@@ -144,8 +144,9 @@ function trackEvent(name: string, params: Record<string, unknown> = {}) {
 
 export default function App() {
   const [page, setPage] = React.useState<Page>("top");
-
-  const navigate = (next: Page) => {
+ const [, setHistory] = React.useState<Page[]>([]);
+  
+const navigate = (next: Page) => {
   setHistory((h: Page[]) => [...h, page])
     setPage(next);
   };
