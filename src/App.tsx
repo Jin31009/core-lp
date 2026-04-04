@@ -146,12 +146,12 @@ export default function App() {
   const [page, setPage] = React.useState<Page>("top");
 
   const navigate = (next: Page) => {
-    setHistory((h) => [...h, page]);
+  setHistory((h: Page[]) => [...h, page])
     setPage(next);
   };
 
   const goBack = () => {
-    setHistory((h) => {
+    setHistory((h: Page[]) => {
       if (h.length === 0) return h;
       const prev = h[h.length - 1];
       setPage(prev);
