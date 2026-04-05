@@ -1,0 +1,1 @@
+export type Page = "top" | "slides" | "demo" | "participation" | "poc";
