@@ -1,7 +1,10 @@
 import React from "react";
 import type { Page } from "../types";
 
-type Card = { title: string; desc: string };
+type Card = {
+  title: string;
+  desc: string;
+};
 
 const SLIDE_CARDS: Card[] = [
   { title: "Theory", desc: "RA理論・Δ・Trigger・Pre-Assetの構造" },
@@ -11,9 +14,9 @@ const SLIDE_CARDS: Card[] = [
 ];
 
 const SLIDE_FRAMES: Card[] = [
-  { title: "Figure 01", desc: "Relational Architectureの全体構造" },
-  { title: "Figure 02", desc: "Δ / Trigger / Pre-Asset の連関" },
-  { title: "Figure 03", desc: "PoCとRA-SSへの接続" },
+  { title: "Figure 01", desc: "Relational Architectureの全体構造を示す基礎図版" },
+  { title: "Figure 02", desc: "Δ / Trigger / Pre-Asset の連関を示す分析図版" },
+  { title: "Figure 03", desc: "PoCとRA-SSへの接続を示す実装イメージ" },
 ];
 
 export default function SlidesPage({
@@ -48,16 +51,23 @@ export default function SlidesPage({
       </div>
 
       <div className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr]">
-        <div className="space-y-4 leading-8 text-slate-600">
-          <p>まず前提として、ここで扱っているのは“広報の改善”ではなく“関係の設計”です。</p>
-          <p>その妥当性は、学会発表として整理された理論・観察・実証の流れで確認できます。</p>
-          <p>必要な方は、この層で判断材料を揃えてください。</p>
+        <div className="space-y-4 text-slate-600 leading-8">
+          <p>
+            ここで扱っているのは、広報表現の改善そのものではなく、
+            その背後にある「関係の設計」です。
+          </p>
+          <p>
+            その妥当性は、学会発表として整理された理論・観察・実証の流れの中で確認できます。
+          </p>
+          <p>
+            導入前に理解を深めたい場合は、まずこのページで背景と位置づけを把握してください。
+          </p>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
           {SLIDE_CARDS.map((c) => (
             <div key={c.title} className="border-b border-black/10 pb-4">
-              <div className="font-medium">{c.title}</div>
+              <div className="font-medium text-slate-900">{c.title}</div>
               <p className="mt-1 text-sm text-slate-600">{c.desc}</p>
             </div>
           ))}
@@ -65,53 +75,73 @@ export default function SlidesPage({
       </div>
 
       <div className="mt-10 grid gap-4 lg:grid-cols-3">
-        <div className="border border-black/10 bg-white p-4">
-          <div className="text-xs tracking-widest text-slate-400">役割</div>
-          <div className="mt-1 text-xl font-medium">判断材料</div>
-          <div className="mt-1 text-xs text-slate-500">導入前の理解を深める</div>
-        </div>
-        <div className="border border-black/10 bg-white p-4">
-          <div className="text-xs tracking-widest text-slate-400">内容</div>
-          <div className="mt-1 text-xl font-medium">理論＋実証</div>
-          <div className="mt-1 text-xs text-slate-500">抽象ではなく検証ベース</div>
-        </div>
-        <div className="border border-black/10 bg-white p-4">
-          <div className="text-xs tracking-widest text-slate-400">次</div>
-          <div className="mt-1 text-xl font-medium">DEMO</div>
-          <div className="mt-1 text-xs text-slate-500">実際に触って確かめる</div>
-        </div>
+        <MiniStat title="役割" value="判断材料" note="導入前の理解を深める" />
+        <MiniStat title="内容" value="理論＋実証" note="抽象ではなく検証ベース" />
+        <MiniStat title="次" value="DEMO" note="実際に触って確かめる" />
       </div>
 
       <div className="mt-10 grid gap-4 md:grid-cols-3">
         {SLIDE_FRAMES.map((c) => (
-          <div key={c.title} className="border border-black/10 bg-white p-5">
-            <div className="flex aspect-[4/3] items-center justify-center border border-dashed border-black/10 bg-slate-50 text-sm tracking-[0.18em] text-slate-400">
-              {c.title}
-            </div>
-            <div className="mt-4 text-sm leading-7 text-slate-600">{c.desc}</div>
-          </div>
+          <FrameCard key={c.title} {...c} />
         ))}
       </div>
 
       <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-        <button
-          onClick={() => onNavigate("demo")}
-          className="w-full bg-black px-6 py-3 text-sm text-white transition hover:scale-[1.01] hover:shadow-md sm:w-auto"
-        >
+        <LinkButton onClick={() => onNavigate("demo")}>
           次に、実際に試してみる
-        </button>
+        </LinkButton>
       </div>
     </section>
   );
 }
-function TextStack({ lines }: any) {
+
+function LinkButton({
+  children,
+  onClick,
+  variant = "primary",
+}: {
+  children: React.ReactNode;
+  onClick?: () => void;
+  variant?: "primary" | "secondary";
+}) {
+  const base = "w-full px-6 py-3 text-sm transition sm:w-auto";
+  const style =
+    variant === "primary"
+      ? "bg-black text-white shadow-sm hover:scale-[1.01] hover:shadow-md"
+      : "border border-black bg-transparent text-black hover:bg-slate-50";
+
   return (
-    <div>
-      {lines.map((l: string, i: number) => <p key={i}>{l}</p>)}
+    <button type="button" onClick={onClick} className={`${base} ${style}`}>
+      {children}
+    </button>
+  );
+}
+
+function MiniStat({
+  title,
+  value,
+  note,
+}: {
+  title: string;
+  value: string;
+  note: string;
+}) {
+  return (
+    <div className="border border-black/10 bg-white p-4">
+      <div className="text-xs tracking-widest text-slate-400">{title}</div>
+      <div className="mt-1 text-xl font-medium">{value}</div>
+      <div className="mt-1 text-xs text-slate-500">{note}</div>
     </div>
   );
 }
 
-function IssueCard({ title, desc }: any) {
-  return <div>{title}</div>;
+function FrameCard({ title, desc }: Card) {
+  return (
+    <div className="border border-black/10 bg-white p-5">
+      <div className="flex aspect-[4/3] items-center justify-center border border-dashed border-black/10 bg-slate-50 text-sm tracking-[0.18em] text-slate-400">
+        {title}
+      </div>
+      <div className="mt-4 text-sm leading-7 text-slate-600">{desc}</div>
+    </div>
+  );
 }

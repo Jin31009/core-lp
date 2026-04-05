@@ -8,6 +8,7 @@ import TopPage from "./pages/TopPage";
 import SlidesPage from "./pages/SlidesPage";
 import ParticipationPage from "./pages/ParticipationPage";
 import PocPage from "./pages/PocPage";
+import DemoPage from "./pages/DemoPage";
 
 export default function App() {
   const [page, setPage] = React.useState<Page>("top");
@@ -26,6 +27,7 @@ export default function App() {
         navItems={[
           { label: "TOP", page: "top" },
           { label: "学会", page: "slides" },
+          { label: "DEMO", page: "demo" },
           { label: "PARTICIPATION", page: "participation" },
           { label: "POC", page: "poc" },
         ]}
@@ -38,6 +40,10 @@ export default function App() {
 
         {page === "slides" && (
           <SlidesPage onNavigate={navigate} onBackPrev={goBack} />
+        )}
+
+        {page === "demo" && (
+          <DemoPage onNavigate={navigate} onBackPrev={goBack} />
         )}
 
         {page === "participation" && (

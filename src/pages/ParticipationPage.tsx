@@ -1,7 +1,6 @@
 import React from "react";
 import type { Page } from "../types";
 
-
 type ParticipationItem = {
   title: string;
   subtitle: string;
@@ -12,17 +11,29 @@ const PARTICIPATION: readonly ParticipationItem[] = [
   {
     title: "OSS / Free",
     subtitle: "無償提供",
-    items: ["考え方・構造モデルを公開", "一部ツールやデモを自由に使う", "入口として体験し理解する"],
+    items: [
+      "考え方・構造モデルを公開",
+      "一部ツールやデモを自由に使う",
+      "入口として体験し理解する",
+    ],
   },
   {
     title: "Co-Creation",
     subtitle: "協賛・共同開発",
-    items: ["ケース提供と検証参加", "改善提案と知見の還流", "共に機能を育てる"],
+    items: [
+      "ケース提供と検証参加",
+      "改善提案と知見の還流",
+      "共に機能を育てる",
+    ],
   },
   {
     title: "Support / Time Fee",
     subtitle: "実費支援",
-    items: ["設定・伴走・導入準備", "PoC設計や運用相談", "時間分のみを請求"],
+    items: [
+      "設定・伴走・導入準備",
+      "PoC設計や運用相談",
+      "時間分のみを請求",
+    ],
   },
 ] as const;
 
@@ -58,58 +69,100 @@ export default function ParticipationPage({
       </div>
 
       <div className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr]">
-        <div className="space-y-4 leading-8 text-slate-600">
-          <p>これは完成品を導入するプロジェクトではありません。</p>
-          <p>関係マネジメントという未整備領域を、協賛者と共に検証しながら形にしていきます。</p>
-          <p>現在、医療機関で実証が始まっています。初期は少数の医療機関と共に進めています。</p>
+        <div className="space-y-4 text-slate-600 leading-8">
+          <p>
+            これは完成品を導入するプロジェクトではありません。
+          </p>
+          <p>
+            関係マネジメントという未整備領域を、協賛者と共に検証しながら形にしていく進め方です。
+          </p>
+          <p>
+            現在、医療機関の現場で小さく実証が始まっており、共に育てる前提で動いています。
+          </p>
         </div>
 
         <div className="grid gap-4 md:grid-cols-3">
           {PARTICIPATION.map((p) => (
-            <div key={p.title} className="border border-black/10 bg-white p-5">
-              <div className="font-medium">{p.subtitle} / {p.title}</div>
-              <ul className="mt-3 space-y-2 text-sm leading-6 text-slate-600">
-                {p.items.map((item) => (
-                  <li key={item}>・{item}</li>
-                ))}
-              </ul>
-            </div>
+            <ListCard
+              key={p.title}
+              title={`${p.subtitle} / ${p.title}`}
+              items={p.items}
+            />
           ))}
         </div>
       </div>
 
       <div className="mt-10 grid gap-4 lg:grid-cols-3">
-        <div className="border border-black/10 bg-white p-4">
-          <div className="text-xs tracking-widest text-slate-400">基本思想</div>
-          <div className="mt-1 text-xl font-medium">共創</div>
-          <div className="mt-1 text-xs text-slate-500">一緒に設計・検証する</div>
-        </div>
-        <div className="border border-black/10 bg-white p-4">
-          <div className="text-xs tracking-widest text-slate-400">提供形態</div>
-          <div className="mt-1 text-xl font-medium">OSS + 協賛</div>
-          <div className="mt-1 text-xs text-slate-500">開きながら育てる</div>
-        </div>
-        <div className="border border-black/10 bg-white p-4">
-          <div className="text-xs tracking-widest text-slate-400">費用</div>
-          <div className="mt-1 text-xl font-medium">Time Fee</div>
-          <div className="mt-1 text-xs text-slate-500">必要な分だけ支援</div>
-        </div>
+        <MiniStat title="基本思想" value="共創" note="一緒に設計・検証する" />
+        <MiniStat title="提供形態" value="OSS + 協賛" note="開きながら育てる" />
+        <MiniStat title="費用" value="Time Fee" note="必要な分だけ支援" />
       </div>
 
       <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-        <button
-          onClick={() => onNavigate("demo")}
-          className="w-full bg-black px-6 py-3 text-sm text-white transition hover:scale-[1.01] hover:shadow-md sm:w-auto"
-        >
-          まず試す
-        </button>
-        <button
-          onClick={() => onNavigate("poc")}
-          className="w-full border border-black bg-transparent px-6 py-3 text-sm text-black transition hover:bg-slate-50 sm:w-auto"
-        >
+        <LinkButton onClick={() => onNavigate("demo")}>まず試す</LinkButton>
+        <LinkButton variant="secondary" onClick={() => onNavigate("poc")}>
           検証を見る
-        </button>
+        </LinkButton>
       </div>
     </section>
+  );
+}
+
+function LinkButton({
+  children,
+  onClick,
+  variant = "primary",
+}: {
+  children: React.ReactNode;
+  onClick?: () => void;
+  variant?: "primary" | "secondary";
+}) {
+  const base = "w-full px-6 py-3 text-sm transition sm:w-auto";
+  const style =
+    variant === "primary"
+      ? "bg-black text-white shadow-sm hover:scale-[1.01] hover:shadow-md"
+      : "border border-black bg-transparent text-black hover:bg-slate-50";
+
+  return (
+    <button type="button" onClick={onClick} className={`${base} ${style}`}>
+      {children}
+    </button>
+  );
+}
+
+function MiniStat({
+  title,
+  value,
+  note,
+}: {
+  title: string;
+  value: string;
+  note: string;
+}) {
+  return (
+    <div className="border border-black/10 bg-white p-4">
+      <div className="text-xs tracking-widest text-slate-400">{title}</div>
+      <div className="mt-1 text-xl font-medium">{value}</div>
+      <div className="mt-1 text-xs text-slate-500">{note}</div>
+    </div>
+  );
+}
+
+function ListCard({
+  title,
+  items,
+}: {
+  title: string;
+  items: readonly string[];
+}) {
+  return (
+    <div className="border border-black/10 bg-white p-5">
+      <div className="font-medium text-slate-900">{title}</div>
+      <ul className="mt-3 space-y-2 text-sm leading-6 text-slate-600">
+        {items.map((item) => (
+          <li key={item}>・{item}</li>
+        ))}
+      </ul>
+    </div>
   );
 }
