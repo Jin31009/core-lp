@@ -1,12 +1,20 @@
-import type React from "react";
+import { useState } from "react";
 
-type DBSampleSectionProps = {
+type Props = {
   delta: string;
   eLevel: string;
   text: string;
   judgment: string;
   actionSummary: string;
-  innerRef?: React.RefObject<HTMLDivElement | null>;
+};
+
+type Row = {
+  id: string;
+  delta: string;
+  e: string;
+  text: string;
+  judgment: string;
+  action: string;
 };
 
 export default function DBSampleSection({
@@ -15,70 +23,90 @@ export default function DBSampleSection({
   text,
   judgment,
   actionSummary,
-  innerRef,
-}: DBSampleSectionProps) {
-  const sectionShell =
-    "overflow-hidden rounded-[18px] border border-stone-200 bg-[#fbfaf7] shadow-[0_8px_28px_rgba(15,23,42,0.05)]";
+}: Props) {
+  const [rows, setRows] = useState<Row[]>([]);
+  const [saved, setSaved] = useState(false);
 
-  const sectionHeader =
-    "border-b border-stone-200 bg-[#e9e5dc] px-6 py-5 sm:px-8";
+  const handleSave = () => {
+    const newRow: Row = {
+      id: `CASE-${String(rows.length + 1).padStart(3, "0")}`,
+      delta,
+      e: eLevel,
+      text: text || "未入力",
+      judgment,
+      action: actionSummary,
+    };
 
-  const sectionTitleClass =
-    "mt-3 text-3xl font-semibold tracking-[-0.01em] text-slate-900";
+    setRows([newRow, ...rows]);
+    setSaved(true);
 
-  const leadClass =
-    "mt-3 text-[15px] leading-8 text-stone-600";
+    setTimeout(() => setSaved(false), 1500);
+  };
 
   return (
-    <section ref={innerRef} className={sectionShell}>
-      <div className={sectionHeader}>
-        <p className="text-[11px] uppercase tracking-[0.24em] text-stone-500">
-          Step 05 / DB Sample
+    <section className="border rounded p-6 space-y-6">
+      <h2 className="text-xl font-semibold">DB見本</h2>
+
+      {/* 確認カード */}
+      <div className="rounded-[14px] border border-stone-200 bg-[#f8f5ef] p-5">
+        <p className="text-[11px] uppercase text-stone-500">Confirm</p>
+        <p className="mt-2 text-sm text-stone-700">
+          この内容でデモ登録しますか？
         </p>
-        <h2 className={sectionTitleClass}>DB見本</h2>
-        <p className={leadClass}>
-          最後に、ケースが保存された後の見本表示を確認します。
-          ここではテーブル形式で見える形を示しています。
-        </p>
+
+        <ul className="mt-3 text-[13px] text-stone-600 space-y-1">
+          <li>Δ: {delta}</li>
+          <li>e: {eLevel}</li>
+          <li>観察: {text || "未入力"}</li>
+        </ul>
+
+        <button
+          onClick={handleSave}
+          className="mt-4 bg-slate-700 text-white px-4 py-2 rounded"
+        >
+          デモ登録する
+        </button>
+
+        {saved && (
+          <p className="mt-2 text-sm text-green-600">
+            保存しました（Demo）
+          </p>
+        )}
       </div>
 
-      <div className="overflow-x-auto p-6 sm:p-8">
-        <table className="min-w-full border-collapse text-sm">
-          <thead>
-            <tr className="border-b border-stone-200 bg-white text-left">
-              <th className="px-4 py-3 font-medium text-stone-700">Case ID</th>
-              <th className="px-4 py-3 font-medium text-stone-700">Δ</th>
-              <th className="px-4 py-3 font-medium text-stone-700">e</th>
-              <th className="px-4 py-3 font-medium text-stone-700">観察内容</th>
-              <th className="px-4 py-3 font-medium text-stone-700">状態の見立て</th>
-              <th className="px-4 py-3 font-medium text-stone-700">次の対応</th>
-              <th className="px-4 py-3 font-medium text-stone-700">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="border-b border-stone-200 align-top bg-[#fbfaf7]">
-              <td className="px-4 py-4 text-stone-700">CASE-001</td>
-              <td className="px-4 py-4 text-stone-700">{delta}</td>
-              <td className="px-4 py-4 text-stone-700">{eLevel}</td>
-              <td className="px-4 py-4 text-stone-700">
-                {text ? text : "未入力"}
-              </td>
-              <td className="px-4 py-4 text-stone-700">{judgment}</td>
-              <td className="px-4 py-4 text-stone-700">{actionSummary}</td>
-              <td className="px-4 py-4 text-stone-700">Draft / Demo</td>
-            </tr>
-          </tbody>
-        </table>
+      {/* テーブル */}
+      <table className="w-full border text-sm">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Δ</th>
+            <th>e</th>
+            <th>観察</th>
+            <th>見立て</th>
+            <th>対応</th>
+          </tr>
+        </thead>
 
-        <div className="mt-8 rounded-[14px] border border-stone-200 bg-[#f8f5ef] p-5">
-          <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
-            Guide
-          </p>
-          <p className="mt-2 text-[13px] leading-7 text-stone-500">
-            最後に、ケースが保存された後の見え方を確認します。
-            実運用を想定したデータ構造のイメージを把握する段階です。
-          </p>
-        </div>
+        <tbody>
+          {rows.map((r) => (
+            <tr key={r.id}>
+              <td>{r.id}</td>
+              <td>{r.delta}</td>
+              <td>{r.e}</td>
+              <td>{r.text}</td>
+              <td>{r.judgment}</td>
+              <td>{r.action}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* Guide */}
+      <div className="rounded-[14px] border border-stone-200 bg-[#f8f5ef] p-5">
+        <p className="text-[11px] uppercase text-stone-500">Guide</p>
+        <p className="mt-2 text-[13px] text-stone-500">
+          登録後の見え方を体験するためのデモ機能です。
+        </p>
       </div>
     </section>
   );

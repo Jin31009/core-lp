@@ -80,6 +80,10 @@ function TabButton({
 
 export default function DemoPage({ setPage }: DemoPageProps) {
   const [text, setText] = useState("");
+  const [emotion, setEmotion] = useState("");
+  const [urgency, setUrgency] = useState("");
+  const [contextEdited, setContextEdited] = useState("");
+
   const [result, setResult] = useState(false);
   const [showResponse, setShowResponse] = useState(false);
   const [showCaseReport, setShowCaseReport] = useState(false);
@@ -97,56 +101,129 @@ export default function DemoPage({ setPage }: DemoPageProps) {
     }
   }, [showDbSample]);
 
-  const isAnxious = text.includes("不安");
+  const contextDraft = (() => {
+    if (!text.trim()) return "";
 
-  const judgment = isAnxious
-    ? "関係の緊張が高まりつつある可能性"
-    : "大きな緊張はまだ表面化していない状態";
+    const scene = /説明|流れ|順番|手順/.test(text)
+      ? "説明場面"
+      : /検査|処置|採血/.test(text)
+      ? "検査・処置場面"
+      : /待つ|待機|呼ばれない/.test(text)
+      ? "待機場面"
+      : "接点場面";
 
-  const actionSummary = isAnxious
-    ? "まず不安の言葉を受け止め、説明不足として感じている点を確認する"
-    : "現状の関わりを維持しつつ、追加の違和感が出ないかを見守る";
+    const emotionPart =
+      emotion === "不安"
+        ? "不安が前景化している"
+        : emotion === "怒り"
+        ? "怒りが前景化している"
+        : emotion === "戸惑い"
+        ? "戸惑いが生じている"
+        : emotion === "悲しみ"
+        ? "悲しみがにじんでいる"
+        : emotion === "無反応"
+        ? "反応が乏しい"
+        : "感情は未確定";
 
-  const delta = isAnxious ? "3" : "1";
-  const eLevel = isAnxious ? "e2（対処の段階）" : "e1（予防の段階）";
+    const urgencyPart =
+      urgency === "緊急対応"
+        ? "早い対応が必要な状態"
+        : urgency === "対応必要"
+        ? "対応を要する状態"
+        : urgency === "経過観察"
+        ? "経過を見ながら確認したい状態"
+        : urgency === "不要"
+        ? "大きな介入は不要な状態"
+        : "必要性は未確定";
 
-  const acexItems: AcexItem[] = isAnxious
-    ? [
-        { key: "A", label: "A", title: "Accept", body: "不安の言葉をそのまま受け止める" },
-        { key: "C", label: "C", title: "Clarify", body: "何が足りないと感じたのかを確認する" },
-        { key: "E", label: "E", title: "Explain", body: "これから何をどう説明するかを伝える" },
-        { key: "X", label: "X", title: "Assist", body: "説明順の整理や確認メモを使う" },
-      ]
-    : [
-        { key: "A", label: "A", title: "Accept", body: "現在の反応を維持しながら丁寧に観察する" },
-        { key: "C", label: "C", title: "Clarify", body: "必要があれば追加で確認する" },
-        { key: "E", label: "E", title: "Explain", body: "今後の流れを簡潔に共有する" },
-        { key: "X", label: "X", title: "Assist", body: "特別な追加支援はせず通常対応を維持する" },
-      ];
+    return `${scene}において、${emotionPart}。現在は${urgencyPart}として整理できる。`;
+  })();
 
-  const flowItems = isAnxious
-    ? [
-        "まず不安の言葉を受け止める",
-        "次に不足感の中身を確認する",
-        "そのうえで説明の見通しを伝える",
-      ]
-    : [
-        "現在の反応を維持する",
-        "必要時のみ追加確認する",
-        "今後の流れを簡潔に共有する",
-      ];
+  const contextText = contextEdited.trim() || contextDraft;
 
-  const ngItems = isAnxious
-    ? [
-        "不安を軽く扱う",
-        "確認せずに説明を進める",
-        "急いで結論だけを返す",
-      ]
-    : [
-        "変化がないのに過剰対応する",
-        "説明を省きすぎる",
-        "観察を止めてしまう",
-      ];
+  const isAnxious = text.includes("不安") || emotion === "不安";
+
+  const judgment =
+    urgency === "緊急対応"
+      ? "関係の緊張が強く、慎重な介入が必要な状態"
+      : urgency === "対応必要" && emotion === "怒り"
+      ? "関係の緊張が高まりつつあり、受理と説明整理が必要な状態"
+      : isAnxious
+      ? "関係の緊張が高まりつつある可能性"
+      : "大きな緊張はまだ表面化していない状態";
+
+  const delta =
+    urgency === "緊急対応" ? "4" : urgency === "対応必要" || isAnxious ? "3" : "1";
+
+  const eLevel =
+    delta === "4" ? "e3（臨界の段階）" : delta === "3" ? "e2（対処の段階）" : "e1（予防の段階）";
+
+  const actionSummary =
+    delta === "4"
+      ? "まず安全を確保し、急がず受け止めと確認を行いながら説明を組み直す"
+      : delta === "3"
+      ? "まず不安や怒りの言葉を受け止め、何が足りないと感じているかを確認する"
+      : "現状の関わりを維持しつつ、追加の違和感が出ないかを見守る";
+
+  const acexItems: AcexItem[] =
+    delta === "4"
+      ? [
+          { key: "A", label: "A", title: "Accept", body: "まず受け止め、安全に関する反応を否定しない" },
+          { key: "C", label: "C", title: "Clarify", body: "何が危険・不安と感じられているかを確認する" },
+          { key: "E", label: "E", title: "Explain", body: "対応の順序と見通しを短く明確に伝える" },
+          { key: "X", label: "X", title: "Assist", body: "必要なら役割調整や上位者介入を行う" },
+        ]
+      : delta === "3"
+      ? [
+          { key: "A", label: "A", title: "Accept", body: "不安や怒りの言葉をそのまま受け止める" },
+          { key: "C", label: "C", title: "Clarify", body: "何が足りないと感じているかを確認する" },
+          { key: "E", label: "E", title: "Explain", body: "これから何をどう説明するかを伝える" },
+          { key: "X", label: "X", title: "Assist", body: "説明順の整理や確認メモを使う" },
+        ]
+      : [
+          { key: "A", label: "A", title: "Accept", body: "現在の反応を維持しながら丁寧に観察する" },
+          { key: "C", label: "C", title: "Clarify", body: "必要があれば追加で確認する" },
+          { key: "E", label: "E", title: "Explain", body: "今後の流れを簡潔に共有する" },
+          { key: "X", label: "X", title: "Assist", body: "特別な追加支援はせず通常対応を維持する" },
+        ];
+
+  const flowItems =
+    delta === "4"
+      ? [
+          "まず安全に関わる不安や怒りを受け止める",
+          "次に何が危険・不足と感じられているかを確認する",
+          "そのうえで対応の順序と見通しを簡潔に伝える",
+        ]
+      : delta === "3"
+      ? [
+          "まず不安や怒りの言葉を受け止める",
+          "次に不足感の中身を確認する",
+          "そのうえで説明の見通しを伝える",
+        ]
+      : [
+          "現在の反応を維持する",
+          "必要時のみ追加確認する",
+          "今後の流れを簡潔に共有する",
+        ];
+
+  const ngItems =
+    delta === "4"
+      ? [
+          "不安や怒りを否定する",
+          "確認せずに説明だけを進める",
+          "急いで結論だけを返す",
+        ]
+      : delta === "3"
+      ? [
+          "不安を軽く扱う",
+          "確認せずに説明を進める",
+          "急いで結論だけを返す",
+        ]
+      : [
+          "変化がないのに過剰対応する",
+          "説明を省きすぎる",
+          "観察を止めてしまう",
+        ];
 
   const currentStep = showDbSample
     ? 5
@@ -162,6 +239,32 @@ export default function DemoPage({ setPage }: DemoPageProps) {
     setSelectedStep(currentStep);
   }, [currentStep]);
 
+  const statusLevel: "safe" | "warning" | "danger" =
+    delta === "4" ? "danger" : delta === "3" ? "warning" : "safe";
+
+  const statusConfig = {
+    safe: {
+      label: "安定",
+      sub: "大きな緊張は見られない",
+      icon: "—",
+      color: "text-stone-400",
+    },
+    warning: {
+      label: "注意",
+      sub: "緊張が高まりつつある",
+      icon: "🔥",
+      color: "text-yellow-500",
+    },
+    danger: {
+      label: "危険",
+      sub: "関係が崩れ始めている可能性",
+      icon: "🔥🔥",
+      color: "text-red-500",
+    },
+  };
+
+  const status = statusConfig[statusLevel];
+
   const sectionShell =
     "overflow-hidden rounded-[18px] border border-stone-200 bg-[#fbfaf7] shadow-[0_8px_28px_rgba(15,23,42,0.05)]";
 
@@ -172,6 +275,13 @@ export default function DemoPage({ setPage }: DemoPageProps) {
           <InputSection
             text={text}
             onTextChange={setText}
+            emotion={emotion}
+            onEmotionChange={setEmotion}
+            urgency={urgency}
+            onUrgencyChange={setUrgency}
+            contextDraft={contextDraft}
+            contextEdited={contextEdited}
+            onContextEditedChange={setContextEdited}
             onCheckState={() => {
               setResult(true);
               setShowResponse(false);
@@ -180,6 +290,9 @@ export default function DemoPage({ setPage }: DemoPageProps) {
             }}
             onClear={() => {
               setText("");
+              setEmotion("");
+              setUrgency("");
+              setContextEdited("");
               setResult(false);
               setShowResponse(false);
               setShowCaseReport(false);
@@ -196,6 +309,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
             eLevel={eLevel}
             text={text}
             judgment={judgment}
+            contextText={contextText}
             onNext={() => setShowResponse(true)}
           />
         ) : null;
@@ -207,6 +321,10 @@ export default function DemoPage({ setPage }: DemoPageProps) {
             acexItems={acexItems}
             flowItems={flowItems}
             ngItems={ngItems}
+            statusLabel={status.label}
+            statusSub={status.sub}
+            statusIcon={status.icon}
+            statusColorClass={status.color}
             onNext={() => setShowCaseReport(true)}
           />
         ) : null;

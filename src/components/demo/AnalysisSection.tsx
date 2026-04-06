@@ -3,6 +3,7 @@ type AnalysisSectionProps = {
   eLevel: string;
   text: string;
   judgment: string;
+  contextText: string;
   onNext: () => void;
 };
 
@@ -11,6 +12,7 @@ export default function AnalysisSection({
   eLevel,
   text,
   judgment,
+  contextText,
   onNext,
 }: AnalysisSectionProps) {
   const sectionShell =
@@ -25,11 +27,41 @@ export default function AnalysisSection({
   const panelCard =
     "rounded-[14px] border border-stone-200 bg-white p-5 shadow-[0_2px_10px_rgba(15,23,42,0.03)]";
 
+  const softCard =
+    "rounded-[14px] border border-stone-200 bg-[#f8f5ef] p-5";
+
   const leadClass =
     "mt-3 text-[15px] leading-8 text-stone-600";
 
   const primaryButton =
     "rounded-[10px] bg-slate-700 px-5 py-3 text-sm font-medium text-white transition hover:bg-slate-800";
+
+  let level: "safe" | "warning" | "danger" = "safe";
+  if (delta === "3") level = "warning";
+  if (delta === "4") level = "danger";
+
+  const statusConfig = {
+    safe: {
+      label: "安定",
+      sub: "大きな緊張は見られない",
+      icon: "—",
+      color: "text-stone-400",
+    },
+    warning: {
+      label: "注意",
+      sub: "緊張が高まりつつある",
+      icon: "🔥",
+      color: "text-yellow-500",
+    },
+    danger: {
+      label: "危険",
+      sub: "関係が崩れ始めている可能性",
+      icon: "🔥🔥",
+      color: "text-red-500",
+    },
+  };
+
+  const status = statusConfig[level];
 
   return (
     <section className={sectionShell}>
@@ -39,13 +71,40 @@ export default function AnalysisSection({
         </p>
         <h2 className={sectionTitleClass}>確認結果</h2>
         <p className={leadClass}>
-          観察内容をもとに、いまの関係の状態を簡易に整理します。
-          まずは全体像をつかむための段階です。
+          入力内容とセンサー情報をもとに、文脈と関係状態を整理します。
         </p>
       </div>
 
       <div className="p-6 sm:p-8">
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="mb-6 flex items-center justify-between rounded-[14px] border border-stone-200 bg-white px-5 py-4">
+          <div>
+            <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
+              状態
+            </p>
+            <p className="mt-1 text-lg font-semibold text-slate-900">
+              {status.label}
+            </p>
+            <p className="text-[13px] text-stone-500">{status.sub}</p>
+          </div>
+
+          <div className={`text-xl font-semibold ${status.color}`}>
+            {status.icon}
+          </div>
+        </div>
+
+        <div className={softCard}>
+          <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
+            Context
+          </p>
+          <p className="mt-3 text-sm font-medium text-stone-700">
+            文脈整理
+          </p>
+          <p className="mt-3 text-[15px] leading-9 text-stone-600">
+            {contextText || "文脈情報はまだありません"}
+          </p>
+        </div>
+
+        <div className="mt-8 grid gap-4 sm:grid-cols-2">
           <div className={panelCard}>
             <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
               Delta
@@ -75,7 +134,9 @@ export default function AnalysisSection({
           <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
             Observation Summary
           </p>
-          <p className="mt-3 text-sm font-medium text-stone-700">観察内容</p>
+          <p className="mt-3 text-sm font-medium text-stone-700">
+            観察内容
+          </p>
           <p className="mt-3 text-[15px] leading-9 text-stone-600">
             {text ? text : "まだ入力がありません"}
           </p>
@@ -104,8 +165,7 @@ export default function AnalysisSection({
             Guide
           </p>
           <p className="mt-2 text-[13px] leading-7 text-stone-500">
-            観察内容をもとに、Δ（関係緊張）とe（フェーズ）で状態を見立てます。
-            厳密な判定より、全体像の把握を優先します。
+            自由記述とセンサー情報から文脈を整理し、その上で関係状態を読みます。
           </p>
         </div>
       </div>
