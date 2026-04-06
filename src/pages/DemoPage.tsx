@@ -107,6 +107,9 @@ export default function DemoPage({ setPage }: DemoPageProps) {
   const sectionShell =
     "overflow-hidden rounded-[16px] border border-stone-200 bg-[#fbfaf7] shadow-[0_6px_24px_rgba(15,23,42,0.04)]";
 
+  const revealClass =
+    "animate-in fade-in slide-in-from-bottom-2 duration-500";
+
   return (
     <div className="min-h-screen bg-[#f4f1ea] text-slate-900">
       <div className="mx-auto max-w-7xl px-6 py-10">
@@ -192,64 +195,74 @@ export default function DemoPage({ setPage }: DemoPageProps) {
 
         <div className="mt-8 grid gap-8 lg:grid-cols-[1.45fr_0.55fr]">
           <main className="space-y-10">
-            <InputSection
-              text={text}
-              onTextChange={setText}
-              onCheckState={() => {
-                setResult(true);
-                setShowResponse(false);
-                setShowCaseReport(false);
-                setShowDbSample(false);
-              }}
-              onClear={() => {
-                setText("");
-                setResult(false);
-                setShowResponse(false);
-                setShowCaseReport(false);
-                setShowDbSample(false);
-              }}
-            />
+            <div className={revealClass}>
+              <InputSection
+                text={text}
+                onTextChange={setText}
+                onCheckState={() => {
+                  setResult(true);
+                  setShowResponse(false);
+                  setShowCaseReport(false);
+                  setShowDbSample(false);
+                }}
+                onClear={() => {
+                  setText("");
+                  setResult(false);
+                  setShowResponse(false);
+                  setShowCaseReport(false);
+                  setShowDbSample(false);
+                }}
+              />
+            </div>
 
             {result && (
-              <AnalysisSection
-                delta={delta}
-                eLevel={eLevel}
-                text={text}
-                judgment={judgment}
-                onNext={() => setShowResponse(true)}
-              />
+              <div className={revealClass}>
+                <AnalysisSection
+                  delta={delta}
+                  eLevel={eLevel}
+                  text={text}
+                  judgment={judgment}
+                  onNext={() => setShowResponse(true)}
+                />
+              </div>
             )}
 
             {result && showResponse && (
-              <ResponseSection
-                actionSummary={actionSummary}
-                acexItems={acexItems}
-                flowItems={flowItems}
-                ngItems={ngItems}
-                onNext={() => setShowCaseReport(true)}
-              />
+              <div className={revealClass}>
+                <ResponseSection
+                  actionSummary={actionSummary}
+                  acexItems={acexItems}
+                  flowItems={flowItems}
+                  ngItems={ngItems}
+                  onNext={() => setShowCaseReport(true)}
+                />
+              </div>
             )}
 
             {result && showCaseReport && (
-              <CaseReportSection
-                delta={delta}
-                eLevel={eLevel}
-                text={text}
-                judgment={judgment}
-                actionSummary={actionSummary}
-                onNext={() => setShowDbSample(true)}
-              />
+              <div className={revealClass}>
+                <CaseReportSection
+                  delta={delta}
+                  eLevel={eLevel}
+                  text={text}
+                  judgment={judgment}
+                  actionSummary={actionSummary}
+                  onNext={() => setShowDbSample(true)}
+                />
+              </div>
             )}
 
             {result && showDbSample && (
-              <DBSampleSection
-                delta={delta}
-                eLevel={eLevel}
-                text={text}
-                judgment={judgment}
-                actionSummary={actionSummary}
-                innerRef={dbSampleRef}
-              />
+              <div className={revealClass}>
+                <DBSampleSection
+                  delta={delta}
+                  eLevel={eLevel}
+                  text={text}
+                  judgment={judgment}
+                  actionSummary={actionSummary}
+                  innerRef={dbSampleRef}
+                />
+              </div>
             )}
           </main>
 
