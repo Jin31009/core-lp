@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type DemoPageProps = {
   setPage: (page: string) => void;
@@ -12,10 +12,26 @@ type AcexItem = {
 };
 
 export default function DemoPage({ setPage }: DemoPageProps) {
+  /* ===== State ===== */
   const [text, setText] = useState("");
   const [result, setResult] = useState(false);
   const [showResponse, setShowResponse] = useState(false);
+  const [showCaseReport, setShowCaseReport] = useState(false);
+  const [showDbSample, setShowDbSample] = useState(false);
 
+  const dbSampleRef = useRef<HTMLDivElement | null>(null);
+
+  /* ===== Auto Scroll ===== */
+  useEffect(() => {
+    if (showDbSample) {
+      dbSampleRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  }, [showDbSample]);
+
+  /* ===== Derived Logic ===== */
   const isAnxious = text.includes("不安");
 
   const judgment = isAnxious
@@ -29,6 +45,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
   const delta = isAnxious ? "3" : "1";
   const eLevel = isAnxious ? "e2（対処の段階）" : "e1（予防の段階）";
 
+  /* ===== ACE + X Data ===== */
   const acexItems: AcexItem[] = isAnxious
     ? [
         {
@@ -83,6 +100,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
         },
       ];
 
+  /* ===== Flow / NG Data ===== */
   const flowItems = isAnxious
     ? [
         "まず不安の言葉を受け止める",
@@ -110,6 +128,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
   return (
     <div className="bg-white text-slate-900">
       <div className="mx-auto max-w-6xl px-6 py-10">
+        {/* ===== Hero / Page Intro ===== */}
         <div className="rounded-3xl border border-slate-200 bg-gradient-to-b from-white to-slate-50 px-6 py-8 shadow-sm">
           <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
             Demo
@@ -139,8 +158,11 @@ export default function DemoPage({ setPage }: DemoPageProps) {
           </div>
         </div>
 
+        {/* ===== Main Layout ===== */}
         <div className="mt-8 grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
+          {/* ===== Left Column ===== */}
           <div>
+            {/* ===== Input Section ===== */}
             <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
               <div className="border-b border-slate-100 pb-4">
                 <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
@@ -181,6 +203,8 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                   onClick={() => {
                     setResult(true);
                     setShowResponse(false);
+                    setShowCaseReport(false);
+                    setShowDbSample(false);
                   }}
                   className="rounded bg-black px-5 py-3 text-sm text-white hover:bg-slate-800"
                 >
@@ -192,6 +216,8 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                     setText("");
                     setResult(false);
                     setShowResponse(false);
+                    setShowCaseReport(false);
+                    setShowDbSample(false);
                   }}
                   className="rounded border border-slate-300 px-5 py-3 text-sm text-slate-700 hover:bg-slate-50"
                 >
@@ -200,6 +226,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
               </div>
             </div>
 
+            {/* ===== Analysis Section ===== */}
             {result && (
               <div className="mt-8 rounded-3xl border border-slate-200 bg-slate-50 p-6">
                 <div className="border-b border-slate-200 pb-4">
@@ -275,12 +302,13 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                   </button>
 
                   <p className="mt-3 text-sm leading-7 text-slate-500">
-                    次のセクションで、ACE＋X・行為の順番・避けたい行動を表示します。
+                    この先で、ACE＋X・行為の順番・避けたい行動を表示します。
                   </p>
                 </div>
               </div>
             )}
 
+            {/* ===== Next Response Section ===== */}
             {result && showResponse && (
               <div className="mt-16 rounded-3xl border-2 border-slate-900 bg-white shadow-md">
                 <div className="rounded-t-3xl bg-slate-900 px-6 py-4">
@@ -359,17 +387,162 @@ export default function DemoPage({ setPage }: DemoPageProps) {
 
                   <div className="mt-6 border-t border-slate-200 pt-5">
                     <button
-                      onClick={() => setShowResponse(false)}
-                      className="rounded border border-slate-300 px-5 py-3 text-sm text-slate-700 hover:bg-slate-50"
+                      onClick={() => setShowCaseReport(true)}
+                      className="rounded bg-slate-900 px-5 py-3 text-sm text-white hover:bg-slate-800"
                     >
-                      次の対応を閉じる
+                      ケース記録を見る
                     </button>
                   </div>
                 </div>
               </div>
             )}
+
+            {/* ===== Case Report Section ===== */}
+            {result && showCaseReport && (
+              <div className="mt-20 rounded-3xl border border-slate-300 bg-slate-50 p-6">
+                <div className="border-b border-slate-200 pb-4">
+                  <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                    Case Report
+                  </p>
+
+                  <h2 className="mt-2 text-xl font-semibold text-slate-900">
+                    ケース記録（簡易）
+                  </h2>
+
+                  <p className="mt-2 text-sm leading-7 text-slate-600">
+                    今回の観察・見立て・対応を、1つのケースとして整理しています。
+                  </p>
+                </div>
+
+                <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                  <div className="rounded-xl border border-slate-200 bg-white p-4">
+                    <p className="text-xs uppercase tracking-[0.14em] text-slate-500">
+                      Delta
+                    </p>
+                    <p className="mt-2 text-sm font-medium text-slate-700">
+                      Δ（関係緊張）
+                    </p>
+                    <p className="mt-1 text-base font-semibold text-slate-900">
+                      {delta}
+                    </p>
+                  </div>
+
+                  <div className="rounded-xl border border-slate-200 bg-white p-4">
+                    <p className="text-xs uppercase tracking-[0.14em] text-slate-500">
+                      Phase
+                    </p>
+                    <p className="mt-2 text-sm font-medium text-slate-700">
+                      e（フェーズ）
+                    </p>
+                    <p className="mt-1 text-base font-semibold text-slate-900">
+                      {eLevel}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-4 rounded-xl border border-slate-200 bg-white p-4">
+                  <p className="text-xs uppercase tracking-[0.14em] text-slate-500">
+                    Observation Summary
+                  </p>
+                  <p className="mt-2 text-sm font-medium text-slate-700">
+                    観察内容
+                  </p>
+                  <p className="mt-1 text-sm leading-7 text-slate-600">
+                    {text ? text : "未入力"}
+                  </p>
+                </div>
+
+                <div className="mt-4 rounded-xl border border-slate-200 bg-white p-4">
+                  <p className="text-xs uppercase tracking-[0.14em] text-slate-500">
+                    Interpretation
+                  </p>
+                  <p className="mt-2 text-sm font-medium text-slate-700">
+                    状態の見立て
+                  </p>
+                  <p className="mt-1 text-sm leading-7 text-slate-600">
+                    {judgment}
+                  </p>
+                </div>
+
+                <div className="mt-4 rounded-xl border border-slate-200 bg-white p-4">
+                  <p className="text-xs uppercase tracking-[0.14em] text-slate-500">
+                    Response Summary
+                  </p>
+                  <p className="mt-2 text-sm font-medium text-slate-700">
+                    次の対応（要約）
+                  </p>
+                  <p className="mt-1 text-sm leading-7 text-slate-600">
+                    {actionSummary}
+                  </p>
+                </div>
+
+                <div className="mt-6 border-t border-slate-200 pt-5">
+                  <button
+                    type="button"
+                    onClick={() => setShowDbSample(true)}
+                    className="rounded bg-slate-900 px-5 py-3 text-sm text-white hover:bg-slate-800"
+                  >
+                    DB見本に送る
+                  </button>
+
+                  <p className="mt-3 text-sm text-slate-500">
+                    ※実際のDB保存ではなく、保存後の見本画面を表示します。
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* ===== DB Sample Section ===== */}
+            {result && showDbSample && (
+              <div
+                ref={dbSampleRef}
+                className="mt-20 rounded-3xl border-2 border-slate-900 bg-white shadow-md"
+              >
+                <div className="rounded-t-3xl bg-slate-900 px-6 py-4">
+                  <p className="text-xs uppercase tracking-[0.18em] text-slate-300">
+                    Case DB Sample
+                  </p>
+                  <h2 className="mt-2 text-2xl font-semibold text-white">
+                    DB見本
+                  </h2>
+                  <p className="mt-2 text-sm leading-7 text-slate-300">
+                    ここでは、ケースが保存された後の見本表示をテーブル形式で示しています。
+                  </p>
+                </div>
+
+                <div className="overflow-x-auto p-6">
+                  <table className="min-w-full border-collapse text-sm">
+                    <thead>
+                      <tr className="border-b border-slate-200 bg-slate-50 text-left">
+                        <th className="px-4 py-3 font-medium text-slate-700">Case ID</th>
+                        <th className="px-4 py-3 font-medium text-slate-700">Δ</th>
+                        <th className="px-4 py-3 font-medium text-slate-700">e</th>
+                        <th className="px-4 py-3 font-medium text-slate-700">観察内容</th>
+                        <th className="px-4 py-3 font-medium text-slate-700">状態の見立て</th>
+                        <th className="px-4 py-3 font-medium text-slate-700">次の対応</th>
+                        <th className="px-4 py-3 font-medium text-slate-700">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-b border-slate-200">
+                        <td className="px-4 py-3 text-slate-700">CASE-001</td>
+                        <td className="px-4 py-3 text-slate-700">{delta}</td>
+                        <td className="px-4 py-3 text-slate-700">{eLevel}</td>
+                        <td className="px-4 py-3 text-slate-700">
+                          {text ? text : "未入力"}
+                        </td>
+                        <td className="px-4 py-3 text-slate-700">{judgment}</td>
+                        <td className="px-4 py-3 text-slate-700">{actionSummary}</td>
+                        <td className="px-4 py-3 text-slate-700">Draft / Demo</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
           </div>
 
+          {/* ===== Right Column / Side Panel ===== */}
           <div className="space-y-4">
             <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
               <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
@@ -380,7 +553,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
               </h3>
               <p className="mt-2 text-sm leading-7 text-slate-700">
                 観察内容を入力し、まず関係の状態を確認し、
-                必要に応じて次の対応まで確認できる構成にしています。
+                必要に応じて次の対応・ケース記録・DB見本まで確認できる構成にしています。
               </p>
             </div>
 
@@ -398,6 +571,8 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                 <li>・Next Response：次の対応</li>
                 <li>・ACE＋X：対応の中身</li>
                 <li>・Flow / NG：順番と避けたい行動</li>
+                <li>・Case Report：簡易記録</li>
+                <li>・DB Sample：保存後の見本テーブル</li>
               </ul>
             </div>
 
@@ -412,7 +587,8 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                 <li>・まず観察内容を入力する</li>
                 <li>・つぎに状態を確認する</li>
                 <li>・必要に応じて次の対応を見る</li>
-                <li>・対応の中身と順番を確認する</li>
+                <li>・ケース記録を見る</li>
+                <li>・最後にDB見本へ送る</li>
               </ul>
             </div>
 
@@ -425,7 +601,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
               </h3>
               <p className="mt-2 text-sm leading-7 text-slate-700">
                 ここで示しているのは完成した自動判定ではなく、
-                観察内容を起点に、関係の状態と次の対応を
+                観察内容を起点に、関係の状態・次の対応・記録の流れを
                 考えやすくするための試作段階です。
               </p>
             </div>
