@@ -113,6 +113,16 @@ export default function ResponseSection({
             ケース記録を見る
           </button>
         </div>
+
+        <div className="mt-8 rounded-[14px] border border-stone-200 bg-[#f8f5ef] p-5">
+          <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
+            Guide
+          </p>
+          <p className="mt-2 text-[13px] leading-7 text-stone-500">
+            ACE＋Xで対応の中身を確認し、Flowで順序を整理します。
+            NGも見ながら、避けるべき行動を意識します。
+          </p>
+        </div>
       </div>
     </section>
   );

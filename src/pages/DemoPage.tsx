@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import SidePanel from "../components/demo/SidePanel";
 import InputSection from "../components/demo/InputSection";
 import AnalysisSection from "../components/demo/AnalysisSection";
 import ResponseSection from "../components/demo/ResponseSection";
@@ -7,7 +6,7 @@ import CaseReportSection from "../components/demo/CaseReportSection";
 import DBSampleSection from "../components/demo/DBSampleSection";
 
 type DemoPageProps = {
-  setPage: (page: string) => void;
+  setPage?: (page: string) => void;
 };
 
 type AcexItem = {
@@ -17,12 +16,75 @@ type AcexItem = {
   body: string;
 };
 
+type TabButtonProps = {
+  stepNo: string;
+  en: string;
+  ja: string;
+  isActive: boolean;
+  isReached: boolean;
+  onClick: () => void;
+};
+
+function TabButton({
+  stepNo,
+  en,
+  ja,
+  isActive,
+  isReached,
+  onClick,
+}: TabButtonProps) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={!isReached}
+      className={`flex min-w-[160px] flex-1 items-center gap-3 border-r border-stone-200 px-4 py-4 text-left transition last:border-r-0 ${
+        isActive
+          ? "bg-[#f2eee6]"
+          : isReached
+          ? "bg-[#fbfaf7] hover:bg-[#f6f2eb]"
+          : "bg-white cursor-not-allowed opacity-60"
+      }`}
+    >
+      <div
+        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border text-xs font-semibold ${
+          isActive
+            ? "border-slate-700 bg-slate-700 text-white"
+            : isReached
+            ? "border-stone-300 bg-white text-stone-600"
+            : "border-stone-200 bg-white text-stone-400"
+        }`}
+      >
+        {stepNo}
+      </div>
+
+      <div className="min-w-0">
+        <p
+          className={`text-[11px] uppercase tracking-[0.18em] ${
+            isActive ? "text-stone-500" : isReached ? "text-stone-500" : "text-stone-400"
+          }`}
+        >
+          {en}
+        </p>
+        <p
+          className={`mt-1 text-sm font-medium ${
+            isActive ? "text-slate-900" : isReached ? "text-slate-800" : "text-stone-400"
+          }`}
+        >
+          {ja}
+        </p>
+      </div>
+    </button>
+  );
+}
+
 export default function DemoPage({ setPage }: DemoPageProps) {
   const [text, setText] = useState("");
   const [result, setResult] = useState(false);
   const [showResponse, setShowResponse] = useState(false);
   const [showCaseReport, setShowCaseReport] = useState(false);
   const [showDbSample, setShowDbSample] = useState(false);
+  const [selectedStep, setSelectedStep] = useState(1);
 
   const dbSampleRef = useRef<HTMLDivElement | null>(null);
 
@@ -86,14 +148,6 @@ export default function DemoPage({ setPage }: DemoPageProps) {
         "観察を止めてしまう",
       ];
 
-  const steps = [
-    { no: "01", ja: "観察入力", en: "Observation", active: true },
-    { no: "02", ja: "確認結果", en: "Analysis", active: result },
-    { no: "03", ja: "次の対応", en: "Response", active: showResponse },
-    { no: "04", ja: "ケース記録", en: "Case Report", active: showCaseReport },
-    { no: "05", ja: "DB見本", en: "DB Sample", active: showDbSample },
-  ];
-
   const currentStep = showDbSample
     ? 5
     : showCaseReport
@@ -104,15 +158,91 @@ export default function DemoPage({ setPage }: DemoPageProps) {
     ? 2
     : 1;
 
-  const sectionShell =
-    "overflow-hidden rounded-[16px] border border-stone-200 bg-[#fbfaf7] shadow-[0_6px_24px_rgba(15,23,42,0.04)]";
+  useEffect(() => {
+    setSelectedStep(currentStep);
+  }, [currentStep]);
 
-  const revealClass =
-    "animate-in fade-in slide-in-from-bottom-2 duration-500";
+  const sectionShell =
+    "overflow-hidden rounded-[18px] border border-stone-200 bg-[#fbfaf7] shadow-[0_8px_28px_rgba(15,23,42,0.05)]";
+
+  const renderStepContent = () => {
+    switch (selectedStep) {
+      case 1:
+        return (
+          <InputSection
+            text={text}
+            onTextChange={setText}
+            onCheckState={() => {
+              setResult(true);
+              setShowResponse(false);
+              setShowCaseReport(false);
+              setShowDbSample(false);
+            }}
+            onClear={() => {
+              setText("");
+              setResult(false);
+              setShowResponse(false);
+              setShowCaseReport(false);
+              setShowDbSample(false);
+              setSelectedStep(1);
+            }}
+          />
+        );
+
+      case 2:
+        return result ? (
+          <AnalysisSection
+            delta={delta}
+            eLevel={eLevel}
+            text={text}
+            judgment={judgment}
+            onNext={() => setShowResponse(true)}
+          />
+        ) : null;
+
+      case 3:
+        return showResponse ? (
+          <ResponseSection
+            actionSummary={actionSummary}
+            acexItems={acexItems}
+            flowItems={flowItems}
+            ngItems={ngItems}
+            onNext={() => setShowCaseReport(true)}
+          />
+        ) : null;
+
+      case 4:
+        return showCaseReport ? (
+          <CaseReportSection
+            delta={delta}
+            eLevel={eLevel}
+            text={text}
+            judgment={judgment}
+            actionSummary={actionSummary}
+            onNext={() => setShowDbSample(true)}
+          />
+        ) : null;
+
+      case 5:
+        return showDbSample ? (
+          <DBSampleSection
+            delta={delta}
+            eLevel={eLevel}
+            text={text}
+            judgment={judgment}
+            actionSummary={actionSummary}
+            innerRef={dbSampleRef}
+          />
+        ) : null;
+
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#f4f1ea] text-slate-900">
-      <div className="mx-auto max-w-7xl px-6 py-10">
+      <div className="mx-auto max-w-6xl px-6 py-10">
         <div className={sectionShell}>
           <div className="border-b border-stone-200 px-6 py-4 sm:px-8">
             <p className="text-[11px] uppercase tracking-[0.28em] text-stone-500">
@@ -142,132 +272,65 @@ export default function DemoPage({ setPage }: DemoPageProps) {
               現場での読み取りと対応の接続を試作しています。
             </p>
 
-            <div className="mt-8 flex flex-wrap gap-3">
-              <button
-                onClick={() => setPage("top")}
-                className="rounded-[10px] border border-stone-300 bg-white px-4 py-2.5 text-sm text-stone-700 transition hover:bg-stone-50"
-              >
-                ← TOPへ戻る
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-6 overflow-hidden rounded-[14px] border border-stone-200 bg-[#fbfaf7] shadow-[0_4px_16px_rgba(15,23,42,0.03)]">
-          <div className="flex flex-wrap items-stretch">
-            {steps.map((step, index) => (
-              <div
-                key={step.no}
-                className={`flex min-w-[180px] flex-1 items-center gap-3 px-4 py-4 ${
-                  index !== steps.length - 1 ? "border-r border-stone-200" : ""
-                }`}
-              >
-                <div
-                  className={`flex h-10 w-10 items-center justify-center rounded-full border text-xs font-semibold ${
-                    step.active
-                      ? "border-slate-700 bg-slate-700 text-white"
-                      : "border-stone-300 bg-white text-stone-400"
-                  }`}
+            {setPage && (
+              <div className="mt-8 flex flex-wrap gap-3">
+                <button
+                  onClick={() => setPage("top")}
+                  className="rounded-[10px] border border-stone-300 bg-white px-4 py-2.5 text-sm text-stone-700 transition hover:bg-stone-50"
                 >
-                  {step.no}
-                </div>
-
-                <div className="min-w-0">
-                  <p
-                    className={`text-[11px] uppercase tracking-[0.18em] ${
-                      step.active ? "text-stone-500" : "text-stone-400"
-                    }`}
-                  >
-                    {step.en}
-                  </p>
-                  <p
-                    className={`mt-1 text-sm font-medium ${
-                      step.active ? "text-slate-900" : "text-stone-400"
-                    }`}
-                  >
-                    {step.ja}
-                  </p>
-                </div>
+                  ← TOPへ戻る
+                </button>
               </div>
-            ))}
+            )}
           </div>
         </div>
 
-        <div className="mt-8 grid gap-8 lg:grid-cols-[1.45fr_0.55fr]">
-          <main className="space-y-10">
-            <div className={revealClass}>
-              <InputSection
-                text={text}
-                onTextChange={setText}
-                onCheckState={() => {
-                  setResult(true);
-                  setShowResponse(false);
-                  setShowCaseReport(false);
-                  setShowDbSample(false);
-                }}
-                onClear={() => {
-                  setText("");
-                  setResult(false);
-                  setShowResponse(false);
-                  setShowCaseReport(false);
-                  setShowDbSample(false);
-                }}
-              />
-            </div>
-
-            {result && (
-              <div className={revealClass}>
-                <AnalysisSection
-                  delta={delta}
-                  eLevel={eLevel}
-                  text={text}
-                  judgment={judgment}
-                  onNext={() => setShowResponse(true)}
-                />
-              </div>
-            )}
-
-            {result && showResponse && (
-              <div className={revealClass}>
-                <ResponseSection
-                  actionSummary={actionSummary}
-                  acexItems={acexItems}
-                  flowItems={flowItems}
-                  ngItems={ngItems}
-                  onNext={() => setShowCaseReport(true)}
-                />
-              </div>
-            )}
-
-            {result && showCaseReport && (
-              <div className={revealClass}>
-                <CaseReportSection
-                  delta={delta}
-                  eLevel={eLevel}
-                  text={text}
-                  judgment={judgment}
-                  actionSummary={actionSummary}
-                  onNext={() => setShowDbSample(true)}
-                />
-              </div>
-            )}
-
-            {result && showDbSample && (
-              <div className={revealClass}>
-                <DBSampleSection
-                  delta={delta}
-                  eLevel={eLevel}
-                  text={text}
-                  judgment={judgment}
-                  actionSummary={actionSummary}
-                  innerRef={dbSampleRef}
-                />
-              </div>
-            )}
-          </main>
-
-          <SidePanel currentStep={currentStep} />
+        <div className="mt-6 overflow-hidden rounded-[16px] border border-stone-200 bg-[#fbfaf7] shadow-[0_4px_16px_rgba(15,23,42,0.03)]">
+          <div className="flex flex-wrap items-stretch">
+            <TabButton
+              stepNo="01"
+              en="Observation"
+              ja="観察入力"
+              isActive={selectedStep === 1}
+              isReached={true}
+              onClick={() => setSelectedStep(1)}
+            />
+            <TabButton
+              stepNo="02"
+              en="Analysis"
+              ja="確認結果"
+              isActive={selectedStep === 2}
+              isReached={currentStep >= 2}
+              onClick={() => setSelectedStep(2)}
+            />
+            <TabButton
+              stepNo="03"
+              en="Response"
+              ja="次の対応"
+              isActive={selectedStep === 3}
+              isReached={currentStep >= 3}
+              onClick={() => setSelectedStep(3)}
+            />
+            <TabButton
+              stepNo="04"
+              en="Case Report"
+              ja="ケース記録"
+              isActive={selectedStep === 4}
+              isReached={currentStep >= 4}
+              onClick={() => setSelectedStep(4)}
+            />
+            <TabButton
+              stepNo="05"
+              en="DB Sample"
+              ja="DB見本"
+              isActive={selectedStep === 5}
+              isReached={currentStep >= 5}
+              onClick={() => setSelectedStep(5)}
+            />
+          </div>
         </div>
+
+        <div className="mt-8">{renderStepContent()}</div>
       </div>
     </div>
   );

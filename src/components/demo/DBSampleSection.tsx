@@ -69,6 +69,16 @@ export default function DBSampleSection({
             </tr>
           </tbody>
         </table>
+
+        <div className="mt-8 rounded-[14px] border border-stone-200 bg-[#f8f5ef] p-5">
+          <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
+            Guide
+          </p>
+          <p className="mt-2 text-[13px] leading-7 text-stone-500">
+            最後に、ケースが保存された後の見え方を確認します。
+            実運用を想定したデータ構造のイメージを把握する段階です。
+          </p>
+        </div>
       </div>
     </section>
   );

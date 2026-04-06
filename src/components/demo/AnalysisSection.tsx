@@ -98,6 +98,16 @@ export default function AnalysisSection({
             次の対応を見る
           </button>
         </div>
+
+        <div className="mt-8 rounded-[14px] border border-stone-200 bg-[#f8f5ef] p-5">
+          <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
+            Guide
+          </p>
+          <p className="mt-2 text-[13px] leading-7 text-stone-500">
+            観察内容をもとに、Δ（関係緊張）とe（フェーズ）で状態を見立てます。
+            厳密な判定より、全体像の把握を優先します。
+          </p>
+        </div>
       </div>
     </section>
   );

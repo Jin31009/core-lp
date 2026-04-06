@@ -112,6 +112,16 @@ export default function CaseReportSection({
             DB見本に送る
           </button>
         </div>
+
+        <div className="mt-8 rounded-[14px] border border-stone-200 bg-[#f8f5ef] p-5">
+          <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
+            Guide
+          </p>
+          <p className="mt-2 text-[13px] leading-7 text-stone-500">
+            観察・見立て・対応を一つのケースとして整理します。
+            振り返りや共有のための記録としてまとめる段階です。
+          </p>
+        </div>
       </div>
     </section>
   );

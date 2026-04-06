@@ -72,6 +72,16 @@ export default function InputSection({
             入力をクリア
           </button>
         </div>
+
+        <div className="mt-8 rounded-[14px] border border-stone-200 bg-[#f8f5ef] p-5">
+          <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
+            Guide
+          </p>
+          <p className="mt-2 text-[13px] leading-7 text-stone-500">
+            最初に、現場で気になったことを短く記述します。結論を急がず、
+            発言や違和感をそのまま観察として置くことが重要です。
+          </p>
+        </div>
       </div>
     </section>
   );
