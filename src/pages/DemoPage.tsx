@@ -8,37 +8,18 @@ export default function DemoPage() {
     <div className="min-h-screen bg-neutral-100 px-6 py-8">
       <div className="mx-auto max-w-6xl grid grid-cols-3 gap-6">
         
-        {/* 左メイン */}
+        {/* 左メイン（←ここは後で元の内容に戻す） */}
         <div className="col-span-2 space-y-6">
-          
-          <section className="rounded-2xl border bg-white p-6 shadow-sm">
-            <h2 className="text-lg font-semibold mb-2">Step 1：観察入力</h2>
-            <button onClick={() => setCurrentStep(1)}>Step1</button>
-          </section>
 
+          {/* 仮プレース（元UIに戻すための足場） */}
           <section className="rounded-2xl border bg-white p-6 shadow-sm">
-            <h2 className="text-lg font-semibold mb-2">Step 2：確認結果</h2>
-            <button onClick={() => setCurrentStep(2)}>Step2</button>
-          </section>
-
-          <section className="rounded-2xl border bg-white p-6 shadow-sm">
-            <h2 className="text-lg font-semibold mb-2">Step 3：対応</h2>
-            <button onClick={() => setCurrentStep(3)}>Step3</button>
-          </section>
-
-          <section className="rounded-2xl border bg-white p-6 shadow-sm">
-            <h2 className="text-lg font-semibold mb-2">Step 4：ケース記録</h2>
-            <button onClick={() => setCurrentStep(4)}>Step4</button>
-          </section>
-
-          <section className="rounded-2xl border bg-white p-6 shadow-sm">
-            <h2 className="text-lg font-semibold mb-2">Step 5：DB</h2>
-            <button onClick={() => setCurrentStep(5)}>Step5</button>
+            <h2 className="text-lg font-semibold mb-2">Demo Content</h2>
+            <p>ここに元のDemoPageのメインコンテンツを戻していきます。</p>
           </section>
 
         </div>
 
-        {/* 右カラム（←ここが今回の目的） */}
+        {/* 右カラム（←ここが今回の本体） */}
         <SidePanel currentStep={currentStep} />
 
       </div>
