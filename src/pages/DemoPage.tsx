@@ -1,474 +1,437 @@
-import React from "react";
-import type { Page } from "../types";
+import { useState } from "react";
 
-type Tone = "emerald" | "amber" | "orange" | "rose";
-type PresetId = "patient" | "recruit" | "staff";
-
-type DemoResult = {
-  delta: string;
-  level: 1 | 2 | 3 | 4;
-  insight: string;
-  action: string;
-  asset: string;
-  category: string;
-  before: string;
-  after: string;
+type DemoPageProps = {
+  setPage: (page: string) => void;
 };
 
-type Preset = {
-  id: PresetId;
+type AcexItem = {
+  key: string;
   label: string;
-  prompt: string;
+  title: string;
+  body: string;
 };
 
-const PRESETS: Preset[] = [
-  {
-    id: "patient",
-    label: "患者対応",
-    prompt: "患者から『説明が足りず不安だった』という声が出ている。",
-  },
-  {
-    id: "recruit",
-    label: "採用・定着",
-    prompt: "採用時には魅力を感じて入職したが、現場とのギャップで早期離職が起きている。",
-  },
-  {
-    id: "staff",
-    label: "職員間連携",
-    prompt: "部署間で認識がずれ、患者への案内内容にばらつきが出ている。",
-  },
-];
+export default function DemoPage({ setPage }: DemoPageProps) {
+  const [text, setText] = useState("");
+  const [result, setResult] = useState(false);
+  const [showResponse, setShowResponse] = useState(false);
 
-export default function DemoPage({
-  onNavigate,
-  onBackPrev,
-}: {
-  onNavigate: (page: Page) => void;
-  onBackPrev: () => void;
-}) {
-  const [selectedPreset, setSelectedPreset] = React.useState<PresetId>(PRESETS[0].id);
-  const [input, setInput] = React.useState(PRESETS[0].prompt);
-  const [step, setStep] = React.useState(1);
-  const [result, setResult] = React.useState<DemoResult | null>(null);
+  const isAnxious = text.includes("不安");
 
-  const currentPreset = PRESETS.find((p) => p.id === selectedPreset) ?? PRESETS[0];
+  const judgment = isAnxious
+    ? "関係の緊張が高まりつつある可能性"
+    : "大きな緊張はまだ表面化していない状態";
 
-  function handlePresetChange(id: PresetId) {
-    const preset = PRESETS.find((p) => p.id === id);
-    if (!preset) return;
-    setSelectedPreset(id);
-    setInput(preset.prompt);
-    setResult(null);
-    setStep(1);
-  }
+  const actionSummary = isAnxious
+    ? "まず不安の言葉を受け止め、説明不足として感じている点を確認する"
+    : "現状の関わりを維持しつつ、追加の違和感が出ないかを見守る";
 
-  function analyzeCase(text: string, id: PresetId): DemoResult {
-    const normalized = text.toLowerCase();
+  const delta = isAnxious ? "3" : "1";
+  const eLevel = isAnxious ? "e2（対処の段階）" : "e1（予防の段階）";
 
-    if (
-      id === "recruit" ||
-      normalized.includes("離職") ||
-      normalized.includes("採用") ||
-      normalized.includes("入職")
-    ) {
-      return {
-        delta: "Δ3（不信）",
-        level: 3,
-        insight:
-          "期待形成と現場実態のあいだにMeaning Gapがあり、入職前後で関係圧が増幅している。",
-        action: "入職前に期待値と役割の見通しを揃える対話導線を設計する。",
-        asset: "C-01｜流れの接続",
-        category: "求職者との関係設計",
-        before: "魅力訴求が中心で、入職後の実態とのズレが残る。",
-        after: "見通しと役割が事前に共有され、定着に向けた接続が生まれる。",
-      };
-    }
+  const acexItems: AcexItem[] = isAnxious
+    ? [
+        {
+          key: "A",
+          label: "A",
+          title: "受け止め",
+          body: "不安の言葉をそのまま受け止める",
+        },
+        {
+          key: "C",
+          label: "C",
+          title: "確認・説明",
+          body: "何が足りないと感じたのかを確認する",
+        },
+        {
+          key: "E",
+          label: "E",
+          title: "見通し",
+          body: "これから何をどう説明するかを伝える",
+        },
+        {
+          key: "X",
+          label: "X",
+          title: "補助",
+          body: "説明順の整理や確認メモを使う",
+        },
+      ]
+    : [
+        {
+          key: "A",
+          label: "A",
+          title: "受け止め",
+          body: "現在の反応を維持しながら丁寧に観察する",
+        },
+        {
+          key: "C",
+          label: "C",
+          title: "確認・説明",
+          body: "必要があれば追加で確認する",
+        },
+        {
+          key: "E",
+          label: "E",
+          title: "見通し",
+          body: "今後の流れを簡潔に共有する",
+        },
+        {
+          key: "X",
+          label: "X",
+          title: "補助",
+          body: "特別な追加支援はせず通常対応を維持する",
+        },
+      ];
 
-    if (
-      id === "staff" ||
-      normalized.includes("部署") ||
-      normalized.includes("職員") ||
-      normalized.includes("連携")
-    ) {
-      return {
-        delta: "Δ2（不満）",
-        level: 2,
-        insight:
-          "部署間で認識と説明プロセスがずれ、患者接点で一貫性が失われている。",
-        action: "案内の基準文と役割分担を明文化し、接点での説明順序を整える。",
-        asset: "A-02｜認識の接続",
-        category: "職員間の関係調整",
-        before: "各部署が個別判断で伝え、患者体験にばらつきが出る。",
-        after: "説明基準が共有され、関係の一貫性が回復する。",
-      };
-    }
+  const flowItems = isAnxious
+    ? [
+        "まず不安の言葉を受け止める",
+        "次に不足感の中身を確認する",
+        "そのうえで説明の見通しを伝える",
+      ]
+    : [
+        "現在の反応を維持する",
+        "必要時のみ追加確認する",
+        "今後の流れを簡潔に共有する",
+      ];
 
-    return {
-      delta: "Δ2（不満）",
-      level: 2,
-      insight:
-        "説明不足により患者側の見通しが立たず、認識のズレが関係圧として蓄積している。",
-      action: "見通しを補う一言と、次に起きる流れの接続を追加する。",
-      asset: "E-01｜見通し提示",
-      category: "患者との関係調整",
-      before: "説明は行われているが、相手の不安や次の見通しが回収されていない。",
-      after: "次に何が起きるかが明確になり、不安が緩和される。",
-    };
-  }
-
-  function goToReview() {
-    if (!input.trim()) return;
-    setResult(null);
-    setStep(2);
-  }
-
-  function analyze() {
-    if (!input.trim()) {
-      setResult(null);
-      setStep(1);
-      return;
-    }
-    setResult(analyzeCase(input, selectedPreset));
-    setStep(3);
-  }
-
-  function resetDemo() {
-    setSelectedPreset(PRESETS[0].id);
-    setInput(PRESETS[0].prompt);
-    setResult(null);
-    setStep(1);
-  }
-
-  const tone: Tone =
-    result?.level === 1
-      ? "emerald"
-      : result?.level === 3
-      ? "orange"
-      : result?.level === 4
-      ? "rose"
-      : "amber";
+  const ngItems = isAnxious
+    ? [
+        "不安を軽く扱う",
+        "確認せずに説明を進める",
+        "急いで結論だけを返す",
+      ]
+    : [
+        "変化がないのに過剰対応する",
+        "説明を省きすぎる",
+        "観察を止めてしまう",
+      ];
 
   return (
-    <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
-      <div className="mb-6 flex flex-col gap-2 sm:mb-8 sm:flex-row">
-        <button
-          onClick={onBackPrev}
-          className="w-full border border-black/15 px-4 py-3 text-sm text-slate-600 transition hover:bg-white sm:w-auto sm:py-2"
-        >
-          ← 前のページへ戻る
-        </button>
-        <button
-          onClick={() => onNavigate("top")}
-          className="w-full border border-black/15 px-4 py-3 text-sm text-slate-600 transition hover:bg-white sm:w-auto sm:py-2"
-        >
-          ← TOPへ戻る
-        </button>
-      </div>
-
-      <div className="mb-12 border-t border-black/10 pt-8">
-        <p className="text-xs tracking-[0.3em] text-slate-400">DEMO</p>
-        <h2 className="mt-2 font-serif text-2xl leading-tight sm:text-3xl md:text-5xl">
-          RA-SSを、まず触れて確認する。
-        </h2>
-      </div>
-
-      <div className="mb-8 grid gap-4 md:grid-cols-3">
-        <StepCard
-          number="01"
-          title="ケースを選ぶ"
-          desc="患者対応・採用・職員連携から近いケースを選ぶ"
-          active={step >= 1}
-        />
-        <StepCard
-          number="02"
-          title="構造を確認"
-          desc="認識のズレと関係圧の方向を見る"
-          active={step >= 2}
-        />
-        <StepCard
-          number="03"
-          title="次の一手を見る"
-          desc="Pre-Assetと改善アクションを確認する"
-          active={step >= 3}
-        />
-      </div>
-
-      <div className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr]">
-        <div className="space-y-6 text-slate-600">
-          <p className="text-lg leading-8">
-            3分で試せます。違和感を入力すると「関係圧」「構造」「次の一手」が表示されます。
-            自組織で使えるかを判断するための最短導線です。
+    <div className="bg-white text-slate-900">
+      <div className="mx-auto max-w-6xl px-6 py-10">
+        <div className="rounded-3xl border border-slate-200 bg-gradient-to-b from-white to-slate-50 px-6 py-8 shadow-sm">
+          <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+            Demo
           </p>
 
-          <Panel title="Case Type">
-            <div className="mt-4 flex flex-wrap gap-3">
-              {PRESETS.map((p) => {
-                const active = selectedPreset === p.id;
-                return (
-                  <button
-                    key={p.id}
-                    type="button"
-                    onClick={() => handlePresetChange(p.id)}
-                    className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${
-                      active
-                        ? "border-slate-950 bg-slate-950 text-white"
-                        : "border-slate-300 bg-white text-slate-700 hover:border-slate-500"
-                    }`}
-                  >
-                    {p.label}
-                  </button>
-                );
-              })}
-            </div>
-          </Panel>
+          <h1 className="mt-3 text-3xl font-semibold leading-tight text-slate-900 sm:text-4xl">
+            観察内容から、関係の状態と次の対応を確認する。
+          </h1>
 
-          <Panel title="Step 1" subtitle="違和感・ケースを入力" badge={currentPreset.label}>
-            <textarea
-              value={input}
-              onChange={(e) => {
-                setInput(e.target.value);
-                setResult(null);
-                setStep(1);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
-                  e.preventDefault();
-                  goToReview();
-                }
-              }}
-              placeholder="例：患者からの不満、採用時の違和感などを入力（⌘/Ctrl + Enterで次へ）"
-              className="mt-4 w-full rounded-2xl border border-slate-300 p-4 text-sm leading-7 outline-none transition focus:border-slate-500"
-              rows={5}
-            />
+          <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-600">
+            この画面では、現場で捉えた違和感や患者の反応を入力し、
+            関係緊張（Δ）・フェーズ（e）・状態の見立て・次の対応までを、
+            最小構成で確認できます。
+          </p>
 
-            <div className="mt-4 flex flex-col gap-3">
-              <LinkButton onClick={goToReview}>構造を確認する</LinkButton>
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <LinkButton variant="secondary" onClick={resetDemo}>
-                  リセット
-                </LinkButton>
-                <LinkButton variant="secondary" onClick={() => onNavigate("poc")}>
-                  PoCへ進む
-                </LinkButton>
-              </div>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <button
+              onClick={() => setPage("top")}
+              className="rounded border border-slate-300 bg-white px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+            >
+              ← TOPへ戻る
+            </button>
+
+            <div className="rounded border border-slate-200 bg-white px-4 py-2 text-sm text-slate-500">
+              面談用デモ / 試作版
             </div>
-          </Panel>
+          </div>
         </div>
 
-        <div className="space-y-5">
-          <Panel
-            title="Step 2"
-            subtitle="構造レビュー"
-            badge={result ? result.delta : "分析待機中"}
-            badgeTone={tone}
-          >
-            <div className="mt-5 grid gap-3 sm:grid-cols-4">
-              <DeltaVisual label="Δ1" title="違和感" active={result?.level === 1} tone="emerald" />
-              <DeltaVisual label="Δ2" title="不満" active={result?.level === 2} tone="amber" />
-              <DeltaVisual label="Δ3" title="不信" active={result?.level === 3} tone="orange" />
-              <DeltaVisual label="Δ4" title="断絶" active={result?.level === 4} tone="rose" />
-            </div>
+        <div className="mt-8 grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
+          <div>
+            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+              <div className="border-b border-slate-100 pb-4">
+                <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                  Input
+                </p>
 
-            <div className="mt-5 rounded-2xl bg-slate-50 p-4 text-sm leading-7 text-slate-600">
-              {step < 2
-                ? "まずケースを入力し、構造レビューへ進んでください。"
-                : result
-                ? result.insight
-                : "このケースでは、認識のズレがどこで生じているかを確認します。次のボタンで分析を実行してください。"}
-            </div>
+                <h2 className="mt-2 text-xl font-semibold text-slate-900">
+                  観察内容を入力
+                </h2>
 
-            <div className="mt-4 flex flex-col sm:items-end">
-              <LinkButton onClick={analyze}>次の一手を見る</LinkButton>
-            </div>
-          </Panel>
-
-          <Panel
-            title="Step 3"
-            subtitle="次の一手 / Pre-Asset"
-            badge={result ? result.category : "未分析"}
-          >
-            {!result ? (
-              <div className="mt-5 rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-5 text-sm leading-7 text-slate-400">
-                分析を実行すると、Pre-Assetと改善アクション、Before / After が表示されます。
+                <p className="mt-2 text-sm leading-7 text-slate-600">
+                  患者の発言、表情、説明場面での違和感、やり取りのズレなどを、
+                  短い文章で入力してください。
+                </p>
               </div>
-            ) : (
-              <div className="mt-5 space-y-4">
-                <PanelLite label="Pre-Asset" value={result.asset} />
-                <PanelLite label="次の一手" value={result.action} />
-                <ResultHighlight result={result} />
-                <div className="grid gap-4 md:grid-cols-2">
-                  <BeforeAfterCard label="Before" text={result.before} />
-                  <BeforeAfterCard label="After" text={result.after} />
+
+              <div className="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <p className="text-xs uppercase tracking-[0.14em] text-slate-500">
+                  Observation
+                </p>
+                <p className="mt-2 text-sm leading-7 text-slate-600">
+                  ここでは、まず「何が気になったか」を観察記述として置きます。
+                  まだ結論を出す段階ではなく、現場で感じた違和感を
+                  言葉にして残す入口です。
+                </p>
+              </div>
+
+              <textarea
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                placeholder="例：患者が説明が足りない気がすると不安を訴えている"
+                rows={7}
+                className="mt-5 w-full rounded-2xl border border-slate-300 bg-white p-4 text-sm leading-7 text-slate-800 placeholder:text-slate-400 focus:border-slate-400 focus:outline-none"
+              />
+
+              <div className="mt-4 flex flex-wrap items-center gap-3">
+                <button
+                  onClick={() => {
+                    setResult(true);
+                    setShowResponse(false);
+                  }}
+                  className="rounded bg-black px-5 py-3 text-sm text-white hover:bg-slate-800"
+                >
+                  状態を確認する
+                </button>
+
+                <button
+                  onClick={() => {
+                    setText("");
+                    setResult(false);
+                    setShowResponse(false);
+                  }}
+                  className="rounded border border-slate-300 px-5 py-3 text-sm text-slate-700 hover:bg-slate-50"
+                >
+                  入力をクリア
+                </button>
+              </div>
+            </div>
+
+            {result && (
+              <div className="mt-8 rounded-3xl border border-slate-200 bg-slate-50 p-6">
+                <div className="border-b border-slate-200 pb-4">
+                  <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                    Analysis
+                  </p>
+
+                  <h2 className="mt-2 text-xl font-semibold text-slate-900">
+                    確認結果
+                  </h2>
+
+                  <p className="mt-2 text-sm leading-7 text-slate-600">
+                    入力された観察内容をもとに、関係の状態を簡易に見立てています。
+                  </p>
+                </div>
+
+                <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                  <div className="rounded-2xl border border-slate-200 bg-white p-4">
+                    <p className="text-xs uppercase tracking-[0.14em] text-slate-500">
+                      Delta
+                    </p>
+                    <p className="mt-2 text-sm font-medium text-slate-700">
+                      Δ（関係緊張）
+                    </p>
+                    <p className="mt-1 text-base font-semibold text-slate-900">
+                      {delta}
+                    </p>
+                  </div>
+
+                  <div className="rounded-2xl border border-slate-200 bg-white p-4">
+                    <p className="text-xs uppercase tracking-[0.14em] text-slate-500">
+                      Phase
+                    </p>
+                    <p className="mt-2 text-sm font-medium text-slate-700">
+                      e（フェーズ）
+                    </p>
+                    <p className="mt-1 text-base font-semibold text-slate-900">
+                      {eLevel}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-4 rounded-2xl border border-slate-200 bg-white p-4">
+                  <p className="text-xs uppercase tracking-[0.14em] text-slate-500">
+                    Observation Summary
+                  </p>
+                  <p className="mt-2 text-sm font-medium text-slate-700">
+                    観察内容
+                  </p>
+                  <p className="mt-1 text-sm leading-7 text-slate-600">
+                    {text ? text : "まだ入力がありません"}
+                  </p>
+                </div>
+
+                <div className="mt-4 rounded-2xl border border-slate-200 bg-white p-4">
+                  <p className="text-xs uppercase tracking-[0.14em] text-slate-500">
+                    Interpretation
+                  </p>
+                  <p className="mt-2 text-sm font-medium text-slate-700">
+                    状態の見立て
+                  </p>
+                  <p className="mt-1 text-sm leading-7 text-slate-600">
+                    {judgment}
+                  </p>
+                </div>
+
+                <div className="mt-6 border-t border-slate-200 pt-5">
+                  <button
+                    onClick={() => setShowResponse(true)}
+                    className="rounded bg-slate-900 px-5 py-3 text-sm text-white hover:bg-slate-800"
+                  >
+                    次の対応を見る
+                  </button>
+
+                  <p className="mt-3 text-sm leading-7 text-slate-500">
+                    次のセクションで、ACE＋X・行為の順番・避けたい行動を表示します。
+                  </p>
                 </div>
               </div>
             )}
-          </Panel>
-        </div>
-      </div>
-    </section>
-  );
-}
 
-function LinkButton({
-  children,
-  onClick,
-  variant = "primary",
-}: {
-  children: React.ReactNode;
-  onClick?: () => void;
-  variant?: "primary" | "secondary";
-}) {
-  const base = "w-full px-6 py-3 text-sm transition sm:w-auto";
-  const style =
-    variant === "primary"
-      ? "bg-black text-white shadow-sm hover:scale-[1.01] hover:shadow-md"
-      : "border border-black bg-transparent text-black hover:bg-slate-50";
+            {result && showResponse && (
+              <div className="mt-16 rounded-3xl border-2 border-slate-900 bg-white shadow-md">
+                <div className="rounded-t-3xl bg-slate-900 px-6 py-4">
+                  <p className="text-xs uppercase tracking-[0.18em] text-slate-300">
+                    Next Response
+                  </p>
+                  <h2 className="mt-2 text-2xl font-semibold text-white">
+                    次の対応
+                  </h2>
+                  <p className="mt-2 text-sm leading-7 text-slate-300">
+                    ここから先は、対応の中身を具体的に確認するセクションです。
+                  </p>
+                </div>
 
-  return (
-    <button type="button" onClick={onClick} className={`${base} ${style}`}>
-      {children}
-    </button>
-  );
-}
+                <div className="p-6">
+                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                    <p className="text-xs uppercase tracking-[0.14em] text-slate-500">
+                      Response Summary
+                    </p>
+                    <p className="mt-2 text-sm font-semibold text-slate-900">
+                      次の対応の要約
+                    </p>
+                    <p className="mt-1 text-sm leading-7 text-slate-600">
+                      {actionSummary}
+                    </p>
+                  </div>
 
-function Panel({
-  title,
-  subtitle,
-  badge,
-  badgeTone,
-  children,
-}: {
-  title: string;
-  subtitle?: string;
-  badge?: string;
-  badgeTone?: Tone;
-  children: React.ReactNode;
-}) {
-  const tones: Record<Tone, string> = {
-    emerald: "border-emerald-200 bg-emerald-50 text-emerald-700",
-    amber: "border-amber-200 bg-amber-50 text-amber-700",
-    orange: "border-orange-200 bg-orange-50 text-orange-700",
-    rose: "border-rose-200 bg-rose-50 text-rose-700",
-  };
+                  <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                    {acexItems.map((item) => (
+                      <div
+                        key={item.key}
+                        className="rounded-xl border border-slate-200 bg-slate-50 p-3"
+                      >
+                        <p className="text-xs uppercase tracking-[0.12em] text-slate-500">
+                          {item.label}
+                        </p>
+                        <p className="mt-1 text-sm font-medium text-slate-700">
+                          {item.title}
+                        </p>
+                        <p className="mt-1 text-sm leading-7 text-slate-600">
+                          {item.body}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
 
-  return (
-    <div className="border border-black/5 bg-white p-5">
-      <div className="flex items-center justify-between gap-4">
-        <div>
-          <div className="text-xs tracking-[0.25em] text-slate-400">{title}</div>
-          {subtitle ? <div className="mt-1 font-medium">{subtitle}</div> : null}
-        </div>
-        {badge ? (
-          <div
-            className={`rounded-full border px-3 py-1 text-xs ${
-              badgeTone ? tones[badgeTone] : "border-black/10 bg-slate-100 text-slate-600"
-            }`}
-          >
-            {badge}
+                  <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4">
+                    <p className="text-xs uppercase tracking-[0.12em] text-slate-500">
+                      Flow
+                    </p>
+                    <p className="mt-2 text-sm font-medium text-slate-700">
+                      行為の順番
+                    </p>
+                    <ol className="mt-2 space-y-2 text-sm leading-7 text-slate-600">
+                      {flowItems.map((item, index) => (
+                        <li key={index}>
+                          {index + 1}. {item}
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+
+                  <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4">
+                    <p className="text-xs uppercase tracking-[0.12em] text-slate-500">
+                      NG
+                    </p>
+                    <p className="mt-2 text-sm font-medium text-slate-700">
+                      避けたい行動
+                    </p>
+                    <ul className="mt-2 space-y-2 text-sm leading-7 text-slate-600">
+                      {ngItems.map((item, index) => (
+                        <li key={index}>・{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="mt-6 border-t border-slate-200 pt-5">
+                    <button
+                      onClick={() => setShowResponse(false)}
+                      className="rounded border border-slate-300 px-5 py-3 text-sm text-slate-700 hover:bg-slate-50"
+                    >
+                      次の対応を閉じる
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
-        ) : null}
+
+          <div className="space-y-4">
+            <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+              <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                Structure
+              </p>
+              <h3 className="mt-2 text-base font-semibold text-slate-900">
+                この画面で行っていること
+              </h3>
+              <p className="mt-2 text-sm leading-7 text-slate-700">
+                観察内容を入力し、まず関係の状態を確認し、
+                必要に応じて次の対応まで確認できる構成にしています。
+              </p>
+            </div>
+
+            <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+              <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                Framework
+              </p>
+              <h3 className="mt-2 text-base font-semibold text-slate-900">
+                この段階で見ている要素
+              </h3>
+              <ul className="mt-3 space-y-2 text-sm leading-7 text-slate-700">
+                <li>・Δ：関係緊張の大きさ</li>
+                <li>・e：関係遷移の段階</li>
+                <li>・Interpretation：状態の見立て</li>
+                <li>・Next Response：次の対応</li>
+                <li>・ACE＋X：対応の中身</li>
+                <li>・Flow / NG：順番と避けたい行動</li>
+              </ul>
+            </div>
+
+            <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+              <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                Reading
+              </p>
+              <h3 className="mt-2 text-base font-semibold text-slate-900">
+                見る順番
+              </h3>
+              <ul className="mt-3 space-y-2 text-sm leading-7 text-slate-700">
+                <li>・まず観察内容を入力する</li>
+                <li>・つぎに状態を確認する</li>
+                <li>・必要に応じて次の対応を見る</li>
+                <li>・対応の中身と順番を確認する</li>
+              </ul>
+            </div>
+
+            <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+              <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                Note
+              </p>
+              <h3 className="mt-2 text-base font-semibold text-slate-900">
+                このデモの位置づけ
+              </h3>
+              <p className="mt-2 text-sm leading-7 text-slate-700">
+                ここで示しているのは完成した自動判定ではなく、
+                観察内容を起点に、関係の状態と次の対応を
+                考えやすくするための試作段階です。
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
-      {children}
-    </div>
-  );
-}
-
-function PanelLite({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="border border-black/10 bg-slate-50 p-4">
-      <div className="text-xs tracking-[0.2em] text-slate-500">{label}</div>
-      <div className="mt-2 text-base leading-7 text-slate-900">{value}</div>
-    </div>
-  );
-}
-
-function ResultHighlight({ result }: { result: DemoResult }) {
-  return (
-    <div className="grid gap-4 md:grid-cols-3">
-      <MiniStat title="関係圧" value={result.delta} note="現在の緊張レベル" />
-      <MiniStat title="カテゴリ" value={result.category} note="どの関係領域の問題か" />
-      <MiniStat title="推奨部材" value={result.asset} note="最初に使うPre-Asset" />
-    </div>
-  );
-}
-
-function StepCard({
-  number,
-  title,
-  desc,
-  active,
-}: {
-  number: string;
-  title: string;
-  desc: string;
-  active: boolean;
-}) {
-  return (
-    <div
-      className={`border p-5 ${
-        active ? "border-black bg-black text-white" : "border-black/10 bg-white text-slate-700"
-      }`}
-    >
-      <div className={`text-xs tracking-[0.22em] ${active ? "text-slate-300" : "text-slate-500"}`}>
-        Step {number}
-      </div>
-      <div className="mt-2 text-lg font-medium">{title}</div>
-      <div className={`mt-2 text-sm leading-6 ${active ? "text-slate-200" : "text-slate-600"}`}>
-        {desc}
-      </div>
-    </div>
-  );
-}
-
-function DeltaVisual({
-  label,
-  title,
-  active,
-  tone,
-}: {
-  label: string;
-  title: string;
-  active: boolean;
-  tone: Tone;
-}) {
-  const tones: Record<Tone, string> = {
-    emerald: active ? "border-emerald-500 bg-emerald-50 text-emerald-700" : "border-black/10 bg-white text-slate-500",
-    amber: active ? "border-amber-500 bg-amber-50 text-amber-700" : "border-black/10 bg-white text-slate-500",
-    orange: active ? "border-orange-500 bg-orange-50 text-orange-700" : "border-black/10 bg-white text-slate-500",
-    rose: active ? "border-rose-500 bg-rose-50 text-rose-700" : "border-black/10 bg-white text-slate-500",
-  };
-
-  return (
-    <div className={`border p-3 text-center transition ${active ? "scale-[1.03] shadow-sm" : ""} ${tones[tone]}`}>
-      <div className="text-xs tracking-[0.18em]">{label}</div>
-      <div className="mt-1 text-sm">{title}</div>
-    </div>
-  );
-}
-
-function BeforeAfterCard({ label, text }: { label: string; text: string }) {
-  return (
-    <div className="border border-black/10 bg-slate-50 p-4">
-      <div className="text-xs tracking-[0.2em] text-slate-500">{label}</div>
-      <div className="mt-2 text-sm leading-7 text-slate-700">{text}</div>
-    </div>
-  );
-}
-
-function MiniStat({
-  title,
-  value,
-  note,
-}: {
-  title: string;
-  value: string;
-  note: string;
-}) {
-  return (
-    <div className="border border-black/10 bg-white p-4">
-      <div className="text-xs tracking-widest text-slate-400">{title}</div>
-      <div className="mt-1 text-xl font-medium">{value}</div>
-      <div className="mt-1 text-xs text-slate-500">{note}</div>
     </div>
   );
 }
