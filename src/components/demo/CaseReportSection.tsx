@@ -109,7 +109,7 @@ export default function CaseReportSection({
 
         <div className="mt-8 border-t border-stone-200 pt-6">
           <button type="button" onClick={onNext} className={primaryButton}>
-            DB見本に送る
+            Step5へ進む
           </button>
         </div>
 

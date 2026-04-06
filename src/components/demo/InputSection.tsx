@@ -65,7 +65,7 @@ export default function InputSection({
 
         <div className="mt-8 flex flex-wrap items-center gap-3">
           <button onClick={onCheckState} className={primaryButton}>
-            状態を確認する
+            Step2へ進む
           </button>
 
           <button onClick={onClear} className={secondaryButton}>

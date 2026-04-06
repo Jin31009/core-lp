@@ -95,7 +95,7 @@ export default function AnalysisSection({
 
         <div className="mt-8 border-t border-stone-200 pt-6">
           <button onClick={onNext} className={primaryButton}>
-            次の対応を見る
+            Step3へ進む
           </button>
         </div>
 

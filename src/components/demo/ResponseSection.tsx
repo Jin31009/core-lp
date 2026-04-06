@@ -110,7 +110,7 @@ export default function ResponseSection({
 
         <div className="mt-8 border-t border-stone-200 pt-6">
           <button onClick={onNext} className={primaryButton}>
-            ケース記録を見る
+            Step4へ進む
           </button>
         </div>
 
