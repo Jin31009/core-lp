@@ -43,7 +43,7 @@ function TabButton({
           ? "bg-[#f2eee6]"
           : isReached
             ? "bg-[#fbfaf7] hover:bg-[#f6f2eb]"
-            : "bg-white cursor-not-allowed opacity-60"
+            : "cursor-not-allowed bg-white opacity-60"
       }`}
     >
       <div
@@ -61,14 +61,22 @@ function TabButton({
       <div className="min-w-0">
         <p
           className={`text-[11px] uppercase tracking-[0.18em] ${
-            isActive ? "text-stone-500" : isReached ? "text-stone-500" : "text-stone-400"
+            isActive
+              ? "text-stone-500"
+              : isReached
+                ? "text-stone-500"
+                : "text-stone-400"
           }`}
         >
           {en}
         </p>
         <p
           className={`mt-1 text-sm font-medium ${
-            isActive ? "text-slate-900" : isReached ? "text-slate-800" : "text-stone-400"
+            isActive
+              ? "text-slate-900"
+              : isReached
+                ? "text-slate-800"
+                : "text-stone-400"
           }`}
         >
           {ja}
@@ -79,13 +87,15 @@ function TabButton({
 }
 
 export default function DemoPage({ setPage }: DemoPageProps) {
-  const [text, setText] = useState("");
+  // Step1 raw inputs
+  const [observationRaw, setObservationRaw] = useState("");
   const [emotion, setEmotion] = useState("");
   const [urgency, setUrgency] = useState("");
   const [contextEdited, setContextEdited] = useState("");
   const [contextRequested, setContextRequested] = useState(false);
 
-  const [result, setResult] = useState(false);
+  // Step visibility
+  const [showAnalysis, setShowAnalysis] = useState(false);
   const [showResponse, setShowResponse] = useState(false);
   const [showCaseReport, setShowCaseReport] = useState(false);
   const [showDbSample, setShowDbSample] = useState(false);
@@ -102,14 +112,17 @@ export default function DemoPage({ setPage }: DemoPageProps) {
     }
   }, [showDbSample]);
 
-  const contextDraft = (() => {
-    if (!text.trim()) return "";
+  // ---------------------------------
+  // Step1: Primary Context Draft
+  // ---------------------------------
+  const primaryContextDraft = (() => {
+    if (!observationRaw.trim()) return "";
 
-    const scene = /説明|流れ|順番|手順/.test(text)
+    const scene = /説明|流れ|順番|手順/.test(observationRaw)
       ? "説明場面"
-      : /検査|処置|採血/.test(text)
+      : /検査|処置|採血/.test(observationRaw)
         ? "検査・処置場面"
-        : /待つ|待機|呼ばれない/.test(text)
+        : /待つ|待機|呼ばれない/.test(observationRaw)
           ? "待機場面"
           : "接点場面";
 
@@ -140,37 +153,53 @@ export default function DemoPage({ setPage }: DemoPageProps) {
     return `${scene}において、${emotionPart}。現在は${urgencyPart}として整理できる。`;
   })();
 
-  const contextText = contextEdited.trim() || contextDraft;
-  const isAnxious = text.includes("不安") || emotion === "不安";
+  // Step1: Final Context
+  const finalContext = contextEdited.trim() || primaryContextDraft;
 
-  const judgment =
+  // ---------------------------------
+  // Step2: Relational Reading (draft)
+  // ---------------------------------
+  const hasAnxiety =
+    observationRaw.includes("不安") || emotion === "不安";
+
+  const deltaValue: 1 | 3 | 4 =
+    urgency === "緊急対応" ? 4 : urgency === "対応必要" || hasAnxiety ? 3 : 1;
+
+  const phaseCode: "e1" | "e2" | "e3" =
+    deltaValue === 4 ? "e3" : deltaValue === 3 ? "e2" : "e1";
+
+  const phaseLabel =
+    phaseCode === "e3"
+      ? "e3（臨界の段階）"
+      : phaseCode === "e2"
+        ? "e2（対処の段階）"
+        : "e1（予防の段階）";
+
+  const insightDraft =
     urgency === "緊急対応"
       ? "関係の緊張が強く、慎重な介入が必要な状態"
       : urgency === "対応必要" && emotion === "怒り"
         ? "関係の緊張が高まりつつあり、受理と説明整理が必要な状態"
-        : isAnxious
+        : hasAnxiety
           ? "関係の緊張が高まりつつある可能性"
           : "大きな緊張はまだ表面化していない状態";
 
-  const delta =
-    urgency === "緊急対応" ? "4" : urgency === "対応必要" || isAnxious ? "3" : "1";
+  // 内部で持つTrigger
+  const triggerState: "pre" | "sign" | "risk" =
+    deltaValue === 4 ? "risk" : deltaValue === 3 ? "sign" : "pre";
 
-  const eLevel =
-    delta === "4"
-      ? "e3（臨界の段階）"
-      : delta === "3"
-        ? "e2（対処の段階）"
-        : "e1（予防の段階）";
-
-  const actionSummary =
-    delta === "4"
+  // ---------------------------------
+  // Step3: Response Draft
+  // ---------------------------------
+  const responseSummary =
+    deltaValue === 4
       ? "まず安全を確保し、急がず受け止めと確認を行いながら説明を組み直す"
-      : delta === "3"
+      : deltaValue === 3
         ? "まず不安や怒りの言葉を受け止め、何が足りないと感じているかを確認する"
         : "現状の関わりを維持しつつ、追加の違和感が出ないかを見守る";
 
   const acexItems: AcexItem[] =
-    delta === "4"
+    deltaValue === 4
       ? [
           {
             key: "A",
@@ -197,7 +226,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
             body: "必要なら役割調整や上位者介入を行う",
           },
         ]
-      : delta === "3"
+      : deltaValue === 3
         ? [
             {
               key: "A",
@@ -252,13 +281,13 @@ export default function DemoPage({ setPage }: DemoPageProps) {
           ];
 
   const flowItems =
-    delta === "4"
+    deltaValue === 4
       ? [
           "まず安全に関わる不安や怒りを受け止める",
           "次に何が危険・不足と感じられているかを確認する",
           "そのうえで対応の順序と見通しを簡潔に伝える",
         ]
-      : delta === "3"
+      : deltaValue === 3
         ? [
             "まず不安や怒りの言葉を受け止める",
             "次に不足感の中身を確認する",
@@ -271,13 +300,13 @@ export default function DemoPage({ setPage }: DemoPageProps) {
           ];
 
   const ngItems =
-    delta === "4"
+    deltaValue === 4
       ? [
           "不安や怒りを否定する",
           "確認せずに説明だけを進める",
           "急いで結論だけを返す",
         ]
-      : delta === "3"
+      : deltaValue === 3
         ? [
             "不安を軽く扱う",
             "確認せずに説明を進める",
@@ -289,13 +318,16 @@ export default function DemoPage({ setPage }: DemoPageProps) {
             "観察を止めてしまう",
           ];
 
+  // ---------------------------------
+  // Step navigation
+  // ---------------------------------
   const currentStep = showDbSample
     ? 5
     : showCaseReport
       ? 4
       : showResponse
         ? 3
-        : result
+        : showAnalysis
           ? 2
           : 1;
 
@@ -304,7 +336,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
   }, [currentStep]);
 
   const statusLevel: "safe" | "warning" | "danger" =
-    delta === "4" ? "danger" : delta === "3" ? "warning" : "safe";
+    deltaValue === 4 ? "danger" : deltaValue === 3 ? "warning" : "safe";
 
   const statusConfig = {
     safe: {
@@ -337,9 +369,9 @@ export default function DemoPage({ setPage }: DemoPageProps) {
       case 1:
         return (
           <InputSection
-            text={text}
+            text={observationRaw}
             onTextChange={(value) => {
-              setText(value);
+              setObservationRaw(value);
               setContextRequested(false);
             }}
             emotion={emotion}
@@ -352,24 +384,31 @@ export default function DemoPage({ setPage }: DemoPageProps) {
               setUrgency(value);
               setContextRequested(false);
             }}
-            contextDraft={contextDraft}
+            contextDraft={primaryContextDraft}
             contextEdited={contextEdited}
             onContextEditedChange={setContextEdited}
             contextRequested={contextRequested}
             onRequestContext={() => setContextRequested(true)}
             onCheckState={() => {
-              setResult(true);
+              setShowAnalysis(true);
               setShowResponse(false);
               setShowCaseReport(false);
               setShowDbSample(false);
+
+              setTimeout(() => {
+                window.scrollTo({
+                  top: 700,
+                  behavior: "smooth",
+                });
+              }, 100);
             }}
             onClear={() => {
-              setText("");
+              setObservationRaw("");
               setEmotion("");
               setUrgency("");
               setContextEdited("");
               setContextRequested(false);
-              setResult(false);
+              setShowAnalysis(false);
               setShowResponse(false);
               setShowCaseReport(false);
               setShowDbSample(false);
@@ -379,13 +418,13 @@ export default function DemoPage({ setPage }: DemoPageProps) {
         );
 
       case 2:
-        return result ? (
+        return showAnalysis ? (
           <AnalysisSection
-            delta={delta}
-            eLevel={eLevel}
-            text={text}
-            judgment={judgment}
-            contextText={contextText}
+            delta={String(deltaValue)}
+            eLevel={phaseLabel}
+            text={observationRaw}
+            judgment={insightDraft}
+            contextText={finalContext}
             onNext={() => setShowResponse(true)}
           />
         ) : null;
@@ -393,7 +432,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
       case 3:
         return showResponse ? (
           <ResponseSection
-            actionSummary={actionSummary}
+            actionSummary={responseSummary}
             acexItems={acexItems}
             flowItems={flowItems}
             ngItems={ngItems}
@@ -408,11 +447,11 @@ export default function DemoPage({ setPage }: DemoPageProps) {
       case 4:
         return showCaseReport ? (
           <CaseReportSection
-            delta={delta}
-            eLevel={eLevel}
-            text={text}
-            judgment={judgment}
-            actionSummary={actionSummary}
+            delta={String(deltaValue)}
+            eLevel={phaseLabel}
+            text={observationRaw}
+            judgment={insightDraft}
+            actionSummary={responseSummary}
             onNext={() => setShowDbSample(true)}
           />
         ) : null;
@@ -420,11 +459,11 @@ export default function DemoPage({ setPage }: DemoPageProps) {
       case 5:
         return showDbSample ? (
           <DBSampleSection
-            delta={delta}
-            eLevel={eLevel}
-            text={text}
-            judgment={judgment}
-            actionSummary={actionSummary}
+            delta={String(deltaValue)}
+            eLevel={phaseLabel}
+            text={observationRaw}
+            judgment={`${insightDraft} / trigger: ${triggerState}`}
+            actionSummary={responseSummary}
             innerRef={dbSampleRef}
           />
         ) : null;
