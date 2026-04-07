@@ -87,19 +87,20 @@ function TabButton({
 }
 
 export default function DemoPage({ setPage }: DemoPageProps) {
-  // Step1 raw inputs
   const [observationRaw, setObservationRaw] = useState("");
   const [emotion, setEmotion] = useState("");
   const [urgency, setUrgency] = useState("");
   const [contextEdited, setContextEdited] = useState("");
   const [contextRequested, setContextRequested] = useState(false);
 
-  // Step visibility
   const [showAnalysis, setShowAnalysis] = useState(false);
   const [showResponse, setShowResponse] = useState(false);
   const [showCaseReport, setShowCaseReport] = useState(false);
   const [showDbSample, setShowDbSample] = useState(false);
   const [selectedStep, setSelectedStep] = useState(1);
+
+  const [executedActions, setExecutedActions] = useState<string[]>([]);
+  const [resultType, setResultType] = useState("");
 
   const dbSampleRef = useRef<HTMLDivElement | null>(null);
 
@@ -112,215 +113,40 @@ export default function DemoPage({ setPage }: DemoPageProps) {
     }
   }, [showDbSample]);
 
-  // ---------------------------------
-  // Step1: Primary Context Draft
-  // ---------------------------------
-  const primaryContextDraft = (() => {
-    if (!observationRaw.trim()) return "";
+  const primaryContextDraft = observationRaw
+    ? "説明場面において、不安が前景化している。対応が必要な状態として整理できる。"
+    : "";
 
-    const scene = /説明|流れ|順番|手順/.test(observationRaw)
-      ? "説明場面"
-      : /検査|処置|採血/.test(observationRaw)
-        ? "検査・処置場面"
-        : /待つ|待機|呼ばれない/.test(observationRaw)
-          ? "待機場面"
-          : "接点場面";
-
-    const emotionPart =
-      emotion === "不安"
-        ? "不安が前景化している"
-        : emotion === "怒り"
-          ? "怒りが前景化している"
-          : emotion === "戸惑い"
-            ? "戸惑いが生じている"
-            : emotion === "悲しみ"
-              ? "悲しみがにじんでいる"
-              : emotion === "無反応"
-                ? "反応が乏しい"
-                : "感情は未確定";
-
-    const urgencyPart =
-      urgency === "緊急対応"
-        ? "早い対応が必要な状態"
-        : urgency === "対応必要"
-          ? "対応を要する状態"
-          : urgency === "経過観察"
-            ? "経過を見ながら確認したい状態"
-            : urgency === "不要"
-              ? "大きな介入は不要な状態"
-              : "必要性は未確定";
-
-    return `${scene}において、${emotionPart}。現在は${urgencyPart}として整理できる。`;
-  })();
-
-  // Step1: Final Context
   const finalContext = contextEdited.trim() || primaryContextDraft;
 
-  // ---------------------------------
-  // Step2: Relational Reading (draft)
-  // ---------------------------------
-  const hasAnxiety =
-    observationRaw.includes("不安") || emotion === "不安";
-
-  const deltaValue: 1 | 3 | 4 =
-    urgency === "緊急対応" ? 4 : urgency === "対応必要" || hasAnxiety ? 3 : 1;
-
-  const phaseCode: "e1" | "e2" | "e3" =
-    deltaValue === 4 ? "e3" : deltaValue === 3 ? "e2" : "e1";
+  const deltaValue = urgency === "緊急対応" ? 4 : urgency === "対応必要" ? 3 : 1;
 
   const phaseLabel =
-    phaseCode === "e3"
+    deltaValue === 4
       ? "e3（臨界の段階）"
-      : phaseCode === "e2"
+      : deltaValue === 3
         ? "e2（対処の段階）"
         : "e1（予防の段階）";
 
-  const insightDraft =
-    urgency === "緊急対応"
-      ? "関係の緊張が強く、慎重な介入が必要な状態"
-      : urgency === "対応必要" && emotion === "怒り"
-        ? "関係の緊張が高まりつつあり、受理と説明整理が必要な状態"
-        : hasAnxiety
-          ? "関係の緊張が高まりつつある可能性"
-          : "大きな緊張はまだ表面化していない状態";
+  const insightDraft = "関係の緊張が高まりつつある可能性";
 
-  // 内部で持つTrigger
-  const triggerState: "pre" | "sign" | "risk" =
-    deltaValue === 4 ? "risk" : deltaValue === 3 ? "sign" : "pre";
-
-  // ---------------------------------
-  // Step3: Response Draft
-  // ---------------------------------
   const responseSummary =
     deltaValue === 4
-      ? "まず安全を確保し、急がず受け止めと確認を行いながら説明を組み直す"
+      ? "安全を優先し慎重に対応"
       : deltaValue === 3
-        ? "まず不安や怒りの言葉を受け止め、何が足りないと感じているかを確認する"
-        : "現状の関わりを維持しつつ、追加の違和感が出ないかを見守る";
+        ? "受け止めと確認を優先"
+        : "観察を維持";
 
-  const acexItems: AcexItem[] =
-    deltaValue === 4
-      ? [
-          {
-            key: "A",
-            label: "A",
-            title: "Accept",
-            body: "まず受け止め、安全に関する反応を否定しない",
-          },
-          {
-            key: "C",
-            label: "C",
-            title: "Clarify",
-            body: "何が危険・不安と感じられているかを確認する",
-          },
-          {
-            key: "E",
-            label: "E",
-            title: "Explain",
-            body: "対応の順序と見通しを短く明確に伝える",
-          },
-          {
-            key: "X",
-            label: "X",
-            title: "Assist",
-            body: "必要なら役割調整や上位者介入を行う",
-          },
-        ]
-      : deltaValue === 3
-        ? [
-            {
-              key: "A",
-              label: "A",
-              title: "Accept",
-              body: "不安や怒りの言葉をそのまま受け止める",
-            },
-            {
-              key: "C",
-              label: "C",
-              title: "Clarify",
-              body: "何が足りないと感じているかを確認する",
-            },
-            {
-              key: "E",
-              label: "E",
-              title: "Explain",
-              body: "これから何をどう説明するかを伝える",
-            },
-            {
-              key: "X",
-              label: "X",
-              title: "Assist",
-              body: "説明順の整理や確認メモを使う",
-            },
-          ]
-        : [
-            {
-              key: "A",
-              label: "A",
-              title: "Accept",
-              body: "現在の反応を維持しながら丁寧に観察する",
-            },
-            {
-              key: "C",
-              label: "C",
-              title: "Clarify",
-              body: "必要があれば追加で確認する",
-            },
-            {
-              key: "E",
-              label: "E",
-              title: "Explain",
-              body: "今後の流れを簡潔に共有する",
-            },
-            {
-              key: "X",
-              label: "X",
-              title: "Assist",
-              body: "特別な追加支援はせず通常対応を維持する",
-            },
-          ];
+  const acexItems: AcexItem[] = [
+    { key: "A", label: "A", title: "Accept", body: "受け止める" },
+    { key: "C", label: "C", title: "Clarify", body: "確認する" },
+    { key: "E", label: "E", title: "Explain", body: "説明する" },
+    { key: "X", label: "X", title: "Assist", body: "補助する" },
+  ];
 
-  const flowItems =
-    deltaValue === 4
-      ? [
-          "まず安全に関わる不安や怒りを受け止める",
-          "次に何が危険・不足と感じられているかを確認する",
-          "そのうえで対応の順序と見通しを簡潔に伝える",
-        ]
-      : deltaValue === 3
-        ? [
-            "まず不安や怒りの言葉を受け止める",
-            "次に不足感の中身を確認する",
-            "そのうえで説明の見通しを伝える",
-          ]
-        : [
-            "現在の反応を維持する",
-            "必要時のみ追加確認する",
-            "今後の流れを簡潔に共有する",
-          ];
+  const flowItems = ["受け止める", "確認する", "説明する"];
+  const ngItems = ["否定する", "急ぐ", "説明不足"];
 
-  const ngItems =
-    deltaValue === 4
-      ? [
-          "不安や怒りを否定する",
-          "確認せずに説明だけを進める",
-          "急いで結論だけを返す",
-        ]
-      : deltaValue === 3
-        ? [
-            "不安を軽く扱う",
-            "確認せずに説明を進める",
-            "急いで結論だけを返す",
-          ]
-        : [
-            "変化がないのに過剰対応する",
-            "説明を省きすぎる",
-            "観察を止めてしまう",
-          ];
-
-  // ---------------------------------
-  // Step navigation
-  // ---------------------------------
   const currentStep = showDbSample
     ? 5
     : showCaseReport
@@ -335,34 +161,8 @@ export default function DemoPage({ setPage }: DemoPageProps) {
     setSelectedStep(currentStep);
   }, [currentStep]);
 
-  const statusLevel: "safe" | "warning" | "danger" =
-    deltaValue === 4 ? "danger" : deltaValue === 3 ? "warning" : "safe";
-
-  const statusConfig = {
-    safe: {
-      label: "安定",
-      sub: "大きな緊張は見られない",
-      icon: "—",
-      color: "text-stone-400",
-    },
-    warning: {
-      label: "注意",
-      sub: "緊張が高まりつつある",
-      icon: "🔥",
-      color: "text-yellow-500",
-    },
-    danger: {
-      label: "危険",
-      sub: "関係が崩れ始めている可能性",
-      icon: "🔥🔥",
-      color: "text-red-500",
-    },
-  };
-
-  const status = statusConfig[statusLevel];
-
   const sectionShell =
-    "overflow-hidden rounded-[18px] border border-stone-200 bg-[#fbfaf7] shadow-[0_8px_28px_rgba(15,23,42,0.05)]";
+    "overflow-hidden rounded-[18px] border border-stone-200 bg-[#fbfaf7] shadow";
 
   const renderStepContent = () => {
     switch (selectedStep) {
@@ -370,20 +170,14 @@ export default function DemoPage({ setPage }: DemoPageProps) {
         return (
           <InputSection
             text={observationRaw}
-            onTextChange={(value) => {
-              setObservationRaw(value);
+            onTextChange={(v) => {
+              setObservationRaw(v);
               setContextRequested(false);
             }}
             emotion={emotion}
-            onEmotionChange={(value) => {
-              setEmotion(value);
-              setContextRequested(false);
-            }}
+            onEmotionChange={setEmotion}
             urgency={urgency}
-            onUrgencyChange={(value) => {
-              setUrgency(value);
-              setContextRequested(false);
-            }}
+            onUrgencyChange={setUrgency}
             contextDraft={primaryContextDraft}
             contextEdited={contextEdited}
             onContextEditedChange={setContextEdited}
@@ -391,16 +185,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
             onRequestContext={() => setContextRequested(true)}
             onCheckState={() => {
               setShowAnalysis(true);
-              setShowResponse(false);
-              setShowCaseReport(false);
-              setShowDbSample(false);
-
-              setTimeout(() => {
-                window.scrollTo({
-                  top: 700,
-                  behavior: "smooth",
-                });
-              }, 100);
+              setTimeout(() => window.scrollTo({ top: 700, behavior: "smooth" }), 100);
             }}
             onClear={() => {
               setObservationRaw("");
@@ -412,13 +197,15 @@ export default function DemoPage({ setPage }: DemoPageProps) {
               setShowResponse(false);
               setShowCaseReport(false);
               setShowDbSample(false);
+              setExecutedActions([]);
+              setResultType("");
               setSelectedStep(1);
             }}
           />
         );
 
       case 2:
-        return showAnalysis ? (
+        return (
           <AnalysisSection
             delta={String(deltaValue)}
             eLevel={phaseLabel}
@@ -427,139 +214,86 @@ export default function DemoPage({ setPage }: DemoPageProps) {
             contextText={finalContext}
             onNext={() => setShowResponse(true)}
           />
-        ) : null;
+        );
 
       case 3:
-        return showResponse ? (
+        return (
           <ResponseSection
             actionSummary={responseSummary}
             acexItems={acexItems}
             flowItems={flowItems}
             ngItems={ngItems}
-            statusLabel={status.label}
-            statusSub={status.sub}
-            statusIcon={status.icon}
-            statusColorClass={status.color}
+            statusLabel="注意"
+            statusSub="関係の揺れあり"
+            statusIcon="🔥"
+            statusColorClass="text-yellow-500"
             onNext={() => setShowCaseReport(true)}
           />
-        ) : null;
+        );
 
       case 4:
-        return showCaseReport ? (
+        return (
           <CaseReportSection
             delta={String(deltaValue)}
             eLevel={phaseLabel}
             text={observationRaw}
             judgment={insightDraft}
             actionSummary={responseSummary}
+            executedActions={executedActions}
+            onExecutedActionsChange={setExecutedActions}
+            resultType={resultType}
+            onResultTypeChange={setResultType}
             onNext={() => setShowDbSample(true)}
           />
-        ) : null;
+        );
 
       case 5:
-        return showDbSample ? (
+        return (
           <DBSampleSection
             delta={String(deltaValue)}
             eLevel={phaseLabel}
             text={observationRaw}
-            judgment={`${insightDraft} / trigger: ${triggerState}`}
+            judgment={insightDraft}
             actionSummary={responseSummary}
+            executedActions={executedActions}
+            resultType={resultType}
             innerRef={dbSampleRef}
           />
-        ) : null;
-
-      default:
-        return null;
+        );
     }
   };
 
   return (
     <div className="min-h-screen bg-[#f4f1ea] text-slate-900">
       <div className="mx-auto max-w-6xl px-6 py-10">
+
+        {/* HERO */}
         <div className={sectionShell}>
-          <div className="border-b border-stone-200 px-6 py-4 sm:px-8">
-            <p className="text-[11px] uppercase tracking-[0.28em] text-stone-500">
-              Demo / Editorial View
-            </p>
-          </div>
-
-          <div className="px-6 py-10 sm:px-8">
-            <div className="flex flex-wrap items-center gap-3">
-              <span className="rounded-full border border-stone-200 bg-white px-3 py-1 text-[11px] tracking-[0.08em] text-stone-600">
-                面談用デモ
-              </span>
-              <span className="rounded-full border border-stone-200 bg-white px-3 py-1 text-[11px] tracking-[0.08em] text-stone-600">
-                Prototype
-              </span>
-            </div>
-
-            <h1 className="mt-6 max-w-4xl text-4xl font-semibold leading-[1.22] tracking-[-0.02em] text-slate-900 sm:text-5xl">
-              観察から、関係の状態を読み直す。
+          <div className="px-6 py-12">
+            <h1 className="text-4xl font-semibold">
+              違和感を、関係の構造として読み直す。
             </h1>
 
-            <p className="mt-6 max-w-3xl text-[15px] leading-9 text-stone-600">
-              いま感じている違和感を、関係の構造として整理し、
-              次にどう動くかを考えていきます。
-              観察から整理へ、整理から次の一手へ。
-              その一連の流れを体験できるデモです。
+            <p className="mt-4 text-stone-600">
+              書く → 読む → 対応する → 記録する
             </p>
 
-            {setPage && (
-              <div className="mt-8 flex flex-wrap gap-3">
-                <button
-                  onClick={() => setPage("top")}
-                  className="rounded-[10px] border border-stone-300 bg-white px-4 py-2.5 text-sm text-stone-700 transition hover:bg-stone-50"
-                >
-                  ← TOPへ戻る
-                </button>
-              </div>
-            )}
+            <button
+              onClick={() => setSelectedStep(1)}
+              className="mt-6 rounded bg-black px-5 py-3 text-white"
+            >
+              はじめる
+            </button>
           </div>
         </div>
 
-        <div className="mt-6 overflow-hidden rounded-[16px] border border-stone-200 bg-[#fbfaf7] shadow-[0_4px_16px_rgba(15,23,42,0.03)]">
-          <div className="flex flex-wrap items-stretch">
-            <TabButton
-              stepNo="01"
-              en="Observation"
-              ja="観察入力"
-              isActive={selectedStep === 1}
-              isReached={true}
-              onClick={() => setSelectedStep(1)}
-            />
-            <TabButton
-              stepNo="02"
-              en="Analysis"
-              ja="確認結果"
-              isActive={selectedStep === 2}
-              isReached={currentStep >= 2}
-              onClick={() => setSelectedStep(2)}
-            />
-            <TabButton
-              stepNo="03"
-              en="Response"
-              ja="次の対応"
-              isActive={selectedStep === 3}
-              isReached={currentStep >= 3}
-              onClick={() => setSelectedStep(3)}
-            />
-            <TabButton
-              stepNo="04"
-              en="Case Report"
-              ja="ケース記録"
-              isActive={selectedStep === 4}
-              isReached={currentStep >= 4}
-              onClick={() => setSelectedStep(4)}
-            />
-            <TabButton
-              stepNo="05"
-              en="DB Sample"
-              ja="DB見本"
-              isActive={selectedStep === 5}
-              isReached={currentStep >= 5}
-              onClick={() => setSelectedStep(5)}
-            />
-          </div>
+        {/* Tabs */}
+        <div className="mt-6 flex">
+          <TabButton stepNo="01" en="Observation" ja="観察" isActive={selectedStep === 1} isReached onClick={() => setSelectedStep(1)} />
+          <TabButton stepNo="02" en="Analysis" ja="分析" isActive={selectedStep === 2} isReached={currentStep >= 2} onClick={() => setSelectedStep(2)} />
+          <TabButton stepNo="03" en="Response" ja="対応" isActive={selectedStep === 3} isReached={currentStep >= 3} onClick={() => setSelectedStep(3)} />
+          <TabButton stepNo="04" en="Report" ja="記録" isActive={selectedStep === 4} isReached={currentStep >= 4} onClick={() => setSelectedStep(4)} />
+          <TabButton stepNo="05" en="DB" ja="DB" isActive={selectedStep === 5} isReached={currentStep >= 5} onClick={() => setSelectedStep(5)} />
         </div>
 
         <div className="mt-8">{renderStepContent()}</div>
