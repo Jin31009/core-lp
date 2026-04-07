@@ -25,6 +25,12 @@ type TabButtonProps = {
   onClick: () => void;
 };
 
+type ContextDraftResponse = {
+  contextDraft?: string;
+  followups?: string[];
+  error?: string;
+};
+
 function TabButton({
   stepNo,
   en,
@@ -93,6 +99,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
   const [contextEdited, setContextEdited] = useState("");
   const [contextRequested, setContextRequested] = useState(false);
   const [primaryContextDraft, setPrimaryContextDraft] = useState("");
+  const [contextFollowups, setContextFollowups] = useState<string[]>([]);
   const [isGeneratingContext, setIsGeneratingContext] = useState(false);
 
   const [showAnalysis, setShowAnalysis] = useState(false);
@@ -321,6 +328,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
     setContextRequested(true);
     setIsGeneratingContext(true);
     setPrimaryContextDraft("AIが整理しています...");
+    setContextFollowups([]);
 
     try {
       const response = await fetch("http://localhost:8787/api/context-draft", {
@@ -339,15 +347,20 @@ export default function DemoPage({ setPage }: DemoPageProps) {
         throw new Error("AI request failed");
       }
 
-      const data = await response.json();
+      const data: ContextDraftResponse = await response.json();
+
       setPrimaryContextDraft(
         data.contextDraft || "整理結果を取得できませんでした。"
+      );
+      setContextFollowups(
+        Array.isArray(data.followups) ? data.followups : []
       );
     } catch (error) {
       console.error(error);
       setPrimaryContextDraft(
         "AIによる整理に失敗しました。もう一度お試しください。"
       );
+      setContextFollowups([]);
     } finally {
       setIsGeneratingContext(false);
     }
@@ -363,18 +376,21 @@ export default function DemoPage({ setPage }: DemoPageProps) {
               setObservationRaw(value);
               setContextRequested(false);
               setPrimaryContextDraft("");
+              setContextFollowups([]);
             }}
             emotion={emotion}
             onEmotionChange={(value) => {
               setEmotion(value);
               setContextRequested(false);
               setPrimaryContextDraft("");
+              setContextFollowups([]);
             }}
             urgency={urgency}
             onUrgencyChange={(value) => {
               setUrgency(value);
               setContextRequested(false);
               setPrimaryContextDraft("");
+              setContextFollowups([]);
             }}
             contextDraft={primaryContextDraft}
             contextEdited={contextEdited}
@@ -401,6 +417,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
               setContextEdited("");
               setContextRequested(false);
               setPrimaryContextDraft("");
+              setContextFollowups([]);
               setShowAnalysis(false);
               setShowResponse(false);
               setShowCaseReport(false);
@@ -409,6 +426,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
               setResultType("");
               setSelectedStep(1);
             }}
+            followups={contextFollowups}
           />
         );
 

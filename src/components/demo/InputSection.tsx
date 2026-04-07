@@ -12,6 +12,7 @@ type InputSectionProps = {
   onRequestContext: () => void;
   onCheckState: () => void;
   onClear: () => void;
+  followups: string[];
 };
 
 const emotionOptions = ["不安", "怒り", "戸惑い", "悲しみ", "無反応"];
@@ -57,6 +58,82 @@ function LoadingDots() {
   );
 }
 
+function LoadingCard() {
+  return (
+    <div
+      className="mt-5 overflow-hidden rounded-[18px] border border-stone-300 bg-[#f6f1e8] shadow-[0_8px_24px_rgba(15,23,42,0.06)]"
+      role="status"
+      aria-live="polite"
+    >
+      <div className="border-b border-stone-200 bg-[linear-gradient(180deg,#f1ece2_0%,#ece5d9_100%)] px-5 py-4">
+        <p className="text-[11px] uppercase tracking-[0.22em] text-stone-500">
+          RA-AI / Loading
+        </p>
+        <p className="mt-2 text-[18px] font-semibold text-slate-900">
+          一次整理CONTEXTを生成しています
+        </p>
+      </div>
+
+      <div className="px-5 py-5">
+        <div className="flex items-start gap-4">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-stone-200 bg-white shadow-sm">
+            <div className="h-6 w-6 animate-spin rounded-full border-2 border-stone-300 border-t-slate-700" />
+          </div>
+
+          <div className="min-w-0 flex-1">
+            <p className="text-[15px] leading-8 text-stone-700">
+              入力内容をもとに、場面・関係文脈・補足確認ポイントを整理しています。
+            </p>
+
+            <div className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-stone-200">
+              <div className="h-full w-1/2 animate-pulse rounded-full bg-slate-500" />
+            </div>
+
+            <div className="mt-4 grid gap-2 text-[13px] leading-7 text-stone-600">
+              <div className="flex items-center gap-2">
+                <LoadingDots />
+                <span>観察内容を読み取っています</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <LoadingDots />
+                <span>関係の文脈を整えています</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <LoadingDots />
+                <span>補足するとよい観点を抽出しています</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PromptChip({
+  label,
+  onClick,
+}: {
+  label: string;
+  onClick?: () => void;
+}) {
+  const clickable = typeof onClick === "function";
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`rounded-full border px-3 py-1.5 text-[12px] leading-5 transition ${
+        clickable
+          ? "border-stone-300 bg-white text-stone-700 hover:bg-stone-50"
+          : "border-stone-300 bg-white text-stone-700"
+      }`}
+    >
+      {label}
+    </button>
+  );
+}
+
 export default function InputSection({
   text,
   onTextChange,
@@ -71,6 +148,7 @@ export default function InputSection({
   onRequestContext,
   onCheckState,
   onClear,
+  followups,
 }: InputSectionProps) {
   const sectionShell =
     "overflow-hidden rounded-[22px] border border-stone-200 bg-[#fbfaf7] shadow-[0_10px_30px_rgba(15,23,42,0.06)]";
@@ -103,13 +181,32 @@ export default function InputSection({
     text.trim().length > 0 && emotion.trim().length > 0 && urgency.trim().length > 0;
 
   const isGenerating =
-    contextRequested && contextDraft.trim() === "AIが整理しています...";
+    contextRequested &&
+    (contextDraft.trim() === "AIが整理しています..." ||
+      contextDraft.trim() === "RA-AIが整理しています...");
 
-  const analysisDisabled = !contextRequested || isGenerating;
+  const hasContextResult =
+    contextRequested &&
+    !isGenerating &&
+    !!contextDraft.trim() &&
+    !contextDraft.includes("失敗しました");
+
+  const hasFollowups = hasContextResult && followups.length > 0;
+
+  const analysisDisabled =
+    !contextRequested || isGenerating || contextDraft.includes("失敗しました");
 
   const requestButtonClass = canRequestContext
     ? "border-slate-700 bg-slate-700 text-white hover:bg-slate-800"
     : "border-stone-300 bg-white text-stone-400";
+
+  const appendToContextEdited = (value: string) => {
+    const normalized = value.trim();
+    if (!normalized) return;
+
+    const prefix = contextEdited.trim().length > 0 ? "\n" : "";
+    onContextEditedChange(`${contextEdited}${prefix}・${normalized}`);
+  };
 
   return (
     <section className={sectionShell}>
@@ -219,32 +316,36 @@ export default function InputSection({
           <div className="mt-5 flex flex-wrap items-center gap-3">
             <button
               onClick={onRequestContext}
-              className={`rounded-[12px] border px-6 py-3.5 text-[15px] font-medium transition ${requestButtonClass}`}
+              className={`rounded-[12px] border px-6 py-3.5 text-[15px] font-medium transition ${requestButtonClass} ${
+                isGenerating ? "cursor-wait opacity-90" : ""
+              }`}
               type="button"
               disabled={!canRequestContext || isGenerating}
             >
-              {isGenerating ? "RA-AIが整理しています..." : "この内容を整理してみる"}
+              {isGenerating ? "RA-AIが整理中…" : "この内容を整理してみる"}
             </button>
 
             {!canRequestContext && (
               <p className="text-[14px] leading-7 text-stone-500">
-                自由記述・感情・対応意図が入ると、整理ボタンが有効になります。
+                入力がそろうと、RA-AIで一次整理できます。
               </p>
             )}
 
-            {canRequestContext && !isGenerating && (
+            {canRequestContext && !isGenerating && !contextRequested && (
               <p className="text-[14px] leading-7 text-stone-500">
                 入力がそろいました。RA-AIで一次整理できます。
               </p>
             )}
 
             {isGenerating && (
-              <p className="inline-flex items-center gap-2 text-[14px] leading-7 text-stone-500">
+              <p className="inline-flex items-center gap-2 text-[14px] leading-7 text-stone-600">
                 <LoadingDots />
                 RA-AIが関係の状態を整理しています...
               </p>
             )}
           </div>
+
+          {isGenerating && <LoadingCard />}
         </div>
 
         {contextRequested && (
@@ -271,23 +372,136 @@ export default function InputSection({
             </div>
 
             <div className="mt-6 border-t border-dashed border-stone-300 pt-6">
-              <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
-                Context Note
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div>
+                  <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
+                    Context Note
+                  </p>
+                  <p className="mt-2 text-[20px] font-semibold text-slate-900">
+                    もう少しここを詳しくすると、整理の質が上がります
+                  </p>
+                </div>
+
+                {hasContextResult && (
+                  <div className="rounded-full border border-slate-200 bg-white px-4 py-1.5 text-[12px] text-slate-600">
+                    補足入力は任意です
+                  </div>
+                )}
+              </div>
+
+              <p className="mt-3 text-[15px] leading-8 text-stone-700">
+                RA-AIの一次整理は返ってきています。ここでは、背景や流れを少しだけ足して、
+                文脈をより正確にしていきます。
               </p>
-              <p className="mt-2 text-[16px] font-semibold text-slate-900">
-                修正や補足を入れてください
-              </p>
-              <p className="mt-2 text-[14px] leading-8 text-stone-600">
-                場面、順番、待ち時間、家族の関わりなど、必要だと思う情報を足してください。
-              </p>
+
+              {hasFollowups && (
+                <div className="mt-5 rounded-[16px] border border-stone-200 bg-white p-5">
+                  <p className="text-[13px] uppercase tracking-[0.16em] text-stone-500">
+                    AI Follow-up
+                  </p>
+                  <p className="mt-2 text-[16px] font-semibold text-slate-900">
+                    RA-AIが、もう少し確認したほうがよい点を挙げています
+                  </p>
+
+                  <div className="mt-4 space-y-3">
+                    {followups.map((item, index) => (
+                      <button
+                        key={`${item}-${index}`}
+                        type="button"
+                        onClick={() => appendToContextEdited(item)}
+                        className="w-full rounded-[14px] border border-stone-200 bg-[#fcfbf8] px-4 py-3 text-left transition hover:bg-stone-50"
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-700 text-[11px] font-semibold text-white">
+                            {index + 1}
+                          </div>
+                          <p className="text-[14px] leading-8 text-stone-700">
+                            {item}
+                          </p>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+
+                  <p className="mt-4 text-[13px] leading-7 text-stone-500">
+                    クリックすると、補足欄に追記しやすくなります。
+                  </p>
+                </div>
+              )}
+
+              <div className="mt-5 rounded-[16px] border border-stone-200 bg-white p-5">
+                <p className="text-[14px] font-semibold text-slate-900">
+                  補足するときの観点
+                </p>
+
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <PromptChip
+                    label="どの場面だったか"
+                    onClick={() => appendToContextEdited("どの場面で起きたことだったか。")}
+                  />
+                  <PromptChip
+                    label="その前に何があったか"
+                    onClick={() => appendToContextEdited("その前後で何があったか。")}
+                  />
+                  <PromptChip
+                    label="どの順番で起きたか"
+                    onClick={() => appendToContextEdited("どの順番で起きたことだったか。")}
+                  />
+                  <PromptChip
+                    label="待ち時間や説明の長さ"
+                    onClick={() =>
+                      appendToContextEdited("待ち時間や説明の長さはどうだったか。")
+                    }
+                  />
+                  <PromptChip
+                    label="家族の関わり"
+                    onClick={() => appendToContextEdited("家族の関わりがあったか。")}
+                  />
+                </div>
+              </div>
+
+              <div className="mt-5 grid gap-4 lg:grid-cols-2">
+                <div className="rounded-[16px] border border-stone-200 bg-[#f8f5ef] p-5">
+                  <p className="text-[13px] uppercase tracking-[0.16em] text-stone-500">
+                    Light Prompt
+                  </p>
+                  <p className="mt-2 text-[16px] font-semibold text-slate-900">
+                    短く足すなら、これだけでも十分です
+                  </p>
+
+                  <ul className="mt-3 space-y-2 text-[14px] leading-8 text-stone-700">
+                    <li>・どの場面で起きたことでしたか</li>
+                    <li>・その前後で何がありましたか</li>
+                    <li>・相手は何に引っかかっていそうでしたか</li>
+                  </ul>
+                </div>
+
+                <div className="rounded-[16px] border border-stone-200 bg-[#f8f5ef] p-5">
+                  <p className="text-[13px] uppercase tracking-[0.16em] text-stone-500">
+                    Example Note
+                  </p>
+                  <p className="mt-2 text-[16px] font-semibold text-slate-900">
+                    記述例
+                  </p>
+
+                  <p className="mt-3 text-[14px] leading-8 text-stone-700">
+                    検査前の説明の場面だった。待ち時間が長く、表情が硬くなっていた。
+                    説明の途中で何度も本人が確認しており、見通しが十分に伝わっていないように見えた。
+                  </p>
+                </div>
+              </div>
 
               <textarea
                 value={contextEdited}
                 onChange={(e) => onContextEditedChange(e.target.value)}
-                placeholder="例：検査前の説明の場面だった。待ち時間が長く、不安が強くなっていた。家族への説明も不足しているようだった。"
-                rows={6}
-                className="mt-4 min-h-[220px] w-full rounded-[16px] border border-stone-300 bg-white p-5 text-[16px] leading-9 text-slate-800 shadow-[inset_0_1px_2px_rgba(15,23,42,0.03)] placeholder:text-stone-400 focus:border-slate-500 focus:outline-none"
+                placeholder="例：検査前の説明の場面だった。待ち時間が長く、不安が強くなっていた。本人が何度も確認しており、見通しが十分に伝わっていないように見えた。"
+                rows={7}
+                className="mt-5 min-h-[210px] w-full rounded-[16px] border border-stone-300 bg-white p-5 text-[16px] leading-9 text-slate-800 shadow-[inset_0_1px_2px_rgba(15,23,42,0.03)] placeholder:text-stone-400 focus:border-slate-500 focus:outline-none"
               />
+
+              <p className="mt-3 text-[13px] leading-7 text-stone-500">
+                補足しない場合は、このまま次へ進んでも大丈夫です。
+              </p>
             </div>
           </div>
         )}
