@@ -41,6 +41,22 @@ function ChoiceButton({
   );
 }
 
+function LoadingDots() {
+  return (
+    <span className="inline-flex items-center gap-1">
+      <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-stone-500" />
+      <span
+        className="h-1.5 w-1.5 animate-pulse rounded-full bg-stone-500"
+        style={{ animationDelay: "0.15s" }}
+      />
+      <span
+        className="h-1.5 w-1.5 animate-pulse rounded-full bg-stone-500"
+        style={{ animationDelay: "0.3s" }}
+      />
+    </span>
+  );
+}
+
 export default function InputSection({
   text,
   onTextChange,
@@ -83,7 +99,17 @@ export default function InputSection({
   const secondaryButton =
     "rounded-[12px] border border-stone-300 bg-white px-6 py-3.5 text-[15px] font-medium text-stone-700 transition hover:bg-stone-50";
 
-  const analysisDisabled = !contextRequested;
+  const canRequestContext =
+    text.trim().length > 0 && emotion.trim().length > 0 && urgency.trim().length > 0;
+
+  const isGenerating =
+    contextRequested && contextDraft.trim() === "AIが整理しています...";
+
+  const analysisDisabled = !contextRequested || isGenerating;
+
+  const requestButtonClass = canRequestContext
+    ? "border-slate-700 bg-slate-700 text-white hover:bg-slate-800"
+    : "border-stone-300 bg-white text-stone-400";
 
   return (
     <section className={sectionShell}>
@@ -187,21 +213,37 @@ export default function InputSection({
             いまの内容を、まず整理してみる
           </p>
           <p className="mt-3 text-[14px] leading-8 text-stone-600">
-            AIが一次的にContextを整えます。必要があれば、人が補足や修正を加えます。
+            RA-AIが一次的にContextを整えます。必要があれば、人が補足や修正を加えます。
           </p>
 
           <div className="mt-5 flex flex-wrap items-center gap-3">
             <button
               onClick={onRequestContext}
-              className={secondaryButton}
+              className={`rounded-[12px] border px-6 py-3.5 text-[15px] font-medium transition ${requestButtonClass}`}
               type="button"
+              disabled={!canRequestContext || isGenerating}
             >
-              この内容を整理してみる
+              {isGenerating ? "RA-AIが整理しています..." : "この内容を整理してみる"}
             </button>
 
-            <p className="text-[14px] leading-7 text-stone-500">
-              押すと、この下に一次整理が表示されます。
-            </p>
+            {!canRequestContext && (
+              <p className="text-[14px] leading-7 text-stone-500">
+                自由記述・感情・対応意図が入ると、整理ボタンが有効になります。
+              </p>
+            )}
+
+            {canRequestContext && !isGenerating && (
+              <p className="text-[14px] leading-7 text-stone-500">
+                入力がそろいました。RA-AIで一次整理できます。
+              </p>
+            )}
+
+            {isGenerating && (
+              <p className="inline-flex items-center gap-2 text-[14px] leading-7 text-stone-500">
+                <LoadingDots />
+                RA-AIが関係の状態を整理しています...
+              </p>
+            )}
           </div>
         </div>
 
@@ -213,12 +255,12 @@ export default function InputSection({
                   Primary Context
                 </p>
                 <p className="mt-2 text-[19px] font-semibold text-slate-900">
-                  いまの情報から、こんなふうに整理できそうです
+                  RA-AIによる一次整理
                 </p>
               </div>
 
               <div className="rounded-full border border-stone-200 bg-white px-4 py-1.5 text-[12px] text-stone-500">
-                AI共同整理
+                RA-AI
               </div>
             </div>
 
