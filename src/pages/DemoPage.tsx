@@ -42,8 +42,8 @@ function TabButton({
         isActive
           ? "bg-[#f2eee6]"
           : isReached
-          ? "bg-[#fbfaf7] hover:bg-[#f6f2eb]"
-          : "bg-white cursor-not-allowed opacity-60"
+            ? "bg-[#fbfaf7] hover:bg-[#f6f2eb]"
+            : "bg-white cursor-not-allowed opacity-60"
       }`}
     >
       <div
@@ -51,8 +51,8 @@ function TabButton({
           isActive
             ? "border-slate-700 bg-slate-700 text-white"
             : isReached
-            ? "border-stone-300 bg-white text-stone-600"
-            : "border-stone-200 bg-white text-stone-400"
+              ? "border-stone-300 bg-white text-stone-600"
+              : "border-stone-200 bg-white text-stone-400"
         }`}
       >
         {stepNo}
@@ -83,6 +83,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
   const [emotion, setEmotion] = useState("");
   const [urgency, setUrgency] = useState("");
   const [contextEdited, setContextEdited] = useState("");
+  const [contextRequested, setContextRequested] = useState(false);
 
   const [result, setResult] = useState(false);
   const [showResponse, setShowResponse] = useState(false);
@@ -107,85 +108,148 @@ export default function DemoPage({ setPage }: DemoPageProps) {
     const scene = /説明|流れ|順番|手順/.test(text)
       ? "説明場面"
       : /検査|処置|採血/.test(text)
-      ? "検査・処置場面"
-      : /待つ|待機|呼ばれない/.test(text)
-      ? "待機場面"
-      : "接点場面";
+        ? "検査・処置場面"
+        : /待つ|待機|呼ばれない/.test(text)
+          ? "待機場面"
+          : "接点場面";
 
     const emotionPart =
       emotion === "不安"
         ? "不安が前景化している"
         : emotion === "怒り"
-        ? "怒りが前景化している"
-        : emotion === "戸惑い"
-        ? "戸惑いが生じている"
-        : emotion === "悲しみ"
-        ? "悲しみがにじんでいる"
-        : emotion === "無反応"
-        ? "反応が乏しい"
-        : "感情は未確定";
+          ? "怒りが前景化している"
+          : emotion === "戸惑い"
+            ? "戸惑いが生じている"
+            : emotion === "悲しみ"
+              ? "悲しみがにじんでいる"
+              : emotion === "無反応"
+                ? "反応が乏しい"
+                : "感情は未確定";
 
     const urgencyPart =
       urgency === "緊急対応"
         ? "早い対応が必要な状態"
         : urgency === "対応必要"
-        ? "対応を要する状態"
-        : urgency === "経過観察"
-        ? "経過を見ながら確認したい状態"
-        : urgency === "不要"
-        ? "大きな介入は不要な状態"
-        : "必要性は未確定";
+          ? "対応を要する状態"
+          : urgency === "経過観察"
+            ? "経過を見ながら確認したい状態"
+            : urgency === "不要"
+              ? "大きな介入は不要な状態"
+              : "必要性は未確定";
 
     return `${scene}において、${emotionPart}。現在は${urgencyPart}として整理できる。`;
   })();
 
   const contextText = contextEdited.trim() || contextDraft;
-
   const isAnxious = text.includes("不安") || emotion === "不安";
 
   const judgment =
     urgency === "緊急対応"
       ? "関係の緊張が強く、慎重な介入が必要な状態"
       : urgency === "対応必要" && emotion === "怒り"
-      ? "関係の緊張が高まりつつあり、受理と説明整理が必要な状態"
-      : isAnxious
-      ? "関係の緊張が高まりつつある可能性"
-      : "大きな緊張はまだ表面化していない状態";
+        ? "関係の緊張が高まりつつあり、受理と説明整理が必要な状態"
+        : isAnxious
+          ? "関係の緊張が高まりつつある可能性"
+          : "大きな緊張はまだ表面化していない状態";
 
   const delta =
     urgency === "緊急対応" ? "4" : urgency === "対応必要" || isAnxious ? "3" : "1";
 
   const eLevel =
-    delta === "4" ? "e3（臨界の段階）" : delta === "3" ? "e2（対処の段階）" : "e1（予防の段階）";
+    delta === "4"
+      ? "e3（臨界の段階）"
+      : delta === "3"
+        ? "e2（対処の段階）"
+        : "e1（予防の段階）";
 
   const actionSummary =
     delta === "4"
       ? "まず安全を確保し、急がず受け止めと確認を行いながら説明を組み直す"
       : delta === "3"
-      ? "まず不安や怒りの言葉を受け止め、何が足りないと感じているかを確認する"
-      : "現状の関わりを維持しつつ、追加の違和感が出ないかを見守る";
+        ? "まず不安や怒りの言葉を受け止め、何が足りないと感じているかを確認する"
+        : "現状の関わりを維持しつつ、追加の違和感が出ないかを見守る";
 
   const acexItems: AcexItem[] =
     delta === "4"
       ? [
-          { key: "A", label: "A", title: "Accept", body: "まず受け止め、安全に関する反応を否定しない" },
-          { key: "C", label: "C", title: "Clarify", body: "何が危険・不安と感じられているかを確認する" },
-          { key: "E", label: "E", title: "Explain", body: "対応の順序と見通しを短く明確に伝える" },
-          { key: "X", label: "X", title: "Assist", body: "必要なら役割調整や上位者介入を行う" },
+          {
+            key: "A",
+            label: "A",
+            title: "Accept",
+            body: "まず受け止め、安全に関する反応を否定しない",
+          },
+          {
+            key: "C",
+            label: "C",
+            title: "Clarify",
+            body: "何が危険・不安と感じられているかを確認する",
+          },
+          {
+            key: "E",
+            label: "E",
+            title: "Explain",
+            body: "対応の順序と見通しを短く明確に伝える",
+          },
+          {
+            key: "X",
+            label: "X",
+            title: "Assist",
+            body: "必要なら役割調整や上位者介入を行う",
+          },
         ]
       : delta === "3"
-      ? [
-          { key: "A", label: "A", title: "Accept", body: "不安や怒りの言葉をそのまま受け止める" },
-          { key: "C", label: "C", title: "Clarify", body: "何が足りないと感じているかを確認する" },
-          { key: "E", label: "E", title: "Explain", body: "これから何をどう説明するかを伝える" },
-          { key: "X", label: "X", title: "Assist", body: "説明順の整理や確認メモを使う" },
-        ]
-      : [
-          { key: "A", label: "A", title: "Accept", body: "現在の反応を維持しながら丁寧に観察する" },
-          { key: "C", label: "C", title: "Clarify", body: "必要があれば追加で確認する" },
-          { key: "E", label: "E", title: "Explain", body: "今後の流れを簡潔に共有する" },
-          { key: "X", label: "X", title: "Assist", body: "特別な追加支援はせず通常対応を維持する" },
-        ];
+        ? [
+            {
+              key: "A",
+              label: "A",
+              title: "Accept",
+              body: "不安や怒りの言葉をそのまま受け止める",
+            },
+            {
+              key: "C",
+              label: "C",
+              title: "Clarify",
+              body: "何が足りないと感じているかを確認する",
+            },
+            {
+              key: "E",
+              label: "E",
+              title: "Explain",
+              body: "これから何をどう説明するかを伝える",
+            },
+            {
+              key: "X",
+              label: "X",
+              title: "Assist",
+              body: "説明順の整理や確認メモを使う",
+            },
+          ]
+        : [
+            {
+              key: "A",
+              label: "A",
+              title: "Accept",
+              body: "現在の反応を維持しながら丁寧に観察する",
+            },
+            {
+              key: "C",
+              label: "C",
+              title: "Clarify",
+              body: "必要があれば追加で確認する",
+            },
+            {
+              key: "E",
+              label: "E",
+              title: "Explain",
+              body: "今後の流れを簡潔に共有する",
+            },
+            {
+              key: "X",
+              label: "X",
+              title: "Assist",
+              body: "特別な追加支援はせず通常対応を維持する",
+            },
+          ];
 
   const flowItems =
     delta === "4"
@@ -195,16 +259,16 @@ export default function DemoPage({ setPage }: DemoPageProps) {
           "そのうえで対応の順序と見通しを簡潔に伝える",
         ]
       : delta === "3"
-      ? [
-          "まず不安や怒りの言葉を受け止める",
-          "次に不足感の中身を確認する",
-          "そのうえで説明の見通しを伝える",
-        ]
-      : [
-          "現在の反応を維持する",
-          "必要時のみ追加確認する",
-          "今後の流れを簡潔に共有する",
-        ];
+        ? [
+            "まず不安や怒りの言葉を受け止める",
+            "次に不足感の中身を確認する",
+            "そのうえで説明の見通しを伝える",
+          ]
+        : [
+            "現在の反応を維持する",
+            "必要時のみ追加確認する",
+            "今後の流れを簡潔に共有する",
+          ];
 
   const ngItems =
     delta === "4"
@@ -214,26 +278,26 @@ export default function DemoPage({ setPage }: DemoPageProps) {
           "急いで結論だけを返す",
         ]
       : delta === "3"
-      ? [
-          "不安を軽く扱う",
-          "確認せずに説明を進める",
-          "急いで結論だけを返す",
-        ]
-      : [
-          "変化がないのに過剰対応する",
-          "説明を省きすぎる",
-          "観察を止めてしまう",
-        ];
+        ? [
+            "不安を軽く扱う",
+            "確認せずに説明を進める",
+            "急いで結論だけを返す",
+          ]
+        : [
+            "変化がないのに過剰対応する",
+            "説明を省きすぎる",
+            "観察を止めてしまう",
+          ];
 
   const currentStep = showDbSample
     ? 5
     : showCaseReport
-    ? 4
-    : showResponse
-    ? 3
-    : result
-    ? 2
-    : 1;
+      ? 4
+      : showResponse
+        ? 3
+        : result
+          ? 2
+          : 1;
 
   useEffect(() => {
     setSelectedStep(currentStep);
@@ -274,14 +338,25 @@ export default function DemoPage({ setPage }: DemoPageProps) {
         return (
           <InputSection
             text={text}
-            onTextChange={setText}
+            onTextChange={(value) => {
+              setText(value);
+              setContextRequested(false);
+            }}
             emotion={emotion}
-            onEmotionChange={setEmotion}
+            onEmotionChange={(value) => {
+              setEmotion(value);
+              setContextRequested(false);
+            }}
             urgency={urgency}
-            onUrgencyChange={setUrgency}
+            onUrgencyChange={(value) => {
+              setUrgency(value);
+              setContextRequested(false);
+            }}
             contextDraft={contextDraft}
             contextEdited={contextEdited}
             onContextEditedChange={setContextEdited}
+            contextRequested={contextRequested}
+            onRequestContext={() => setContextRequested(true)}
             onCheckState={() => {
               setResult(true);
               setShowResponse(false);
@@ -293,6 +368,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
               setEmotion("");
               setUrgency("");
               setContextEdited("");
+              setContextRequested(false);
               setResult(false);
               setShowResponse(false);
               setShowCaseReport(false);
@@ -379,15 +455,14 @@ export default function DemoPage({ setPage }: DemoPageProps) {
             </div>
 
             <h1 className="mt-6 max-w-4xl text-4xl font-semibold leading-[1.22] tracking-[-0.02em] text-slate-900 sm:text-5xl">
-              観察内容から、関係の状態と
-              <br className="hidden sm:block" />
-              次の対応を確認する。
+              観察から、関係の状態を読み直す。
             </h1>
 
             <p className="mt-6 max-w-3xl text-[15px] leading-9 text-stone-600">
-              Observation から Analysis、Response、Case Report、DB Sample までを、
-              ひとつの流れとして確認するデモです。構造を見せながら、
-              現場での読み取りと対応の接続を試作しています。
+              いま感じている違和感を、関係の構造として整理し、
+              次にどう動くかを考えていきます。
+              観察から整理へ、整理から次の一手へ。
+              その一連の流れを体験できるデモです。
             </p>
 
             {setPage && (

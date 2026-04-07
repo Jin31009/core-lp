@@ -8,6 +8,8 @@ type InputSectionProps = {
   contextDraft: string;
   contextEdited: string;
   onContextEditedChange: (value: string) => void;
+  contextRequested: boolean;
+  onRequestContext: () => void;
   onCheckState: () => void;
   onClear: () => void;
 };
@@ -49,6 +51,8 @@ export default function InputSection({
   contextDraft,
   contextEdited,
   onContextEditedChange,
+  contextRequested,
+  onRequestContext,
   onCheckState,
   onClear,
 }: InputSectionProps) {
@@ -76,44 +80,64 @@ export default function InputSection({
   const secondaryButton =
     "rounded-[10px] border border-stone-300 bg-white px-5 py-3 text-sm font-medium text-stone-700 transition hover:bg-stone-50";
 
+  const analysisDisabled = !contextRequested;
+
   return (
     <section className={sectionShell}>
       <div className={sectionHeader}>
         <p className="text-[11px] uppercase tracking-[0.24em] text-stone-500">
           Step 01 / Observation
         </p>
-        <h2 className={sectionTitleClass}>観察内容を入力</h2>
+        <h2 className={sectionTitleClass}>
+          いま、どんな違和感がありましたか？
+        </h2>
         <p className={leadClass}>
-          自由記述に加えて、感情と対応必要性のセンサーを補助的に入れます。
-          その情報をもとに、次の段階で使う Context を整理します。
+          少し気になる。でも、うまく言葉にできない。そんな違和感を、
+          そのままにしていませんか。まずは一度、一緒に整理してみましょう。
         </p>
       </div>
 
-      <div className="p-6 sm:p-8">
+      <div className="space-y-8 p-6 sm:p-8">
         <div className={softCard}>
           <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
             Observation
           </p>
           <p className="mt-3 text-[15px] leading-9 text-stone-600">
-            患者の発言、表情、説明場面での違和感、やり取りのズレなどを入力します。
+            思いつくままに書いてみてください。断片的でも大丈夫です。
+            発言、表情、場面のズレ、説明への反応など、気になったことを先に置きます。
           </p>
         </div>
 
-        <textarea
-          value={text}
-          onChange={(e) => onTextChange(e.target.value)}
-          placeholder="例：患者が説明が足りない気がすると不安を訴えている"
-          rows={7}
-          className="mt-8 w-full rounded-[14px] border border-stone-300 bg-white p-5 text-[15px] leading-9 text-slate-800 shadow-[inset_0_1px_2px_rgba(15,23,42,0.03)] placeholder:text-stone-400 focus:border-slate-500 focus:outline-none"
-        />
+        <div className={panelCard}>
+          <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
+            Case Note
+          </p>
+          <p className="mt-2 text-sm font-medium text-stone-700">
+            気になったことを、まずそのまま書いてみてください
+          </p>
 
-        <div className="mt-8 grid gap-6 lg:grid-cols-2">
+          <textarea
+            value={text}
+            onChange={(e) => onTextChange(e.target.value)}
+            placeholder="例：患者が説明を受けたあとも不安そうで、何度も確認していた。内容が十分に伝わっていないように見えた。"
+            rows={4}
+            className="mt-4 min-h-[120px] w-full rounded-[14px] border border-stone-300 bg-white p-5 text-[15px] leading-8 text-slate-800 shadow-[inset_0_1px_2px_rgba(15,23,42,0.03)] placeholder:text-stone-400 focus:border-slate-500 focus:outline-none"
+          />
+        </div>
+
+        <div className={softCard}>
+          <p className="text-[14px] leading-8 text-stone-600">
+            いまの内容をもとに、少しだけ整理の手がかりを加えてみましょう。
+          </p>
+        </div>
+
+        <div className="grid gap-6 lg:grid-cols-2">
           <div className={panelCard}>
             <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
               Sensor 01
             </p>
             <p className="mt-2 text-sm font-medium text-stone-700">
-              相手の主な反応
+              相手の反応として、どれが近いでしょうか。
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
               {emotionOptions.map((option) => (
@@ -132,7 +156,7 @@ export default function InputSection({
               Sensor 02
             </p>
             <p className="mt-2 text-sm font-medium text-stone-700">
-              対応の必要性
+              このあと、どんな対応が必要だと感じましたか。
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
               {urgencyOptions.map((option) => (
@@ -147,44 +171,63 @@ export default function InputSection({
           </div>
         </div>
 
-        <div className="mt-8 rounded-[14px] border border-stone-200 bg-[#f8f5ef] p-5">
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
-                Context Draft
-              </p>
-              <p className="mt-2 text-sm font-medium text-stone-700">
-                このように整理できます
-              </p>
-            </div>
-            <div className="rounded-full border border-stone-200 bg-white px-3 py-1 text-xs text-stone-500">
-              AI共同整理
-            </div>
-          </div>
-
-          <div className="mt-4 rounded-[12px] border border-stone-200 bg-white p-4">
-            <p className="text-[14px] leading-8 text-stone-600">
-              {contextDraft || "自由記述とセンサー入力をもとに整理結果がここに表示されます。"}
-            </p>
-          </div>
-
-          <div className="mt-4">
-            <p className="text-sm font-medium text-stone-700">
-              補足や修正はありますか？
-            </p>
-            <textarea
-              value={contextEdited}
-              onChange={(e) => onContextEditedChange(e.target.value)}
-              placeholder="必要なら補足・修正を記入"
-              rows={4}
-              className="mt-3 w-full rounded-[12px] border border-stone-300 bg-white p-4 text-[14px] leading-8 text-slate-800 placeholder:text-stone-400 focus:border-slate-500 focus:outline-none"
-            />
-          </div>
+        <div className="flex flex-wrap items-center gap-3">
+          <button onClick={onRequestContext} className={secondaryButton}>
+            この内容を整理してみる
+          </button>
         </div>
 
-        <div className="mt-8 flex flex-wrap items-center gap-3">
-          <button onClick={onCheckState} className={primaryButton}>
-            Step2へ進む
+        {contextRequested && (
+          <div className="rounded-[16px] border border-stone-200 bg-[#f3efe7] p-6 shadow-[0_6px_18px_rgba(15,23,42,0.04)]">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
+                  Primary Context
+                </p>
+                <p className="mt-2 text-base font-semibold text-slate-900">
+                  いまの情報から、こんなふうに整理できそうです
+                </p>
+              </div>
+              <div className="rounded-full border border-stone-200 bg-white px-3 py-1 text-xs text-stone-500">
+                AI共同整理
+              </div>
+            </div>
+
+            <div className="mt-5 rounded-[14px] border-2 border-stone-300 bg-white p-5">
+              <p className="text-[18px] font-semibold leading-9 text-stone-700">
+                {contextDraft || "整理結果がここに表示されます。"}
+              </p>
+            </div>
+
+            <div className="mt-6">
+              <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
+                Context Note
+              </p>
+              <p className="mt-2 text-sm font-medium text-stone-700">
+                必要に応じて、補足や修正をしてみてください
+              </p>
+              <p className="mt-2 text-[13px] leading-7 text-stone-500">
+                場面やタイミングが分かると、より整理しやすくなります。
+              </p>
+
+              <textarea
+                value={contextEdited}
+                onChange={(e) => onContextEditedChange(e.target.value)}
+                placeholder="例：検査前の説明の場面だった。待ち時間が長く、不安が強くなっていた。家族への説明も不足しているようだった。"
+                rows={6}
+                className="mt-3 min-h-[220px] w-full rounded-[14px] border border-stone-300 bg-white p-5 text-[15px] leading-8 text-slate-800 shadow-[inset_0_1px_2px_rgba(15,23,42,0.03)] placeholder:text-stone-400 focus:border-slate-500 focus:outline-none"
+              />
+            </div>
+          </div>
+        )}
+
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            onClick={onCheckState}
+            className={`${primaryButton} ${analysisDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+            disabled={analysisDisabled}
+          >
+            分析してみましょう
           </button>
 
           <button onClick={onClear} className={secondaryButton}>
@@ -192,16 +235,44 @@ export default function InputSection({
           </button>
         </div>
 
-        <div className="mt-8 rounded-[14px] border border-stone-200 bg-[#f8f5ef] p-5">
+        <div className="rounded-[16px] border border-stone-200 bg-[#f8f5ef] p-6">
           <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
             Guide
           </p>
-          <p className="mt-2 text-[13px] leading-7 text-stone-500">
-            自由記述に加えて、感情と必要性のセンサーを入れることで、
-            次段階の Context と分析の粒度をそろえます。
-          </p>
+          <h3 className="mt-3 text-lg font-semibold tracking-[-0.01em] text-slate-900">
+            このステップでやっていること
+          </h3>
+
+          <div className="mt-5 grid gap-4 lg:grid-cols-3">
+            <div className="rounded-[12px] border border-stone-200 bg-white p-4">
+              <p className="text-sm font-medium text-stone-700">
+                1. 違和感を置く
+              </p>
+              <p className="mt-2 text-[13px] leading-7 text-stone-500">
+                まずは整理しきれなくても大丈夫です。気になったことを、そのまま置くところから始めます。
+              </p>
+            </div>
+
+            <div className="rounded-[12px] border border-stone-200 bg-white p-4">
+              <p className="text-sm font-medium text-stone-700">
+                2. 手がかりを加える
+              </p>
+              <p className="mt-2 text-[13px] leading-7 text-stone-500">
+                感情と対応意識を足すことで、AIが一次Contextを整理しやすくなります。
+              </p>
+            </div>
+
+            <div className="rounded-[12px] border border-stone-200 bg-white p-4">
+              <p className="text-sm font-medium text-stone-700">
+                3. 文脈を整える
+              </p>
+              <p className="mt-2 text-[13px] leading-7 text-stone-500">
+                AIが出した下書きをもとに、人が補足・修正し、次の分析の土台をつくります。
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
   );
-}　
+}
