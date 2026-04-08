@@ -73,7 +73,7 @@ function LoadingCard() {
           RA-AI / Loading
         </p>
         <p className="mt-2 text-[18px] font-semibold text-slate-900">
-          一次整理CONTEXTを生成しています
+          一次整理を生成しています
         </p>
       </div>
 
@@ -85,7 +85,7 @@ function LoadingCard() {
 
           <div className="min-w-0 flex-1">
             <p className="text-[16px] leading-8 text-stone-700">
-              入力内容をもとに、場面・関係文脈・補足確認ポイントを整理しています。
+              入力内容をもとに、場面と関係の文脈を整理しています。
             </p>
 
             <div className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-stone-200">
@@ -103,7 +103,7 @@ function LoadingCard() {
               </div>
               <div className="flex items-center gap-2">
                 <LoadingDots />
-                <span>補足するとよい観点を抽出しています</span>
+                <span>補足の観点を抽出しています</span>
               </div>
             </div>
           </div>
@@ -125,7 +125,7 @@ function FinalLoadingCard() {
           RA-AI / Final Context
         </p>
         <p className="mt-2 text-[18px] font-semibold text-slate-900">
-          補足を反映した最終Contextを生成しています
+          最終Contextを生成しています
         </p>
       </div>
 
@@ -137,7 +137,7 @@ function FinalLoadingCard() {
 
           <div className="min-w-0 flex-1">
             <p className="text-[16px] leading-8 text-stone-700">
-              一次整理と補足情報をつなぎ、読みやすい最終Contextに再整理しています。
+              一次整理と補足をつないで、読みやすい形に整えています。
             </p>
 
             <div className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-slate-200">
@@ -147,7 +147,7 @@ function FinalLoadingCard() {
             <div className="mt-4 grid gap-2 text-[14px] leading-7 text-stone-600">
               <div className="flex items-center gap-2">
                 <LoadingDots />
-                <span>一次整理を再確認しています</span>
+                <span>一次整理を確認しています</span>
               </div>
               <div className="flex items-center gap-2">
                 <LoadingDots />
@@ -155,7 +155,7 @@ function FinalLoadingCard() {
               </div>
               <div className="flex items-center gap-2">
                 <LoadingDots />
-                <span>最終Contextとして整えています</span>
+                <span>最終Contextに整えています</span>
               </div>
             </div>
           </div>
@@ -206,7 +206,7 @@ export default function InputSection({
     "rounded-[18px] border border-stone-200 bg-[#f3efe7] p-6 shadow-[0_6px_18px_rgba(15,23,42,0.04)]";
 
   const primaryButton =
-    "rounded-[12px] bg-slate-700 px-6 py-3.5 text-[15px] font-medium text-white transition hover:bg-slate-800";
+    "w-full rounded-[14px] bg-slate-900 py-4 text-[16px] font-medium text-white transition hover:bg-slate-800";
 
   const secondaryButton =
     "rounded-[12px] border border-stone-300 bg-white px-6 py-3.5 text-[15px] font-medium text-stone-700 transition hover:bg-stone-50";
@@ -264,8 +264,8 @@ export default function InputSection({
           いま、どんな違和感がありましたか？
         </h2>
         <p className={leadClass}>
-          少し気になる。でも、うまく言葉にできない。そんな違和感を、
-          そのままにしていませんか。まずは一度、一緒に整理してみましょう。
+          気になった場面を、そのまま置いてみます。
+          まずは断片的でも大丈夫です。
         </p>
       </div>
 
@@ -275,11 +275,10 @@ export default function InputSection({
             Observation
           </p>
           <p className="mt-3 text-[17px] leading-9 text-stone-700">
-            思いつくままに書いてみてください。断片的でも大丈夫です。
-            発言、表情、場面のズレ、説明への反応など、気になったことを先に置きます。
+            発言、表情、場面のズレなど、気になったことを書いてください。
           </p>
           <div className={nextStepNote}>
-            次の一手：気になった場面を書いたら、下で感情と対応意図を選びます。
+            次の一手：場面を書いたら、下で感情と対応意図を選びます。
           </div>
         </div>
 
@@ -288,16 +287,13 @@ export default function InputSection({
             Case Note
           </p>
           <p className="mt-2 text-[18px] font-semibold text-slate-900">
-            気になったことを、まずそのまま書いてみてください
-          </p>
-          <p className="mt-2 text-[15px] leading-8 text-stone-600">
-            一文でも大丈夫です。完全な文章でなくても、断片的なメモから始められます。
+            まずそのまま書いてみる
           </p>
 
           <textarea
             value={text}
             onChange={(e) => onTextChange(e.target.value)}
-            placeholder="例：患者が説明を受けたあとも不安そうで、何度も確認していた。内容が十分に伝わっていないように見えた。"
+            placeholder="例：患者が説明のあとも不安そうで、何度も確認していた。"
             rows={5}
             className="mt-4 min-h-[170px] w-full rounded-[16px] border border-stone-300 bg-white p-5 text-[18px] leading-9 text-slate-800 shadow-[inset_0_1px_2px_rgba(15,23,42,0.03)] placeholder:text-stone-400 focus:border-slate-500 focus:outline-none"
           />
@@ -309,10 +305,7 @@ export default function InputSection({
               Sensor 01
             </p>
             <p className="mt-2 text-[18px] font-semibold text-slate-900">
-              相手の反応として、どれが近いでしょうか。
-            </p>
-            <p className="mt-2 text-[15px] leading-8 text-stone-600">
-              いちばん近いものを一つ選んでください。
+              いちばん近い反応
             </p>
 
             <div className="mt-5 flex flex-wrap gap-3">
@@ -332,10 +325,7 @@ export default function InputSection({
               Sensor 02
             </p>
             <p className="mt-2 text-[18px] font-semibold text-slate-900">
-              このあと、どんな対応が必要だと感じましたか。
-            </p>
-            <p className="mt-2 text-[15px] leading-8 text-stone-600">
-              現時点の感覚に近いものを選んでください。
+              いま感じる対応意図
             </p>
 
             <div className="mt-5 flex flex-wrap gap-3">
@@ -356,10 +346,10 @@ export default function InputSection({
             Context
           </p>
           <p className="mt-2 text-[20px] font-semibold text-slate-900">
-            いまの内容を、まず整理してみる
+            いまの内容を整理する
           </p>
           <p className="mt-3 text-[15px] leading-8 text-stone-600">
-            RA-AIが一次的にContextを整えます。必要があれば、人が補足や修正を加えます。
+            RA-AIが一次的にContextを整えます。
           </p>
 
           <div className="mt-5 flex flex-wrap items-center gap-3">
@@ -376,27 +366,27 @@ export default function InputSection({
 
             {!canRequestContext && (
               <p className="text-[15px] leading-7 text-stone-500">
-                入力がそろうと、RA-AIで一次整理できます。
+                入力がそろうと整理できます。
               </p>
             )}
 
             {canRequestContext && !isGenerating && !contextRequested && (
               <p className="text-[15px] leading-7 text-stone-500">
-                入力がそろいました。RA-AIで一次整理できます。
+                入力がそろいました。
               </p>
             )}
 
             {isGenerating && (
               <p className="inline-flex items-center gap-2 text-[15px] leading-7 text-stone-600">
                 <LoadingDots />
-                RA-AIが関係の状態を整理しています...
+                RA-AIが整理しています...
               </p>
             )}
           </div>
 
           {!contextRequested && (
             <div className={nextStepNote}>
-              次の一手：一次整理が返ってきたら、必要なものだけ短く補足します。
+              次の一手：一次整理が返ってきたら、必要なら短く補足します。
             </div>
           )}
 
@@ -411,7 +401,7 @@ export default function InputSection({
                   Primary Context
                 </p>
                 <p className="mt-2 text-[20px] font-semibold text-slate-900">
-                  RA-AIによる一次整理
+                  一次整理
                 </p>
               </div>
 
@@ -432,7 +422,7 @@ export default function InputSection({
                   Context Note
                 </p>
                 <p className="mt-2 text-[20px] font-semibold text-slate-900">
-                  RA-AIが、もう少し確認したほうがよい点を挙げています
+                  必要なら補足する
                 </p>
               </div>
 
@@ -461,13 +451,13 @@ export default function InputSection({
               <textarea
                 value={contextEdited}
                 onChange={(e) => onContextEditedChange(e.target.value)}
-                placeholder="必要なら、上の1・2・3に答える形で短く補足してください。"
+                placeholder="必要なら短く補足してください。"
                 rows={7}
                 className="mt-5 min-h-[220px] w-full rounded-[16px] border border-stone-300 bg-white p-5 text-[17px] leading-9 text-slate-800 shadow-[inset_0_1px_2px_rgba(15,23,42,0.03)] placeholder:text-stone-400 focus:border-slate-500 focus:outline-none"
               />
 
               <div className={nextStepNote}>
-                次の一手：補足を書いたら、下のボタンで Final Context を生成します。
+                次の一手：必要なら補足し、下で Final Context を生成します。
               </div>
 
               <div className="mt-5 flex flex-wrap items-center gap-3">
@@ -483,12 +473,8 @@ export default function InputSection({
                 >
                   {isGeneratingFinalContext
                     ? "Final Contextを生成中…"
-                    : "補足を反映してFinal Contextをつくる"}
+                    : "Final Contextをつくる"}
                 </button>
-
-                <p className="text-[14px] leading-7 text-stone-500">
-                  一次整理と補足情報をつないで、読みやすい最終Contextに整えます。
-                </p>
               </div>
 
               {isGeneratingFinalContext && <FinalLoadingCard />}
@@ -506,7 +492,7 @@ export default function InputSection({
                   </p>
 
                   <div className="mt-5 rounded-[14px] border border-dashed border-slate-300 bg-slate-50 px-4 py-3 text-[14px] leading-7 text-stone-600">
-                    次の一手：この内容でよければ、下の「関係の状態を見てみる」から Step2 に進みます。
+                    次の一手：この内容でよければ、下から Step2 に進みます。
                   </div>
                 </div>
               )}
@@ -519,17 +505,13 @@ export default function InputSection({
                       Final Context
                     </p>
                     <p className="mt-2 text-[19px] font-semibold text-slate-900">
-                      補足を反映した最終整理
+                      最終整理
                     </p>
                     <p className="mt-4 text-[20px] leading-10 text-stone-800">
                       {finalContextDraft}
                     </p>
                   </div>
                 )}
-
-              <p className="mt-3 text-[13px] leading-7 text-stone-500">
-                補足しない場合は、このまま次へ進んでも大丈夫です。
-              </p>
             </div>
           </div>
         )}

@@ -4,6 +4,7 @@ import AnalysisSection from "../components/demo/AnalysisSection";
 import ResponseSection from "../components/demo/ResponseSection";
 import CaseReportSection from "../components/demo/CaseReportSection";
 import DBSampleSection from "../components/demo/DBSampleSection";
+import ReflectionPanel from "../components/demo/ReflectionPanel";
 
 type DemoPageProps = {
   setPage?: (page: string) => void;
@@ -118,6 +119,10 @@ export default function DemoPage({ setPage }: DemoPageProps) {
 
   const [executedActions, setExecutedActions] = useState<string[]>([]);
   const [resultType, setResultType] = useState("");
+  const [afterNote, setAfterNote] = useState("");
+  const [whyTags, setWhyTags] = useState<string[]>([]);
+  const [whyMemo, setWhyMemo] = useState("");
+  const [nextAssets, setNextAssets] = useState<string[]>([]);
 
   const finalContext =
     finalContextDraft.trim() || contextEdited.trim() || primaryContextDraft;
@@ -297,12 +302,12 @@ export default function DemoPage({ setPage }: DemoPageProps) {
             }
           : selectedStep === 4
             ? {
-                title: "Step4 / Case Report",
-                body: "今回の読みと対応を、記録として残す段階です。",
+                title: "Step4 / Case Learning",
+                body: "今回の場面・対応・結果を、次に使える学びとして残す段階です。",
               }
             : {
-                title: "Step5 / DB Sample",
-                body: "構造化された情報が、DBでどう見えるかを確認する段階です。",
+                title: "Step5 / Structured Record",
+                body: "構造化された記録として、今回の学びがどう残るかを確認する段階です。",
               };
 
   useEffect(() => {
@@ -390,6 +395,15 @@ export default function DemoPage({ setPage }: DemoPageProps) {
     } finally {
       setIsGeneratingFinalContext(false);
     }
+  };
+
+  const resetLearningState = () => {
+    setExecutedActions([]);
+    setResultType("");
+    setAfterNote("");
+    setWhyTags([]);
+    setWhyMemo("");
+    setNextAssets([]);
   };
 
   const startFlow = () => {
@@ -521,16 +535,16 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                 />
                 <TabButton
                   stepNo="04"
-                  en="Case Report"
-                  ja="ケース記録"
+                  en="Case Learning"
+                  ja="学びの記録"
                   isActive={selectedStep === 4}
                   isReached={maxUnlockedStep >= 4}
                   onClick={() => openStep(4)}
                 />
                 <TabButton
                   stepNo="05"
-                  en="DB Sample"
-                  ja="DB見本"
+                  en="Structured Record"
+                  ja="構造化記録"
                   isActive={selectedStep === 5}
                   isReached={maxUnlockedStep >= 5}
                   onClick={() => openStep(5)}
@@ -560,6 +574,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                     setPrimaryContextDraft("");
                     setContextFollowups([]);
                     setFinalContextDraft("");
+                    resetLearningState();
                     setMaxUnlockedStep(1);
                     setSelectedStep(1);
                   }}
@@ -570,6 +585,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                     setPrimaryContextDraft("");
                     setContextFollowups([]);
                     setFinalContextDraft("");
+                    resetLearningState();
                     setMaxUnlockedStep(1);
                     setSelectedStep(1);
                   }}
@@ -580,6 +596,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                     setPrimaryContextDraft("");
                     setContextFollowups([]);
                     setFinalContextDraft("");
+                    resetLearningState();
                     setMaxUnlockedStep(1);
                     setSelectedStep(1);
                   }}
@@ -601,8 +618,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                     setPrimaryContextDraft("");
                     setContextFollowups([]);
                     setFinalContextDraft("");
-                    setExecutedActions([]);
-                    setResultType("");
+                    resetLearningState();
                     setSelectedStep(1);
                     setMaxUnlockedStep(1);
                   }}
@@ -663,6 +679,14 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                   onExecutedActionsChange={setExecutedActions}
                   resultType={resultType}
                   onResultTypeChange={setResultType}
+                  afterNote={afterNote}
+                  onAfterNoteChange={setAfterNote}
+                  whyTags={whyTags}
+                  onWhyTagsChange={setWhyTags}
+                  whyMemo={whyMemo}
+                  onWhyMemoChange={setWhyMemo}
+                  nextAssets={nextAssets}
+                  onNextAssetsChange={setNextAssets}
                   onNext={goToStep5}
                 />
               )}
@@ -676,9 +700,15 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                   actionSummary={responseSummary}
                   executedActions={executedActions}
                   resultType={resultType}
+                  afterNote={afterNote}
+                  whyTags={whyTags}
+                  whyMemo={whyMemo}
+                  nextAssets={nextAssets}
                   innerRef={null}
                 />
               )}
+
+              <ReflectionPanel currentStep={selectedStep} />
             </div>
           </>
         )}

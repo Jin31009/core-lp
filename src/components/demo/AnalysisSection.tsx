@@ -484,7 +484,7 @@ export default function AnalysisSection({
     "rounded-[18px] border-2 border-stone-300 bg-white p-6 shadow-[0_8px_22px_rgba(15,23,42,0.05)]";
 
   const primaryButton =
-    "rounded-[12px] bg-slate-700 px-6 py-3.5 text-[15px] font-medium text-white transition hover:bg-slate-800";
+    "w-full rounded-[14px] bg-blue-600 py-4 text-[16px] font-medium text-white transition hover:bg-blue-700";
 
   const secondaryButton =
     "rounded-[12px] border border-stone-300 bg-white px-6 py-3.5 text-[15px] font-medium text-stone-700 transition hover:bg-stone-50";

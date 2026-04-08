@@ -390,7 +390,7 @@ export default function ResponseSection({
     "mt-5 rounded-[14px] border border-dashed border-stone-300 bg-white/80 px-4 py-3 text-[14px] leading-7 text-stone-600";
 
   const primaryButton =
-    "rounded-[12px] bg-slate-700 px-6 py-3.5 text-[15px] font-medium text-white transition hover:bg-slate-800";
+    "w-full rounded-[14px] bg-orange-500 py-4 text-[16px] font-medium text-white transition hover:bg-orange-600";
 
   const secondaryButton =
     "rounded-[12px] border border-stone-300 bg-white px-6 py-3.5 text-[15px] font-medium text-stone-700 transition hover:bg-stone-50";
