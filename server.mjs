@@ -17,6 +17,27 @@ const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+function parseContextResponse(text) {
+  const contextMatch = text.match(/Context:\s*([\s\S]*?)Followups:/);
+  const followupsMatch = text.match(/Followups:\s*([\s\S]*)/);
+
+  const contextDraft = contextMatch
+    ? contextMatch[1].trim()
+    : text.trim();
+
+  const followups = followupsMatch
+    ? followupsMatch[1]
+        .split("\n")
+        .map((line) => line.replace(/^-\s*/, "").trim())
+        .filter((line) => line.length > 0)
+    : [];
+
+  return {
+    contextDraft,
+    followups,
+  };
+}
+
 app.post("/api/context-draft", async (req, res) => {
   try {
     const { observationRaw, emotion, urgency } = req.body ?? {};
@@ -59,28 +80,83 @@ ${urgency || ""}
     });
 
     const text = response.output_text || "";
-
-    // --- ここが追加ポイント（パース処理） ---
-    const contextMatch = text.match(/Context:\s*([\s\S]*?)Followups:/);
-    const followupsMatch = text.match(/Followups:\s*([\s\S]*)/);
-
-    const contextDraft = contextMatch
-      ? contextMatch[1].trim()
-      : text.trim();
-
-    const followups = followupsMatch
-      ? followupsMatch[1]
-          .split("\n")
-          .map((l) => l.replace(/^-\s*/, "").trim())
-          .filter((l) => l.length > 0)
-      : [];
+    const parsed = parseContextResponse(text);
 
     res.json({
-      contextDraft,
-      followups,
+      contextDraft: parsed.contextDraft || "整理結果を取得できませんでした。",
+      followups: parsed.followups || [],
     });
   } catch (error) {
-    console.error("OpenAI error:", error);
+    console.error("OpenAI error (context-draft):", error);
+
+    res.status(500).json({
+      error: error instanceof Error ? error.message : "AI生成エラー",
+    });
+  }
+});
+
+app.post("/api/final-context", async (req, res) => {
+  try {
+    const {
+      observationRaw,
+      emotion,
+      urgency,
+      primaryContextDraft,
+      contextEdited,
+    } = req.body ?? {};
+
+    if (!primaryContextDraft && !contextEdited) {
+      return res.status(400).json({
+        error: "最終Context化する材料がありません",
+      });
+    }
+
+    const input = `
+以下の材料をもとに、医療接点における最終的なContextを日本語で1段落に再整理してください。
+
+目的：
+- 一次整理Contextと補足情報をつなぐ
+- 重複を避ける
+- 場面、反応、流れ、必要性が自然につながるようにする
+- 判断や断定は避ける
+- 読みやすい最終Contextにまとめる
+
+出力条件：
+- 必ず1段落
+- 箇条書きにしない
+- 200〜320字程度を目安
+- 補足情報があれば反映する
+- 補足が薄い場合でも、一次整理Contextをベースに自然に整える
+
+【元の自由記述】
+${observationRaw || ""}
+
+【感情】
+${emotion || ""}
+
+【対応意図】
+${urgency || ""}
+
+【一次整理Context】
+${primaryContextDraft || ""}
+
+【補足情報】
+${contextEdited || ""}
+`;
+
+    const response = await client.responses.create({
+      model: "gpt-5.4-mini",
+      input,
+    });
+
+    const finalContext =
+      response.output_text?.trim() || "最終Contextを取得できませんでした。";
+
+    res.json({
+      finalContext,
+    });
+  } catch (error) {
+    console.error("OpenAI error (final-context):", error);
 
     res.status(500).json({
       error: error instanceof Error ? error.message : "AI生成エラー",

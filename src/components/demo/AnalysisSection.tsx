@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 type AnalysisSectionProps = {
   delta: string;
   eLevel: string;
@@ -56,13 +58,7 @@ function detectSignal(text: string) {
     "対応が悪い",
   ];
 
-  const safeKeywords = [
-    "安心",
-    "大丈夫",
-    "落ち着い",
-    "ほっと",
-    "安堵",
-  ];
+  const safeKeywords = ["安心", "大丈夫", "落ち着い", "ほっと", "安堵"];
 
   const trustKeywords = [
     "信頼",
@@ -180,7 +176,11 @@ function detectAlignmentKey(text: string, signal: string) {
     "誰がやる",
   ];
 
-  const addByKeywords = (keywords: string[], key: keyof typeof score, points = 2) => {
+  const addByKeywords = (
+    keywords: string[],
+    key: keyof typeof score,
+    points = 2
+  ) => {
     keywords.forEach((keyword) => {
       if (normalized.includes(keyword)) addScore(key, points);
     });
@@ -229,7 +229,6 @@ function detectAlignmentKey(text: string, signal: string) {
 
   if (bestScore === 0) return "AK_PREDICT";
 
-  // 同点に近いときは規則上の優先を少しだけかける
   if (bestScore === secondScore) {
     if (signal === "FEAR") return "AK_SAFE";
     if (signal === "ANXIETY") return "AK_PREDICT";
@@ -432,6 +431,8 @@ export default function AnalysisSection({
   contextText,
   onNext,
 }: AnalysisSectionProps) {
+  const [showRelationalReading, setShowRelationalReading] = useState(false);
+
   const mergedText = `${contextText} ${text}`;
   const signal = detectSignal(mergedText);
   const alignmentKey = detectAlignmentKey(mergedText, signal);
@@ -448,14 +449,56 @@ export default function AnalysisSection({
           ? "不安や揺れが継続しており、関係の緊張が高まりつつあります"
           : "強い緊張状態にあり、慎重な対応が必要です";
 
+  const triggerTone =
+    trigger === "Triggerあり"
+      ? {
+          card: "border-rose-300 bg-rose-50",
+          text: "text-rose-700",
+          chip: "border-rose-300 bg-white text-rose-700",
+        }
+      : {
+          card: "border-emerald-300 bg-emerald-50",
+          text: "text-emerald-700",
+          chip: "border-emerald-300 bg-white text-emerald-700",
+        };
+
   const sectionShell =
-    "overflow-hidden rounded-[22px] border border-stone-200 bg-[#fbfaf7]";
+    "overflow-hidden rounded-[22px] border border-stone-200 bg-[#fbfaf7] shadow-[0_12px_36px_rgba(15,23,42,0.05)]";
 
   const sectionHeader =
-    "border-b border-stone-200 px-6 py-7 sm:px-8";
+    "border-b border-stone-200 bg-[linear-gradient(180deg,#ede8dd_0%,#e6e1d6_100%)] px-6 py-7 sm:px-8";
 
-  const sectionCard =
-    "rounded-[18px] border border-stone-200 bg-white p-6";
+  const sectionTitleClass =
+    "mt-3 text-[34px] font-semibold tracking-[-0.02em] text-slate-900";
+
+  const leadClass =
+    "mt-4 max-w-4xl text-[18px] leading-9 text-stone-700";
+
+  const groupWrap =
+    "rounded-[18px] border border-stone-200 bg-white p-6 shadow-[0_3px_14px_rgba(15,23,42,0.04)]";
+
+  const subCard =
+    "rounded-[16px] border border-stone-200 bg-[#fcfbf8] p-5";
+
+  const contextCard =
+    "rounded-[18px] border-2 border-stone-300 bg-white p-6 shadow-[0_8px_22px_rgba(15,23,42,0.05)]";
+
+  const primaryButton =
+    "rounded-[12px] bg-slate-700 px-6 py-3.5 text-[15px] font-medium text-white transition hover:bg-slate-800";
+
+  const secondaryButton =
+    "rounded-[12px] border border-stone-300 bg-white px-6 py-3.5 text-[15px] font-medium text-stone-700 transition hover:bg-stone-50";
+
+  const expandButton =
+    "rounded-[12px] border border-slate-300 bg-white px-6 py-3.5 text-[15px] font-medium text-slate-700 transition hover:bg-slate-50";
+
+  const nextStepNote =
+    "mt-5 rounded-[14px] border border-dashed border-stone-300 bg-white/80 px-4 py-3 text-[14px] leading-7 text-stone-600";
+
+  const groupTitle = "mt-2 text-[24px] font-semibold text-slate-900";
+  const groupLead = "mt-3 text-[17px] leading-8 text-stone-700";
+  const bodyText = "mt-3 text-[16px] leading-8 text-stone-700";
+  const reasonText = "mt-3 text-[15px] leading-8 text-stone-600";
 
   return (
     <section className={sectionShell}>
@@ -463,102 +506,231 @@ export default function AnalysisSection({
         <p className="text-[11px] uppercase tracking-[0.24em] text-stone-500">
           Step 02 / Analysis
         </p>
-        <h2 className="mt-3 text-[32px] font-semibold text-slate-900">
-          関係の読み取り
-        </h2>
-        <p className="mt-4 text-[16px] text-stone-700">
-          Step1で整えたContextをもとに、いまの関係状態を読み直します。
+        <h2 className={sectionTitleClass}>関係の読み取り</h2>
+        <p className={leadClass}>
+          Step1で整えたContextをもとに、いまの関係状態を構造として読み直します。
+          ここでは、何が起きていて、何が不足し、関係がどう動いているかを順に見ていきます。
         </p>
       </div>
 
       <div className="space-y-8 p-6 sm:p-8">
-        <div className={sectionCard}>
-          <p className="text-sm text-stone-500">Context</p>
-          <p className="mt-3 text-[18px] text-stone-800">
+        <div className={contextCard}>
+          <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
+            01 / Context
+          </p>
+          <p className="mt-2 text-[24px] font-semibold tracking-[-0.01em] text-slate-900">
+            整理された状況
+          </p>
+          <p className="mt-5 text-[21px] leading-10 text-stone-800">
             {contextText}
           </p>
+          <div className={nextStepNote}>
+            次の一手：まず下で、いま表れている状態と緊張の強さを確認します。
+          </div>
         </div>
 
-        <div className={sectionCard}>
-          <p className="text-sm text-stone-500">Signal</p>
-          <p className="mt-3 text-[20px] font-semibold text-slate-900">
-            {signal}
+        <div className={groupWrap}>
+          <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
+            02 / State Reading
           </p>
-          <p className="mt-2 text-[14px] text-stone-600">
-            {getSignalReason(signal)}
+          <p className={groupTitle}>いま表れている状態</p>
+          <p className={groupLead}>
+            まず、現在の関係がどのような状態として表れているかを読み取ります。
           </p>
+
+          <div className="mt-6 grid gap-5 lg:grid-cols-2">
+            <div className={subCard}>
+              <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
+                Signal
+              </p>
+              <p className="mt-2 text-[22px] font-semibold text-slate-900">
+                {signal}
+              </p>
+              <p className={reasonText}>{getSignalReason(signal)}</p>
+            </div>
+
+            <div className={subCard}>
+              <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
+                Δ（関係緊張）
+              </p>
+              <p className="mt-2 text-[22px] font-semibold text-slate-900">
+                Δ{delta}
+              </p>
+              <p className={reasonText}>{deltaReason}</p>
+            </div>
+          </div>
+
+          <div className={nextStepNote}>
+            次の一手：必要なら、下を開いて「何が不足し、関係がどう動いているか」を確認します。
+          </div>
+
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setShowRelationalReading((prev) => !prev)}
+              className={expandButton}
+            >
+              {showRelationalReading
+                ? "関係の読み取りを閉じる"
+                : "関係の読み取りをさらに進める"}
+            </button>
+
+            <p className="text-[14px] leading-7 text-stone-500">
+              ここを開くと、Alignment Key / APCE / R / Trigger が表示されます。
+            </p>
+          </div>
         </div>
 
-        <div className={sectionCard}>
-          <p className="text-sm text-stone-500">Alignment Key</p>
-          <p className="mt-3 text-[20px] font-semibold text-slate-900">
-            {getAlignmentLabel(alignmentKey)}
-          </p>
-          <p className="mt-2 text-[14px] text-stone-600">
-            {getAlignmentReason(alignmentKey)}
-          </p>
-        </div>
+        {showRelationalReading && (
+          <>
+            <div className={groupWrap}>
+              <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
+                03 / Missing Need
+              </p>
+              <p className={groupTitle}>何が不足しているか</p>
+              <p className={groupLead}>
+                次に、いまの関係で満たされにくくなっている要素を見ます。
+              </p>
 
-        <div className={sectionCard}>
-          <p className="text-sm text-stone-500">APCE</p>
-          <p className="mt-3 text-[20px] font-semibold text-slate-900">
-            {getApceLabel(apce)}
-          </p>
-          <p className="mt-2 text-[14px] text-stone-600">
-            {getApceReason(apce)}
-          </p>
-        </div>
+              <div className="mt-6">
+                <div className={subCard}>
+                  <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
+                    Alignment Key
+                  </p>
+                  <p className="mt-2 text-[22px] font-semibold text-slate-900">
+                    {getAlignmentLabel(alignmentKey)}
+                  </p>
+                  <p className={reasonText}>{getAlignmentReason(alignmentKey)}</p>
+                </div>
+              </div>
 
-        <div className={sectionCard}>
-          <p className="text-sm text-stone-500">R</p>
-          <p className="mt-3 text-[20px] font-semibold text-slate-900">
-            {rValue}
-          </p>
-          <p className="mt-2 text-[14px] text-stone-600">
-            {getRReason(alignmentKey, apce, rValue)}
-          </p>
-        </div>
+              <div className={nextStepNote}>
+                次の一手：不足している要素に対して、今の関わりがどう作用しているかを下で確認します。
+              </div>
+            </div>
 
-        <div className={sectionCard}>
-          <p className="text-sm text-stone-500">Trigger</p>
-          <p className="mt-3 text-[20px] font-semibold text-slate-900">
-            {trigger}
-          </p>
-          <p className="mt-2 text-[14px] text-stone-600">
-            {getTriggerReason(delta, rValue, signal, trigger)}
-          </p>
-        </div>
+            <div className={groupWrap}>
+              <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
+                04 / Relational Movement
+              </p>
+              <p className={groupTitle}>関係はどう動いているか</p>
+              <p className={groupLead}>
+                必要な要素に対して、現在の関わりがどう作用しているかを見ます。
+              </p>
 
-        <div className={sectionCard}>
-          <p className="text-sm text-stone-500">Δ（関係緊張）</p>
-          <p className="mt-3 text-[22px] font-semibold text-slate-900">
-            Δ{delta}
-          </p>
-          <p className="mt-2 text-[14px] text-stone-600">
-            {deltaReason}
-          </p>
-        </div>
+              <div className="mt-6 grid gap-5 lg:grid-cols-2">
+                <div className={subCard}>
+                  <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
+                    APCE
+                  </p>
+                  <p className="mt-2 text-[22px] font-semibold text-slate-900">
+                    {getApceLabel(apce)}
+                  </p>
+                  <p className={reasonText}>{getApceReason(apce)}</p>
+                </div>
 
-        <div className={sectionCard}>
-          <p className="text-sm text-stone-500">Phase</p>
-          <p className="mt-3 text-[20px] font-semibold text-slate-900">
-            {eLevel}
-          </p>
-        </div>
+                <div className={subCard}>
+                  <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
+                    R
+                  </p>
+                  <p className="mt-2 text-[22px] font-semibold text-slate-900">
+                    {rValue}
+                  </p>
+                  <p className={reasonText}>
+                    {getRReason(alignmentKey, apce, rValue)}
+                  </p>
+                </div>
+              </div>
 
-        <div className={sectionCard}>
-          <p className="text-sm text-stone-500">Insight</p>
-          <p className="mt-3 text-[16px] text-stone-700">
-            {judgment}
-          </p>
-        </div>
+              <div className={nextStepNote}>
+                次の一手：最後に、局面全体を Trigger・Phase・Insight でまとめて確認します。
+              </div>
+            </div>
 
-        <button
-          onClick={onNext}
-          className="rounded-[12px] bg-slate-700 px-6 py-3 text-white"
-        >
-          次の対応へ
-        </button>
+            <div className={groupWrap}>
+              <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
+                05 / Overall Reading
+              </p>
+              <p className={groupTitle}>全体の見立て</p>
+              <p className={groupLead}>
+                最後に、局面全体をまとめて、次の対応にどうつなぐかを確認します。
+              </p>
+
+              <div className="mt-6 grid gap-5 lg:grid-cols-2">
+                <div className={`rounded-[16px] border p-5 ${triggerTone.card}`}>
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
+                      Trigger
+                    </p>
+                    <span
+                      className={`rounded-full border px-3 py-1 text-[12px] font-medium ${triggerTone.chip}`}
+                    >
+                      {trigger}
+                    </span>
+                  </div>
+                  <p className={`mt-3 text-[23px] font-semibold ${triggerTone.text}`}>
+                    {trigger}
+                  </p>
+                  <p className="mt-3 text-[15px] leading-8 text-stone-700">
+                    {getTriggerReason(delta, rValue, signal, trigger)}
+                  </p>
+                </div>
+
+                <div className={subCard}>
+                  <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
+                    Phase
+                  </p>
+                  <p className="mt-2 text-[22px] font-semibold text-slate-900">
+                    {eLevel}
+                  </p>
+                  <p className={reasonText}>
+                    現在の緊張と関係の動きから、この局面はこの段階として読むのが自然です。
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-5">
+                <div className={subCard}>
+                  <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
+                    Insight
+                  </p>
+                  <p className={bodyText}>{judgment}</p>
+                </div>
+              </div>
+
+              <div className={nextStepNote}>
+                次の一手：必要なら Step1 に戻って補足を見直し、そのまま進める場合は下のボタンで次の対応へ移ります。
+              </div>
+
+              <div className="mt-6 flex flex-wrap items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    window.scrollTo({
+                      top: 500,
+                      behavior: "smooth",
+                    });
+                  }}
+                  className={secondaryButton}
+                >
+                  Step1に戻って補足を見直す
+                </button>
+              </div>
+            </div>
+          </>
+        )}
+
+        <div className="rounded-[16px] border-t border-stone-200 pt-4">
+          <div className={nextStepNote}>
+            次の一手：内容が確認できたら、「次の対応へ」で Step3 に進みます。
+          </div>
+
+          <div className="mt-4">
+            <button onClick={onNext} className={primaryButton} type="button">
+              次の対応へ
+            </button>
+          </div>
+        </div>
       </div>
     </section>
   );
