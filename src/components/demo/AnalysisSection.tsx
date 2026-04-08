@@ -7,6 +7,423 @@ type AnalysisSectionProps = {
   onNext: () => void;
 };
 
+function detectSignal(text: string) {
+  if (!text) return "DISCOMFORT";
+
+  const normalized = text.toLowerCase();
+
+  const fearKeywords = [
+    "怖",
+    "恐",
+    "危険",
+    "危ない",
+    "こわい",
+    "命",
+    "痛みが強い",
+    "手術台",
+    "息ができ",
+  ];
+
+  const anxietyKeywords = [
+    "不安",
+    "心配",
+    "落ち着か",
+    "何度も確認",
+    "繰り返し確認",
+    "表情が硬",
+    "見通し",
+    "説明が伝わ",
+    "説明不足",
+    "待ち時間",
+    "待たされ",
+    "先が見え",
+    "このあと",
+    "どうなる",
+    "まだ呼ばれ",
+    "予定がわから",
+  ];
+
+  const dissatKeywords = [
+    "怒",
+    "不満",
+    "納得でき",
+    "苦情",
+    "冷たい",
+    "雑",
+    "ひどい",
+    "ちゃんとして",
+    "説明が違う",
+    "対応が悪い",
+  ];
+
+  const safeKeywords = [
+    "安心",
+    "大丈夫",
+    "落ち着い",
+    "ほっと",
+    "安堵",
+  ];
+
+  const trustKeywords = [
+    "信頼",
+    "任せ",
+    "ありがたい",
+    "感謝",
+    "納得した",
+    "安心して任せ",
+  ];
+
+  const hasAny = (keywords: string[]) =>
+    keywords.some((keyword) => normalized.includes(keyword));
+
+  if (hasAny(fearKeywords)) return "FEAR";
+  if (hasAny(anxietyKeywords)) return "ANXIETY";
+  if (hasAny(dissatKeywords)) return "DISSAT";
+  if (hasAny(safeKeywords)) return "SAFE";
+  if (hasAny(trustKeywords)) return "TRUST";
+
+  return "DISCOMFORT";
+}
+
+function getSignalReason(signal: string) {
+  switch (signal) {
+    case "FEAR":
+      return "強い恐れや危機感が前面に出ている状態として読めます";
+    case "ANXIETY":
+      return "先行きの不確実さや説明不足への揺れが続いている状態として読めます";
+    case "DISSAT":
+      return "否定的な評価や不満が関係の表面に出ている状態として読めます";
+    case "SAFE":
+      return "安心して状況を受け止められている状態として読めます";
+    case "TRUST":
+      return "相手や体制への任せられる感覚が保たれている状態として読めます";
+    default:
+      return "まだ大きくは破綻していないものの、軽いズレや違和感がある状態として読めます";
+  }
+}
+
+function detectAlignmentKey(text: string, signal: string) {
+  const normalized = text.toLowerCase();
+
+  const score = {
+    AK_SAFE: 0,
+    AK_PREDICT: 0,
+    AK_TRUST: 0,
+    AK_RESPECT: 0,
+    AK_ROLE: 0,
+  };
+
+  const addScore = (key: keyof typeof score, points: number) => {
+    score[key] += points;
+  };
+
+  const safeKeywords = [
+    "怖",
+    "恐",
+    "危険",
+    "危ない",
+    "こわい",
+    "安全",
+    "痛み",
+    "苦しい",
+    "息ができ",
+  ];
+
+  const predictKeywords = [
+    "説明",
+    "見通し",
+    "いつ",
+    "今後",
+    "先",
+    "このあと",
+    "どうなる",
+    "予定",
+    "待ち時間",
+    "まだ呼ばれ",
+    "説明不足",
+    "説明が伝わ",
+    "わからない",
+  ];
+
+  const trustKeywords = [
+    "信頼",
+    "任せ",
+    "信用",
+    "感謝",
+    "ありがたい",
+    "安心して任せ",
+    "納得した",
+  ];
+
+  const respectKeywords = [
+    "冷たい",
+    "雑",
+    "軽く",
+    "怒",
+    "不満",
+    "ひどい",
+    "ちゃんとして",
+    "対応が悪い",
+    "説明が違う",
+    "無視",
+  ];
+
+  const roleKeywords = [
+    "誰",
+    "担当",
+    "役割",
+    "引き継ぎ",
+    "先生",
+    "看護師",
+    "どこに聞け",
+    "どの人",
+    "誰がやる",
+  ];
+
+  const addByKeywords = (keywords: string[], key: keyof typeof score, points = 2) => {
+    keywords.forEach((keyword) => {
+      if (normalized.includes(keyword)) addScore(key, points);
+    });
+  };
+
+  addByKeywords(safeKeywords, "AK_SAFE");
+  addByKeywords(predictKeywords, "AK_PREDICT");
+  addByKeywords(trustKeywords, "AK_TRUST");
+  addByKeywords(respectKeywords, "AK_RESPECT");
+  addByKeywords(roleKeywords, "AK_ROLE");
+
+  if (signal === "FEAR") addScore("AK_SAFE", 3);
+  if (signal === "ANXIETY") addScore("AK_PREDICT", 3);
+  if (signal === "TRUST") addScore("AK_TRUST", 3);
+  if (signal === "DISSAT") addScore("AK_RESPECT", 3);
+
+  if (
+    normalized.includes("説明") &&
+    (normalized.includes("伝わ") ||
+      normalized.includes("不足") ||
+      normalized.includes("わから"))
+  ) {
+    addScore("AK_PREDICT", 2);
+  }
+
+  if (
+    normalized.includes("誰") &&
+    (normalized.includes("担当") ||
+      normalized.includes("聞け") ||
+      normalized.includes("やる"))
+  ) {
+    addScore("AK_ROLE", 2);
+  }
+
+  if (
+    normalized.includes("冷たい") ||
+    normalized.includes("雑") ||
+    normalized.includes("軽く扱")
+  ) {
+    addScore("AK_RESPECT", 2);
+  }
+
+  const ordered = Object.entries(score).sort((a, b) => b[1] - a[1]);
+  const [bestKey, bestScore] = ordered[0];
+  const secondScore = ordered[1]?.[1] ?? 0;
+
+  if (bestScore === 0) return "AK_PREDICT";
+
+  // 同点に近いときは規則上の優先を少しだけかける
+  if (bestScore === secondScore) {
+    if (signal === "FEAR") return "AK_SAFE";
+    if (signal === "ANXIETY") return "AK_PREDICT";
+    if (signal === "TRUST") return "AK_TRUST";
+    if (signal === "DISSAT") return "AK_RESPECT";
+  }
+
+  return bestKey;
+}
+
+function getAlignmentLabel(key: string) {
+  switch (key) {
+    case "AK_SAFE":
+      return "AK_SAFE（安心）";
+    case "AK_PREDICT":
+      return "AK_PREDICT（見通し）";
+    case "AK_TRUST":
+      return "AK_TRUST（信頼）";
+    case "AK_RESPECT":
+      return "AK_RESPECT（尊重）";
+    case "AK_ROLE":
+      return "AK_ROLE（役割理解）";
+    default:
+      return key;
+  }
+}
+
+function getAlignmentReason(key: string) {
+  switch (key) {
+    case "AK_SAFE":
+      return "まず安全感が保たれているかどうかが重要な論点です";
+    case "AK_PREDICT":
+      return "先の見通しや説明の不足が、関係の揺れにつながっている可能性があります";
+    case "AK_TRUST":
+      return "相手に任せられる感覚が保たれているかが焦点になります";
+    case "AK_RESPECT":
+      return "大切に扱われている感覚が揺らいでいないかを確認する必要があります";
+    case "AK_ROLE":
+      return "誰が何を担うのかが見えにくく、役割理解の不足が影響している可能性があります";
+    default:
+      return "今回の読み取りでは、この観点が重要です";
+  }
+}
+
+function detectApce(text: string, alignmentKey: string) {
+  if (
+    text.includes("説明") ||
+    text.includes("伝え") ||
+    text.includes("見通し") ||
+    text.includes("案内")
+  ) {
+    return "C";
+  }
+
+  if (
+    text.includes("寄り添") ||
+    text.includes("受け止め") ||
+    text.includes("声かけ") ||
+    text.includes("気持ち")
+  ) {
+    return "A";
+  }
+
+  if (
+    text.includes("待ち時間") ||
+    text.includes("環境") ||
+    text.includes("対応") ||
+    text.includes("実施") ||
+    text.includes("処置")
+  ) {
+    return "E";
+  }
+
+  if (
+    text.includes("制止") ||
+    text.includes("調整") ||
+    text.includes("制御") ||
+    text.includes("境界")
+  ) {
+    return "P";
+  }
+
+  if (alignmentKey === "AK_PREDICT") return "C";
+  if (alignmentKey === "AK_SAFE") return "A";
+  if (alignmentKey === "AK_TRUST") return "A";
+  if (alignmentKey === "AK_RESPECT") return "A";
+  if (alignmentKey === "AK_ROLE") return "C";
+
+  return "C";
+}
+
+function getApceLabel(apce: string) {
+  switch (apce) {
+    case "A":
+      return "A（共感）";
+    case "P":
+      return "P（許容・制御）";
+    case "C":
+      return "C（説明・予測）";
+    case "E":
+      return "E（実行・環境）";
+    default:
+      return apce;
+  }
+}
+
+function getApceReason(apce: string) {
+  switch (apce) {
+    case "A":
+      return "気持ちを受け止める関わりが重要な局面として読めます";
+    case "P":
+      return "行動や境界を調整する関わりが必要な局面として読めます";
+    case "C":
+      return "説明や見通し提示が重要な局面として読めます";
+    case "E":
+      return "実際の対応や環境調整が重要な局面として読めます";
+    default:
+      return "今回の読み取りでは、この行為が重要です";
+  }
+}
+
+function detectR(alignmentKey: string, apce: string) {
+  if (alignmentKey === "AK_SAFE" && apce === "A") return "R+";
+  if (alignmentKey === "AK_PREDICT" && apce === "C") return "R+";
+  if (alignmentKey === "AK_TRUST" && (apce === "A" || apce === "C")) return "R+";
+  if (alignmentKey === "AK_RESPECT" && apce === "A") return "R+";
+  if (alignmentKey === "AK_ROLE" && apce === "C") return "R+";
+
+  return "R-";
+}
+
+function getRReason(alignmentKey: string, apce: string, rValue: string) {
+  if (rValue === "R+") {
+    switch (alignmentKey) {
+      case "AK_SAFE":
+        return "必要な安心に対して、受け止めや寄り添いが比較的適合している状態です";
+      case "AK_PREDICT":
+        return "必要な見通しに対して、説明や予測提示が比較的適合している状態です";
+      case "AK_TRUST":
+        return "信頼保持に対して、受理や説明が比較的適合している状態です";
+      case "AK_RESPECT":
+        return "尊重ニーズに対して、受け止めが比較的適合している状態です";
+      case "AK_ROLE":
+        return "役割理解に対して、説明や整理が比較的適合している状態です";
+      default:
+        return "必要な要素に対して、関わりが比較的適合している状態です";
+    }
+  }
+
+  switch (alignmentKey) {
+    case "AK_SAFE":
+      return `安心が求められている一方で、現在の関わり（${getApceLabel(apce)}）は十分には適合していない可能性があります`;
+    case "AK_PREDICT":
+      return `見通しが求められている一方で、現在の関わり（${getApceLabel(apce)}）は十分には適合していない可能性があります`;
+    case "AK_TRUST":
+      return `信頼保持が求められている一方で、現在の関わり（${getApceLabel(apce)}）は十分には適合していない可能性があります`;
+    case "AK_RESPECT":
+      return `尊重が求められている一方で、現在の関わり（${getApceLabel(apce)}）は十分には適合していない可能性があります`;
+    case "AK_ROLE":
+      return `役割理解が求められている一方で、現在の関わり（${getApceLabel(apce)}）は十分には適合していない可能性があります`;
+    default:
+      return "必要な要素と現在の関わりの間にズレが残っている可能性があります";
+  }
+}
+
+function detectTrigger(delta: string, rValue: string, signal: string) {
+  const highDelta = delta === "3" || delta === "4";
+  const unstableSignal =
+    signal === "FEAR" || signal === "ANXIETY" || signal === "DISSAT";
+
+  if (highDelta && rValue === "R-" && unstableSignal) {
+    return "Triggerあり";
+  }
+
+  return "Triggerなし";
+}
+
+function getTriggerReason(
+  delta: string,
+  rValue: string,
+  signal: string,
+  trigger: string
+) {
+  if (trigger === "Triggerあり") {
+    return `Signal=${signal} が続き、Δ${delta} と高めの緊張があり、現在の関わりが十分に適合していないため、Trigger成立の可能性があります`;
+  }
+
+  if (rValue === "R+") {
+    return "必要な要素に対して一定の適合が見られるため、現時点ではTriggerは抑えられている状態です";
+  }
+
+  return "緊張やズレは見られますが、現時点ではTrigger成立とまでは読まない段階です";
+}
+
 export default function AnalysisSection({
   delta,
   eLevel,
@@ -15,76 +432,30 @@ export default function AnalysisSection({
   contextText,
   onNext,
 }: AnalysisSectionProps) {
+  const mergedText = `${contextText} ${text}`;
+  const signal = detectSignal(mergedText);
+  const alignmentKey = detectAlignmentKey(mergedText, signal);
+  const apce = detectApce(mergedText, alignmentKey);
+  const rValue = detectR(alignmentKey, apce);
+  const trigger = detectTrigger(delta, rValue, signal);
+
+  const deltaReason =
+    delta === "1"
+      ? "大きな緊張はまだ表面化していない状態です"
+      : delta === "2"
+        ? "小さなズレがあり、見落とさず整える価値があります"
+        : delta === "3"
+          ? "不安や揺れが継続しており、関係の緊張が高まりつつあります"
+          : "強い緊張状態にあり、慎重な対応が必要です";
+
   const sectionShell =
-    "overflow-hidden rounded-[22px] border border-stone-200 bg-[#fbfaf7] shadow-[0_12px_36px_rgba(15,23,42,0.06)]";
+    "overflow-hidden rounded-[22px] border border-stone-200 bg-[#fbfaf7]";
 
   const sectionHeader =
-    "border-b border-stone-200 bg-[linear-gradient(180deg,#ede8dd_0%,#e6e1d6_100%)] px-6 py-7 sm:px-8";
-
-  const sectionTitleClass =
-    "mt-3 text-[36px] font-semibold tracking-[-0.02em] text-slate-900";
-
-  const leadClass =
-    "mt-4 max-w-4xl text-[18px] leading-9 text-stone-700";
-
-  const heroCard =
-    "rounded-[20px] border-2 border-stone-300 bg-white p-7 shadow-[0_8px_22px_rgba(15,23,42,0.05)]";
+    "border-b border-stone-200 px-6 py-7 sm:px-8";
 
   const sectionCard =
-    "rounded-[18px] border border-stone-200 bg-white p-6 shadow-[0_3px_14px_rgba(15,23,42,0.04)]";
-
-  const subCard =
-    "rounded-[16px] border border-stone-200 bg-[#fcfbf8] p-5";
-
-  const softCard =
-    "rounded-[18px] border border-stone-200 bg-[#f7f3eb] p-6";
-
-  const primaryButton =
-    "rounded-[12px] bg-slate-700 px-6 py-3.5 text-[15px] font-medium text-white transition hover:bg-slate-800";
-
-  const stepChip =
-    "inline-flex items-center rounded-full border border-stone-300 bg-white px-4 py-2 text-[12px] font-medium text-stone-700";
-
-  const deltaLabel =
-    delta === "1"
-      ? "小さい"
-      : delta === "2"
-        ? "中くらい"
-        : delta === "3"
-          ? "高い"
-          : "かなり高い";
-
-  const deltaHelp =
-    delta === "1"
-      ? "いまは大きな緊張は見えにくい状態です。"
-      : delta === "2"
-        ? "小さなズレがあり、見落とさず整える価値があります。"
-        : delta === "3"
-          ? "緊張が高まりつつあり、早めの関わりが有効です。"
-          : "関係の不安定化が進みやすく、慎重な対応が必要です。";
-
-  const stateLabel =
-    delta === "1" || delta === "2"
-      ? "まだ大きなズレは表面化していない状態"
-      : delta === "3"
-        ? "関係の揺れが見え始めている状態"
-        : "関係のズレが表面化し始めている可能性がある状態";
-
-  const stateTone =
-    delta === "1" || delta === "2"
-      ? "border-emerald-200 bg-emerald-50 text-emerald-800"
-      : delta === "3"
-        ? "border-amber-200 bg-amber-50 text-amber-800"
-        : "border-rose-200 bg-rose-50 text-rose-800";
-
-  const resolvedContextText =
-    contextText?.trim() || "まだContextが整っていません。Step1で整理した内容がここに表示されます。";
-
-  const resolvedObservationText =
-    text?.trim() || "まだ観察内容がありません。Step1の自由記述がここに反映されます。";
-
-  const resolvedInsightText =
-    judgment?.trim() || "ここでは結論を出すのではなく、次にどこを見ればよいかの手がかりを整理します。";
+    "rounded-[18px] border border-stone-200 bg-white p-6";
 
   return (
     <section className={sectionShell}>
@@ -92,154 +463,102 @@ export default function AnalysisSection({
         <p className="text-[11px] uppercase tracking-[0.24em] text-stone-500">
           Step 02 / Analysis
         </p>
-        <h2 className={sectionTitleClass}>関係の整理</h2>
-        <p className={leadClass}>
-          Step1で整えたContextをもとに、いまの関係の状態を仮に読み直していきます。
-          ここでは断定するのではなく、次に何を見ればよいかの見取り図をつくります。
+        <h2 className="mt-3 text-[32px] font-semibold text-slate-900">
+          関係の読み取り
+        </h2>
+        <p className="mt-4 text-[16px] text-stone-700">
+          Step1で整えたContextをもとに、いまの関係状態を読み直します。
         </p>
-
-        <div className="mt-6 flex flex-wrap gap-3">
-          <span className={stepChip}>① 最終Contextを読む</span>
-          <span className={stepChip}>② 状態の強さを見る</span>
-          <span className={stepChip}>③ 局面を確かめる</span>
-          <span className={stepChip}>④ 次の対応へ進む</span>
-        </div>
       </div>
 
       <div className="space-y-8 p-6 sm:p-8">
-        {/* Context */}
-        <div className={heroCard}>
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
-                01 / Final Context
-              </p>
-              <p className="mt-2 text-[24px] font-semibold tracking-[-0.01em] text-slate-900">
-                整理された状況
-              </p>
-            </div>
-            <div className="rounded-full border border-stone-200 bg-[#f8f5ef] px-4 py-1.5 text-[12px] text-stone-600">
-              Step1の最終Context
-            </div>
-          </div>
-
-          <div className="mt-6 rounded-[16px] border border-stone-200 bg-[#fcfbf8] p-6">
-            <p className="text-[20px] font-semibold leading-10 text-stone-800">
-              {resolvedContextText}
-            </p>
-          </div>
-        </div>
-
-        {/* State */}
         <div className={sectionCard}>
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div>
-              <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
-                02 / State
-              </p>
-              <p className="mt-2 text-[22px] font-semibold text-slate-900">
-                いまの関係の状態
-              </p>
-            </div>
-            <span className={`rounded-full border px-4 py-1.5 text-[12px] font-medium ${stateTone}`}>
-              仮の見立て
-            </span>
-          </div>
-
-          <p className="mt-5 text-[19px] leading-9 text-stone-800">
-            {stateLabel}
+          <p className="text-sm text-stone-500">Context</p>
+          <p className="mt-3 text-[18px] text-stone-800">
+            {contextText}
           </p>
-          <p className="mt-3 text-[15px] leading-8 text-stone-600">
-            ここでは「良い・悪い」と結論づけるのではなく、
-            関係の揺れがどの程度見え始めているかをやわらかく確認します。
-          </p>
-
-          <div className="mt-6 grid gap-5 lg:grid-cols-2">
-            <div className={subCard}>
-              <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
-                Delta
-              </p>
-              <p className="mt-2 text-[18px] font-semibold text-slate-900">
-                緊張の強さ
-              </p>
-              <div className="mt-4 flex items-end justify-between gap-4">
-                <p className="text-[30px] font-semibold tracking-[-0.02em] text-slate-900">
-                  {deltaLabel}
-                </p>
-                <span className="text-[13px] text-stone-500">Δ{delta}</span>
-              </div>
-              <p className="mt-4 text-[15px] leading-8 text-stone-600">
-                {deltaHelp}
-              </p>
-            </div>
-
-            <div className={subCard}>
-              <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
-                Phase
-              </p>
-              <p className="mt-2 text-[18px] font-semibold text-slate-900">
-                いまの局面
-              </p>
-              <div className="mt-4 rounded-[14px] border border-stone-200 bg-white p-4">
-                <p className="text-[18px] font-semibold leading-8 text-slate-900">
-                  {eLevel}
-                </p>
-              </div>
-              <p className="mt-4 text-[15px] leading-8 text-stone-600">
-                緊張の強さとは別に、いまがどの段階として読めるかを確認します。
-              </p>
-            </div>
-          </div>
         </div>
 
-        {/* Reading Support */}
-        <div className={softCard}>
-          <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
-            03 / Reading Support
+        <div className={sectionCard}>
+          <p className="text-sm text-stone-500">Signal</p>
+          <p className="mt-3 text-[20px] font-semibold text-slate-900">
+            {signal}
           </p>
-          <p className="mt-2 text-[20px] font-semibold text-slate-900">
-            補助的な読み取り
+          <p className="mt-2 text-[14px] text-stone-600">
+            {getSignalReason(signal)}
           </p>
-          <p className="mt-3 text-[15px] leading-8 text-stone-600">
-            ここは結論ではなく、Contextと状態をどう読むかの補助です。
-          </p>
-
-          <div className="mt-6 grid gap-5 lg:grid-cols-2">
-            <div className="rounded-[16px] border border-stone-200 bg-white p-5">
-              <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
-                Observation
-              </p>
-              <p className="mt-2 text-[17px] font-semibold text-slate-900">
-                観察内容
-              </p>
-              <p className="mt-4 text-[15px] leading-9 text-stone-700">
-                {resolvedObservationText}
-              </p>
-            </div>
-
-            <div className="rounded-[16px] border border-stone-200 bg-white p-5">
-              <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
-                Insight Draft
-              </p>
-              <p className="mt-2 text-[17px] font-semibold text-slate-900">
-                仮の見立てメモ
-              </p>
-              <p className="mt-4 text-[15px] leading-9 text-stone-700">
-                {resolvedInsightText}
-              </p>
-            </div>
-          </div>
         </div>
 
-        {/* Next */}
-        <div className="rounded-[16px] border-t border-stone-200 pt-7">
-          <p className="mb-4 text-[15px] leading-8 text-stone-600">
-            ここまで整理できれば、次の対応を具体的に考えられます。
+        <div className={sectionCard}>
+          <p className="text-sm text-stone-500">Alignment Key</p>
+          <p className="mt-3 text-[20px] font-semibold text-slate-900">
+            {getAlignmentLabel(alignmentKey)}
           </p>
-          <button onClick={onNext} className={primaryButton} type="button">
-            次の対応を考える
-          </button>
+          <p className="mt-2 text-[14px] text-stone-600">
+            {getAlignmentReason(alignmentKey)}
+          </p>
         </div>
+
+        <div className={sectionCard}>
+          <p className="text-sm text-stone-500">APCE</p>
+          <p className="mt-3 text-[20px] font-semibold text-slate-900">
+            {getApceLabel(apce)}
+          </p>
+          <p className="mt-2 text-[14px] text-stone-600">
+            {getApceReason(apce)}
+          </p>
+        </div>
+
+        <div className={sectionCard}>
+          <p className="text-sm text-stone-500">R</p>
+          <p className="mt-3 text-[20px] font-semibold text-slate-900">
+            {rValue}
+          </p>
+          <p className="mt-2 text-[14px] text-stone-600">
+            {getRReason(alignmentKey, apce, rValue)}
+          </p>
+        </div>
+
+        <div className={sectionCard}>
+          <p className="text-sm text-stone-500">Trigger</p>
+          <p className="mt-3 text-[20px] font-semibold text-slate-900">
+            {trigger}
+          </p>
+          <p className="mt-2 text-[14px] text-stone-600">
+            {getTriggerReason(delta, rValue, signal, trigger)}
+          </p>
+        </div>
+
+        <div className={sectionCard}>
+          <p className="text-sm text-stone-500">Δ（関係緊張）</p>
+          <p className="mt-3 text-[22px] font-semibold text-slate-900">
+            Δ{delta}
+          </p>
+          <p className="mt-2 text-[14px] text-stone-600">
+            {deltaReason}
+          </p>
+        </div>
+
+        <div className={sectionCard}>
+          <p className="text-sm text-stone-500">Phase</p>
+          <p className="mt-3 text-[20px] font-semibold text-slate-900">
+            {eLevel}
+          </p>
+        </div>
+
+        <div className={sectionCard}>
+          <p className="text-sm text-stone-500">Insight</p>
+          <p className="mt-3 text-[16px] text-stone-700">
+            {judgment}
+          </p>
+        </div>
+
+        <button
+          onClick={onNext}
+          className="rounded-[12px] bg-slate-700 px-6 py-3 text-white"
+        >
+          次の対応へ
+        </button>
       </div>
     </section>
   );
