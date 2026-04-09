@@ -1,39 +1,53 @@
 import React from "react";
 
-// ===== pages（直下） =====
+// ===== pages（直下）=====
 import TopPage from "./pages/TopPage";
 import DemoPage from "./pages/DemoPage";
 import CoreLPPage from "./pages/CoreLPPage";
 import ParticipationPage from "./pages/ParticipationPage";
 import SlidesPage from "./pages/SlidesPage";
+import ContactPage from "./pages/ContactPage";
 
-// ===== pages（フォルダ内） =====
+// ===== pages（フォルダ内）=====
 import CasePage from "./pages/case/CasePage";
 import StructurePage from "./pages/structure/StructurePage";
 import ProcessPage from "./pages/process/ProcessPage";
+import EvidencePage from "./pages/evidence/EvidencePage";
 
 export default function App() {
   const [page, setPage] = React.useState("top");
 
   return (
     <div>
+      {/* TOP */}
       {page === "top" && <TopPage setPage={setPage} />}
 
+      {/* CORE LP */}
+      {page === "corelp" && <CoreLPPage setPage={setPage} />}
+
+      {/* PROTOTYPE / DEMO */}
       {page === "prototype" && <DemoPage setPage={setPage} />}
 
-      {page === "case" && <CasePage setPage={setPage} />}
-
+      {/* STRUCTURE */}
       {page === "structure" && <StructurePage setPage={setPage} />}
 
+      {/* CASE */}
+      {page === "case" && <CasePage setPage={setPage} />}
+
+      {/* PROCESS（使う場合だけ残す） */}
       {page === "process" && <ProcessPage setPage={setPage} />}
 
-      {page === "participation" && (
-        <ParticipationPage setPage={setPage} />
-      )}
+      {/* EVIDENCE */}
+      {page === "evidence" && <EvidencePage setPage={setPage} />}
 
+      {/* CONTACT / PoC参加ページ */}
+      {page === "contact" && <ContactPage setPage={setPage} />}
+
+      {/* 旧 participation ページを残す場合 */}
+      {page === "participation" && <ParticipationPage setPage={setPage} />}
+
+      {/* SLIDES */}
       {page === "slides" && <SlidesPage setPage={setPage} />}
-
-      {page === "corelp" && <CoreLPPage setPage={setPage} />}
     </div>
   );
 }

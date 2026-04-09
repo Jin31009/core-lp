@@ -1,45 +1,100 @@
-type CTASectionProps = {
-  onOpenDemo?: () => void;
+import React from "react";
+
+type Props = {
+  setPage: (page: string) => void;
 };
 
-export default function CTASection({ onOpenDemo }: CTASectionProps) {
+export default function CtaSection({ setPage }: Props) {
   return (
-    <section className="border-t border-stone-200 bg-white px-6 py-28 md:px-10 md:py-36">
-      <div className="mx-auto max-w-4xl text-center">
-        <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.28em] text-stone-400">
-          Closing Note
-        </p>
+    <section style={sectionStyle}>
+      <div style={containerStyle}>
+        <p style={labelStyle}>CTA</p>
 
-        <h2 className="text-4xl font-semibold leading-tight tracking-[-0.02em] text-stone-900 md:text-6xl">
-          違和感は、
+        <h2 style={titleStyle}>
+          この構想を、
           <br />
-          ただの違和感ではない。
+          次の現場で確かめていく
         </h2>
 
-        <p className="mx-auto mt-10 max-w-2xl text-[16px] leading-9 text-stone-600">
-          それは、関係が変わり始めているという兆しである。
-        </p>
+        <div style={textWrapStyle}>
+          <p style={textStyle}>
+            この構想は、まだ途中にあります。
+          </p>
 
-        <p className="mx-auto mt-8 max-w-2xl text-[16px] leading-9 text-stone-600">
-          もしそれを、構造として扱うことができるなら。
-          接点は、経験則ではなく、再現可能な知へ近づいていく。
-        </p>
+          <p style={textStyle}>
+            だからこそ、現場とともに試しながら、
+            <br />
+            広報を関係の構造として扱うための形を
+            <br />
+            少しずつ整えていきたいと考えています。
+          </p>
 
-        <div className="mt-14">
-          <button
-            type="button"
-            onClick={onOpenDemo}
-            className="inline-flex items-center justify-center bg-stone-900 px-8 py-3 text-[12px] font-medium uppercase tracking-[0.16em] text-white transition hover:opacity-90"
-          >
-            DEMOを体験する
-          </button>
+          <p style={textStyle}>
+            PoCへの参加は、
+            <br />
+            その最初の入口です。
+          </p>
         </div>
 
-        <p className="mx-auto mt-8 max-w-xl text-[13px] leading-7 text-stone-500">
-          答えを読むのではなく、
-          構造が立ち上がる瞬間を体験してください。
-        </p>
+        <div style={buttonWrapStyle}>
+          <button
+            onClick={() => setPage("contact")}
+            style={buttonStyle}
+          >
+            PoCに参加する
+          </button>
+        </div>
       </div>
     </section>
   );
 }
+
+const sectionStyle: React.CSSProperties = {
+  background: "#f7f5f2",
+  padding: "140px 48px 160px",
+};
+
+const containerStyle: React.CSSProperties = {
+  maxWidth: 880,
+  margin: "0 auto",
+  textAlign: "center",
+};
+
+const labelStyle: React.CSSProperties = {
+  fontSize: 11,
+  letterSpacing: "0.18em",
+  textTransform: "uppercase",
+  opacity: 0.5,
+  marginBottom: 24,
+};
+
+const titleStyle: React.CSSProperties = {
+  fontSize: 40,
+  lineHeight: 1.7,
+  letterSpacing: "-0.02em",
+  marginBottom: 32,
+};
+
+const textWrapStyle: React.CSSProperties = {
+  maxWidth: 640,
+  margin: "0 auto",
+};
+
+const textStyle: React.CSSProperties = {
+  fontSize: 17,
+  lineHeight: 2,
+  margin: "0 0 14px",
+  opacity: 0.84,
+};
+
+const buttonWrapStyle: React.CSSProperties = {
+  marginTop: 42,
+};
+
+const buttonStyle: React.CSSProperties = {
+  padding: "14px 30px",
+  border: "1px solid rgba(0,0,0,0.22)",
+  background: "transparent",
+  cursor: "pointer",
+  fontSize: 15,
+};

@@ -1,70 +1,89 @@
+import React from "react";
+
 type Props = {
   setPage: (page: string) => void;
 };
 
 export default function CtaSection({ setPage }: Props) {
   return (
-    <section
-      style={{
-        padding: "164px 48px 182px",
-        borderTop: "1px solid rgba(0,0,0,0.06)",
-      }}
-    >
-      <div style={{ maxWidth: 1180, margin: "0 auto" }}>
-        <div style={{ maxWidth: 760, margin: "0 auto", textAlign: "center" }}>
-          <p
-            style={{
-              fontSize: 10,
-              letterSpacing: "0.18em",
-              textTransform: "uppercase",
-              opacity: 0.45,
-              marginBottom: 26,
-            }}
-          >
-            Action
+    <section style={sectionStyle}>
+      <div style={containerStyle}>
+        <p style={labelStyle}>Participation</p>
+
+        <div style={scriptWrapStyle}>
+          <p style={scriptStyle}>
+            まだ途中にある
           </p>
 
-          <h2
-            style={{
-              fontSize: 42,
-              lineHeight: 1.65,
-              margin: 0,
-              letterSpacing: "-0.03em",
-            }}
-          >
-            まずは、小さく触れてみてください。
-          </h2>
+          <p style={scriptStrongStyle}>
+            だからこそ、
+            <br />
+            一緒に試しながら
+            <br />
+            確かめていきたい
+          </p>
+        </div>
 
-          <button
-            onClick={() => setPage("prototype")}
-            style={{
-              marginTop: 42,
-              padding: "14px 28px",
-              border: "1px solid rgba(0,0,0,0.18)",
-              background: "rgba(0,0,0,0.03)",
-              color: "#111",
-              fontSize: 14,
-              letterSpacing: "0.04em",
-              cursor: "pointer",
-            }}
-          >
-            プロトタイプへ
+        <div style={ctaWrapStyle}>
+          <button onClick={() => setPage("contact")} style={buttonStyle}>
+            PoCに参加する
           </button>
-
-          <p
-            style={{
-              marginTop: 18,
-              fontSize: 13,
-              lineHeight: 1.9,
-              opacity: 0.6,
-              cursor: "pointer",
-            }}
-            onClick={() => setPage("structure")}
-          >
-            構造から読みたい方は、Structureへ。
-          </p>
         </div>
       </div>
     </section>
   );
 }
+
+/* ===== styles ===== */
+
+const sectionStyle: React.CSSProperties = {
+  padding: "60px 48px 160px",
+  background: "#f7f5f2",
+  color: "#111",
+};
+
+const containerStyle: React.CSSProperties = {
+  maxWidth: 900,
+  margin: "0 auto",
+  textAlign: "center",
+};
+
+const labelStyle: React.CSSProperties = {
+  margin: "0 0 28px",
+  fontSize: 11,
+  letterSpacing: "0.18em",
+  textTransform: "uppercase",
+  opacity: 0.48,
+};
+
+const scriptWrapStyle: React.CSSProperties = {
+  marginBottom: 36,
+};
+
+const scriptStyle: React.CSSProperties = {
+  margin: "0 0 18px",
+  fontSize: 28,
+  lineHeight: 1.9,
+  letterSpacing: "-0.02em",
+  opacity: 0.78,
+};
+
+const scriptStrongStyle: React.CSSProperties = {
+  margin: 0,
+  fontSize: 34,
+  lineHeight: 1.85,
+  letterSpacing: "-0.025em",
+  fontWeight: 500,
+};
+
+const ctaWrapStyle: React.CSSProperties = {
+  marginTop: 28,
+};
+
+const buttonStyle: React.CSSProperties = {
+  padding: "14px 30px",
+  border: "1px solid rgba(0,0,0,0.22)",
+  background: "transparent",
+  cursor: "pointer",
+  fontSize: 15,
+};

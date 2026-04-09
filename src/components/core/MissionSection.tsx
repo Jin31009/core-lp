@@ -1,37 +1,42 @@
 import React from "react";
 
-type Props = {
-  setPage: (page: string) => void;
-};
-
-export default function PrototypeSection({ setPage }: Props) {
+export default function MissionSection() {
   return (
     <section style={sectionStyle}>
       <div style={containerStyle}>
-        <p style={labelStyle}>Prototype</p>
+        <p style={labelStyle}>Mission</p>
 
         <div style={scriptWrapStyle}>
           <p style={scriptStyle}>
-            だから、
+            広報は、
             <br />
-            この構想を試している
+            情報を届ける行為ではなく
           </p>
 
           <p style={scriptStrongStyle}>
-            関係を構造として捉えることで、
+            関係の状態に働きかける営みとして
             <br />
-            広報の見え方は少し変わる
+            捉え直すことができる
           </p>
         </div>
 
-        <div style={ctaWrapStyle}>
-          <button
-            onClick={() => setPage("prototype")}
-            style={buttonStyle}
-          >
-            DEMOを触れてみる
-          </button>
-        </div>
+        <p style={afterStyle}>
+          関係の状態が変われば、
+          <br />
+          同じ言葉でも
+          <br />
+          意味の届き方は変わる
+        </p>
+
+        <div style={dividerStyle} />
+
+        <p style={willStyle}>
+          私たちは、
+          <br />
+          広報が扱うものを
+          <br />
+          変えたい
+        </p>
       </div>
     </section>
   );
@@ -60,7 +65,7 @@ const labelStyle: React.CSSProperties = {
 };
 
 const scriptWrapStyle: React.CSSProperties = {
-  marginBottom: 36,
+  marginBottom: 32,
 };
 
 const scriptStyle: React.CSSProperties = {
@@ -72,20 +77,30 @@ const scriptStyle: React.CSSProperties = {
 
 const scriptStrongStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: 34,
+  fontSize: 36,
   lineHeight: 1.85,
   letterSpacing: "-0.025em",
   fontWeight: 500,
 };
 
-const ctaWrapStyle: React.CSSProperties = {
-  marginTop: 28,
+const afterStyle: React.CSSProperties = {
+  margin: "0 auto",
+  maxWidth: 560,
+  fontSize: 18,
+  lineHeight: 2,
+  opacity: 0.8,
 };
 
-const buttonStyle: React.CSSProperties = {
-  padding: "14px 30px",
-  border: "1px solid rgba(0,0,0,0.22)",
-  background: "transparent",
-  cursor: "pointer",
-  fontSize: 15,
+const dividerStyle: React.CSSProperties = {
+  width: 1,
+  height: 56,
+  background: "rgba(0,0,0,0.14)",
+  margin: "36px auto",
+};
+
+const willStyle: React.CSSProperties = {
+  margin: 0,
+  fontSize: 34,
+  lineHeight: 1.9,
+  letterSpacing: "-0.02em",
 };

@@ -4,7 +4,7 @@ type Props = {
   setPage: (page: string) => void;
 };
 
-export default function CoreHeader({ setPage }: Props) {
+export default function SiteHeader({ setPage }: Props) {
   return (
     <header style={headerStyle}>
       <div style={innerStyle}>

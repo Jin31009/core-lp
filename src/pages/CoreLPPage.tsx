@@ -3,8 +3,7 @@ import HeroSection from "../components/core/HeroSection";
 import ProblemSection from "../components/core/ProblemSection";
 import CoreSection from "../components/core/CoreSection";
 import PrototypeSection from "../components/core/PrototypeSection";
-import TrustSection from "../components/core/TrustSection";
-import InterfaceSection from "../components/core/InterfaceSection";
+import MissionSection from "../components/core/MissionSection";
 import CtaSection from "../components/core/CtaSection";
 import FooterSection from "../components/core/FooterSection";
 
@@ -16,12 +15,12 @@ export default function CoreLPPage({ setPage }: Props) {
   return (
     <main style={{ background: "#f7f5f2", color: "#111" }}>
       <CoreHeader setPage={setPage} />
+
       <HeroSection />
       <ProblemSection />
       <CoreSection />
       <PrototypeSection setPage={setPage} />
-      <TrustSection />
-      <InterfaceSection setPage={setPage} />
+      <MissionSection />
       <CtaSection setPage={setPage} />
       <FooterSection />
     </main>

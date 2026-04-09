@@ -4,7 +4,12 @@ type Props = {
   setPage: (page: string) => void;
 };
 
-type CardKey = "structure" | "prototype" | "process" | "participation" | null;
+type CardKey =
+  | "structure"
+  | "prototype"
+  | "case"
+  | "evidence"
+  | null;
 
 export default function InterfaceSection({ setPage }: Props) {
   const [hovered, setHovered] = React.useState<CardKey>(null);
@@ -19,6 +24,7 @@ export default function InterfaceSection({ setPage }: Props) {
     >
       <div style={{ maxWidth: 1180, margin: "0 auto" }}>
         <div style={{ maxWidth: 980, margin: "0 auto" }}>
+          {/* ===== TITLE ===== */}
           <p
             style={{
               fontSize: 10,
@@ -44,6 +50,7 @@ export default function InterfaceSection({ setPage }: Props) {
             このモデルとの関わり方
           </h2>
 
+          {/* ===== GRID ===== */}
           <div
             style={{
               display: "grid",
@@ -52,6 +59,7 @@ export default function InterfaceSection({ setPage }: Props) {
               marginTop: 64,
             }}
           >
+            {/* ===== Structure ===== */}
             <button
               onClick={() => setPage("structure")}
               onMouseEnter={() => setHovered("structure")}
@@ -60,9 +68,12 @@ export default function InterfaceSection({ setPage }: Props) {
             >
               <p style={cardIndexStyle}>01</p>
               <h3 style={cardTitleStyle}>理解する</h3>
-              <p style={cardTextStyle}>構造と背景を読む</p>
+              <p style={cardTextStyle}>
+                再定義と構造を読み解く
+              </p>
             </button>
 
+            {/* ===== Prototype ===== */}
             <button
               onClick={() => setPage("prototype")}
               onMouseEnter={() => setHovered("prototype")}
@@ -71,29 +82,37 @@ export default function InterfaceSection({ setPage }: Props) {
             >
               <p style={cardIndexStyle}>02</p>
               <h3 style={cardTitleStyle}>体験する</h3>
-              <p style={cardTextStyle}>プロトタイプに触れる</p>
+              <p style={cardTextStyle}>
+                プロトタイプに触れる
+              </p>
             </button>
 
+            {/* ===== Case ===== */}
             <button
-              onClick={() => setPage("process")}
-              onMouseEnter={() => setHovered("process")}
+              onClick={() => setPage("case")}
+              onMouseEnter={() => setHovered("case")}
               onMouseLeave={() => setHovered(null)}
-              style={getCardStyle(hovered === "process")}
+              style={getCardStyle(hovered === "case")}
             >
               <p style={cardIndexStyle}>03</p>
-              <h3 style={cardTitleStyle}>試す</h3>
-              <p style={cardTextStyle}>小さく現場で試行する</p>
+              <h3 style={cardTitleStyle}>実例を見る</h3>
+              <p style={cardTextStyle}>
+                現場での構造の現れ方を見る
+              </p>
             </button>
 
+            {/* ===== Evidence ===== */}
             <button
-              onClick={() => setPage("participation")}
-              onMouseEnter={() => setHovered("participation")}
+              onClick={() => setPage("evidence")}
+              onMouseEnter={() => setHovered("evidence")}
               onMouseLeave={() => setHovered(null)}
-              style={getCardStyle(hovered === "participation")}
+              style={getCardStyle(hovered === "evidence")}
             >
               <p style={cardIndexStyle}>04</p>
-              <h3 style={cardTitleStyle}>導入する</h3>
-              <p style={cardTextStyle}>共同研究や伴走支援につなぐ</p>
+              <h3 style={cardTitleStyle}>信頼を見る</h3>
+              <p style={cardTextStyle}>
+                学術・思想・実績を確認する
+              </p>
             </button>
           </div>
         </div>
@@ -102,6 +121,8 @@ export default function InterfaceSection({ setPage }: Props) {
   );
 }
 
+/* ===== STYLE ===== */
+
 function getCardStyle(isHovered: boolean): React.CSSProperties {
   return {
     textAlign: "left",
@@ -109,7 +130,9 @@ function getCardStyle(isHovered: boolean): React.CSSProperties {
     border: isHovered
       ? "1px solid rgba(0,0,0,0.22)"
       : "1px solid rgba(0,0,0,0.1)",
-    background: isHovered ? "rgba(255,255,255,0.78)" : "rgba(255,255,255,0.42)",
+    background: isHovered
+      ? "rgba(255,255,255,0.78)"
+      : "rgba(255,255,255,0.42)",
     cursor: "pointer",
     transition: "all 180ms ease",
     transform: isHovered ? "translateY(-2px)" : "translateY(0)",
