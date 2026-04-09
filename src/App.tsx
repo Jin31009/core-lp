@@ -1,61 +1,39 @@
 import React from "react";
-import type { Page } from "./types";
 
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-
+// ===== pages（直下） =====
 import TopPage from "./pages/TopPage";
-import SlidesPage from "./pages/SlidesPage";
-import ParticipationPage from "./pages/ParticipationPage";
-import PocPage from "./pages/PocPage";
 import DemoPage from "./pages/DemoPage";
+import CoreLPPage from "./pages/CoreLPPage";
+import ParticipationPage from "./pages/ParticipationPage";
+import SlidesPage from "./pages/SlidesPage";
+
+// ===== pages（フォルダ内） =====
+import CasePage from "./pages/case/CasePage";
+import StructurePage from "./pages/structure/StructurePage";
+import ProcessPage from "./pages/process/ProcessPage";
 
 export default function App() {
-  const [page, setPage] = React.useState<Page>("top");
-
-  const navigate = (next: Page) => {
-    setPage(next);
-  };
-
-  const goBack = () => {
-    setPage("top");
-  };
+  const [page, setPage] = React.useState("top");
 
   return (
     <div>
-      <Header
-        navItems={[
-          { label: "TOP", page: "top" },
-          { label: "学会", page: "slides" },
-          { label: "DEMO", page: "demo" },
-          { label: "PARTICIPATION", page: "participation" },
-          { label: "POC", page: "poc" },
-        ]}
-        current={page}
-        onNavigate={navigate}
-      />
+      {page === "top" && <TopPage setPage={setPage} />}
 
-      <main>
-        {page === "top" && <TopPage onNavigate={navigate} />}
+      {page === "prototype" && <DemoPage setPage={setPage} />}
 
-        {page === "slides" && (
-          <SlidesPage onNavigate={navigate} onBackPrev={goBack} />
-        )}
+      {page === "case" && <CasePage setPage={setPage} />}
 
-        {page === "demo" && (
-          <DemoPage onNavigate={navigate} onBackPrev={goBack} />
-        )}
+      {page === "structure" && <StructurePage setPage={setPage} />}
 
-        {page === "participation" && (
-          <ParticipationPage onNavigate={navigate} onBackPrev={goBack} />
-        )}
+      {page === "process" && <ProcessPage setPage={setPage} />}
 
-        {page === "poc" && (
-          <PocPage onNavigate={navigate} onBackPrev={goBack} />
-        )}
-      </main>
+      {page === "participation" && (
+        <ParticipationPage setPage={setPage} />
+      )}
 
-      <Footer />
+      {page === "slides" && <SlidesPage setPage={setPage} />}
+
+      {page === "corelp" && <CoreLPPage setPage={setPage} />}
     </div>
   );
 }

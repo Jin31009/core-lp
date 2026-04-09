@@ -494,7 +494,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
 
                 {setPage && (
                   <button
-                    onClick={() => setPage("top")}
+                    onClick={() => setPage("lp")}
                     className="rounded-[10px] border border-stone-300 bg-white px-4 py-2.5 text-sm text-stone-700 transition hover:bg-stone-50"
                   >
                     ← TOPへ戻る
