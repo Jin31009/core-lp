@@ -7,7 +7,7 @@ import DBSampleSection from "../components/demo/DBSampleSection";
 import ReflectionPanel from "../components/demo/ReflectionPanel";
 
 type DemoPageProps = {
-  setPage?: (page: string) => void;
+  setPage: (page: string) => void;
 };
 
 type AcexItem = {
@@ -492,14 +492,12 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                   Step1から始める
                 </button>
 
-                {setPage && (
-                  <button
-                    onClick={() => setPage("lp")}
-                    className="rounded-[10px] border border-stone-300 bg-white px-4 py-2.5 text-sm text-stone-700 transition hover:bg-stone-50"
-                  >
-                    ← TOPへ戻る
-                  </button>
-                )}
+                <button
+                  onClick={() => setPage("corelp")}
+                  className="rounded-[10px] border border-stone-300 bg-white px-4 py-2.5 text-sm text-stone-700 transition hover:bg-stone-50"
+                >
+                  ← TOPへ戻る
+                </button>
               </div>
             </div>
           </div>
