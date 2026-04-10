@@ -1,4 +1,3 @@
-import LPPage from "./pages/LPPage";
 import { useState } from "react";
 
 
