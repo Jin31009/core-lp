@@ -37,7 +37,7 @@ export default function App() {
     >
       <Header onNavigate={(nextPage) => setPage(nextPage as Page)} />
 
-      {page === "top" && <TopPage setPage={(nextPage) => setPage(nextPage as Page)} />}
+      {page === "top" && <LPPage setPage={(nextPage) => setPage(nextPage as Page)} />}
       {page === "lp" && <LPPage setPage={(nextPage) => setPage(nextPage as Page)} />}
       {page === "demo" && <DemoPage setPage={(nextPage) => setPage(nextPage as Page)} />}
       {page === "mission" && <MissionPage setPage={(nextPage) => setPage(nextPage as Page)} />}
