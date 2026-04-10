@@ -21,9 +21,9 @@ export default function LPPage({ setPage }: LPPageProps) {
   return (
     <div className="min-h-screen bg-[#f7f4ee] text-stone-900">
       <Header
-        onOpenTop={() => setPage("lp")}
+        onOpenTop={() => setPage("top")}
         onOpenDemo={() => setPage("demo")}
-        onOpenSlides={() => setPage("slides")}
+        onOpenSlides={() => setPage("top")}
       />
 
       <main>
@@ -54,7 +54,7 @@ export default function LPPage({ setPage }: LPPageProps) {
             onOpenCase={() => setPage("case")}
             onOpenStructure={() => setPage("structure")}
             onOpenProcess={() => setPage("process")}
-            onOpenSlides={() => setPage("slides")}
+            onOpenSlides={() => setPage("top")}
             onOpenNotes={() => window.open("https://note.com", "_blank")}
           />
         </div>
@@ -65,9 +65,9 @@ export default function LPPage({ setPage }: LPPageProps) {
       </main>
 
       <Footer
-        onOpenTop={() => setPage("lp")}
+        onOpenTop={() => setPage("top")}
         onOpenDemo={() => setPage("demo")}
-        onOpenSlides={() => setPage("slides")}
+        onOpenSlides={() => setPage("top")}
       />
     </div>
   );
