@@ -60,7 +60,7 @@ export default function LPPage({ setPage }: LPPageProps) {
         </div>
 
         <div data-reveal className={revealClassName}>
-          <CTASection onOpenDemo={() => setPage("demo")} />
+          <CTASection setPage={setPage} />
         </div>
       </main>
 

@@ -1,4 +1,4 @@
-import React from "react";
+
 
 // ===== pages（直下）=====
 import TopPage from "./pages/TopPage";
@@ -9,10 +9,8 @@ import SlidesPage from "./pages/SlidesPage";
 import ContactPage from "./pages/ContactPage";
 
 // ===== pages（フォルダ内）=====
-import CasePage from "./pages/case/CasePage";
 import StructurePage from "./pages/structure/StructurePage";
 import ProcessPage from "./pages/process/ProcessPage";
-import EvidencePage from "./pages/evidence/EvidencePage";
 
 export default function App() {
   const [page, setPage] = React.useState("top");
@@ -32,13 +30,11 @@ export default function App() {
       {page === "structure" && <StructurePage setPage={setPage} />}
 
       {/* CASE */}
-      {page === "case" && <CasePage setPage={setPage} />}
 
       {/* PROCESS（使う場合だけ残す） */}
       {page === "process" && <ProcessPage setPage={setPage} />}
 
       {/* EVIDENCE */}
-      {page === "evidence" && <EvidencePage setPage={setPage} />}
 
       {/* CONTACT / PoC参加ページ */}
       {page === "contact" && <ContactPage setPage={setPage} />}

@@ -1,4 +1,4 @@
-import React from "react";
+
 
 type Props = {
   setPage: (page: string) => void;

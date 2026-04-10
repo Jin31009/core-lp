@@ -1,4 +1,4 @@
-import React from "react";
+
 import SiteHeader from "../../components/shared/SiteHeader";
 
 type Props = {
