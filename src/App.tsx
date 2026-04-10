@@ -17,7 +17,7 @@ export default function App() {
   return (
     <div>
       {/* TOP */}
-      {page === "top" && <LPPage setPage={setPage} />}
+      {page === "top" {page === "top" && <LPPage setPage={setPage} />}{page === "top" && <LPPage setPage={setPage} />} <CoreLPPage setPage={setPage} />}
 
       {/* CORE LP */}
       {page === "corelp" && <CoreLPPage setPage={setPage} />}
