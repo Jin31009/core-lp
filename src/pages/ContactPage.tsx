@@ -1,3 +1,4 @@
+import { useState } from "react";
 
 import SiteHeader from "../components/shared/SiteHeader";
 
@@ -6,11 +7,11 @@ type Props = {
 };
 
 export default function ContactPage({ setPage }: Props) {
-  const [name, setName] = React.useState("");
-  const [organization, setOrganization] = React.useState("");
-  const [participation, setParticipation] = React.useState("話を聞いてみる");
-  const [message, setMessage] = React.useState("");
-  const [submitted, setSubmitted] = React.useState(false);
+  const [name, setName] = useState("");
+  const [organization, setOrganization] = useState("");
+  const [participation, setParticipation] = useState("話を聞いてみる");
+  const [message, setMessage] = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

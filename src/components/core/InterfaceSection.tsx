@@ -12,7 +12,7 @@ type CardKey =
   | null;
 
 export default function InterfaceSection({ setPage }: Props) {
-  const [hovered, setHovered] = React.useState<CardKey>(null);
+  const [hovered, setHovered] = useState<CardKey>(null);
 
   return (
     <section

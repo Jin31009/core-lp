@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import InputSection from "../components/demo/InputSection";
 import AnalysisSection from "../components/demo/AnalysisSection";
@@ -109,7 +110,6 @@ export default function DemoPage({ setPage }: DemoPageProps) {
   const [contextRequested, setContextRequested] = useState(false);
   const [primaryContextDraft, setPrimaryContextDraft] = useState("");
   const [contextFollowups, setContextFollowups] = useState<string[]>([]);
-  const [isGeneratingContext, setIsGeneratingContext] = useState(false);
 
   const [finalContextDraft, setFinalContextDraft] = useState("");
   const [isGeneratingFinalContext, setIsGeneratingFinalContext] = useState(false);
@@ -704,7 +704,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                   whyTags={whyTags}
                   whyMemo={whyMemo}
                   nextAssets={nextAssets}
-                  innerRef={null}
+                  innerRef={undefined}
                 />
               )}
 
