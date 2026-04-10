@@ -318,7 +318,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
     if (!observationRaw.trim() && !emotion && !urgency) return;
 
     setContextRequested(true);
-    setIsGeneratingContext(true);
+    setIsGeneratingFinalContext(true);
     setPrimaryContextDraft("AIが整理しています...");
     setContextFollowups([]);
     setFinalContextDraft("");
@@ -353,7 +353,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
       );
       setContextFollowups([]);
     } finally {
-      setIsGeneratingContext(false);
+     setIsGeneratingFinalContext(false);
     }
   };
 

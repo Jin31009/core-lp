@@ -1,5 +1,7 @@
 
 
+import { useState } from "react";
+
 type Props = {
   setPage: (page: string) => void;
 };
