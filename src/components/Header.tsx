@@ -1,80 +1,123 @@
-import React from "react";
-import type { Page } from "../types";
-
-type NavItem = {
-  label: string;
-  page: Page;
-};
-
 type HeaderProps = {
-  navItems: NavItem[];
-  current: Page;
-  onNavigate: (page: Page) => void;
+  onNavigate: (page: string) => void;
 };
 
-export default function Header({
-  navItems,
-  current,
-  onNavigate,
-}: HeaderProps) {
+export default function Header({ onNavigate }: HeaderProps) {
+  const topLinks = [
+    { key: "top", label: "Top" },
+    { key: "mission", label: "Mission" },
+    { key: "demo", label: "Prototype" },
+    { key: "case", label: "Case" },
+    { key: "evidence", label: "Evidence" },
+  ];
+
+  const subLinks = [
+    { key: "participation", label: "Participation" },
+    { key: "slides", label: "Slides" },
+    { key: "contact", label: "Contact" },
+  ];
+
   return (
-    <header className="sticky top-0 z-50 border-b border-black/10 bg-white/90 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-start justify-between gap-6 px-4 py-4 sm:px-6">
-        <button
-          onClick={() => onNavigate("top")}
-          className="text-left transition hover:opacity-80"
+    <header
+      style={{
+        position: "sticky",
+        top: 0,
+        zIndex: 50,
+        backdropFilter: "blur(10px)",
+        background: "rgba(247,247,245,0.92)",
+        borderBottom: "1px solid #e6e6df",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: 1180,
+          margin: "0 auto",
+          padding: "14px 20px 10px",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 16,
+            marginBottom: 10,
+            flexWrap: "wrap",
+          }}
         >
-          <div className="text-[10px] tracking-[0.28em] text-slate-400">
-            RELATION DESIGN
-          </div>
-          <div className="mt-1 text-sm font-medium text-slate-900 sm:text-base">
-            黒江 仁
-          </div>
-          <div className="mt-1 text-[10px] leading-4 text-slate-500 sm:text-[11px]">
-            病院広報の限界を超える｜関係マネジメントとAIによる新しい設計（CORE）
-          </div>
-        </button>
+          <button
+            onClick={() => onNavigate("top")}
+            style={{
+              border: "none",
+              background: "transparent",
+              padding: 0,
+              cursor: "pointer",
+              fontSize: 18,
+              fontWeight: 700,
+              letterSpacing: "0.04em",
+              color: "#111111",
+            }}
+          >
+            CORE
+          </button>
 
-        <nav className="hidden items-center gap-2 sm:flex">
-          {navItems.map((item) => {
-            const active = current === item.page;
-            return (
+          <nav
+            style={{
+              display: "flex",
+              gap: 10,
+              flexWrap: "wrap",
+            }}
+          >
+            {topLinks.map((item) => (
               <button
-                key={item.page}
-                onClick={() => onNavigate(item.page)}
-                className={
-                  active
-                    ? "border border-black bg-black px-3 py-2 text-xs tracking-[0.18em] text-white"
-                    : "border border-black/10 bg-white px-3 py-2 text-xs tracking-[0.18em] text-slate-600 transition hover:border-black/30 hover:text-black"
-                }
+                key={item.key}
+                onClick={() => onNavigate(item.key)}
+                style={navButtonStyle}
               >
                 {item.label}
               </button>
-            );
-          })}
-        </nav>
-      </div>
-
-      <div className="border-t border-black/5 px-4 py-3 sm:hidden">
-        <div className="flex flex-wrap gap-2">
-          {navItems.map((item) => {
-            const active = current === item.page;
-            return (
-              <button
-                key={item.page}
-                onClick={() => onNavigate(item.page)}
-                className={
-                  active
-                    ? "border border-black bg-black px-3 py-2 text-[11px] text-white"
-                    : "border border-black/10 bg-white px-3 py-2 text-[11px] text-slate-600"
-                }
-              >
-                {item.label}
-              </button>
-            );
-          })}
+            ))}
+          </nav>
         </div>
+
+        <nav
+          style={{
+            display: "flex",
+            gap: 10,
+            flexWrap: "wrap",
+          }}
+        >
+          {subLinks.map((item) => (
+            <button
+              key={item.key}
+              onClick={() => onNavigate(item.key)}
+              style={subNavButtonStyle}
+            >
+              {item.label}
+            </button>
+          ))}
+        </nav>
       </div>
     </header>
   );
 }
+
+const navButtonStyle = {
+  border: "1px solid #ddddd6",
+  background: "#ffffff",
+  color: "#111111",
+  padding: "8px 14px",
+  borderRadius: 999,
+  fontSize: 13,
+  cursor: "pointer",
+};
+
+const subNavButtonStyle = {
+  border: "1px solid #ecece6",
+  background: "#f9f9f7",
+  color: "#444444",
+  padding: "7px 12px",
+  borderRadius: 999,
+  fontSize: 12,
+  cursor: "pointer",
+};

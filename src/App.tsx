@@ -1,53 +1,53 @@
-import React from "react";
+import { useState } from "react";
 
-// ===== pages（直下）=====
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+
 import TopPage from "./pages/TopPage";
+import LPPage from "./pages/LPPage";
 import DemoPage from "./pages/DemoPage";
-import CoreLPPage from "./pages/CoreLPPage";
 import ParticipationPage from "./pages/ParticipationPage";
 import SlidesPage from "./pages/SlidesPage";
 import ContactPage from "./pages/ContactPage";
-
-// ===== pages（フォルダ内）=====
+import MissionPage from "./pages/MissionPage";
 import CasePage from "./pages/case/CasePage";
-import StructurePage from "./pages/structure/StructurePage";
-import ProcessPage from "./pages/process/ProcessPage";
 import EvidencePage from "./pages/evidence/EvidencePage";
 
+export type Page =
+  | "top"
+  | "lp"
+  | "demo"
+  | "mission"
+  | "participation"
+  | "slides"
+  | "case"
+  | "evidence"
+  | "contact";
+
 export default function App() {
-  const [page, setPage] = React.useState("top");
+  const [page, setPage] = useState<Page>("top");
 
   return (
-    <div>
-      {/* TOP */}
-      {page === "top" && <TopPage setPage={setPage} />}
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "#f7f7f5",
+        color: "#111111",
+      }}
+    >
+      <Header onNavigate={(nextPage) => setPage(nextPage as Page)} />
 
-      {/* CORE LP */}
-      {page === "corelp" && <CoreLPPage setPage={setPage} />}
-
-      {/* PROTOTYPE / DEMO */}
-      {page === "prototype" && <DemoPage setPage={setPage} />}
-
-      {/* STRUCTURE */}
-      {page === "structure" && <StructurePage setPage={setPage} />}
-
-      {/* CASE */}
-      {page === "case" && <CasePage setPage={setPage} />}
-
-      {/* PROCESS（使う場合だけ残す） */}
-      {page === "process" && <ProcessPage setPage={setPage} />}
-
-      {/* EVIDENCE */}
-      {page === "evidence" && <EvidencePage setPage={setPage} />}
-
-      {/* CONTACT / PoC参加ページ */}
-      {page === "contact" && <ContactPage setPage={setPage} />}
-
-      {/* 旧 participation ページを残す場合 */}
+      {page === "top" && <TopPage setPage={(nextPage) => setPage(nextPage as Page)} />}
+      {page === "lp" && <LPPage setPage={(nextPage) => setPage(nextPage as Page)} />}
+      {page === "demo" && <DemoPage setPage={(nextPage) => setPage(nextPage as Page)} />}
+      {page === "mission" && <MissionPage setPage={(nextPage) => setPage(nextPage as Page)} />}
       {page === "participation" && <ParticipationPage setPage={setPage} />}
-
-      {/* SLIDES */}
       {page === "slides" && <SlidesPage setPage={setPage} />}
+      {page === "case" && <CasePage setPage={setPage} />}
+      {page === "evidence" && <EvidencePage setPage={setPage} />}
+      {page === "contact" && <ContactPage setPage={(nextPage) => setPage(nextPage as Page)} />}
+
+      <Footer />
     </div>
   );
 }

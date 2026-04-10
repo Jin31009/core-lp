@@ -1,311 +1,263 @@
-import React from "react";
-import SiteHeader from "../../components/shared/SiteHeader";
+import type { CSSProperties } from "react";
+import type { Page } from "../../App";
 
 type Props = {
-  setPage: (page: string) => void;
+  setPage: (page: Page) => void;
 };
 
 export default function CasePage({ setPage }: Props) {
   return (
-    <>
-      <SiteHeader setPage={setPage} />
+    <main style={pageWrap}>
+      <div style={container}>
+        <p style={labelStyle}>Case</p>
 
-      <main style={mainStyle}>
-        <div style={containerStyle}>
-          <p style={labelStyle}>Case</p>
+        <h1 style={titleStyle}>
+          Concept is validated
+          <br />
+          through situated cases.
+        </h1>
 
-          <h1 style={titleStyle}>
-            私たちはすでに、
-            <br />
-            関係を扱うためのPoC段階にある
-          </h1>
+        <section style={summaryWrap}>
+          <p style={subLabelStyle}>Executive Summary</p>
+          <p style={text}>
+            COREが提示する構造は、抽象概念として閉じるのではなく、
+            実際の接点や現場の観察から往復しながら検証されるべきものです。
+            そのためCaseページでは、構造がどのように記述され、どのように読み替えられ、
+            次の行動に接続されるのかを示します。
+          </p>
+        </section>
 
-          {/* Executive Summary */}
-          <section style={summaryWrap}>
-            <p style={subLabelStyle}>Executive Summary</p>
+        <section style={sectionWrap}>
+          <p style={subLabelStyle}>Figure</p>
+          <h2 style={sectionTitleStyle}>Case as structured interpretation</h2>
 
-            <h2 style={summaryTitle}>
-              広報は、
-              <br />
-              関係の状態を扱うものである
-            </h2>
-
-            <div style={summaryBox}>
-              <p style={summaryText}>
-                広報を関係の状態として捉えるという再定義は、
-                <br />
-                概念ではなく、概念実証（PoC）として提示されている。
-              </p>
-
-              <p style={summaryText}>
-                RA-SS DEMOは、
-                <br />
-                関係を観察し、構造として整理し、
-                <br />
-                次の関係行為へつなげるプロトタイプとして機能している。
-              </p>
-
-              <p style={summaryTextLast}>
-                実際に触れることで、
-                <br />
-                関係がどのように見えるかを体験できる。
-              </p>
-            </div>
-          </section>
-
-          {/* Figure */}
-          <section style={sectionStyle}>
-            <p style={subLabelStyle}>Figure</p>
-
-            <h2 style={sectionTitleStyle}>
-              再定義は、操作プロセスとして実装されている
-            </h2>
-
-            <div style={figureWrap}>
-              <div style={figureStep}>
-                <p style={figureLabel}>Input</p>
-                <p style={figureTitle}>出来事を記述する</p>
-                <p style={figureBody}>
-                  違和感や状況を
-                  <br />
-                  そのまま入力する
-                </p>
-              </div>
-
-              <div style={arrow}>→</div>
-
-              <div style={figureStep}>
-                <p style={figureLabel}>Structure</p>
-                <p style={figureTitle}>構造として整理する</p>
-                <p style={figureBody}>
-                  関係の緊張やズレを
-                  <br />
-                  構造として捉える
-                </p>
-              </div>
-
-              <div style={arrow}>→</div>
-
-              <div style={figureStep}>
-                <p style={figureLabel}>Action</p>
-                <p style={figureTitle}>関係行為へつなぐ</p>
-                <p style={figureBody}>
-                  次の一手を
-                  <br />
-                  関係行為として提示する
-                </p>
-              </div>
-
-              <div style={arrow}>→</div>
-
-              <div style={figureStep}>
-                <p style={figureLabel}>Result</p>
-                <p style={figureTitle}>結果を記録する</p>
-                <p style={figureBody}>
-                  改善・維持・悪化を
-                  <br />
-                  次の学習へつなげる
-                </p>
-              </div>
+          <div style={figureWrap}>
+            <div style={figureCard}>
+              <div style={figureTitle}>Observation</div>
+              <p style={figureText}>現場で発生した記述や違和感を採取する</p>
             </div>
 
-            <p style={figureNote}>
-              このプロセスは、実際のケース入力によって再現可能である。
-            </p>
-          </section>
+            <div style={arrow}>→</div>
 
-          {/* Prototype */}
-          <section style={sectionStyle}>
-            <p style={subLabelStyle}>Prototype</p>
-
-            <h2 style={sectionTitleStyle}>
-              RA-SS DEMOは、
-              <br />
-              関係の操作可能性を示す
-            </h2>
-
-            <p style={text}>
-              それは判断を代行するシステムではない。
-              <br />
-              関係の状態を記述し、
-              <br />
-              構造として整理し、
-              <br />
-              次の関係行為へ接続するための装置である。
-            </p>
-          </section>
-
-          {/* Process */}
-          <section style={sectionStyle}>
-            <p style={subLabelStyle}>Process</p>
-
-            <h2 style={sectionTitleStyle}>
-              出来事は、
-              <br />
-              構造として扱われる
-            </h2>
-
-            <div style={flow}>
-              <div>出来事</div>
-              <div style={flowArrow}>↓</div>
-              <div>関係の緊張</div>
-              <div style={flowArrow}>↓</div>
-              <div>意味のズレ</div>
-              <div style={flowArrow}>↓</div>
-              <div>関係行為</div>
+            <div style={figureCard}>
+              <div style={figureTitle}>Structuring</div>
+              <p style={figureText}>関係の緊張・ズレ・前兆として再配置する</p>
             </div>
 
-            <p style={text}>
-              出来事はそのまま扱われるのではない。
-              <br />
-              分解され、構造として整理され、
-              <br />
-              介入可能な形へ再構成される。
-            </p>
-          </section>
+            <div style={arrow}>→</div>
 
-          {/* Result */}
-          <section style={sectionStyle}>
-            <p style={subLabelStyle}>Result</p>
-
-            <h2 style={sectionTitleStyle}>
-              関係は、
-              <br />
-              扱える対象になる
-            </h2>
-
-            <div style={resultGrid}>
-              <div style={card}>
-                <p style={cardTitle}>Observe</p>
-                <p style={cardText}>関係の変化を観察できる</p>
-              </div>
-              <div style={card}>
-                <p style={cardTitle}>Intervene</p>
-                <p style={cardText}>次の一手へ介入できる</p>
-              </div>
-              <div style={card}>
-                <p style={cardTitle}>Accumulate</p>
-                <p style={cardText}>経験が蓄積される</p>
-              </div>
+            <div style={figureCard}>
+              <div style={figureTitle}>Interpretation</div>
+              <p style={figureText}>意味のあるケースとして再読し、次の判断へつなぐ</p>
             </div>
 
-            <p style={text}>
-              この実装は、
-              <br />
-              次の関係を整える起点にもなる。
-            </p>
-          </section>
+            <div style={arrow}>→</div>
 
-          {/* CTA */}
-          <div style={ctaWrap}>
-            <button onClick={() => setPage("corelp")} style={buttonStyle}>
-              TOPへ戻る
-            </button>
+            <div style={figureCard}>
+              <div style={figureTitle}>Action</div>
+              <p style={figureText}>Prototype / Dialogue / Recordへ返す</p>
+            </div>
           </div>
+
+          <p style={figureNote}>
+            ケースは事例の集積ではなく、概念が現場と接続されるための検証単位です。
+          </p>
+        </section>
+
+        <section style={sectionWrap}>
+          <p style={subLabelStyle}>Prototype</p>
+          <h2 style={sectionTitleStyle}>Case is not archive, but interface.</h2>
+          <p style={text}>
+            事例を蓄積するだけでは、実践知は共有されません。重要なのは、
+            ケースが再利用可能な構造として記述され、他者が読み、判断し、
+            次の行動へ接続できることです。COREではこの過程を、
+            「事例保存」ではなく「構造化された接点」として扱います。
+          </p>
+        </section>
+
+        <section style={sectionWrap}>
+          <p style={subLabelStyle}>Process</p>
+          <h2 style={sectionTitleStyle}>Observation → Structure → Reuse</h2>
+          <div style={flow}>
+            <div style={flowItem}>Write</div>
+            <div style={flowArrow}>→</div>
+            <div style={flowItem}>Interpret</div>
+            <div style={flowArrow}>→</div>
+            <div style={flowItem}>Prototype</div>
+            <div style={flowArrow}>→</div>
+            <div style={flowItem}>Return to field</div>
+          </div>
+          <p style={text}>
+            このページは、単一の成功事例を誇示するためではなく、
+            構造が複数の現場や課題にまたがって再利用できるかを確認するためのものです。
+          </p>
+        </section>
+
+        <section style={sectionWrap}>
+          <p style={subLabelStyle}>Result</p>
+          <h2 style={sectionTitleStyle}>Case becomes evidence for design.</h2>
+          <p style={text}>
+            ここで得られるのは、単なる感想ではありません。どのような構造が有効か、
+            どのような記述が再利用可能か、どこで意味のずれが起きるかという、
+            設計上の判断材料です。CaseはEvidenceへ接続され、
+            理論・実務・試作の中間地帯を形づくります。
+          </p>
+        </section>
+
+        <div style={ctaWrap}>
+          <button onClick={() => setPage("evidence")} style={primaryButton}>
+            Evidenceへ
+          </button>
         </div>
-      </main>
-    </>
+      </div>
+    </main>
   );
 }
 
-/* ===== styles ===== */
-
-const mainStyle = {
-  background: "#f7f5f2",
-  minHeight: "100vh",
-  padding: "160px 48px",
+const pageWrap: CSSProperties = {
+  padding: "96px 24px 120px",
 };
 
-const containerStyle = {
+const container: CSSProperties = {
   maxWidth: 1080,
   margin: "0 auto",
 };
 
-const labelStyle = {
-  fontSize: 11,
+const labelStyle: CSSProperties = {
+  fontSize: 12,
   textAlign: "center",
-  opacity: 0.5,
-  marginBottom: 28,
+  opacity: 0.6,
+  marginBottom: 16,
+  letterSpacing: "0.12em",
+  textTransform: "uppercase",
 };
 
-const titleStyle = {
-  fontSize: 42,
+const titleStyle: CSSProperties = {
+  fontSize: "clamp(32px, 5vw, 58px)",
   textAlign: "center",
+  marginBottom: 28,
+  lineHeight: 1.15,
+  fontWeight: 600,
+};
+
+const summaryWrap: CSSProperties = {
+  textAlign: "center",
+  marginBottom: 56,
+  maxWidth: 780,
+  marginLeft: "auto",
+  marginRight: "auto",
+};
+
+const subLabelStyle: CSSProperties = {
+  fontSize: 12,
+  textAlign: "center",
+  opacity: 0.6,
+  marginBottom: 14,
+  letterSpacing: "0.12em",
+  textTransform: "uppercase",
+};
+
+const sectionWrap: CSSProperties = {
   marginBottom: 56,
 };
 
-const subLabelStyle = {
-  fontSize: 11,
-  textAlign: "center",
-  opacity: 0.5,
-  marginBottom: 20,
-};
-
-const sectionStyle = {
-  marginTop: 96,
-};
-
-const sectionTitleStyle = {
-  fontSize: 30,
+const sectionTitleStyle: CSSProperties = {
+  fontSize: 28,
   textAlign: "center",
   marginBottom: 24,
+  lineHeight: 1.3,
+  fontWeight: 600,
 };
 
-const text = {
+const text: CSSProperties = {
   fontSize: 17,
-  lineHeight: 2,
+  lineHeight: 1.95,
+  textAlign: "center",
+  color: "#444",
+  maxWidth: 820,
+  margin: "0 auto",
+};
+
+const figureWrap: CSSProperties = {
+  display: "grid",
+  gridTemplateColumns: "repeat(7, 1fr)",
+  gap: 12,
+  alignItems: "center",
+};
+
+const figureCard: CSSProperties = {
+  gridColumn: "span 1",
+  background: "#fff",
+  border: "1px solid #e5e5e0",
+  borderRadius: 18,
+  padding: 18,
+  minHeight: 150,
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+};
+
+const figureTitle: CSSProperties = {
+  fontSize: 16,
+  fontWeight: 600,
+  marginBottom: 10,
   textAlign: "center",
 };
 
-const summaryWrap = { textAlign: "center", marginBottom: 80 };
-
-const summaryTitle = { fontSize: 28, marginBottom: 24 };
-
-const summaryBox = {
-  border: "1px solid rgba(0,0,0,0.1)",
-  padding: 28,
+const figureText: CSSProperties = {
+  fontSize: 14,
+  lineHeight: 1.7,
+  textAlign: "center",
+  color: "#555",
 };
 
-const summaryText = { marginBottom: 10 };
-
-const summaryTextLast = {};
-
-const figureWrap = {
-  display: "grid",
-  gridTemplateColumns: "1fr 40px 1fr 40px 1fr 40px 1fr",
-  gap: 10,
+const arrow: CSSProperties = {
+  textAlign: "center",
+  fontSize: 28,
+  opacity: 0.5,
 };
 
-const figureStep = {
-  border: "1px solid rgba(0,0,0,0.1)",
-  padding: 20,
+const figureNote: CSSProperties = {
+  textAlign: "center",
+  marginTop: 18,
+  fontSize: 14,
+  color: "#666",
 };
 
-const figureLabel = { fontSize: 12, opacity: 0.6 };
-const figureTitle = { fontSize: 18 };
-const figureBody = { fontSize: 14 };
-
-const arrow = { textAlign: "center", fontSize: 20 };
-
-const figureNote = { textAlign: "center", marginTop: 20 };
-
-const flow = { textAlign: "center", fontSize: 22 };
-const flowArrow = { opacity: 0.3 };
-
-const resultGrid = {
-  display: "grid",
-  gridTemplateColumns: "repeat(3,1fr)",
-  gap: 20,
+const flow: CSSProperties = {
+  textAlign: "center",
+  fontSize: 16,
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  gap: 12,
+  flexWrap: "wrap",
+  marginBottom: 22,
 };
 
-const card = { border: "1px solid rgba(0,0,0,0.1)", padding: 20 };
+const flowItem: CSSProperties = {
+  padding: "12px 18px",
+  border: "1px solid #e5e5e0",
+  borderRadius: 999,
+  background: "#fff",
+};
 
-const cardTitle = { fontWeight: "bold" };
-const cardText = {};
+const flowArrow: CSSProperties = {
+  fontSize: 22,
+  opacity: 0.5,
+};
 
-const ctaWrap = { textAlign: "center", marginTop: 100 };
+const ctaWrap: CSSProperties = {
+  textAlign: "center",
+  marginTop: 28,
+};
 
-const buttonStyle = {
-  padding: "12px 24px",
-  border: "1px solid rgba(0,0,0,0.2)",
+const primaryButton: CSSProperties = {
+  border: "none",
+  background: "#111111",
+  color: "#ffffff",
+  padding: "14px 22px",
+  borderRadius: 999,
+  fontSize: 14,
+  cursor: "pointer",
 };

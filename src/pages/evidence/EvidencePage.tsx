@@ -1,330 +1,259 @@
-import React from "react";
-import SiteHeader from "../../components/shared/SiteHeader";
+import type { CSSProperties } from "react";
+import type { Page } from "../../App";
 
 type Props = {
-  setPage: (page: string) => void;
+  setPage: (page: Page) => void;
 };
 
 export default function EvidencePage({ setPage }: Props) {
   return (
-    <>
-      <SiteHeader setPage={setPage} />
+    <main style={pageWrap}>
+      <div style={container}>
+        <p style={labelStyle}>Evidence</p>
 
-      <main style={mainStyle}>
-        <div style={containerStyle}>
-          <p style={labelStyle}>Evidence</p>
+        <h1 style={titleStyle}>
+          Evidence is not only proof.
+          <br />
+          It is a basis for iteration.
+        </h1>
 
-          <h1 style={titleStyle}>
-            この構想は、
-            <br />
-            いくつかの現場との関わりの中で形づくられてきた
-          </h1>
+        <section style={summaryWrap}>
+          <p style={subLabelStyle}>Executive Summary</p>
+          <p style={textStyle}>
+            COREにおけるEvidenceは、単に正しさを証明するための資料ではありません。
+            仮説、観察、試作、実装のあいだを往復しながら、
+            次の改善や対話へ接続するための根拠として機能します。
+          </p>
+        </section>
 
-          {/* Executive Summary */}
-          <section style={summaryWrap}>
-            <p style={subLabelStyle}>Executive Summary</p>
+        <section style={sectionWrap}>
+          <p style={subLabelStyle}>Figure</p>
+          <h2 style={sectionTitleStyle}>Evidence as layered validation</h2>
 
-            <h2 style={summaryTitle}>
-              理論だけでも、
-              <br />
-              実装だけでもない
-            </h2>
-
-            <div style={summaryBox}>
-              <p style={summaryText}>
-                広報を関係として捉えるという考えは、
-                <br />
-                一度に生まれたものではない。
-              </p>
-
-              <p style={summaryText}>
-                学術的な問い、言葉としての整理、
-                <br />
-                そして現場での試行を行き来する中で、
-                <br />
-                少しずつ形になってきた。
-              </p>
-
-              <p style={summaryText}>
-                まだ途中にあるが、
-                <br />
-                この視点はすでにいくつかの現場で共有され始めている。
-              </p>
-
-              <p style={summaryTextLast}>
-                以下は、その過程の一部である。
-              </p>
-            </div>
-          </section>
-
-          {/* Figure */}
-          <section style={sectionStyle}>
-            <p style={subLabelStyle}>Figure</p>
-
-            <h2 style={sectionTitleStyle}>
-              この構想は、
-              <br />
-              往復の中で形づくられてきた
-            </h2>
-
-            <div style={figureWrap}>
-              <div style={figureBlock}>
-                <p style={figureLabel}>Question</p>
-                <p style={figureTitle}>問い</p>
-                <p style={figureText}>
-                  学術・研究としての問い
-                </p>
-              </div>
-
-              <div style={figureArrow}>→</div>
-
-              <div style={figureBlock}>
-                <p style={figureLabel}>Language</p>
-                <p style={figureTitle}>言語化</p>
-                <p style={figureText}>
-                  note・概念整理・
-                  <br />
-                  言葉としての構築
-                </p>
-              </div>
-
-              <div style={figureArrow}>→</div>
-
-              <div style={figureBlock}>
-                <p style={figureLabel}>Practice</p>
-                <p style={figureTitle}>実践</p>
-                <p style={figureText}>
-                  現場との接点・
-                  <br />
-                  編集・支援
-                </p>
-              </div>
+          <div style={figureWrap}>
+            <div style={figureCard}>
+              <div style={figureTitle}>Academic</div>
+              <p style={figureText}>理論的な位置づけと記述の厳密性</p>
             </div>
 
-            <p style={figureNote}>
-              一方向ではなく、
-              <br />
-              この往復の中で構想は更新されてきた。
-            </p>
-          </section>
+            <div style={figureArrow}>→</div>
 
-          {/* Academic */}
-          <section style={sectionStyle}>
-            <p style={subLabelStyle}>Academic</p>
-
-            <h2 style={sectionTitleStyle}>
-              問いとして、
-              <br />
-              外に開いてきた
-            </h2>
-
-            <div style={blockStyle}>
-              <p style={blockLead}>
-                この構想は、
-                <br />
-                学会発表や研究構成の中で
-                <br />
-                検討されてきた。
-              </p>
-
-              <p style={blockText}>
-                成果を示すことよりも、
-                <br />
-                外部からの視点にさらされてきたことが重要である。
-              </p>
+            <div style={figureCard}>
+              <div style={figureTitle}>Thought</div>
+              <p style={figureText}>概念の再定義と編集的統合</p>
             </div>
-          </section>
 
-          {/* Thought */}
-          <section style={sectionStyle}>
-            <p style={subLabelStyle}>Thought</p>
+            <div style={figureArrow}>→</div>
 
-            <h2 style={sectionTitleStyle}>
-              言葉として、
-              <br />
-              繰り返し書いてきた
-            </h2>
-
-            <div style={blockStyle}>
-              <p style={blockLead}>
-                この考えは、
-                <br />
-                noteなどを通じて
-                <br />
-                何度も言い直されてきた。
-              </p>
-
-              <p style={blockText}>
-                一度の説明で完結するのではなく、
-                <br />
-                少しずつ輪郭を持ってきた。
-              </p>
+            <div style={figureCard}>
+              <div style={figureTitle}>Practice</div>
+              <p style={figureText}>現場での接続可能性と反復改善</p>
             </div>
-          </section>
-
-          {/* Practice */}
-          <section style={sectionStyle}>
-            <p style={subLabelStyle}>Practice</p>
-
-            <h2 style={sectionTitleStyle}>
-              現場との接点の中で、
-              <br />
-              確かめてきた
-            </h2>
-
-            <div style={blockStyle}>
-              <p style={blockLead}>
-                医療広報の企画・編集・支援を通じて、
-                <br />
-                多くの現場と関わってきた。
-              </p>
-
-              <p style={blockText}>
-                そこで繰り返し見えてきたのは、
-                <br />
-                広報が情報だけでは扱えないという事実である。
-              </p>
-            </div>
-          </section>
-
-          {/* Closing */}
-          <section style={sectionStyle}>
-            <p style={subLabelStyle}>Closing</p>
-
-            <h2 style={sectionTitleStyle}>
-              この構想は、
-              <br />
-              まだ途中にある
-            </h2>
-
-            <p style={textStyle}>
-              ここまでの積み重ねはあるが、
-              <br />
-              まだ十分とは言えない。
-            </p>
-
-            <p style={textStyle}>
-              だからこそ、
-              <br />
-              現場とともに試しながら、
-              <br />
-              構造として整えていく必要がある。
-            </p>
-
-            <p style={textStyle}>
-              この積み重ねが、
-              <br />
-              関係を構造として扱うという発想につながっている。
-            </p>
-
-            <p style={textStyle}>
-              このページは、
-              <br />
-              その入口のひとつである。
-            </p>
-          </section>
-
-          {/* CTA */}
-          <div style={ctaWrap}>
-            <button onClick={() => setPage("corelp")} style={buttonStyle}>
-              TOPへ戻る
-            </button>
           </div>
+
+          <p style={figureNote}>
+            Evidenceは単層ではなく、理論・思考・実践の重なりによって成立します。
+          </p>
+        </section>
+
+        <section style={sectionWrap}>
+          <p style={subLabelStyle}>Academic</p>
+          <h2 style={sectionTitleStyle}>Research gives structure to meaning.</h2>
+          <p style={blockLead}>
+            学術的な整理は、概念の輪郭を曖昧なままにしないための基礎です。
+          </p>
+          <p style={blockText}>
+            どのような問いを立て、どのようなデータや事例を扱い、どのように構造として読むのか。
+            その記述の厳密性が、後続のPrototypeやDialogueの質を支えます。
+          </p>
+        </section>
+
+        <section style={sectionWrap}>
+          <p style={subLabelStyle}>Thought</p>
+          <h2 style={sectionTitleStyle}>Concept becomes communicable through editing.</h2>
+          <p style={blockLead}>
+            思考は、編集されてはじめて他者と共有できる形になります。
+          </p>
+          <p style={blockText}>
+            COREでは、理論をそのまま提示するのではなく、
+            LP、スライド、図版、テキストを通して、理解可能な単位に編成します。
+            その編集過程そのものがEvidenceの一部です。
+          </p>
+        </section>
+
+        <section style={sectionWrap}>
+          <p style={subLabelStyle}>Practice</p>
+          <h2 style={sectionTitleStyle}>Evidence returns to the field.</h2>
+          <p style={blockLead}>
+            根拠は、現場に返ってはじめて次の意味を持ちます。
+          </p>
+          <p style={blockText}>
+            接点で使われ、再び観察され、改良されることで、
+            概念は静的な説明ではなく、学習可能な実践知へと変わっていきます。
+          </p>
+        </section>
+
+        <section style={sectionWrap}>
+          <p style={subLabelStyle}>Closing</p>
+          <h2 style={sectionTitleStyle}>Evidence supports the next conversation.</h2>
+          <p style={textStyle}>
+            COREが目指しているのは、研究成果の展示ではありません。
+            概念、試作、運用、対話が循環するための基盤をつくることです。
+          </p>
+          <p style={textStyle}>
+            そのためEvidenceページは、過去の成果を並べる場所ではなく、
+            次の実装や協働に向けた判断の足場として構成されています。
+          </p>
+        </section>
+
+        <div style={ctaWrap}>
+          <button onClick={() => setPage("contact")} style={primaryButton}>
+            Contactへ
+          </button>
         </div>
-      </main>
-    </>
+      </div>
+    </main>
   );
 }
 
-/* ===== styles（変更なし） ===== */
-
-const mainStyle = {
-  background: "#f7f5f2",
-  minHeight: "100vh",
-  padding: "160px 48px",
+const pageWrap: CSSProperties = {
+  padding: "96px 24px 120px",
 };
 
-const containerStyle = {
+const container: CSSProperties = {
   maxWidth: 1080,
   margin: "0 auto",
 };
 
-const labelStyle = {
+const labelStyle: CSSProperties = {
   textAlign: "center",
-  opacity: 0.5,
-  marginBottom: 28,
+  opacity: 0.6,
+  marginBottom: 16,
+  fontSize: 12,
+  letterSpacing: "0.12em",
+  textTransform: "uppercase",
 };
 
-const titleStyle = {
-  fontSize: 42,
+const titleStyle: CSSProperties = {
+  fontSize: "clamp(32px, 5vw, 58px)",
   textAlign: "center",
+  marginBottom: 28,
+  lineHeight: 1.15,
+  fontWeight: 600,
+};
+
+const summaryWrap: CSSProperties = {
+  textAlign: "center",
+  marginBottom: 56,
+  maxWidth: 780,
+  marginLeft: "auto",
+  marginRight: "auto",
+};
+
+const subLabelStyle: CSSProperties = {
+  textAlign: "center",
+  opacity: 0.6,
+  marginBottom: 14,
+  fontSize: 12,
+  letterSpacing: "0.12em",
+  textTransform: "uppercase",
+};
+
+const sectionWrap: CSSProperties = {
   marginBottom: 56,
 };
 
-const subLabelStyle = {
+const sectionTitleStyle: CSSProperties = {
+  fontSize: 28,
   textAlign: "center",
-  opacity: 0.5,
-  marginBottom: 20,
+  marginBottom: 22,
+  lineHeight: 1.3,
+  fontWeight: 600,
 };
 
-const sectionStyle = {
-  marginTop: 96,
-};
-
-const sectionTitleStyle = {
-  fontSize: 30,
-  textAlign: "center",
-  marginBottom: 24,
-};
-
-const textStyle = {
-  fontSize: 17,
-  lineHeight: 2,
-  textAlign: "center",
-};
-
-const summaryWrap = { textAlign: "center", marginBottom: 80 };
-
-const summaryTitle = { fontSize: 28, marginBottom: 24 };
-
-const summaryBox = {
-  border: "1px solid rgba(0,0,0,0.1)",
-  padding: 28,
-};
-
-const summaryText = { marginBottom: 10 };
-const summaryTextLast = {};
-
-const figureWrap = {
+const figureWrap: CSSProperties = {
   display: "grid",
-  gridTemplateColumns: "1fr 40px 1fr 40px 1fr",
-  gap: 10,
+  gridTemplateColumns: "1fr 60px 1fr 60px 1fr",
+  gap: 12,
+  alignItems: "center",
 };
 
-const figureBlock = {
-  border: "1px solid rgba(0,0,0,0.1)",
-  padding: 20,
+const figureCard: CSSProperties = {
+  background: "#fff",
+  border: "1px solid #e5e5e0",
+  borderRadius: 18,
+  padding: 22,
+  minHeight: 150,
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
 };
 
-const figureLabel = { fontSize: 12, opacity: 0.6 };
-const figureTitle = { fontSize: 20 };
-const figureText = { fontSize: 14 };
-
-const figureArrow = { textAlign: "center" };
-const figureNote = { textAlign: "center", marginTop: 20 };
-
-const blockStyle = {
-  borderTop: "1px solid rgba(0,0,0,0.1)",
-  borderBottom: "1px solid rgba(0,0,0,0.1)",
-  padding: 24,
+const figureTitle: CSSProperties = {
+  fontSize: 16,
+  fontWeight: 600,
+  marginBottom: 10,
+  textAlign: "center",
 };
 
-const blockLead = { textAlign: "center", marginBottom: 10 };
-const blockText = { textAlign: "center" };
+const figureText: CSSProperties = {
+  textAlign: "center",
+  fontSize: 14,
+  lineHeight: 1.7,
+  color: "#555",
+};
 
-const ctaWrap = { textAlign: "center", marginTop: 100 };
+const figureArrow: CSSProperties = {
+  textAlign: "center",
+  fontSize: 28,
+  opacity: 0.45,
+};
 
-const buttonStyle = {
-  padding: "12px 24px",
-  border: "1px solid rgba(0,0,0,0.2)",
+const figureNote: CSSProperties = {
+  textAlign: "center",
+  marginTop: 18,
+  fontSize: 14,
+  color: "#666",
+};
+
+const blockLead: CSSProperties = {
+  textAlign: "center",
+  marginBottom: 12,
+  fontSize: 18,
+  lineHeight: 1.8,
+  fontWeight: 500,
+  color: "#222",
+};
+
+const blockText: CSSProperties = {
+  textAlign: "center",
+  fontSize: 16,
+  lineHeight: 1.95,
+  color: "#444",
+  maxWidth: 820,
+  margin: "0 auto",
+};
+
+const textStyle: CSSProperties = {
+  fontSize: 17,
+  lineHeight: 1.95,
+  textAlign: "center",
+  color: "#444",
+  maxWidth: 820,
+  margin: "0 auto 16px",
+};
+
+const ctaWrap: CSSProperties = {
+  textAlign: "center",
+  marginTop: 28,
+};
+
+const primaryButton: CSSProperties = {
+  border: "none",
+  background: "#111111",
+  color: "#ffffff",
+  padding: "14px 22px",
+  borderRadius: 999,
+  fontSize: 14,
+  cursor: "pointer",
 };

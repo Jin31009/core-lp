@@ -1,10 +1,8 @@
-import type { Page } from "../App";
-
 type Props = {
-  setPage: (page: Page) => void;
+  setPage: (page: string) => void;
 };
 
-export default function ParticipationPage({ setPage }: Props) {
+export default function MissionPage({ setPage }: Props) {
   return (
     <main
       style={{
@@ -23,7 +21,7 @@ export default function ParticipationPage({ setPage }: Props) {
           textAlign: "center",
         }}
       >
-        Participation
+        Mission
       </p>
 
       <h1
@@ -35,9 +33,9 @@ export default function ParticipationPage({ setPage }: Props) {
           fontWeight: 600,
         }}
       >
-        学会・研究・対話の場に、
+        関係を、概念だけでなく
         <br />
-        どのように参加していくか。
+        実装可能な構造として扱う。
       </h1>
 
       <p
@@ -50,30 +48,30 @@ export default function ParticipationPage({ setPage }: Props) {
           color: "#444",
         }}
       >
-        COREは、地域医療広報・関係設計・研究実装を横断しながら、
-        学会発表、対話、試作、検証を通して実践知を更新していくことを目指しています。
+        COREは、医療・地域・広報・記録・対話の接点を、
+        観察可能で、共有可能で、再利用可能な構造として編み直すことを目指しています。
       </p>
 
       <section
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+          gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
           gap: 24,
-          marginBottom: 56,
+          marginBottom: 52,
         }}
       >
         {[
           {
-            title: "Academic Presentation",
-            text: "研究構造を整理し、理論・実践・プロトタイプを接続しながら発表へ展開します。",
+            title: "Observe",
+            text: "接点で生じる違和感や記述を、消費せずに観察対象として扱います。",
           },
           {
-            title: "Collaborative Dialogue",
-            text: "病院、教育機関、実務者との対話を通じて、概念を現場の言葉に変換します。",
+            title: "Structure",
+            text: "断片的な事象を、関係構造として再配置し、意味を読み直します。",
           },
           {
-            title: "Prototype Validation",
-            text: "仮説を画面・動線・記録の形に落とし込み、実装可能性を確かめていきます。",
+            title: "Prototype",
+            text: "概念を画面・導線・記録の形に落とし込み、実装可能性を検証します。",
           },
         ].map((item) => (
           <div
@@ -89,7 +87,7 @@ export default function ParticipationPage({ setPage }: Props) {
             <h2
               style={{
                 fontSize: 20,
-                marginBottom: 14,
+                marginBottom: 12,
                 fontWeight: 600,
               }}
             >
@@ -116,16 +114,10 @@ export default function ParticipationPage({ setPage }: Props) {
           flexWrap: "wrap",
         }}
       >
-        <button
-          onClick={() => setPage("slides")}
-          style={buttonStyle}
-        >
-          Slidesを見る
+        <button onClick={() => setPage("demo")} style={primaryButton}>
+          Prototypeへ
         </button>
-        <button
-          onClick={() => setPage("contact")}
-          style={buttonSecondaryStyle}
-        >
+        <button onClick={() => setPage("contact")} style={secondaryButton}>
           Contactへ
         </button>
       </div>
@@ -133,7 +125,7 @@ export default function ParticipationPage({ setPage }: Props) {
   );
 }
 
-const buttonStyle = {
+const primaryButton = {
   border: "none",
   background: "#111111",
   color: "#ffffff",
@@ -143,7 +135,7 @@ const buttonStyle = {
   cursor: "pointer",
 };
 
-const buttonSecondaryStyle = {
+const secondaryButton = {
   border: "1px solid #d7d7d0",
   background: "#ffffff",
   color: "#111111",

@@ -109,7 +109,6 @@ export default function DemoPage({ setPage }: DemoPageProps) {
   const [contextRequested, setContextRequested] = useState(false);
   const [primaryContextDraft, setPrimaryContextDraft] = useState("");
   const [contextFollowups, setContextFollowups] = useState<string[]>([]);
-  const [isGeneratingContext, setIsGeneratingContext] = useState(false);
 
   const [finalContextDraft, setFinalContextDraft] = useState("");
   const [isGeneratingFinalContext, setIsGeneratingFinalContext] = useState(false);
@@ -318,7 +317,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
     if (!observationRaw.trim() && !emotion && !urgency) return;
 
     setContextRequested(true);
-    setIsGeneratingContext(true);
+    setIsGeneratingFinalContext(true);
     setPrimaryContextDraft("AIが整理しています...");
     setContextFollowups([]);
     setFinalContextDraft("");
@@ -353,7 +352,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
       );
       setContextFollowups([]);
     } finally {
-      setIsGeneratingContext(false);
+      setIsGeneratingFinalContext(false);
     }
   };
 
@@ -702,7 +701,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                   whyTags={whyTags}
                   whyMemo={whyMemo}
                   nextAssets={nextAssets}
-                  innerRef={null}
+                  innerRef={undefined}
                 />
               )}
 

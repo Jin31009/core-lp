@@ -1,100 +1,101 @@
-import React from "react";
-
 type Props = {
-  setPage: (page: string) => void;
+  onOpenDemo?: () => void;
+  onOpenContact?: () => void;
 };
 
-export default function CtaSection({ setPage }: Props) {
+export default function CTASection({ onOpenDemo, onOpenContact }: Props) {
   return (
-    <section style={sectionStyle}>
-      <div style={containerStyle}>
-        <p style={labelStyle}>CTA</p>
+    <section
+      style={{
+        padding: "72px 24px",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: 1040,
+          margin: "0 auto",
+          background: "#111111",
+          color: "#ffffff",
+          borderRadius: 28,
+          padding: "40px 28px",
+          textAlign: "center",
+        }}
+      >
+        <p
+          style={{
+            fontSize: 12,
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            opacity: 0.7,
+            marginBottom: 14,
+          }}
+        >
+          Call to Action
+        </p>
 
-        <h2 style={titleStyle}>
-          この構想を、
-          <br />
-          次の現場で確かめていく
+        <h2
+          style={{
+            fontSize: "clamp(28px, 4vw, 44px)",
+            lineHeight: 1.25,
+            marginBottom: 18,
+            fontWeight: 600,
+          }}
+        >
+          Conceptを、説明だけで終わらせない。
         </h2>
 
-        <div style={textWrapStyle}>
-          <p style={textStyle}>
-            この構想は、まだ途中にあります。
-          </p>
+        <p
+          style={{
+            maxWidth: 720,
+            margin: "0 auto 28px",
+            fontSize: 16,
+            lineHeight: 1.9,
+            color: "rgba(255,255,255,0.82)",
+          }}
+        >
+          Prototype、Case、Evidenceを通して、
+          COREの構想を対話可能なかたちへ接続します。
+        </p>
 
-          <p style={textStyle}>
-            だからこそ、現場とともに試しながら、
-            <br />
-            広報を関係の構造として扱うための形を
-            <br />
-            少しずつ整えていきたいと考えています。
-          </p>
-
-          <p style={textStyle}>
-            PoCへの参加は、
-            <br />
-            その最初の入口です。
-          </p>
-        </div>
-
-        <div style={buttonWrapStyle}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: 12,
+            flexWrap: "wrap",
+          }}
+        >
           <button
-            onClick={() => setPage("contact")}
-            style={buttonStyle}
+            onClick={onOpenDemo}
+            style={{
+              border: "none",
+              background: "#ffffff",
+              color: "#111111",
+              padding: "14px 22px",
+              borderRadius: 999,
+              fontSize: 14,
+              cursor: "pointer",
+            }}
           >
-            PoCに参加する
+            Prototypeを見る
+          </button>
+
+          <button
+            onClick={onOpenContact}
+            style={{
+              border: "1px solid rgba(255,255,255,0.24)",
+              background: "transparent",
+              color: "#ffffff",
+              padding: "14px 22px",
+              borderRadius: 999,
+              fontSize: 14,
+              cursor: "pointer",
+            }}
+          >
+            Contact
           </button>
         </div>
       </div>
     </section>
   );
 }
-
-const sectionStyle: React.CSSProperties = {
-  background: "#f7f5f2",
-  padding: "140px 48px 160px",
-};
-
-const containerStyle: React.CSSProperties = {
-  maxWidth: 880,
-  margin: "0 auto",
-  textAlign: "center",
-};
-
-const labelStyle: React.CSSProperties = {
-  fontSize: 11,
-  letterSpacing: "0.18em",
-  textTransform: "uppercase",
-  opacity: 0.5,
-  marginBottom: 24,
-};
-
-const titleStyle: React.CSSProperties = {
-  fontSize: 40,
-  lineHeight: 1.7,
-  letterSpacing: "-0.02em",
-  marginBottom: 32,
-};
-
-const textWrapStyle: React.CSSProperties = {
-  maxWidth: 640,
-  margin: "0 auto",
-};
-
-const textStyle: React.CSSProperties = {
-  fontSize: 17,
-  lineHeight: 2,
-  margin: "0 0 14px",
-  opacity: 0.84,
-};
-
-const buttonWrapStyle: React.CSSProperties = {
-  marginTop: 42,
-};
-
-const buttonStyle: React.CSSProperties = {
-  padding: "14px 30px",
-  border: "1px solid rgba(0,0,0,0.22)",
-  background: "transparent",
-  cursor: "pointer",
-  fontSize: 15,
-};

@@ -1,89 +1,101 @@
-import React from "react";
-
 type Props = {
   setPage: (page: string) => void;
 };
 
 export default function CtaSection({ setPage }: Props) {
   return (
-    <section style={sectionStyle}>
-      <div style={containerStyle}>
-        <p style={labelStyle}>Participation</p>
+    <section
+      style={{
+        padding: "72px 24px",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: 1040,
+          margin: "0 auto",
+          background: "#111111",
+          color: "#ffffff",
+          borderRadius: 28,
+          padding: "40px 28px",
+          textAlign: "center",
+        }}
+      >
+        <p
+          style={{
+            fontSize: 12,
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            opacity: 0.7,
+            marginBottom: 14,
+          }}
+        >
+          Call to Action
+        </p>
 
-        <div style={scriptWrapStyle}>
-          <p style={scriptStyle}>
-            まだ途中にある
-          </p>
+        <h2
+          style={{
+            fontSize: "clamp(28px, 4vw, 44px)",
+            lineHeight: 1.25,
+            marginBottom: 18,
+            fontWeight: 600,
+          }}
+        >
+          COREの構想を、
+          実際の導線として開く。
+        </h2>
 
-          <p style={scriptStrongStyle}>
-            だからこそ、
-            <br />
-            一緒に試しながら
-            <br />
-            確かめていきたい
-          </p>
-        </div>
+        <p
+          style={{
+            maxWidth: 720,
+            margin: "0 auto 28px",
+            fontSize: 16,
+            lineHeight: 1.9,
+            color: "rgba(255,255,255,0.82)",
+          }}
+        >
+          Mission、Prototype、Contactへ接続しながら、
+          概念を説明可能なかたちだけでなく、移動可能な体験として提示します。
+        </p>
 
-        <div style={ctaWrapStyle}>
-          <button onClick={() => setPage("contact")} style={buttonStyle}>
-            PoCに参加する
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: 12,
+            flexWrap: "wrap",
+          }}
+        >
+          <button
+            onClick={() => setPage("demo")}
+            style={{
+              border: "none",
+              background: "#ffffff",
+              color: "#111111",
+              padding: "14px 22px",
+              borderRadius: 999,
+              fontSize: 14,
+              cursor: "pointer",
+            }}
+          >
+            Prototypeを見る
+          </button>
+
+          <button
+            onClick={() => setPage("contact")}
+            style={{
+              border: "1px solid rgba(255,255,255,0.24)",
+              background: "transparent",
+              color: "#ffffff",
+              padding: "14px 22px",
+              borderRadius: 999,
+              fontSize: 14,
+              cursor: "pointer",
+            }}
+          >
+            Contact
           </button>
         </div>
       </div>
     </section>
   );
 }
-
-/* ===== styles ===== */
-
-const sectionStyle: React.CSSProperties = {
-  padding: "60px 48px 160px",
-  background: "#f7f5f2",
-  color: "#111",
-};
-
-const containerStyle: React.CSSProperties = {
-  maxWidth: 900,
-  margin: "0 auto",
-  textAlign: "center",
-};
-
-const labelStyle: React.CSSProperties = {
-  margin: "0 0 28px",
-  fontSize: 11,
-  letterSpacing: "0.18em",
-  textTransform: "uppercase",
-  opacity: 0.48,
-};
-
-const scriptWrapStyle: React.CSSProperties = {
-  marginBottom: 36,
-};
-
-const scriptStyle: React.CSSProperties = {
-  margin: "0 0 18px",
-  fontSize: 28,
-  lineHeight: 1.9,
-  letterSpacing: "-0.02em",
-  opacity: 0.78,
-};
-
-const scriptStrongStyle: React.CSSProperties = {
-  margin: 0,
-  fontSize: 34,
-  lineHeight: 1.85,
-  letterSpacing: "-0.025em",
-  fontWeight: 500,
-};
-
-const ctaWrapStyle: React.CSSProperties = {
-  marginTop: 28,
-};
-
-const buttonStyle: React.CSSProperties = {
-  padding: "14px 30px",
-  border: "1px solid rgba(0,0,0,0.22)",
-  background: "transparent",
-  cursor: "pointer",
-  fontSize: 15,
-};
