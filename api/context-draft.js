@@ -27,8 +27,7 @@ export default async function handler(req, res) {
 
     const prompt = `
 あなたは、医療現場の観察情報を「一次Context」として整理する支援AIです。
-目的は、単なる要約ではなく、状況・受け取り・関係上の緊張が自然に読める短い文章へ整えることです。
-さらに、追加補足として何を書くと文脈が深まるかを簡潔に示してください。
+目的は、観察内容を自然な文章で一次整理し、さらに追加補足として深めるための観点を短い候補で示すことです。
 
 【入力情報】
 観察内容:
@@ -45,22 +44,25 @@ ${note || "（未入力）"}
 
 【出力ルール】
 - 日本語で書く
-- 箇条書きにしない
+- 一次Contextは箇条書きにしない
 - 見出しや ### や記号を出さない
-- 「一次Context」は180〜320字程度
-- 状況説明だけで終わらせず、患者や家族がどう受け取っているか、
+- 一次Contextは180〜320字程度
+- 状況だけでなく、患者や家族がどう受け取っているか、
   何に違和感や不満が集まっているかが自然ににじむように書く
-- 断定しすぎず、「〜と受け取っている可能性がある」「〜への不安や不満が高まりつつあるように見える」など、
-  記録として使える慎重なトーンにする
-- 「追加補足の方向」は1〜2文で、
-  このあと何を追記すると文脈理解が深まるかを示す
-- 余計な前置き（「以下のように整理できます」等）は書かない
+- 断定しすぎず、観察記録として使える慎重なトーンにする
+- followups は 2〜3個
+- followups は「このあと追加補足として書くとよい観点」を、短い一文で返す
+- followups は箇条書き用の短文にする
 - 出力は JSON のみ
 
 【JSON形式】
 {
   "contextDraft": "ここに一次Context本文",
-  "followupGuide": "ここに追加補足の方向"
+  "followups": [
+    "ここに補足候補1",
+    "ここに補足候補2",
+    "ここに補足候補3"
+  ]
 }
 `.trim();
 
@@ -77,13 +79,13 @@ ${note || "（未入力）"}
     } catch {
       parsed = {
         contextDraft: text,
-        followupGuide: "",
+        followups: [],
       };
     }
 
     return res.status(200).json({
       contextDraft: parsed.contextDraft || "",
-      followupGuide: parsed.followupGuide || "",
+      followups: Array.isArray(parsed.followups) ? parsed.followups : [],
     });
   } catch (error) {
     console.error("context-draft error:", error);
