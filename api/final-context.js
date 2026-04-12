@@ -4,93 +4,231 @@ const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+const MODEL = process.env.RA_CONTEXT_MODEL || "gpt-5.4-mini";
+
+function cleanText(value) {
+  if (typeof value !== "string") return "";
+  return value.replace(/\r\n/g, "\n").trim();
+}
+
+function normalizeFinalContext(text) {
+  const fallback =
+    "補足情報を踏まえると、表面上は不満や怒りとして現れていても、その背景には説明内容そのものへの拒否というより、自分の状況として十分に受け取れないまま不安や距離感が強まっていた可能性がある。やり取りの緊張は、情報不足だけでなく、説明と本人の理解実感がうまく接続しなかったことに由来していたと考えられる。";
+
+  if (typeof text !== "string") return fallback;
+
+  const normalized = text
+    .replace(/^「|」$/g, "")
+    .replace(/^#+\s*/gm, "")
+    .replace(/^\s*[-*・]\s*/gm, "")
+    .replace(/以下のように整理できます。?/g, "")
+    .replace(/以下のように言えます。?/g, "")
+    .replace(/整理すると/gi, "")
+    .replace(/記録向け|共有向け|申し送り向け|用途別|原因別/gi, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+
+  return normalized || fallback;
+}
+
+function buildUserPrompt({
+  observationRaw,
+  contextDraft,
+  selectedFollowups,
+  userFollowupNote,
+  note,
+}) {
+  const followupText = Array.isArray(selectedFollowups)
+    ? selectedFollowups.filter(Boolean).join("\n- ")
+    : "";
+
+  return [
+    "【観察メモ】",
+    observationRaw || "（未入力）",
+    "",
+    "【一次Context】",
+    contextDraft || "（未入力）",
+    "",
+    "【選択されたfollowups】",
+    followupText ? `- ${followupText}` : "（なし）",
+    "",
+    "【補足入力】",
+    userFollowupNote || "（なし）",
+    "",
+    "【追加メモ】",
+    note || "（なし）",
+    "",
+    "【タスク】",
+    "一次Contextと補足情報を統合し、より確からしい関係理解へ整えてください。",
+    "これは応答文ではなく、Step2分析へ渡すためのFinal Contextです。",
+  ].join("\n");
+}
+
+const SYSTEM_PROMPT = `
+あなたは RA-SS（Relational Architecture Sensing System）の分析前処理エンジンです。
+
+あなたの役割は、
+一次Contextと補足情報を統合し、
+より確からしい関係理解へ整理することです。
+
+ただし、これはまだ応答ではなく、
+分析（Step2）に渡すための整理された関係理解です。
+
+【最重要Goal】
+Final Contextとは、
+「一次Contextの仮説を、補足情報によって調整し、
+関係のずれの焦点が一段明確になった状態」
+です。
+
+【役割定義】
+- 一次Context = 仮説（未完成）
+- Final Context = 仮説の再統合（中間完成）
+
+【入力として扱う情報】
+- 観察メモ
+- 一次Context
+- followupsへの応答
+- 補足記述
+
+【やること】
+1. 一次Contextの仮説を受け取る
+2. 補足情報によってズレの位置を見直す
+3. 関係の緊張や距離の焦点を少し絞る
+4. 次の分析に渡せる粒度に整える
+
+【出力に含める要素】
+- 起きている関係の状態
+- ズレや緊張の焦点
+- 表面感情の背後にある構造
+- 仮説としての一貫性
+
+【文体ルール】
+- 必ず自然文で書く
+- 箇条書きにしない
+- 一次Contextより少し整理されている
+- ただし説明文にしない
+- 断定しすぎないが、焦点はぼかしすぎない
+
+【禁止】
+- 応答文を書くこと
+- 助言を書くこと
+- 「〜すべき」と書くこと
+- 一次Contextの言い換えだけにすること
+- 長文化だけすること
+- 分析ラベル（APCE、SRPLなど）を出すこと
+- メタ説明
+- 用途説明
+
+【統合ルール（最重要）】
+- 一次Contextの単純な繰り返しは禁止
+- 補足によって何が変わったかを反映すること
+- ズレの焦点が少し絞られていること
+- 関係理解として一段締まっていること
+
+【文末ルール】
+- 状態がある程度まとまっている
+- しかし完全な断定ではない
+- 応答方針には進まない
+
+【出力形式】
+必ずJSONのみを返すこと。コードフェンス禁止。マークダウン禁止。
+
+{
+  "finalContext": "統合された関係理解の自然文"
+}
+`.trim();
+
+const OUTPUT_SCHEMA = {
+  name: "ra_final_context",
+  strict: true,
+  schema: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      finalContext: {
+        type: "string",
+      },
+    },
+    required: ["finalContext"],
+  },
+};
+
 export default async function handler(req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
-
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
-    const {
-      observationRaw = "",
-      emotion = "",
-      urgency = "",
-      primaryContextDraft = "",
-      contextEdited = "",
-      note = "",
-    } = req.body || {};
+    const body = req.body || {};
+    const observationRaw = cleanText(body.observationRaw);
+    const contextDraft = cleanText(body.contextDraft);
+    const userFollowupNote = cleanText(body.userFollowupNote);
+    const note = cleanText(body.note);
+    const selectedFollowups = Array.isArray(body.selectedFollowups)
+      ? body.selectedFollowups.map((item) => cleanText(String(item))).filter(Boolean)
+      : [];
 
-    const prompt = `
-あなたは、医療現場の観察情報を「最終Context」として整える支援AIです。
-目的は、状況・患者や家族の受け取り・関係上の緊張・今後の観察や対応で焦点になる点が、
-自然な日本語の一続きの文章として読めるようにすることです。
+    if (!observationRaw && !contextDraft) {
+      return res.status(400).json({
+        error: "observationRaw or contextDraft is required",
+      });
+    }
 
-【観察内容】
-${observationRaw || "（未入力）"}
-
-【感情トーン】
-${emotion || "（未入力）"}
-
-【緊急度】
-${urgency || "（未入力）"}
-
-【一次Context】
-${primaryContextDraft || "（未入力）"}
-
-【編集後Context】
-${contextEdited || "（未入力）"}
-
-【補足メモ】
-${note || "（未入力）"}
-
-【出力ルール】
-- 日本語で書く
-- 箇条書きにしない
-- 見出しや ### や記号を出さない
-- 260〜420字程度
-- 観察事実だけでなく、相手がどう受け止めているか、
-  その結果どのような関係上の緊張が生まれているかが読めるようにする
-- なぜそうした反応になっているように見えるかを、断定しすぎずににじませる
-- 最後に、今後の対応や観察で何が焦点になるかが自然に含まれるようにする
-- 「以下のように整理します」「最終Contextです」などの前置きは不要
-- 出力は JSON のみ
-
-【JSON形式】
-{
-  "finalContext": "ここに最終Context本文"
-}
-`.trim();
-
-    const response = await client.responses.create({
-      model: "gpt-5.4-mini",
-      input: prompt,
+    const userPrompt = buildUserPrompt({
+      observationRaw,
+      contextDraft,
+      selectedFollowups,
+      userFollowupNote,
+      note,
     });
 
-    const text = response.output_text || "{}";
+    const response = await client.responses.create({
+      model: MODEL,
+      reasoning: { effort: "medium" },
+      input: [
+        {
+          role: "system",
+          content: [{ type: "input_text", text: SYSTEM_PROMPT }],
+        },
+        {
+          role: "user",
+          content: [{ type: "input_text", text: userPrompt }],
+        },
+      ],
+      text: {
+        format: {
+          type: "json_schema",
+          ...OUTPUT_SCHEMA,
+        },
+      },
+      max_output_tokens: 700,
+    });
 
-    let parsed;
+    let parsed = null;
+
     try {
-      parsed = JSON.parse(text);
+      parsed = JSON.parse(response.output_text || "{}");
     } catch {
+      parsed = null;
+    }
+
+    if (!parsed || typeof parsed !== "object" || !parsed.finalContext) {
       parsed = {
-        finalContext: text,
+        finalContext:
+          "補足情報を踏まえると、表面上は不満や怒りとして現れていても、その背景には説明内容そのものへの拒否というより、自分の状況として十分に受け取れないまま不安や距離感が強まっていた可能性がある。やり取りの緊張は、情報不足だけでなく、説明と本人の理解実感がうまく接続しなかったことに由来していたと考えられる。",
       };
     }
 
     return res.status(200).json({
-      finalContext: parsed.finalContext || "",
+      finalContext: normalizeFinalContext(parsed.finalContext),
     });
   } catch (error) {
     console.error("final-context error:", error);
+
     return res.status(500).json({
-      error: "Failed to generate final context",
+      error: "AIによるFinal Context生成に失敗しました。",
+      finalContext:
+        "補足情報を踏まえると、表面上は不満や怒りとして現れていても、その背景には説明内容そのものへの拒否というより、自分の状況として十分に受け取れないまま不安や距離感が強まっていた可能性がある。やり取りの緊張は、情報不足だけでなく、説明と本人の理解実感がうまく接続しなかったことに由来していたと考えられる。",
     });
   }
 }
