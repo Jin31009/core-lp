@@ -108,6 +108,9 @@ Final Contextとは、
 - 一次Contextより少し整理されている
 - ただし説明文にしない
 - 断定しすぎないが、焦点はぼかしすぎない
+- 個人の意図や悪意を決めつけない
+- 責任追及に寄せない
+- 「〜に見える」「〜可能性がある」を適切に使う
 
 【禁止】
 - 応答文を書くこと
@@ -118,12 +121,18 @@ Final Contextとは、
 - 分析ラベル（APCE、SRPLなど）を出すこと
 - メタ説明
 - 用途説明
+- 個人攻撃的な断定
+- 「心ない発言」「尊重していない」などの断定表現
 
 【統合ルール（最重要）】
 - 一次Contextの単純な繰り返しは禁止
 - 補足によって何が変わったかを反映すること
 - ズレの焦点が少し絞られていること
 - 関係理解として一段締まっていること
+- ただし、言い切りすぎず仮説として開いておくこと
+
+【理想の出力イメージ】
+患者さんの怒りは、単なる説明不足への反応というより、やり取りの中で受け止められていない感覚が強まった状態として表れている可能性がある。表面は強い反発として出ているが、その奥には「もう分かってもらえない」という諦めに近いトーンが混じっており、対立というより信頼に至る手前で関係が冷えているようにも見える。ズレの焦点は説明内容そのものより、言葉の受け取られ方や関わりの積み重ねにあり、納得できていないというより、関係の中で十分に尊重されていないと感じる方向に傾いている可能性がある。
 
 【文末ルール】
 - 状態がある程度まとまっている
@@ -161,8 +170,8 @@ export default async function handler(req, res) {
   try {
     const body = req.body || {};
     const observationRaw = cleanText(body.observationRaw);
-    const contextDraft = cleanText(body.contextDraft);
-    const userFollowupNote = cleanText(body.userFollowupNote);
+    const contextDraft = cleanText(body.contextDraft || body.primaryContextDraft);
+    const userFollowupNote = cleanText(body.userFollowupNote || body.contextEdited);
     const note = cleanText(body.note);
     const selectedFollowups = Array.isArray(body.selectedFollowups)
       ? body.selectedFollowups.map((item) => cleanText(String(item))).filter(Boolean)
