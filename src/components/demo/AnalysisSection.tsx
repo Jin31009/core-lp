@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 
 type AnalysisSectionProps = {
@@ -568,7 +567,7 @@ export default function AnalysisSection({
           <div className="mt-6 flex flex-wrap items-center gap-3">
             <button
               type="button"
-              onClick={() => setShowRelationalReading((prev: boolean) => !prev)}
+              onClick={() => setShowRelationalReading((prev) => !prev)}
               className={expandButton}
             >
               {showRelationalReading
