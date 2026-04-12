@@ -215,7 +215,9 @@ export default function InputSection({
     "mt-5 rounded-[14px] border border-dashed border-stone-300 bg-white/80 px-4 py-3 text-[14px] leading-7 text-stone-600";
 
   const canRequestContext =
-    text.trim().length > 0 && emotion.trim().length > 0 && urgency.trim().length > 0;
+    text.trim().length > 0 &&
+    emotion.trim().length > 0 &&
+    urgency.trim().length > 0;
 
   const isGenerating =
     contextRequested &&
@@ -524,7 +526,9 @@ export default function InputSection({
           <div className="mt-4 flex flex-wrap items-center gap-3">
             <button
               onClick={onCheckState}
-              className={`${primaryButton} ${analysisDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+              className={`${primaryButton} ${
+                analysisDisabled ? "cursor-not-allowed opacity-50" : ""
+              }`}
               disabled={analysisDisabled}
               type="button"
             >
