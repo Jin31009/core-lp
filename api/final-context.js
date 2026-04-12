@@ -167,6 +167,8 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
+  const startedAt = Date.now();
+
   try {
     const body = req.body || {};
     const observationRaw = cleanText(body.observationRaw);
@@ -177,7 +179,21 @@ export default async function handler(req, res) {
       ? body.selectedFollowups.map((item) => cleanText(String(item))).filter(Boolean)
       : [];
 
+    console.log("FINAL_CONTEXT_INPUT:", {
+      model: MODEL,
+      observationRaw,
+      contextDraft,
+      selectedFollowups,
+      userFollowupNote,
+      note,
+      timestamp: new Date().toISOString(),
+    });
+
     if (!observationRaw && !contextDraft) {
+      console.warn("FINAL_CONTEXT_BAD_REQUEST:", {
+        reason: "observationRaw or contextDraft is required",
+      });
+
       return res.status(400).json({
         error: "observationRaw or contextDraft is required",
       });
@@ -217,7 +233,11 @@ export default async function handler(req, res) {
 
     try {
       parsed = JSON.parse(response.output_text || "{}");
-    } catch {
+    } catch (parseError) {
+      console.error("FINAL_CONTEXT_PARSE_ERROR:", {
+        message: parseError instanceof Error ? parseError.message : "Unknown parse error",
+        outputText: response.output_text || "",
+      });
       parsed = null;
     }
 
@@ -228,11 +248,22 @@ export default async function handler(req, res) {
       };
     }
 
-    return res.status(200).json({
+    const normalizedOutput = {
       finalContext: normalizeFinalContext(parsed.finalContext),
+    };
+
+    console.log("FINAL_CONTEXT_OUTPUT:", {
+      durationMs: Date.now() - startedAt,
+      output: normalizedOutput,
     });
+
+    return res.status(200).json(normalizedOutput);
   } catch (error) {
-    console.error("final-context error:", error);
+    console.error("FINAL_CONTEXT_ERROR:", {
+      durationMs: Date.now() - startedAt,
+      message: error instanceof Error ? error.message : "Unknown error",
+      stack: error instanceof Error ? error.stack : undefined,
+    });
 
     return res.status(500).json({
       error: "AIによるFinal Context生成に失敗しました。",

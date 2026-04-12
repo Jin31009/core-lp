@@ -173,6 +173,8 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
+  const startedAt = Date.now();
+
   try {
     const body = req.body || {};
     const observationRaw = cleanText(body.observationRaw);
@@ -180,7 +182,20 @@ export default async function handler(req, res) {
     const urgency = cleanText(body.urgency);
     const note = cleanText(body.note);
 
+    console.log("CONTEXT_DRAFT_INPUT:", {
+      model: MODEL,
+      observationRaw,
+      emotion,
+      urgency,
+      note,
+      timestamp: new Date().toISOString(),
+    });
+
     if (!observationRaw) {
+      console.warn("CONTEXT_DRAFT_BAD_REQUEST:", {
+        reason: "observationRaw is required",
+      });
+
       return res.status(400).json({
         error: "observationRaw is required",
       });
@@ -219,7 +234,11 @@ export default async function handler(req, res) {
 
     try {
       parsed = JSON.parse(response.output_text || "{}");
-    } catch {
+    } catch (parseError) {
+      console.error("CONTEXT_DRAFT_PARSE_ERROR:", {
+        message: parseError instanceof Error ? parseError.message : "Unknown parse error",
+        outputText: response.output_text || "",
+      });
       parsed = null;
     }
 
@@ -235,12 +254,23 @@ export default async function handler(req, res) {
       };
     }
 
-    return res.status(200).json({
+    const normalizedOutput = {
       contextDraft: normalizeContextDraft(parsed.contextDraft),
       followups: normalizeFollowups(parsed.followups),
+    };
+
+    console.log("CONTEXT_DRAFT_OUTPUT:", {
+      durationMs: Date.now() - startedAt,
+      output: normalizedOutput,
     });
+
+    return res.status(200).json(normalizedOutput);
   } catch (error) {
-    console.error("context-draft error:", error);
+    console.error("CONTEXT_DRAFT_ERROR:", {
+      durationMs: Date.now() - startedAt,
+      message: error instanceof Error ? error.message : "Unknown error",
+      stack: error instanceof Error ? error.stack : undefined,
+    });
 
     return res.status(500).json({
       error: "AIによる一次Context生成に失敗しました。",
