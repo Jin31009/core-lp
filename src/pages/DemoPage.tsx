@@ -99,6 +99,7 @@ function TabButton({
 }
 
 export default function DemoPage({ setPage }: DemoPageProps) {
+  const API_BASE = import.meta.env.DEV ? "http://localhost:8787" : "";
   const [hasEnteredFlow, setHasEnteredFlow] = useState(false);
 
   const [observationRaw, setObservationRaw] = useState("");
@@ -323,7 +324,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
     setFinalContextDraft("");
 
     try {
-      const response = await fetch("http://localhost:8787/api/context-draft", {
+      const response = await fetch(`${API_BASE}/api/context-draft`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -363,7 +364,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
     setFinalContextDraft("Final Contextを生成しています...");
 
     try {
-      const response = await fetch("http://localhost:8787/api/final-context", {
+      const response = await fetch(`${API_BASE}/api/final-context`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
