@@ -328,15 +328,8 @@ export default function AnalysisSection({
   const trigger = detectTrigger(delta, rValue, signal);
   const deltaMeta = getDeltaMeta(delta);
 
-  const effectiveAK = analysis?.AK_Primary ?? alignmentKey;
-const effectiveDelta = analysis?.MAX_DELTA ? String(analysis.MAX_DELTA) : delta;
-const effectiveApce = analysis?.APCE_Miss ?? apce;
-const effectiveTrigger = analysis?.Trigger ?? trigger;
-const effectiveR = analysis ? (analysis.Trigger === "Yes" ? "R-" : "R+") : rValue;
-
-
   const triggerTone =
-    (analysis?.Trigger === "Yes" || analysis?.Trigger === "Triggerあり")
+    trigger === "Triggerあり"
       ? {
           card: "border-rose-300 bg-rose-50",
           chip: "border-rose-300 bg-white text-rose-700",
@@ -540,7 +533,7 @@ const effectiveR = analysis ? (analysis.Trigger === "Yes" ? "R-" : "R+") : rValu
               </div>
 
               <p className={`mt-3 text-[23px] font-semibold ${triggerTone.text}`}>
-                {effectiveTrigger}
+                {trigger}
               </p>
               <p className={bodyText}>{getTriggerCopy(trigger)}</p>
             </div>

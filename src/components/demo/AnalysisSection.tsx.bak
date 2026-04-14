@@ -328,15 +328,8 @@ export default function AnalysisSection({
   const trigger = detectTrigger(delta, rValue, signal);
   const deltaMeta = getDeltaMeta(delta);
 
-  const effectiveAK = analysis?.AK_Primary ?? alignmentKey;
-const effectiveDelta = analysis?.MAX_DELTA ? String(analysis.MAX_DELTA) : delta;
-const effectiveApce = analysis?.APCE_Miss ?? apce;
-const effectiveTrigger = analysis?.Trigger ?? trigger;
-const effectiveR = analysis ? (analysis.Trigger === "Yes" ? "R-" : "R+") : rValue;
-
-
   const triggerTone =
-    (analysis?.Trigger === "Yes" || analysis?.Trigger === "Triggerあり")
+    trigger === "Triggerあり"
       ? {
           card: "border-rose-300 bg-rose-50",
           chip: "border-rose-300 bg-white text-rose-700",
@@ -391,20 +384,6 @@ const effectiveR = analysis ? (analysis.Trigger === "Yes" ? "R-" : "R+") : rValu
         </p>
       </div>
 
-      {analysis && (
-        <div className="mx-6 mt-6 rounded-[16px] border border-sky-200 bg-sky-50 px-5 py-4 text-[14px] text-slate-800 sm:mx-8">
-          <p className="text-[11px] uppercase tracking-[0.18em] text-sky-700">
-            AI Analysis / Step2
-          </p>
-          <div className="mt-2 grid gap-2 sm:grid-cols-2">
-            <div>Δ：{String(analysis.MAX_DELTA ?? "")}</div>
-            <div>Trigger：{String(analysis.Trigger ?? "")}</div>
-            <div>AK：{String(analysis.AK_Primary ?? "")}</div>
-            <div>Miss：{String(analysis.APCE_Miss ?? "")}</div>
-          </div>
-        </div>
-      )}
-
       <div className="space-y-8 p-6 sm:p-8">
         <div className={contextCard}>
           <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
@@ -436,7 +415,7 @@ const effectiveR = analysis ? (analysis.Trigger === "Yes" ? "R-" : "R+") : rValu
                 Signal
               </p>
               <p className="mt-2 text-[22px] font-semibold text-slate-900">
-                {analysis ? analysis.AK_Primary : getSignalLabel(signal)}
+                {getSignalLabel(signal)}
               </p>
               <p className={bodyText}>{getSignalCopy(signal)}</p>
             </div>
@@ -452,7 +431,7 @@ const effectiveR = analysis ? (analysis.Trigger === "Yes" ? "R-" : "R+") : rValu
               </div>
 
               <p className="mt-2 text-[22px] font-semibold text-slate-900">
-                {analysis ? 'Δ' + analysis.MAX_DELTA : deltaMeta.title}
+                {deltaMeta.title}
               </p>
 
               <div className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-stone-200">
@@ -486,7 +465,7 @@ const effectiveR = analysis ? (analysis.Trigger === "Yes" ? "R-" : "R+") : rValu
                 AK
               </p>
               <p className="mt-2 text-[22px] font-semibold text-slate-900">
-                {analysis ? analysis.AK_Primary : getAlignmentLabel(alignmentKey)}
+                {getAlignmentLabel(alignmentKey)}
               </p>
               <p className={bodyText}>{getAlignmentCopy(alignmentKey)}</p>
             </div>
@@ -496,7 +475,7 @@ const effectiveR = analysis ? (analysis.Trigger === "Yes" ? "R-" : "R+") : rValu
                 APCE
               </p>
               <p className="mt-2 text-[22px] font-semibold text-slate-900">
-                {analysis ? analysis.APCE_Miss : getApceLabel(apce)}
+                {getApceLabel(apce)}
               </p>
               <p className={bodyText}>{getApceCopy(apce)}</p>
             </div>
@@ -506,7 +485,7 @@ const effectiveR = analysis ? (analysis.Trigger === "Yes" ? "R-" : "R+") : rValu
                 R
               </p>
               <p className="mt-2 text-[22px] font-semibold text-slate-900">
-                {analysis ? (analysis.Trigger === 'Yes' ? 'R-' : 'R+') : rValue}
+                {rValue}
               </p>
               <p className={bodyText}>{getRCopy(rValue)}</p>
             </div>
@@ -535,12 +514,12 @@ const effectiveR = analysis ? (analysis.Trigger === "Yes" ? "R-" : "R+") : rValu
                 <span
                   className={`rounded-full border px-3 py-1 text-[12px] font-medium ${triggerTone.chip}`}
                 >
-                  {analysis ? analysis.Trigger : trigger}
+                  {trigger}
                 </span>
               </div>
 
               <p className={`mt-3 text-[23px] font-semibold ${triggerTone.text}`}>
-                {effectiveTrigger}
+                {trigger}
               </p>
               <p className={bodyText}>{getTriggerCopy(trigger)}</p>
             </div>

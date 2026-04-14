@@ -386,8 +386,6 @@ export default function DemoPage({ setPage }: DemoPageProps) {
       console.log("FINAL CONTEXT CLICKED");
       const data: FinalContextResponse = await response.json();
 
-      setAnalysis(data.analysis);
-
       setFinalContextDraft(
         data.finalContext || "Final Contextを取得できませんでした。"
       );
@@ -635,7 +633,6 @@ export default function DemoPage({ setPage }: DemoPageProps) {
 
               {selectedStep === 2 && maxUnlockedStep >= 2 && (
                 <AnalysisSection
-                  analysis={analysis}
                   delta={String(deltaValue)}
                   eLevel={phaseLabel}
                   text={observationRaw}

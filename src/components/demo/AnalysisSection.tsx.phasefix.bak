@@ -336,7 +336,7 @@ const effectiveR = analysis ? (analysis.Trigger === "Yes" ? "R-" : "R+") : rValu
 
 
   const triggerTone =
-    (analysis?.Trigger === "Yes" || analysis?.Trigger === "Triggerあり")
+    trigger === "Triggerあり"
       ? {
           card: "border-rose-300 bg-rose-50",
           chip: "border-rose-300 bg-white text-rose-700",

@@ -1,274 +1,364 @@
-import OpenAI from "openai";
-
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-const MODEL = process.env.RA_CONTEXT_MODEL || "gpt-5.4-mini";
-
-function cleanText(value) {
-  if (typeof value !== "string") return "";
-  return value.replace(/\r\n/g, "\n").trim();
-}
-
-function normalizeFinalContext(text) {
-  const fallback =
-    "補足情報を踏まえると、表面上は不満や怒りとして現れていても、その背景には説明内容そのものへの拒否というより、自分の状況として十分に受け取れないまま不安や距離感が強まっていた可能性がある。やり取りの緊張は、情報不足だけでなく、説明と本人の理解実感がうまく接続しなかったことに由来していたと考えられる。";
-
-  if (typeof text !== "string") return fallback;
-
-  const normalized = text
-    .replace(/^「|」$/g, "")
-    .replace(/^#+\s*/gm, "")
-    .replace(/^\s*[-*・]\s*/gm, "")
-    .replace(/以下のように整理できます。?/g, "")
-    .replace(/以下のように言えます。?/g, "")
-    .replace(/整理すると/gi, "")
-    .replace(/記録向け|共有向け|申し送り向け|用途別|原因別/gi, "")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
-
-  return normalized || fallback;
-}
-
-function buildUserPrompt({
-  observationRaw,
-  contextDraft,
-  selectedFollowups,
-  userFollowupNote,
-  note,
-}) {
-  const followupText = Array.isArray(selectedFollowups)
-    ? selectedFollowups.filter(Boolean).join("\n- ")
-    : "";
-
-  return [
-    "【観察メモ】",
-    observationRaw || "（未入力）",
-    "",
-    "【一次Context】",
-    contextDraft || "（未入力）",
-    "",
-    "【選択されたfollowups】",
-    followupText ? `- ${followupText}` : "（なし）",
-    "",
-    "【補足入力】",
-    userFollowupNote || "（なし）",
-    "",
-    "【追加メモ】",
-    note || "（なし）",
-    "",
-    "【タスク】",
-    "一次Contextと補足情報を統合し、より確からしい関係理解へ整えてください。",
-    "これは応答文ではなく、Step2分析へ渡すためのFinal Contextです。",
-  ].join("\n");
-}
-
-const SYSTEM_PROMPT = `
-あなたは RA-SS（Relational Architecture Sensing System）の分析前処理エンジンです。
-
-あなたの役割は、
-一次Contextと補足情報を統合し、
-より確からしい関係理解へ整理することです。
-
-ただし、これはまだ応答ではなく、
-分析（Step2）に渡すための整理された関係理解です。
-
-【最重要Goal】
-Final Contextとは、
-「一次Contextの仮説を、補足情報によって調整し、
-関係のずれの焦点が一段明確になった状態」
-です。
-
-【役割定義】
-- 一次Context = 仮説（未完成）
-- Final Context = 仮説の再統合（中間完成）
-
-【入力として扱う情報】
-- 観察メモ
-- 一次Context
-- followupsへの応答
-- 補足記述
-
-【やること】
-1. 一次Contextの仮説を受け取る
-2. 補足情報によってズレの位置を見直す
-3. 関係の緊張や距離の焦点を少し絞る
-4. 次の分析に渡せる粒度に整える
-
-【出力に含める要素】
-- 起きている関係の状態
-- ズレや緊張の焦点
-- 表面感情の背後にある構造
-- 仮説としての一貫性
-
-【文体ルール】
-- 必ず自然文で書く
-- 箇条書きにしない
-- 一次Contextより少し整理されている
-- ただし説明文にしない
-- 断定しすぎないが、焦点はぼかしすぎない
-- 個人の意図や悪意を決めつけない
-- 責任追及に寄せない
-- 「〜に見える」「〜可能性がある」を適切に使う
-
-【禁止】
-- 応答文を書くこと
-- 助言を書くこと
-- 「〜すべき」と書くこと
-- 一次Contextの言い換えだけにすること
-- 長文化だけすること
-- 分析ラベル（APCE、SRPLなど）を出すこと
-- メタ説明
-- 用途説明
-- 個人攻撃的な断定
-- 「心ない発言」「尊重していない」などの断定表現
-
-【統合ルール（最重要）】
-- 一次Contextの単純な繰り返しは禁止
-- 補足によって何が変わったかを反映すること
-- ズレの焦点が少し絞られていること
-- 関係理解として一段締まっていること
-- ただし、言い切りすぎず仮説として開いておくこと
-
-【理想の出力イメージ】
-患者さんの怒りは、単なる説明不足への反応というより、やり取りの中で受け止められていない感覚が強まった状態として表れている可能性がある。表面は強い反発として出ているが、その奥には「もう分かってもらえない」という諦めに近いトーンが混じっており、対立というより信頼に至る手前で関係が冷えているようにも見える。ズレの焦点は説明内容そのものより、言葉の受け取られ方や関わりの積み重ねにあり、納得できていないというより、関係の中で十分に尊重されていないと感じる方向に傾いている可能性がある。
-
-【文末ルール】
-- 状態がある程度まとまっている
-- しかし完全な断定ではない
-- 応答方針には進まない
-
-【出力形式】
-必ずJSONのみを返すこと。コードフェンス禁止。マークダウン禁止。
-
-{
-  "finalContext": "統合された関係理解の自然文"
-}
-`.trim();
-
-const OUTPUT_SCHEMA = {
-  name: "ra_final_context",
-  strict: true,
-  schema: {
-    type: "object",
-    additionalProperties: false,
-    properties: {
-      finalContext: {
-        type: "string",
-      },
-    },
-    required: ["finalContext"],
-  },
-};
-
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const startedAt = Date.now();
-
   try {
-    const body = req.body || {};
-    const observationRaw = cleanText(body.observationRaw);
-    const contextDraft = cleanText(body.contextDraft || body.primaryContextDraft);
-    const userFollowupNote = cleanText(body.userFollowupNote || body.contextEdited);
-    const note = cleanText(body.note);
-    const selectedFollowups = Array.isArray(body.selectedFollowups)
-      ? body.selectedFollowups.map((item) => cleanText(String(item))).filter(Boolean)
-      : [];
+    const {
+      observationRaw = "",
+      contextEdited = "",
+      primaryContextDraft = "",
+    } = req.body || {};
 
-    console.log("FINAL_CONTEXT_INPUT:", {
-      model: MODEL,
-      observationRaw,
-      contextDraft,
-      selectedFollowups,
-      userFollowupNote,
-      note,
-      timestamp: new Date().toISOString(),
-    });
+    const finalContext =
+      String(contextEdited).trim() ||
+      String(primaryContextDraft).trim() ||
+      String(observationRaw).trim();
 
-    if (!observationRaw && !contextDraft) {
-      console.warn("FINAL_CONTEXT_BAD_REQUEST:", {
-        reason: "observationRaw or contextDraft is required",
-      });
-
+    if (!finalContext) {
       return res.status(400).json({
-        error: "observationRaw or contextDraft is required",
+        error: "No input text provided",
       });
     }
 
-    const userPrompt = buildUserPrompt({
-      observationRaw,
-      contextDraft,
-      selectedFollowups,
-      userFollowupNote,
-      note,
+    const text = normalize(finalContext);
+
+    const MAX_DELTA = detectMaxDelta(text);
+    const AK_Break_Type = detectAkBreakTypes(text);
+    const AK_Primary = detectAkPrimary(text, AK_Break_Type);
+    const APCE_Miss = detectApceMiss(text, AK_Primary, MAX_DELTA);
+    const R_Plus = detectRPlus(text);
+    const R_Failure = detectRFailureReason(text, R_Plus);
+    const Trigger = detectTrigger({
+      text,
+      maxDelta: MAX_DELTA,
+      akPrimary: AK_Primary,
+      akBreakTypes: AK_Break_Type,
+    });
+    const Case_Phase = detectCasePhase(MAX_DELTA, Trigger);
+
+    const Trigger_Memo = buildTriggerMemo({
+      akPrimary: AK_Primary,
+      akBreakTypes: AK_Break_Type,
+      trigger: Trigger,
     });
 
-    const response = await client.responses.create({
-      model: MODEL,
-      reasoning: { effort: "medium" },
-      input: [
-        {
-          role: "system",
-          content: [{ type: "input_text", text: SYSTEM_PROMPT }],
-        },
-        {
-          role: "user",
-          content: [{ type: "input_text", text: userPrompt }],
-        },
-      ],
-      text: {
-        format: {
-          type: "json_schema",
-          ...OUTPUT_SCHEMA,
-        },
+    const R_Memo = buildRMemo({
+      rPlus: R_Plus,
+      rFailure: R_Failure,
+      akPrimary: AK_Primary,
+      apceMiss: APCE_Miss,
+    });
+
+    return res.status(200).json({
+      finalContext,
+      analysis: {
+        MAX_DELTA,
+        Trigger,
+        R_Plus,
+        AK_Break_Type,
+        AK_Primary,
+        APCE_Miss,
+        R_Failure,
+        Case_Phase,
+        Trigger_Memo,
+        R_Memo,
       },
-      max_output_tokens: 700,
     });
-
-    let parsed = null;
-
-    try {
-      parsed = JSON.parse(response.output_text || "{}");
-    } catch (parseError) {
-      console.error("FINAL_CONTEXT_PARSE_ERROR:", {
-        message: parseError instanceof Error ? parseError.message : "Unknown parse error",
-        outputText: response.output_text || "",
-      });
-      parsed = null;
-    }
-
-    if (!parsed || typeof parsed !== "object" || !parsed.finalContext) {
-      parsed = {
-        finalContext:
-          "補足情報を踏まえると、表面上は不満や怒りとして現れていても、その背景には説明内容そのものへの拒否というより、自分の状況として十分に受け取れないまま不安や距離感が強まっていた可能性がある。やり取りの緊張は、情報不足だけでなく、説明と本人の理解実感がうまく接続しなかったことに由来していたと考えられる。",
-      };
-    }
-
-    const normalizedOutput = {
-      finalContext: normalizeFinalContext(parsed.finalContext),
-    };
-
-    console.log("FINAL_CONTEXT_OUTPUT:", {
-      durationMs: Date.now() - startedAt,
-      output: normalizedOutput,
-    });
-
-    return res.status(200).json(normalizedOutput);
   } catch (error) {
-    console.error("FINAL_CONTEXT_ERROR:", {
-      durationMs: Date.now() - startedAt,
-      message: error instanceof Error ? error.message : "Unknown error",
-      stack: error instanceof Error ? error.stack : undefined,
-    });
-
+    console.error("final-context error:", error);
     return res.status(500).json({
-      error: "AIによるFinal Context生成に失敗しました。",
-      finalContext:
-        "補足情報を踏まえると、表面上は不満や怒りとして現れていても、その背景には説明内容そのものへの拒否というより、自分の状況として十分に受け取れないまま不安や距離感が強まっていた可能性がある。やり取りの緊張は、情報不足だけでなく、説明と本人の理解実感がうまく接続しなかったことに由来していたと考えられる。",
+      error: "Server error",
     });
   }
+}
+
+function normalize(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function includesAny(text, keywords) {
+  return keywords.some((k) => text.includes(k));
+}
+
+function uniq(arr) {
+  return [...new Set(arr)];
+}
+
+function detectMaxDelta(text) {
+  const delta4 = [
+    "拒絶",
+    "帰る",
+    "帰ります",
+    "二度と",
+    "許せない",
+    "訴える",
+    "最悪",
+    "関係断絶",
+  ];
+
+  const delta3 = [
+    "怒",
+    "腹が立",
+    "不信",
+    "信頼できない",
+    "ひどい",
+    "納得できない",
+    "ショック",
+    "強い不快",
+    "怖い",
+    "危険",
+  ];
+
+  const delta2 = [
+    "不満",
+    "不安",
+    "困る",
+    "改善",
+    "気になる",
+    "心配",
+    "ちゃんとして",
+    "どうなる",
+  ];
+
+  const delta1 = [
+    "違和感",
+    "少し気になる",
+    "なんとなく",
+  ];
+
+  if (includesAny(text, delta4)) return 4;
+  if (includesAny(text, delta3)) return 3;
+  if (includesAny(text, delta2)) return 2;
+  if (includesAny(text, delta1)) return 1;
+  return 0;
+}
+
+function detectAkBreakTypes(text) {
+  const result = [];
+
+  if (
+    includesAny(text, [
+      "冷たい",
+      "雑",
+      "受け止められていない",
+      "感じが悪い",
+      "失礼",
+      "怒",
+      "ひどい",
+      "納得できない",
+    ])
+  ) {
+    result.push("R");
+  }
+
+  if (
+    includesAny(text, [
+      "どうなる",
+      "先が見えない",
+      "見通し",
+      "説明不足",
+      "説明がない",
+      "何度も確認",
+      "不安",
+      "待たされる",
+    ])
+  ) {
+    result.push("P");
+  }
+
+  if (
+    includesAny(text, [
+      "誰が",
+      "担当",
+      "役割",
+      "たらい回し",
+      "引き継ぎ",
+      "どこに聞けば",
+    ])
+  ) {
+    result.push("L");
+  }
+
+  if (
+    includesAny(text, [
+      "怖い",
+      "危険",
+      "安全",
+      "苦しい",
+      "痛い",
+      "息ができない",
+      "不安でたまらない",
+    ])
+  ) {
+    result.push("S");
+  }
+
+  return uniq(result);
+}
+
+function detectAkPrimary(text, akBreakTypes) {
+  const candidates = [
+    {
+      key: "R",
+      keywords: [
+        "冷たい",
+        "雑",
+        "受け止められていない",
+        "感じが悪い",
+        "失礼",
+        "怒",
+        "ひどい",
+        "納得できない",
+      ],
+    },
+    {
+      key: "L",
+      keywords: [
+        "誰が",
+        "担当",
+        "役割",
+        "たらい回し",
+        "引き継ぎ",
+        "どこに聞けば",
+      ],
+    },
+    {
+      key: "P",
+      keywords: [
+        "どうなる",
+        "先が見えない",
+        "見通し",
+        "説明不足",
+        "説明がない",
+        "何度も確認",
+        "不安",
+        "待たされる",
+      ],
+    },
+    {
+      key: "S",
+      keywords: [
+        "怖い",
+        "危険",
+        "安全",
+        "苦しい",
+        "痛い",
+        "息ができない",
+      ],
+    },
+  ];
+
+  let best = null;
+
+  for (const candidate of candidates) {
+    for (const keyword of candidate.keywords) {
+      const index = text.indexOf(keyword);
+      if (index !== -1) {
+        if (!best || index < best.index) {
+          best = { key: candidate.key, index };
+        }
+      }
+    }
+  }
+
+  if (best) return best.key;
+  if (akBreakTypes.length > 0) return akBreakTypes[0];
+  return "P";
+}
+
+function detectApceMiss(text, akPrimary, maxDelta) {
+  if (includesAny(text, ["説明がない", "説明不足", "説明されない"])) return "P";
+  if (includesAny(text, ["受け止められない", "わかってもらえない"])) return "A";
+  if (includesAny(text, ["共感がない", "気持ちをわかってくれない"])) return "E";
+  if (includesAny(text, ["調整されない", "整理されていない", "引き継がれていない"])) return "C";
+
+  if (maxDelta >= 3) {
+    if (akPrimary === "R") return "E";
+    if (akPrimary === "P") return "P";
+    if (akPrimary === "L") return "C";
+    if (akPrimary === "S") return "";
+  }
+
+  if (akPrimary === "R") return "E";
+  if (akPrimary === "P") return "P";
+  if (akPrimary === "L") return "C";
+  if (akPrimary === "S") return "";
+
+  return "";
+}
+
+function detectRPlus(text) {
+  if (
+    includesAny(text, [
+      "安心した",
+      "納得した",
+      "わかってもらえた",
+      "助かった",
+      "改善した",
+      "落ち着いた",
+    ])
+  ) {
+    return "Yes";
+  }
+  return "No";
+}
+
+function detectRFailureReason(text, rPlus) {
+  if (rPlus === "Yes") return "";
+
+  if (includesAny(text, ["待たされた", "遅い", "後回し"])) return "遅延";
+  if (includesAny(text, ["違う", "ズレ", "かみ合わない"])) return "ミスマッチ";
+  if (includesAny(text, ["何もされない", "説明がない", "声かけがない"])) return "未介入";
+
+  return "記述不足";
+}
+
+function detectTrigger({ text, maxDelta, akPrimary, akBreakTypes }) {
+  if (maxDelta === 4) return "Yes";
+
+  if (maxDelta === 3 && akBreakTypes.includes("R")) return "Yes";
+
+  const hasStateJump = includesAny(text, [
+    "怒",
+    "ショック",
+    "強い不快",
+    "信頼できない",
+    "否定された",
+    "批判された",
+  ]);
+
+  const hasEvent = includesAny(text, [
+    "高圧的",
+    "説明拒否",
+    "説明不足",
+    "不適切",
+    "不公平",
+    "安全無視",
+  ]);
+
+  if (maxDelta === 3 && akPrimary === "R" && hasStateJump && hasEvent) {
+    return "Yes";
+  }
+
+  return "No";
+}
+
+function detectCasePhase(maxDelta, trigger) {
+  if (maxDelta === 4) return "Trigger後";
+  if (trigger === "Yes") return "Trigger時";
+  return "Trigger前";
+}
+
+function buildTriggerMemo({ akPrimary, akBreakTypes, trigger }) {
+  const primary = akPrimary || "不明";
+  const support = akBreakTypes.filter((x) => x !== akPrimary).join("・") || "補助要因なし";
+  return `[主因AK] ${primary} によりΔ上昇。[補助要因] ${support} が重なりTrigger${trigger === "Yes" ? "成立" : "未成立"}。`;
+}
+
+function buildRMemo({ rPlus, rFailure, akPrimary, apceMiss }) {
+  if (rPlus === "Yes") {
+    return "R+が確認できるため、関係は回復方向にあります。";
+  }
+  return `主因AKは ${akPrimary}、欠けた行為は ${apceMiss || "特定困難"} で、R失敗理由は ${rFailure} です。`;
 }
