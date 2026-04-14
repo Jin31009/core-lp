@@ -479,6 +479,14 @@ app.post("/api/final-context", async (req, res) => {
 
     return res.json({
       finalContext: normalizeFinalContext(parsed.finalContext),
+      analysis: {
+        MAX_DELTA: 3,
+        Trigger: "Yes",
+        AK_Primary: "R",
+        APCE_Miss: "E",
+        R_Failure: "ミスマッチ",
+        Case_Phase: "Trigger時"
+      }
     });
   } catch (error) {
     console.error("OpenAI error (final-context):", error);

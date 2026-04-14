@@ -111,6 +111,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
   const [primaryContextDraft, setPrimaryContextDraft] = useState("");
   const [contextFollowups, setContextFollowups] = useState<string[]>([]);
 
+  const [analysis, setAnalysis] = useState(null);
   const [finalContextDraft, setFinalContextDraft] = useState("");
   const [isGeneratingFinalContext, setIsGeneratingFinalContext] = useState(false);
 
@@ -382,6 +383,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
         throw new Error("Final context request failed");
       }
 
+      console.log("FINAL CONTEXT CLICKED");
       const data: FinalContextResponse = await response.json();
 
       setFinalContextDraft(
