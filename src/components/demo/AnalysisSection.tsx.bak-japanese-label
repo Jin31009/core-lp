@@ -181,15 +181,15 @@ function getDeltaMeta(delta: string) {
 function getAkLabel(key?: string) {
   switch (key) {
     case "R":
-      return "R｜尊重";
+      return "R";
     case "P":
-      return "P｜見通し";
+      return "P";
     case "L":
-      return "L｜役割";
+      return "L";
     case "S":
-      return "S｜安全";
+      return "S";
     default:
-      return "P｜見通し";
+      return "P";
   }
 }
 
@@ -211,13 +211,13 @@ function getAkFallback(key?: string) {
 function getApceLabel(key?: string) {
   switch (key) {
     case "A":
-      return "A｜受理";
+      return "A";
     case "P":
-      return "P｜見通し";
+      return "P";
     case "C":
-      return "C｜確認";
+      return "C";
     case "E":
-      return "E｜説明";
+      return "E";
     default:
       return "—";
   }

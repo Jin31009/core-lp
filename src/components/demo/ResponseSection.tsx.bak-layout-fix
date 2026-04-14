@@ -1,0 +1,153 @@
+type AcexItem = {
+  key: string;
+  label: string;
+  title: string;
+  body: string;
+};
+
+type ResponseSectionProps = {
+  actionSummary: string;
+  acexItems: AcexItem[];
+  flowItems: string[];
+  ngItems: string[];
+  statusLabel: string;
+  statusSub: string;
+  statusIcon: string;
+  statusColorClass: string;
+  onNext: () => void;
+};
+
+function getAcexMeta(key: string) {
+  switch (key) {
+    case "A":
+      return { label: "受け止め" };
+    case "C":
+      return { label: "確認" };
+    case "E":
+      return { label: "説明" };
+    case "X":
+      return { label: "補助" };
+    default:
+      return { label: key };
+  }
+}
+
+function getNgMeta(text: string) {
+  return {
+    title: text,
+    instead: "一度確認してから進める",
+  };
+}
+
+export default function ResponseSection({
+  actionSummary,
+  acexItems,
+  flowItems,
+  ngItems,
+  statusLabel,
+  statusSub,
+  statusIcon,
+  statusColorClass,
+  onNext,
+}: ResponseSectionProps) {
+
+  const primary = acexItems[0];
+  const support = acexItems.slice(1);
+
+  return (
+    <section className="rounded-[22px] border border-stone-200 bg-[#fbfaf7] shadow p-6">
+
+      {/* 状態 */}
+      <div className="mb-6">
+        <div className="flex items-center gap-3">
+          <div className={`text-xl ${statusColorClass}`}>{statusIcon}</div>
+          <div>
+            <div className="text-sm text-stone-500">① 判断</div>
+            <div className="text-lg font-semibold">{statusLabel}</div>
+            <div className="text-sm text-stone-600">{statusSub}</div>
+          </div>
+        </div>
+      </div>
+
+      {/* 最初の一手 */}
+      <div className="mb-6 border-2 border-slate-300 rounded-xl p-4 bg-white">
+        <div className="text-xs text-stone-500 mb-1">② 行動</div>
+        <div className="text-xl font-semibold">
+          {actionSummary}
+        </div>
+      </div>
+
+      {/* フロー */}
+      <div className="mb-6">
+        <div className="text-xs text-stone-500 mb-2">③ どう動くか</div>
+        <div className="space-y-2">
+          {flowItems.map((item, i) => (
+            <div key={i} className="flex gap-2">
+              <div className="w-6 h-6 rounded-full bg-slate-700 text-white text-xs flex items-center justify-center">
+                {i + 1}
+              </div>
+              <div className="text-sm">{item}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ACEX（主＋補） */}
+      <div className="mb-6">
+        <div className="text-xs text-stone-500 mb-2">④ この場面で使う</div>
+
+        {/* Primary */}
+        {primary && (
+          <div className="border-2 border-blue-300 bg-blue-50 rounded-xl p-4 mb-3">
+            <div className="text-xs text-blue-600 mb-1">Primary</div>
+            <div className="font-semibold">
+              {getAcexMeta(primary.key).label}
+            </div>
+            <div className="text-sm mt-1">{primary.body}</div>
+          </div>
+        )}
+
+        {/* Support */}
+        <div className="grid grid-cols-3 gap-2">
+          {support.map((item, i) => (
+            <div key={i} className="border rounded-lg p-3 bg-white">
+              <div className="text-xs text-stone-400">Support</div>
+              <div className="text-sm font-semibold">
+                {getAcexMeta(item.key).label}
+              </div>
+              <div className="text-xs mt-1">{item.body}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* NG */}
+      <div className="mb-6">
+        <div className="text-xs text-stone-500 mb-2">⑤ 注意</div>
+        <div className="space-y-2">
+          {ngItems.map((item, i) => {
+            const meta = getNgMeta(item);
+            return (
+              <div key={i} className="border border-red-200 rounded-lg p-3 bg-white">
+                <div className="text-sm text-red-600">
+                  ❌ {meta.title}
+                </div>
+                <div className="text-xs text-green-600 mt-1">
+                  → {meta.instead}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ボタン */}
+      <button
+        onClick={onNext}
+        className="w-full bg-orange-500 text-white py-3 rounded-lg"
+      >
+        ケース記録へ進む
+      </button>
+    </section>
+  );
+}

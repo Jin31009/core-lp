@@ -112,8 +112,6 @@ export default function DemoPage({ setPage }: DemoPageProps) {
   const [contextFollowups, setContextFollowups] = useState<string[]>([]);
 
   const [analysis, setAnalysis] = useState(null);
-  const [analysisText, setAnalysisText] = useState(null);
-  const [response, setResponse] = useState(null);
   const [finalContextDraft, setFinalContextDraft] = useState("");
   const [isGeneratingFinalContext, setIsGeneratingFinalContext] = useState(false);
 
@@ -324,10 +322,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
     setIsGeneratingFinalContext(true);
     setPrimaryContextDraft("AIが整理しています...");
     setContextFollowups([]);
-    setAnalysis(null);
-    setAnalysisText(null);
-                    setResponse(null);
-setFinalContextDraft("");
+    setFinalContextDraft("");
 
     try {
       const response = await fetch(`${API_BASE}/api/context-draft`, {
@@ -358,10 +353,7 @@ setFinalContextDraft("");
         "AIによる整理に失敗しました。もう一度お試しください。"
       );
       setContextFollowups([]);
-    setAnalysis(null);
-    setAnalysisText(null);
-                    setResponse(null);
-} finally {
+    } finally {
       setIsGeneratingFinalContext(false);
     }
   };
@@ -395,8 +387,6 @@ setFinalContextDraft("");
       const data: FinalContextResponse = await response.json();
 
       setAnalysis(data.analysis);
-      setAnalysisText(data.analysisText);
-      setResponse(data.response);
 
       setFinalContextDraft(
         data.finalContext || "Final Contextを取得できませんでした。"
@@ -587,10 +577,7 @@ setFinalContextDraft("");
                     setContextRequested(false);
                     setPrimaryContextDraft("");
                     setContextFollowups([]);
-                    setAnalysis(null);
-                    setAnalysisText(null);
-                    setResponse(null);
-setFinalContextDraft("");
+                    setFinalContextDraft("");
                     resetLearningState();
                     setMaxUnlockedStep(1);
                     setSelectedStep(1);
@@ -601,10 +588,7 @@ setFinalContextDraft("");
                     setContextRequested(false);
                     setPrimaryContextDraft("");
                     setContextFollowups([]);
-                    setAnalysis(null);
-                    setAnalysisText(null);
-                    setResponse(null);
-setFinalContextDraft("");
+                    setFinalContextDraft("");
                     resetLearningState();
                     setMaxUnlockedStep(1);
                     setSelectedStep(1);
@@ -615,10 +599,7 @@ setFinalContextDraft("");
                     setContextRequested(false);
                     setPrimaryContextDraft("");
                     setContextFollowups([]);
-                    setAnalysis(null);
-                    setAnalysisText(null);
-                    setResponse(null);
-setFinalContextDraft("");
+                    setFinalContextDraft("");
                     resetLearningState();
                     setMaxUnlockedStep(1);
                     setSelectedStep(1);
@@ -640,10 +621,7 @@ setFinalContextDraft("");
                     setContextRequested(false);
                     setPrimaryContextDraft("");
                     setContextFollowups([]);
-                    setAnalysis(null);
-                    setAnalysisText(null);
-                    setResponse(null);
-setFinalContextDraft("");
+                    setFinalContextDraft("");
                     resetLearningState();
                     setSelectedStep(1);
                     setMaxUnlockedStep(1);
@@ -658,7 +636,6 @@ setFinalContextDraft("");
               {selectedStep === 2 && maxUnlockedStep >= 2 && (
                 <AnalysisSection
                   analysis={analysis}
-                  analysisText={analysisText}
                   delta={String(deltaValue)}
                   eLevel={phaseLabel}
                   text={observationRaw}
@@ -670,33 +647,27 @@ setFinalContextDraft("");
 
               {selectedStep === 3 && maxUnlockedStep >= 3 && (
                 <ResponseSection
-                  actionSummary={response?.actionSummary || responseSummary}
-                  acexItems={response?.acexItems || acexItems}
-                  flowItems={response?.flowItems || flowItems}
-                  ngItems={response?.ngItems || ngItems}
+                  actionSummary={responseSummary}
+                  acexItems={acexItems}
+                  flowItems={flowItems}
+                  ngItems={ngItems}
                   statusLabel={
-                    response?.statusLabel ||
-                    (deltaValue === 4 ? "危険" : deltaValue === 3 ? "注意" : "安定")
+                    deltaValue === 4 ? "危険" : deltaValue === 3 ? "注意" : "安定"
                   }
                   statusSub={
-                    response?.statusSub ||
-                    (deltaValue === 4
+                    deltaValue === 4
                       ? "関係が崩れ始めている可能性"
                       : deltaValue === 3
                         ? "緊張が高まりつつある"
-                        : "大きな緊張は見られない")
+                        : "大きな緊張は見られない"
                   }
-                  statusIcon={
-                    response?.statusIcon ||
-                    (deltaValue === 4 ? "🔥🔥" : deltaValue === 3 ? "🔥" : "—")
-                  }
+                  statusIcon={deltaValue === 4 ? "🔥🔥" : deltaValue === 3 ? "🔥" : "—"}
                   statusColorClass={
-                    response?.statusColorClass ||
-                    (deltaValue === 4
+                    deltaValue === 4
                       ? "text-red-500"
                       : deltaValue === 3
                         ? "text-yellow-500"
-                        : "text-stone-400")
+                        : "text-stone-400"
                   }
                   onNext={goToStep4}
                 />
@@ -704,7 +675,6 @@ setFinalContextDraft("");
 
               {selectedStep === 4 && maxUnlockedStep >= 4 && (
                 <CaseReportSection
-                  finalContext={finalContext}
                   delta={String(deltaValue)}
                   eLevel={phaseLabel}
                   text={observationRaw}

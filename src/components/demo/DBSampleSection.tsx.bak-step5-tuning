@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 type DBSampleSectionProps = {
-  finalContext: string;
   delta: string;
   eLevel: string;
   text: string;
@@ -17,7 +16,6 @@ type DBSampleSectionProps = {
 };
 
 export default function DBSampleSection({
-  finalContext,
   delta,
   eLevel,
   text,
@@ -67,17 +65,8 @@ export default function DBSampleSection({
   const resolvedObservation = text?.trim() || "未入力";
   const resolvedJudgment = judgment?.trim() || "未設定";
   const resolvedAction = actionSummary?.trim() || "未設定";
-  const acexMap = {
-  A: "A｜受け止め",
-  C: "C｜確認",
-  E: "E｜説明",
-  X: "X｜補助",
-};
-
-const resolvedExecuted =
-  executedActions.length > 0
-    ? executedActions.map(a => acexMap[a] || a).join(" / ")
-    : "未選択";
+  const resolvedExecuted =
+    executedActions.length > 0 ? executedActions.join(" / ") : "未選択";
   const resolvedResult = resultType || "未選択";
   const resolvedAfterNote = afterNote?.trim() || "未記入";
   const resolvedWhyTags =
@@ -116,13 +105,6 @@ const resolvedExecuted =
             <div className={label}>Observation</div>
             <div className="col-span-2 text-[15px] leading-8 text-stone-800">
               {resolvedObservation}
-            </div>
-          </div>
-
-          <div className={row}>
-            <div className={label}>Final Context</div>
-            <div className="col-span-2 text-[15px] leading-8 text-stone-800">
-              {finalContext || "未生成"}
             </div>
           </div>
 
@@ -192,7 +174,7 @@ const resolvedExecuted =
           </div>
 
           <div className={row}>
-            <div className={label}>Next Pattern</div>
+            <div className={label}>Next Asset</div>
             <div className="col-span-2 text-[15px] leading-8 text-stone-800">
               {resolvedNextAssets}
             </div>
