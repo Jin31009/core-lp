@@ -1,0 +1,240 @@
+import express from "express";
+import cors from "cors";
+import OpenAI from "openai";
+
+const app = express();
+const port = 8787;
+
+app.use(cors());
+app.use(express.json());
+
+if (!process.env.OPENAI_API_KEY) {
+  console.error("OPENAI_API_KEY が設定されていません");
+  process.exit(1);
+}
+
+const client = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+const MODEL = "gpt-5.4-mini";
+
+/* =========================
+ Utility
+========================= */
+
+function cleanText(value) {
+  if (typeof value !== "string") return "";
+  return value.replace(/\r\n/g, "\n").trim();
+}
+
+function normalizeText(value) {
+  if (typeof value !== "string") return "";
+  return value.replace(/\s+/g, " ").trim();
+}
+
+function normalizeAkBreakType(list) {
+  if (!Array.isArray(list)) return [];
+  return [...new Set(list.filter((v) => ["R", "P", "L", "S"].includes(v)))];
+}
+
+/* =========================
+ ⭐ AI結果を壊さない normalize
+========================= */
+
+function normalizeAnalysisPayload(analysis) {
+  const fallback = {
+    MAX_DELTA: 2,
+    Trigger: "No",
+    R_Plus: "No",
+    AK_Break_Type: ["P"],
+    AK_Primary: "P",
+    APCE_Miss: "P",
+    R_Failure_Reason: "記述不足",
+    Case_Phase: "Trigger前",
+    Trigger_Memo:
+      "[主因AK] P によりΔ上昇。[補助要因] なし が重なりTrigger未成立。",
+    R_Memo: "主因AKはPで、修復状況は記述不足です。",
+  };
+
+  if (!analysis || typeof analysis !== "object") return fallback;
+
+  const MAX_DELTA =
+    Number.isInteger(analysis.MAX_DELTA) &&
+    analysis.MAX_DELTA >= 0 &&
+    analysis.MAX_DELTA <= 4
+      ? analysis.MAX_DELTA
+      : fallback.MAX_DELTA;
+
+  const Trigger =
+    analysis.Trigger === "Yes" || analysis.Trigger === "No"
+      ? analysis.Trigger
+      : fallback.Trigger;
+
+  const R_Plus =
+    analysis.R_Plus === "Yes" || analysis.R_Plus === "No"
+      ? analysis.R_Plus
+      : fallback.R_Plus;
+
+  const AK_Break_Type = normalizeAkBreakType(analysis.AK_Break_Type);
+  const safeBreak = AK_Break_Type.length ? AK_Break_Type : fallback.AK_Break_Type;
+
+  const AK_Primary =
+    ["R", "P", "L", "S"].includes(analysis.AK_Primary)
+      ? analysis.AK_Primary
+      : fallback.AK_Primary;
+
+  const APCE_Miss =
+    ["A", "P", "C", "E", ""].includes(analysis.APCE_Miss)
+      ? analysis.APCE_Miss
+      : fallback.APCE_Miss;
+
+  const R_Failure_Reason =
+    ["未介入", "遅延", "ミスマッチ", "記述不足", ""].includes(
+      analysis.R_Failure_Reason
+    )
+      ? analysis.R_Failure_Reason
+      : fallback.R_Failure_Reason;
+
+  const Case_Phase =
+    ["Trigger前", "Trigger時", "Trigger後"].includes(analysis.Case_Phase)
+      ? analysis.Case_Phase
+      : MAX_DELTA === 4
+        ? "Trigger後"
+        : Trigger === "Yes"
+          ? "Trigger時"
+          : "Trigger前";
+
+  return {
+    MAX_DELTA,
+    Trigger,
+    R_Plus,
+    AK_Break_Type: safeBreak,
+    AK_Primary,
+    APCE_Miss,
+    R_Failure_Reason,
+    Case_Phase,
+    Trigger_Memo:
+      normalizeText(analysis.Trigger_Memo) || fallback.Trigger_Memo,
+    R_Memo:
+      normalizeText(analysis.R_Memo) || fallback.R_Memo,
+  };
+}
+
+/* =========================
+ Context Draft API
+========================= */
+
+app.post("/api/context-draft", async (req, res) => {
+  try {
+    const { observationRaw, emotion, urgency, note } = req.body;
+
+    const prompt = `
+観察:
+${observationRaw}
+
+感情: ${emotion}
+緊急度: ${urgency}
+補足: ${note}
+`;
+
+    const response = await client.responses.create({
+      model: MODEL,
+      input: prompt,
+      max_output_tokens: 500,
+    });
+
+    const text = response.output_text || "";
+
+    return res.json({
+      contextDraft: text,
+      followups: [
+        "どの場面で反応が変わりましたか？",
+        "説明の順番に違和感はありましたか？",
+        "特に気にしていた言葉はありますか？",
+      ],
+    });
+
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "context error" });
+  }
+});
+
+/* =========================
+ Final Context + Analysis API
+========================= */
+
+const FINAL_SYSTEM_PROMPT = `
+あなたはRA-SS分析エンジンです。
+必ずJSONのみで返してください。
+
+Triggerはイベントです。
+AK_Primaryは原因イベントです。
+推測は禁止です。
+`;
+
+app.post("/api/final-context", async (req, res) => {
+  try {
+    const { finalContext } = req.body;
+
+    const response = await client.responses.create({
+      model: MODEL,
+      input: [
+        {
+          role: "system",
+          content: FINAL_SYSTEM_PROMPT,
+        },
+        {
+          role: "user",
+          content: finalContext,
+        },
+      ],
+      text: {
+        format: {
+          type: "json_schema",
+          name: "ra_output",
+          schema: {
+            type: "object",
+            properties: {
+              finalContext: { type: "string" },
+              analysis: { type: "object" },
+              analysisText: { type: "object" },
+              response: { type: "object" }
+            },
+            required: ["finalContext", "analysis", "analysisText", "response"]
+          }
+        }
+      },
+      max_output_tokens: 1500,
+    });
+
+    let parsed = {};
+    try {
+      parsed = JSON.parse(response.output_text || "{}");
+    } catch {
+      console.error("JSON parse error");
+    }
+
+    const normalizedAnalysis = normalizeAnalysisPayload(parsed.analysis);
+
+    return res.json({
+      finalContext: parsed.finalContext || "",
+      analysis: normalizedAnalysis,
+      analysisText: parsed.analysisText || {},
+      response: parsed.response || {},
+    });
+
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "final-context error" });
+  }
+});
+
+/* =========================
+ Start Server
+========================= */
+
+app.listen(port, () => {
+  console.log(`Server running http://localhost:${port}`);
+});

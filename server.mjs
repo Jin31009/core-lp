@@ -19,93 +19,85 @@ const client = new OpenAI({
 
 const MODEL = process.env.RA_CONTEXT_MODEL || "gpt-5.4-mini";
 
+/* =========================
+   Utility
+========================= */
+
 function cleanText(value) {
   if (typeof value !== "string") return "";
   return value.replace(/\r\n/g, "\n").trim();
 }
 
-function normalizeContextDraft(text) {
-  const fallback =
-    "患者さんはやり取りの中で何らかの引っかかりや不安を抱えたままになっている可能性がある。説明自体は行われているものの、その内容が自分の状況として十分に結びついて理解されておらず、納得感よりも距離感や置いていかれる感覚が残っているようにも見える。そのため、どの部分で理解や受け取りにずれが生じているのかを、もう少し具体的に見極める必要がある。";
-
-  if (typeof text !== "string") return fallback;
-
-  const normalized = text
-    .replace(/^「|」$/g, "")
-    .replace(/^#+\s*/gm, "")
-    .replace(/^\s*[-*・]\s*/gm, "")
-    .replace(/以下のように整理できます。?/g, "")
-    .replace(/以下のように言えます。?/g, "")
-    .replace(/整理すると/gi, "")
-    .replace(/記録向け|共有向け|申し送り向け|用途別|原因別/gi, "")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
-
-  return normalized || fallback;
-}
-
-function normalizeFollowups(list) {
-  const fallback = [
-    "患者さんは、どの説明のあとで反応が変わったように見えましたか？",
-    "内容そのものではなく、伝わり方や順番に引っかかりがあった可能性はありますか？",
-    "患者さんが繰り返し気にしていた言葉や場面はありましたか？",
-  ];
-
-  if (!Array.isArray(list)) return fallback;
-
-  const normalized = list
-    .filter((item) => typeof item === "string")
-    .map((item) => item.trim())
-    .filter(Boolean)
-    .slice(0, 3);
-
-  while (normalized.length < 3) {
-    normalized.push(fallback[normalized.length]);
-  }
-
-  return normalized;
-}
-
-function normalizeFinalContext(text) {
-  const fallback =
-    "補足情報を踏まえると、表面上は不満や怒りとして現れていても、その背景には説明内容そのものへの拒否というより、自分の状況として十分に受け取れないまま不安や距離感が強まっていた可能性がある。やり取りの緊張は、情報不足だけでなく、説明と本人の理解実感がうまく接続しなかったことに由来していたと考えられる。";
-
-  if (typeof text !== "string") return fallback;
-
-  const normalized = text
-    .replace(/^「|」$/g, "")
-    .replace(/^#+\s*/gm, "")
-    .replace(/^\s*[-*・]\s*/gm, "")
-    .replace(/以下のように整理できます。?/g, "")
-    .replace(/以下のように言えます。?/g, "")
-    .replace(/整理すると/gi, "")
-    .replace(/記録向け|共有向け|申し送り向け|用途別|原因別/gi, "")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
-
-  return normalized || fallback;
-}
-
-function normalizeAnalysisText(value) {
+function normalizeText(value) {
   if (typeof value !== "string") return "";
-  return value
+  return value.replace(/\s+/g, " ").trim();
+}
+
+function normalizeFreeText(text, fallback = "") {
+  if (typeof text !== "string") return fallback;
+  const normalized = text
+    .replace(/^```(?:json)?/gm, "")
+    .replace(/```$/gm, "")
     .replace(/^「|」$/g, "")
-    .replace(/\s+/g, " ")
+    .replace(/^#+\s*/gm, "")
+    .replace(/^\s*[-*・]\s*/gm, "")
+    .replace(/\n{3,}/g, "\n\n")
     .trim();
+
+  return normalized || fallback;
 }
 
 function normalizeAkBreakType(list) {
   if (!Array.isArray(list)) return [];
-
-  return [
-    ...new Set(
-      list
-        .filter((item) => typeof item === "string")
-        .map((item) => item.trim())
-        .filter((item) => ["R", "P", "L", "S"].includes(item))
-    ),
-  ];
+  return [...new Set(list.filter((v) => ["R", "P", "L", "S"].includes(v)))];
 }
+
+function safeStringArray(list, fallback, max = 3) {
+  if (!Array.isArray(list)) return fallback;
+  const normalized = list
+    .filter((item) => typeof item === "string")
+    .map((item) => normalizeText(item))
+    .filter(Boolean)
+    .slice(0, max);
+
+  return normalized.length ? normalized : fallback;
+}
+
+function tryParseJSONObject(rawText) {
+  if (typeof rawText !== "string" || !rawText.trim()) return null;
+
+  try {
+    return JSON.parse(rawText);
+  } catch {
+    // noop
+  }
+
+  const codeBlockMatch = rawText.match(/```json\s*([\s\S]*?)```/i);
+  if (codeBlockMatch) {
+    try {
+      return JSON.parse(codeBlockMatch[1]);
+    } catch {
+      // noop
+    }
+  }
+
+  const firstBrace = rawText.indexOf("{");
+  const lastBrace = rawText.lastIndexOf("}");
+  if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+    const candidate = rawText.slice(firstBrace, lastBrace + 1);
+    try {
+      return JSON.parse(candidate);
+    } catch {
+      // noop
+    }
+  }
+
+  return null;
+}
+
+/* =========================
+   Normalize payloads
+========================= */
 
 function normalizeAnalysisPayload(analysis) {
   const fallback = {
@@ -118,14 +110,11 @@ function normalizeAnalysisPayload(analysis) {
     R_Failure_Reason: "記述不足",
     Case_Phase: "Trigger前",
     Trigger_Memo:
-      "[主因AK] P によりΔ上昇。[補助要因] 補助要因なし が重なりTrigger未成立。",
-    R_Memo:
-      "主因AKはP、必要な関わりはPで、修復状況は記述不足です。",
+      "[主因AK] P によりΔ上昇。[補助要因] なし が重なりTrigger未成立。",
+    R_Memo: "主因AKはPで、修復状況は記述不足です。",
   };
 
-  if (!analysis || typeof analysis !== "object") {
-    return fallback;
-  }
+  if (!analysis || typeof analysis !== "object") return fallback;
 
   const maxDeltaNum = Number(analysis.MAX_DELTA);
   const MAX_DELTA =
@@ -144,9 +133,12 @@ function normalizeAnalysisPayload(analysis) {
       : fallback.R_Plus;
 
   const AK_Break_Type = normalizeAkBreakType(analysis.AK_Break_Type);
-  const AK_Primary = ["R", "P", "L", "S"].includes(analysis.AK_Primary)
-    ? analysis.AK_Primary
-    : AK_Break_Type[0] || fallback.AK_Primary;
+  const safeBreak = AK_Break_Type.length ? AK_Break_Type : fallback.AK_Break_Type;
+
+  const AK_Primary =
+    ["R", "P", "L", "S"].includes(analysis.AK_Primary)
+      ? analysis.AK_Primary
+      : fallback.AK_Primary;
 
   const APCE_Miss =
     ["A", "P", "C", "E", ""].includes(analysis.APCE_Miss)
@@ -169,243 +161,130 @@ function normalizeAnalysisPayload(analysis) {
           ? "Trigger時"
           : "Trigger前";
 
-  const Trigger_Memo =
-    normalizeAnalysisText(analysis.Trigger_Memo) || fallback.Trigger_Memo;
-  const R_Memo = normalizeAnalysisText(analysis.R_Memo) || fallback.R_Memo;
-
   return {
     MAX_DELTA,
     Trigger,
     R_Plus,
-    AK_Break_Type: AK_Break_Type.length ? AK_Break_Type : fallback.AK_Break_Type,
+    AK_Break_Type: safeBreak,
     AK_Primary,
     APCE_Miss,
     R_Failure_Reason,
     Case_Phase,
-    Trigger_Memo,
-    R_Memo,
+    Trigger_Memo:
+      normalizeText(analysis.Trigger_Memo) || fallback.Trigger_Memo,
+    R_Memo:
+      normalizeText(analysis.R_Memo) || fallback.R_Memo,
   };
 }
 
 function normalizeAnalysisTextPayload(analysisText, analysis) {
-  const deltaMap = {
-    0: "大きな緊張はまだ明確ではありません。",
-    1: "小さな違和感が残っている状態です。",
-    2: "不満や懸念が見え始めています。",
-    3: "関係の緊張は臨界域に入りつつあります。",
-    4: "関係の緊張は強く、崩れが表面化しています。",
-  };
-
-  const akMap = {
-    R: "主因は尊重の不足です。",
-    P: "主因は見通しの不足です。",
-    L: "主因は役割や担当の不明瞭さです。",
-    S: "主因は安全への不安です。",
-  };
-
-  const apceMap = {
-    A: "まず認識をそろえる関わりが必要です。",
-    P: "まず説明を通じて見通しを補う必要があります。",
-    C: "まず調整や接続を整える必要があります。",
-    E: "まず共感的な受け止めが必要です。",
-    "": "この場面では不足行為の特定は限定的です。",
-  };
-
   const fallback = {
     signal: "何らかの引っかかりが前面に出ています。",
-    delta: deltaMap[analysis.MAX_DELTA] || deltaMap[2],
-    ak: akMap[analysis.AK_Primary] || "主因が一つ前面に出ています。",
-    apce: apceMap[analysis.APCE_Miss] || "まず必要な関わりを補う必要があります。",
+    delta:
+      analysis.MAX_DELTA >= 3
+        ? "関係の緊張は高まっています。"
+        : "不満や懸念が見え始めています。",
+    ak:
+      analysis.AK_Primary === "R"
+        ? "主因は尊重の不足です。"
+        : analysis.AK_Primary === "L"
+          ? "主因は役割や担当の不明瞭さです。"
+          : analysis.AK_Primary === "S"
+            ? "主因は安全への不安です。"
+            : "主因は見通しの不足です。",
+    apce:
+      analysis.APCE_Miss === "E"
+        ? "まず受け止めを置く必要があります。"
+        : analysis.APCE_Miss === "C"
+          ? "まず接続や整理を整える必要があります。"
+          : analysis.APCE_Miss === "A"
+            ? "まず認識をそろえる必要があります。"
+            : "まず見通しを補う必要があります。",
     r:
       analysis.R_Plus === "Yes"
         ? "関係は回復方向に向いています。"
         : "関係はまだ回復方向に向いていません。",
     trigger:
       analysis.Trigger === "Yes"
-        ? "局所的な出来事が緊張を押し上げた可能性があります。"
+        ? "局所的な出来事が緊張を押し上げています。"
         : "決定的な分岐イベントはまだ明確ではありません。",
     phase:
       analysis.Case_Phase === "Trigger後"
-        ? "このケースはすでに崩れが表面化した段階です。"
+        ? "このケースは崩れが表面化した段階です。"
         : analysis.Case_Phase === "Trigger時"
           ? "このケースは分岐点にあります。"
-          : "このケースはまだ分岐前の段階です。",
-    insight: "見通し不足が不安を増幅している構造です。",
+          : "このケースは分岐前の段階です。",
+    insight: "関係の読み取りと見通し整理が必要な構造です。",
   };
 
-  if (!analysisText || typeof analysisText !== "object") {
-    return fallback;
-  }
+  if (!analysisText || typeof analysisText !== "object") return fallback;
 
   return {
-    signal: normalizeAnalysisText(analysisText.signal) || fallback.signal,
-    delta: normalizeAnalysisText(analysisText.delta) || fallback.delta,
-    ak: normalizeAnalysisText(analysisText.ak) || fallback.ak,
-    apce: normalizeAnalysisText(analysisText.apce) || fallback.apce,
-    r: normalizeAnalysisText(analysisText.r) || fallback.r,
-    trigger: normalizeAnalysisText(analysisText.trigger) || fallback.trigger,
-    phase: normalizeAnalysisText(analysisText.phase) || fallback.phase,
-    insight: normalizeAnalysisText(analysisText.insight) || fallback.insight,
+    signal: normalizeText(analysisText.signal) || fallback.signal,
+    delta: normalizeText(analysisText.delta) || fallback.delta,
+    ak: normalizeText(analysisText.ak) || fallback.ak,
+    apce: normalizeText(analysisText.apce) || fallback.apce,
+    r: normalizeText(analysisText.r) || fallback.r,
+    trigger: normalizeText(analysisText.trigger) || fallback.trigger,
+    phase: normalizeText(analysisText.phase) || fallback.phase,
+    insight: normalizeText(analysisText.insight) || fallback.insight,
   };
 }
 
-function normalizeResponseStatusColorClass(value, fallback) {
-  const allowed = ["text-red-500", "text-yellow-500", "text-stone-400"];
-  return allowed.includes(value) ? value : fallback;
-}
+function normalizeAcexItems(acexItems) {
+  const fallback = [
+    {
+      key: "A",
+      label: "A",
+      title: "Accept",
+      body: "まず相手の引っかかりや不安を受け止める。",
+    },
+    {
+      key: "C",
+      label: "C",
+      title: "Clarify",
+      body: "何が問題の中心かを一つに絞って確かめる。",
+    },
+    {
+      key: "E",
+      label: "E",
+      title: "Explain",
+      body: "必要な説明を短く補い、流れを整える。",
+    },
+    {
+      key: "X",
+      label: "X",
+      title: "Assist",
+      body: "必要に応じて次の動きや担当につなぐ。",
+    },
+  ];
 
-function normalizeStringArray(list, fallback, maxItems = 3) {
-  if (!Array.isArray(list)) return fallback;
-  const normalized = list
-    .filter((item) => typeof item === "string")
-    .map((item) => normalizeAnalysisText(item))
-    .filter(Boolean)
-    .slice(0, maxItems);
+  if (!Array.isArray(acexItems)) return fallback;
 
-  return normalized.length ? normalized : fallback;
-}
-
-function normalizeAcexItems(list, analysis) {
-  const fallbackByAK = {
-    R: [
-      {
-        key: "A",
-        label: "A",
-        title: "Accept",
-        body: "まず受け止め、相手の引っかかりを否定しない。",
-      },
-      {
-        key: "C",
-        label: "C",
-        title: "Clarify",
-        body: "何が受け止められていない感覚につながっているかを確かめる。",
-      },
-      {
-        key: "E",
-        label: "E",
-        title: "Explain",
-        body: "相手の感情に沿う順番で短く説明を補う。",
-      },
-      {
-        key: "X",
-        label: "X",
-        title: "Assist",
-        body: "必要なら担当や説明順を整理して支える。",
-      },
-    ],
-    P: [
-      {
-        key: "A",
-        label: "A",
-        title: "Accept",
-        body: "不安や見えにくさが残っていることを受け止める。",
-      },
-      {
-        key: "C",
-        label: "C",
-        title: "Clarify",
-        body: "何が見通せていないのかを一つに絞って確認する。",
-      },
-      {
-        key: "E",
-        label: "E",
-        title: "Explain",
-        body: "今わかっていることと次の流れを短く伝える。",
-      },
-      {
-        key: "X",
-        label: "X",
-        title: "Assist",
-        body: "必要なら説明順を整えて理解しやすくする。",
-      },
-    ],
-    L: [
-      {
-        key: "A",
-        label: "A",
-        title: "Accept",
-        body: "たらい回し感や混乱が生じていることを受け止める。",
-      },
-      {
-        key: "C",
-        label: "C",
-        title: "Clarify",
-        body: "誰が何を担当するのかをはっきりさせる。",
-      },
-      {
-        key: "E",
-        label: "E",
-        title: "Explain",
-        body: "連絡先や次の窓口を短く明示する。",
-      },
-      {
-        key: "X",
-        label: "X",
-        title: "Assist",
-        body: "必要なら引継ぎや役割整理をその場で支える。",
-      },
-    ],
-    S: [
-      {
-        key: "A",
-        label: "A",
-        title: "Accept",
-        body: "まず安全への不安を受け止める。",
-      },
-      {
-        key: "C",
-        label: "C",
-        title: "Clarify",
-        body: "何が危険や苦しさとして感じられているか確認する。",
-      },
-      {
-        key: "E",
-        label: "E",
-        title: "Explain",
-        body: "安全に関わる対応と次の流れを簡潔に伝える。",
-      },
-      {
-        key: "X",
-        label: "X",
-        title: "Assist",
-        body: "必要なら上位者や追加支援につなぐ。",
-      },
-    ],
-  };
-
-  const fallback = fallbackByAK[analysis.AK_Primary] || fallbackByAK.P;
-
-  if (!Array.isArray(list)) return fallback;
-
-  const normalized = list
+  const normalized = acexItems
     .filter((item) => item && typeof item === "object")
+    .slice(0, 4)
     .map((item, index) => {
-      const fallbackItem = fallback[index] || fallback[0];
-      const key =
-        typeof item.key === "string" &&
-        ["A", "C", "E", "X", "P"].includes(item.key.trim())
-          ? item.key.trim()
-          : fallbackItem.key;
-
+      const fb = fallback[index] || fallback[0];
       return {
-        key,
+        key:
+          typeof item.key === "string" && item.key.trim()
+            ? item.key.trim()
+            : fb.key,
         label:
           typeof item.label === "string" && item.label.trim()
             ? item.label.trim()
-            : key,
+            : fb.label,
         title:
           typeof item.title === "string" && item.title.trim()
             ? item.title.trim()
-            : fallbackItem.title,
+            : fb.title,
         body:
-          typeof item.body === "string" && normalizeAnalysisText(item.body)
-            ? normalizeAnalysisText(item.body)
-            : fallbackItem.body,
+          typeof item.body === "string" && normalizeText(item.body)
+            ? normalizeText(item.body)
+            : fb.body,
       };
-    })
-    .slice(0, 4);
-
-  if (!normalized.length) return fallback;
+    });
 
   while (normalized.length < 4) {
     normalized.push(fallback[normalized.length]);
@@ -415,76 +294,33 @@ function normalizeAcexItems(list, analysis) {
 }
 
 function normalizeResponsePayload(response, analysis) {
-  const statusFallback =
-    analysis.Case_Phase === "Trigger後"
-      ? {
-          statusLabel: "危険",
-          statusSub: "関係の崩れが表面化している",
-          statusIcon: "🔥🔥",
-          statusColorClass: "text-red-500",
-        }
-      : analysis.Trigger === "Yes"
-        ? {
-            statusLabel: "注意",
-            statusSub: "局所イベントで緊張が押し上がっている",
-            statusIcon: "🔥",
-            statusColorClass: "text-yellow-500",
-          }
-        : {
-            statusLabel: "安定",
-            statusSub: "まだ大きな崩れの手前にある",
-            statusIcon: "—",
-            statusColorClass: "text-stone-400",
-          };
-
   const fallback = {
-    ...statusFallback,
+    statusLabel: analysis.MAX_DELTA >= 3 ? "注意" : "安定",
+    statusSub:
+      analysis.Trigger === "Yes"
+        ? "局所イベントで関係の緊張が押し上がっている"
+        : "まだ大きな崩れの手前にある",
+    statusIcon: analysis.MAX_DELTA >= 3 ? "🔥" : "—",
+    statusColorClass:
+      analysis.MAX_DELTA >= 3 ? "text-yellow-500" : "text-stone-400",
     actionSummary:
       analysis.AK_Primary === "R"
-        ? "まず受け止めを先に置き、相手がどこで関係の冷えを感じたかを確かめる。"
-        : analysis.AK_Primary === "P"
-          ? "まず見通しを補い、何が見えにくくなっているかを短く確かめる。"
-          : analysis.AK_Primary === "L"
-            ? "まず担当と流れを整理し、誰が何を担うのかを明確にする。"
-            : "まず安全への不安を受け止め、何が危険として感じられているかを確認する。",
-    flowItems:
-      analysis.AK_Primary === "R"
-        ? [
-            "まず、受け止められていない感覚がどこで強まったかを短く確認する。",
-            "次に、評価や反論を急がず、引っかかりの焦点を一つに絞る。",
-            "最後に、その焦点に沿って短く説明や対応を補う。",
-          ]
-        : analysis.AK_Primary === "P"
-          ? [
-              "まず、何が見えにくいまま残っているかを確認する。",
-              "次に、今わかっていることと次の流れを分けて伝える。",
-              "最後に、理解や納得が追いついたかを一言で確かめる。",
-            ]
-          : analysis.AK_Primary === "L"
-            ? [
-                "まず、誰に聞けばよいか分かりにくくなっていないか確かめる。",
-                "次に、担当と役割をその場で明確にする。",
-                "最後に、次の窓口や引継ぎ先を短く共有する。",
-              ]
-            : [
-                "まず、安全や苦しさへの不安を止めずに受け止める。",
-                "次に、何が危険や負担として感じられているか確認する。",
-                "最後に、安全に関わる対応と次の流れを簡潔に伝える。",
-              ],
-    ngItems:
-      analysis.AK_Primary === "R"
-        ? ["感情を否定する", "すぐ反論する", "説明だけで押し切る"]
-        : analysis.AK_Primary === "P"
-          ? ["確認せずに説明を続ける", "急いで結論だけを返す", "不安を軽く扱う"]
-          : analysis.AK_Primary === "L"
-            ? ["担当を曖昧にしたまま進める", "引継ぎを口頭だけで終える", "窓口を増やして混乱させる"]
-            : ["安全不安を軽く扱う", "確認前に安心だけを強調する", "急いで結論だけ返す"],
-    acexItems: normalizeAcexItems([], analysis),
+        ? "まず受け止めを先に置き、どこで反応が変わったかを短く確かめる。"
+        : analysis.AK_Primary === "L"
+          ? "まず担当と役割を整理し、誰が何を担うかを明確にする。"
+          : analysis.AK_Primary === "S"
+            ? "まず安全への不安を受け止め、何が危険かを確認する。"
+            : "まず見通しを補い、何が見えにくくなっているかを短く確かめる。",
+    flowItems: [
+      "まず、状況の中心にある引っかかりを一つに絞って確認する。",
+      "次に、必要な説明や整理を短く補う。",
+      "最後に、次の一手や担当を明確にする。",
+    ],
+    ngItems: ["すぐ反論する", "説明だけで押し切る", "不安を軽く扱う"],
+    acexItems: normalizeAcexItems([]),
   };
 
-  if (!response || typeof response !== "object") {
-    return fallback;
-  }
+  if (!response || typeof response !== "object") return fallback;
 
   return {
     statusLabel:
@@ -492,27 +328,32 @@ function normalizeResponsePayload(response, analysis) {
         ? response.statusLabel.trim()
         : fallback.statusLabel,
     statusSub:
-      typeof response.statusSub === "string" && normalizeAnalysisText(response.statusSub)
-        ? normalizeAnalysisText(response.statusSub)
+      typeof response.statusSub === "string" && normalizeText(response.statusSub)
+        ? normalizeText(response.statusSub)
         : fallback.statusSub,
     statusIcon:
       typeof response.statusIcon === "string" && response.statusIcon.trim()
         ? response.statusIcon.trim()
         : fallback.statusIcon,
-    statusColorClass: normalizeResponseStatusColorClass(
-      response.statusColorClass,
-      fallback.statusColorClass
-    ),
+    statusColorClass:
+      typeof response.statusColorClass === "string" &&
+      response.statusColorClass.trim()
+        ? response.statusColorClass.trim()
+        : fallback.statusColorClass,
     actionSummary:
       typeof response.actionSummary === "string" &&
-      normalizeAnalysisText(response.actionSummary)
-        ? normalizeAnalysisText(response.actionSummary)
+      normalizeText(response.actionSummary)
+        ? normalizeText(response.actionSummary)
         : fallback.actionSummary,
-    flowItems: normalizeStringArray(response.flowItems, fallback.flowItems, 3),
-    ngItems: normalizeStringArray(response.ngItems, fallback.ngItems, 3),
-    acexItems: normalizeAcexItems(response.acexItems, analysis),
+    flowItems: safeStringArray(response.flowItems, fallback.flowItems, 3),
+    ngItems: safeStringArray(response.ngItems, fallback.ngItems, 3),
+    acexItems: normalizeAcexItems(response.acexItems),
   };
 }
+
+/* =========================
+   Prompt builders
+========================= */
 
 function buildContextPrompt({ observationRaw, emotion, urgency, note }) {
   return [
@@ -521,602 +362,260 @@ function buildContextPrompt({ observationRaw, emotion, urgency, note }) {
     "",
     "【観察者メモ】",
     `感情トーン: ${emotion || "未入力"}`,
-    `緊急度: ${urgency || "未入力"}`,
+    `対応意図: ${urgency || "未入力"}`,
     `補足: ${note || "なし"}`,
     "",
     "【タスク】",
-    "この観察を、説明や要約ではなく、関係の状態として読み直してください。",
-    "一次Contextは自然文で書き、観察記録としてそのまま読める文章にしてください。",
-    "そのうえで、次に補足すべき観察ポイントを3件だけ生成してください。",
+    "この観察を、説明や助言ではなく、関係の状態として一次整理してください。",
+    "3文から5文の自然文で書いてください。",
+    "途中で切れず、必ず完結させてください。",
+    "followups は3件、日本語、自然な問いで返してください。",
+    "必ずJSONのみを返してください。",
   ].join("\n");
 }
 
-function buildFinalContextPrompt({
-  observationRaw,
-  contextDraft,
-  selectedFollowups,
-  userFollowupNote,
-  note,
-}) {
-  const followupText = Array.isArray(selectedFollowups)
-    ? selectedFollowups.filter(Boolean).join("\n- ")
-    : "";
+function buildFinalPrompt(body) {
+  const observationRaw = cleanText(body.observationRaw) || "（観察未入力）";
+  const primaryContext =
+    cleanText(body.primaryContextDraft || body.contextDraft) ||
+    "（一次Context未入力）";
+  const contextEdited =
+    cleanText(body.contextEdited || body.userFollowupNote) || "（補足なし）";
+  const emotion = cleanText(body.emotion) || "（未入力）";
+  const urgency = cleanText(body.urgency) || "（未入力）";
 
   return [
     "【観察メモ】",
-    observationRaw || "（未入力）",
+    observationRaw,
     "",
     "【一次Context】",
-    contextDraft || "（未入力）",
-    "",
-    "【選択されたfollowups】",
-    followupText ? `- ${followupText}` : "（なし）",
+    primaryContext,
     "",
     "【補足入力】",
-    userFollowupNote || "（なし）",
+    contextEdited,
     "",
-    "【追加メモ】",
-    note || "（なし）",
+    "【感情】",
+    emotion,
+    "",
+    "【対応意図】",
+    urgency,
     "",
     "【タスク】",
-    "一次Contextと補足情報を統合し、より確からしい関係理解へ整えてください。",
-    "これは応答文ではなく、Step2分析とStep3対応設計へ渡すためのFinal Contextです。",
+    "1. Final Contextを自然文で作成する",
+    "2. analysis を返す",
+    "3. analysisText を返す",
+    "4. response を返す",
+    "5. 必ずJSONのみを返す",
   ].join("\n");
 }
 
+/* =========================
+   Prompts
+========================= */
+
 const CONTEXT_SYSTEM_PROMPT = `
-あなたは RA-SS（Relational Architecture Sensing System）の一次Context生成エンジンです。
-あなたの役割は、出来事を説明することではありません。
-観察された違和感を、関係の状態として読み直すことです。
+あなたはRA-SSの一次Context生成エンジンです。
+観察された違和感を、関係の状態として未完成の自然文に整理してください。
+助言や応答文は禁止です。
+followups は3件、日本語、自然な問いにしてください。
+一次Contextは3文から5文で、必ず途中で切れずに完結させてください。
 
-【最重要Goal】
-一次Contextとは、
-「観察された違和感を、関係の状態として読み直し、
-次に何を補足すべきかが自然に立ち上がる文」
-です。
-
-【役割定義】
-この出力は未完成でよい。
-目的は、関係の仮説を立ち上げることであり、完成した理解を提示することではない。
-
-【一次Contextの構造】
-以下の4要素を、自然文の中ににじませること。
-
-1. 何が起きているか
-2. どう受け取られている可能性があるか
-3. 関係のずれ・緊張・距離
-4. 次に何を見極める必要があるか
-
-【文体ルール】
-- 必ず自然文で書く
-- 観察記録としてそのまま読める文章にする
-- 「可能性がある」「ように見える」を適切に使う
-- ただし曖昧に逃げすぎない
-- 説明調・解説調にしない
-- メタ表現を書かない
-
-【禁止】
-- 「以下のように整理できます」
-- 「以下のように言えます」
-- 箇条書き
-- 見出し（###など）
-- 用途説明（記録向け、共有向け、申し送り向け など）
-- 単純な感情ラベル化（例：「怒っている状態です」）
-- 助言・指導（〜すべき）
-- 結論の確定
-- 応答案の提示
-
-【重要制約】
-入力が抽象的（例：「怒っている」「不満がある」など）の場合でも、
-説明や分類に逃げてはいけない。
-必ず、やり取りの場面を仮定し、関係の状態として読み直すこと。
-単語の説明や分類に逃げることは禁止。
-
-【停止ルール（最重要）】
-この出力は未完成で止めること。
-- 原因を確定しない
-- 状況を閉じない
-- 応答方針に進まない
-文末は、「次に何を確かめる必要があるか」が自然に立ち上がる位置で止めること。
-
-【followupsのルール】
-- 必ず3件
-- すべて日本語
-- このケースで次に補足すべき観察ポイントにする
-- 単なる一般論は禁止
-- UIでそのまま選択できる自然な問いにする
-
-【出力形式】
-必ずJSONのみを返すこと。コードフェンス禁止。マークダウン禁止。
+必ずJSONのみを返してください。
 
 {
   "contextDraft": "自然文の一次Context",
-  "followups": [
-    "補足観察ポイント1",
-    "補足観察ポイント2",
-    "補足観察ポイント3"
-  ]
+  "followups": ["質問1", "質問2", "質問3"]
 }
 `.trim();
 
 const FINAL_SYSTEM_PROMPT = `
-あなたは RA-SS（Relational Architecture Sensing System）の分析前処理エンジンです。
-入力された Final Context だけを根拠に、Step2 用の分析結果と Step3 用の対応設計を生成してください。
-推測や過剰補完は禁止です。
-必ず JSON のみを返してください。
+あなたはRA-SSのFinal Context生成エンジンです。
+入力された観察、一次Context、補足情報をもとに、Final Contextと分析結果を返してください。
+必ずJSONのみを返してください。コードフェンスは禁止です。
 
-【あなたの役割】
-- 一次Contextと補足情報を統合して Final Context を整える
-- Final Context を根拠に analysis を返す
-- Step2 の各Box本文として使える短い analysisText を返す
-- Step3 の response を返す
-- 応答文や助言文そのものは書かない
-
-【最重要指示】
-- 既存のローカル判定ロジックは参照しない
-- Final Context の記述だけを根拠にする
-- analysisText は短く、各項目1文、長くても2文まで
-- response も短く、表示向けに簡潔にする
-- 一般論ではなく、このケースに即して書く
-- 不明な場合は無理に膨らませず、最小限に書く
-
-【Final Context 生成ルール】
-- 一次Contextの単純な繰り返しは禁止
-- 補足によって何が変わったかを反映する
-- ズレの焦点を少し絞る
-- 自然文で書く
-- 応答文にしない
-- APCE, SRPL などのラベルを Final Context 本文には書かない
-- 断定しすぎず、仮説として開いておく
-- 特に、出来事の直後に反応変化（黙る・短い返答・視線回避・家族への不信表明）がある場合は、
-  「不安が続いている」だけで終わらせず、
-  「関係が一段切れた可能性」「対話を続ける前提が弱くなった可能性」まで書く
-- R系ケースでは、説明不足よりも『受け止められなかった感覚』『話しても無駄という感覚』を優先して書く
+【目的】
+- Final Contextは要約ではなく、分析に使える解像度で整える
+- 出来事、反応変化、関係の変化点を残す
+- 応答文は作らない
 
 
-【Final Context の書き分け例】
-悪い例：
-- 不安が続いている
-- ズレが残っている
+
+【重要（出力ルール）】
+Final Contextでは必ず以下を含めること：
+
+1. 何が起きたか（具体的な出来事）
+2. その直後に何が変化したか
+3. 関係がどう変わったか
+
+禁止：
+・抽象語だけで終わる（例：不満、距離、緊張）
+・出来事を省略する
 
 良い例：
-- 話を遮られた直後から反応が変わっており、やり取りの中で関係が一段切れた可能性がある
-- 受け止められなかった感覚が残り、対話を続ける前提そのものが弱くなっている可能性がある
+「待ち時間が長く、患者が強い口調で訴えたことで、スタッフとの関係の緊張が一段高まった可能性がある」
 
-【判定基準】
 
-【最終補正ルール（最優先）】
-以下の条件がそろう場合は、他の判定より優先して強制上書きする：
 
-条件：
-1. 遮断イベント（話を遮る・途中で切る・一方的な結論）
-2. 直後の反応変化（黙る・短い返答・視線回避）
-3. 不信・諦めの表現（もう話しても無駄・聞いてもらえない）
+【最終補正（重要）】
 
-この3つが揃う場合：
+Final Contextでは以下を厳守する：
 
-- MAX_DELTA = 3 に強制する
-- Trigger = Yes に強制する
-- AK_Primary = R を優先する
+・内面の推測を書かない（例：信頼感、納得感、安心感）
+・観察できる変化のみを書く（発言、態度、トーン）
+・出来事 → 変化 → 関係 の順で書く
 
-このルールは最優先で適用し、他の判断よりも上書きする
+禁止：
+・「〜と感じた可能性がある」などの心理推測
+・状態の抽象化だけで終わる
 
-1. MAX_DELTA
 
-- 以下のような「対話放棄・関係放棄」の表現がある場合は、感情の強さに関わらず Δ3 以上を優先する：
-  ・もう話しても無駄
-  ・諦めている
-  ・黙り込む
-  ・関わりを避ける / 距離を取る
-  ・応答が極端に短くなる
-- これは「関係が継続しない状態」を示すため、Δは高く判定する
 
-以下の順で1つ選ぶ
-- 4: 拒絶・関係断絶
-- 3: 強い不満・不信（臨界）
-- 2: 不満・懸念
-- 1: 違和感
-- 0: なし
 
-2. Trigger
-Trigger は「Δ2からΔ3へジャンプさせた局所イベント」。
-以下の場合のみ Yes
-- MAX_DELTA = 3
-- 状態変化が明記されている
-- その変化を起こしたイベントが特定できる
-- そのイベントを境に、反応だけでなく関係の質（信頼・受け止められ感）が一段下がったと読める
-- 特に、以下のような関係破壊イベントの直後に反応変化がある場合は Trigger を強く検討する
-  ・話を遮る
-  ・途中で話を切る
-  ・一方的に結論だけ伝える
-  ・聞いてもらえない感覚を生む
-- 上記イベントの直後に、表情が硬くなる、発話が減る、返答が短くなる、距離を取る、家族や第三者に不信を表明する、のいずれかがあれば Trigger = Yes とする
-- 特に、以下の3点がそろう場合は Trigger = Yes を強く優先する
-  1. 遮断イベントがある（話を遮る、途中で切る、一方的に結論だけ伝える）
-  2. その直後に反応変化がある（表情硬化、短い返答、発話減少）
-  3. その後に不信や不満が第三者へ表明されている
-- この条件では、表面上の感情語よりも「関係が一段切れたか」を優先して判断する
-それ以外は No
-ただし MAX_DELTA = 4 の場合は Trigger = Yes 固定
+【R優先ルール】
+以下の場合はRを優先する：
+・最後まで聞かない
+・話を途中で遮る
+・相手の話を軽く扱う
+・「それ前にも言いましたよね」などの切り返し
 
-3. R_Plus
-評価が明確にプラス反転した場合のみ Yes
-それ以外は No
+この場合、感情が戸惑いでもAK_PrimaryはRとする
 
-4. AK_Break_Type
-該当するものをすべて配列で返す
-- R = 尊重
-- P = 見通し
-- L = 役割
-- S = 安全
+【Trigger抑制ルール】
+以下の場合はTriggerとしない：
+・軽い沈黙
+・表情変化のみ
+・発言量の減少
 
-5. AK_Primary
+Triggerは「関係が一段切れた」場合のみ
 
-- 以下の「関係破壊イベント」がある場合は、感情語よりも優先して R を選択する：
-  ・話を遮る
-  ・途中で話を切る
-  ・ちゃんと聞いてもらえない
-  ・受け止めてもらえない
-  ・一方的に結論だけ伝える
 
-最初にΔを上げた原因イベントに対応するものを1つ返す
-- R / P / L / S のいずれか
-- 以下の表現がある場合は、結果感情よりも原因イベントを優先して判定する
-  - 「話を遮る」「途中で遮る」「途中で切る」「聞かずに結論だけ返す」「ちゃんと聞いてもらえない」「受け止めてもらえない」
-  - これらは原則 R（尊重）を優先する
-- 「不安」「落ち着かない」などの感情語があっても、原因が尊重欠如なら R を優先する
 
-6. APCE_Miss
-明記があればそれを優先
-補完は最小限で1つのみ
-- R → E を優先、次点で A
-- P → P
-- L → C
-- S のみ → 空文字可
-Δ3では原則1つ返す。S単独のみ空文字可。
+【最優先の主因判定ルール】
 
-7. R_Failure_Reason
-R_Plus = Yes なら空文字
-R_Plus = No の場合のみ以下から1つ
-- 未介入
-- 遅延
-- ミスマッチ
-- 記述不足
+次のような出来事がある場合、AK_Primary は P ではなく R とする：
 
-8. Case_Phase
-- MAX_DELTA = 4 → Trigger後
-- Trigger = Yes → Trigger時
-- それ以外 → Trigger前
+・最後まで聞かない
+・話を途中で遮る
+・相手の話を軽く扱う
+・症状や訴えに対して突き放すように返す
+・「それは前にも言われましたよね」など、話す意欲を下げる返し
 
-9. Trigger_Memo
-以下のテンプレ固定
-[主因AK] によりΔ上昇。[補助要因] が重なりTrigger成立。
-または
-[主因AK] によりΔ上昇。[補助要因] が重なりTrigger未成立。
+重要：
+この場合、相手の反応が「戸惑い」「不安」「黙る」であっても、
+それは結果であり主因ではない。
+主因は「受け止められなさ」「尊重の欠如」であるため、
+AK_Primary = R を優先する。
 
-10. R_Memo
-短く1文で記述
-- R_Plus = Yes の場合は回復方向を述べる
-- R_Plus = No の場合は主因AK・APCE_Miss・R_Failure_Reason を簡潔に述べる
+【Pにしてはいけない条件】
 
-【analysisText の書き方】
-- signal: いま前面に出ている状態
-- delta: 緊張の強さ
-- ak: 主因AKの意味
-- apce: 必要な関わり
-- r: 関係の回復状況
-- trigger: 分岐イベントの有無
-- phase: ケース段階
-- insight: 全体要約
-- insight は『〜構造』で終えるか、それに準ずる1文で、構造を言い切ること
-すべて短く、ケース固有で書くこと
+以下の場合は P にしてはいけない：
+・問題の中心が見通し不足ではない
+・説明不足より、聞かれ方・返し方・扱われ方が原因である
+・相手が話すこと自体をやめている、または減らしている
 
-【response の書き方】
-- statusLabel: 危険 / 注意 / 安定 のいずれか
-- statusSub: 今の局面を一文で短く
-- statusIcon: 危険=🔥🔥 / 注意=🔥 / 安定=—
-- statusColorClass: 危険=text-red-500 / 注意=text-yellow-500 / 安定=text-stone-400
-- actionSummary: 最初の対応方針を1文
-- flowItems: 3件。対応の順番
-- ngItems: 3件。避けたい対応
-- acexItems: 4件固定。A/C/E/X の順
-- 各bodyは短く、このケースに即して書く
-- Response は応答文そのものではなく、最初の対応設計にする
 
-【response の接続ルール】
-- AK_Primary = R のとき、受け止め・共感・尊重回復を前面に出す
-- AK_Primary = P のとき、見通し・説明整理・確認を前面に出す
-- ただし P でも、不安の中身が未特定なら Primary は C（確認）を優先してよい
-- R の場合は Primary を A（受け止め）優先で考える
-- AK_Primary = L のとき、担当・役割・引継ぎ整理を前面に出す
-- AK_Primary = S のとき、安全確認・不安低減を前面に出す
-- Trigger = Yes のとき、順番をより慎重にする
-- Case_Phase = Trigger後 のとき、危険寄りにする
+【分析ルール】
+- Triggerはイベントである
+- AK_Primaryは原因イベントである
+- 推測しすぎない
+- 不明な場合は最小限にまとめる
 
 【出力形式】
-必ずJSONのみを返すこと。コードフェンス禁止。マークダウン禁止。
-
 {
-  "finalContext": "統合された関係理解の自然文",
+  "finalContext": "自然文",
   "analysis": {
-    "MAX_DELTA": 0,
-    "Trigger": "Yes",
+    "MAX_DELTA": 2,
+    "Trigger": "No",
     "R_Plus": "No",
-    "AK_Break_Type": ["R"],
-    "AK_Primary": "R",
-    "APCE_Miss": "E",
-    "R_Failure_Reason": "未介入",
-    "Case_Phase": "Trigger時",
-    "Trigger_Memo": "[主因AK] R によりΔ上昇。[補助要因] P が重なりTrigger成立。",
-    "R_Memo": "主因AKはR、必要な関わりはEで、修復状況は未介入です。"
+    "AK_Break_Type": ["P"],
+    "AK_Primary": "P",
+    "APCE_Miss": "P",
+    "R_Failure_Reason": "記述不足",
+    "Case_Phase": "Trigger前",
+    "Trigger_Memo": "短い説明",
+    "R_Memo": "短い説明"
   },
   "analysisText": {
-    "signal": "不満と不信が前面に出ています。",
-    "delta": "関係の緊張は臨界域に入りつつあります。",
-    "ak": "主因は尊重の不足です。",
-    "apce": "まず共感的な受け止めが必要です。",
-    "r": "関係はまだ回復方向に向いていません。",
-    "trigger": "局所的な出来事が緊張を押し上げた可能性があります。",
-    "phase": "このケースは分岐点にあります。",
-    "insight": "関係のずれの焦点を絞って見る必要があります。"
+    "signal": "",
+    "delta": "",
+    "ak": "",
+    "apce": "",
+    "r": "",
+    "trigger": "",
+    "phase": "",
+    "insight": ""
   },
   "response": {
     "statusLabel": "注意",
-    "statusSub": "見通し不足が緊張を高めつつある",
+    "statusSub": "",
     "statusIcon": "🔥",
     "statusColorClass": "text-yellow-500",
-    "actionSummary": "まず見通しを補い、何が見えにくくなっているかを短く確かめる。",
-    "flowItems": [
-      "まず、何が見えにくいまま残っているかを確認する。",
-      "次に、今わかっていることと次の流れを分けて伝える。",
-      "最後に、理解や納得が追いついたかを一言で確かめる。"
-    ],
-    "ngItems": [
-      "確認せずに説明を続ける",
-      "急いで結論だけを返す",
-      "不安を軽く扱う"
-    ],
+    "actionSummary": "",
+    "flowItems": ["", "", ""],
+    "ngItems": ["", "", ""],
     "acexItems": [
-      {
-        "key": "A",
-        "label": "A",
-        "title": "Accept",
-        "body": "不安や見えにくさが残っていることを受け止める。"
-      },
-      {
-        "key": "C",
-        "label": "C",
-        "title": "Clarify",
-        "body": "何が見通せていないのかを一つに絞って確認する。"
-      },
-      {
-        "key": "E",
-        "label": "E",
-        "title": "Explain",
-        "body": "今わかっていることと次の流れを短く伝える。"
-      },
-      {
-        "key": "X",
-        "label": "X",
-        "title": "Assist",
-        "body": "必要なら説明順を整えて理解しやすくする。"
-      }
+      { "key": "A", "label": "A", "title": "Accept", "body": "" },
+      { "key": "C", "label": "C", "title": "Clarify", "body": "" },
+      { "key": "E", "label": "E", "title": "Explain", "body": "" },
+      { "key": "X", "label": "X", "title": "Assist", "body": "" }
     ]
   }
 }
 `.trim();
 
-const CONTEXT_OUTPUT_SCHEMA = {
-  name: "ra_context_draft",
-  strict: true,
-  schema: {
-    type: "object",
-    additionalProperties: false,
-    properties: {
-      contextDraft: {
-        type: "string",
-      },
-      followups: {
-        type: "array",
-        items: {
-          type: "string",
-        },
-        minItems: 3,
-        maxItems: 3,
-      },
-    },
-    required: ["contextDraft", "followups"],
-  },
-};
+/* =========================
+   Fallback builders
+========================= */
 
-const FINAL_OUTPUT_SCHEMA = {
-  name: "ra_final_context_with_analysis_and_response",
-  strict: true,
-  schema: {
-    type: "object",
-    additionalProperties: false,
-    properties: {
-      finalContext: {
-        type: "string",
-      },
-      analysis: {
-        type: "object",
-        additionalProperties: false,
-        properties: {
-          MAX_DELTA: {
-            type: "integer",
-            minimum: 0,
-            maximum: 4,
-          },
-          Trigger: {
-            type: "string",
-            enum: ["Yes", "No"],
-          },
-          R_Plus: {
-            type: "string",
-            enum: ["Yes", "No"],
-          },
-          AK_Break_Type: {
-            type: "array",
-            items: {
-              type: "string",
-              enum: ["R", "P", "L", "S"],
-            },
-          },
-          AK_Primary: {
-            type: "string",
-            enum: ["R", "P", "L", "S"],
-          },
-          APCE_Miss: {
-            type: "string",
-            enum: ["A", "P", "C", "E", ""],
-          },
-          R_Failure_Reason: {
-            type: "string",
-            enum: ["未介入", "遅延", "ミスマッチ", "記述不足", ""],
-          },
-          Case_Phase: {
-            type: "string",
-            enum: ["Trigger前", "Trigger時", "Trigger後"],
-          },
-          Trigger_Memo: {
-            type: "string",
-          },
-          R_Memo: {
-            type: "string",
-          },
-        },
-        required: [
-          "MAX_DELTA",
-          "Trigger",
-          "R_Plus",
-          "AK_Break_Type",
-          "AK_Primary",
-          "APCE_Miss",
-          "R_Failure_Reason",
-          "Case_Phase",
-          "Trigger_Memo",
-          "R_Memo",
-        ],
-      },
-      analysisText: {
-        type: "object",
-        additionalProperties: false,
-        properties: {
-          signal: {
-            type: "string",
-          },
-          delta: {
-            type: "string",
-          },
-          ak: {
-            type: "string",
-          },
-          apce: {
-            type: "string",
-          },
-          r: {
-            type: "string",
-          },
-          trigger: {
-            type: "string",
-          },
-          phase: {
-            type: "string",
-          },
-          insight: {
-            type: "string",
-          },
-        },
-        required: [
-          "signal",
-          "delta",
-          "ak",
-          "apce",
-          "r",
-          "trigger",
-          "phase",
-          "insight",
-        ],
-      },
-      response: {
-        type: "object",
-        additionalProperties: false,
-        properties: {
-          statusLabel: {
-            type: "string",
-            enum: ["危険", "注意", "安定"],
-          },
-          statusSub: {
-            type: "string",
-          },
-          statusIcon: {
-            type: "string",
-          },
-          statusColorClass: {
-            type: "string",
-            enum: ["text-red-500", "text-yellow-500", "text-stone-400"],
-          },
-          actionSummary: {
-            type: "string",
-          },
-          flowItems: {
-            type: "array",
-            items: {
-              type: "string",
-            },
-            minItems: 3,
-            maxItems: 3,
-          },
-          ngItems: {
-            type: "array",
-            items: {
-              type: "string",
-            },
-            minItems: 3,
-            maxItems: 3,
-          },
-          acexItems: {
-            type: "array",
-            minItems: 4,
-            maxItems: 4,
-            items: {
-              type: "object",
-              additionalProperties: false,
-              properties: {
-                key: {
-                  type: "string",
-                  enum: ["A", "C", "E", "X", "P"],
-                },
-                label: {
-                  type: "string",
-                },
-                title: {
-                  type: "string",
-                },
-                body: {
-                  type: "string",
-                },
-              },
-              required: ["key", "label", "title", "body"],
-            },
-          },
-        },
-        required: [
-          "statusLabel",
-          "statusSub",
-          "statusIcon",
-          "statusColorClass",
-          "actionSummary",
-          "flowItems",
-          "ngItems",
-          "acexItems",
-        ],
-      },
+function fallbackContextPayload(observationRaw) {
+  return {
+    contextDraft:
+      normalizeFreeText(
+        observationRaw,
+        "観察内容から一次整理を十分に生成できませんでした。"
+      ) ||
+      "観察内容から一次整理を十分に生成できませんでした。",
+    followups: [
+      "どの場面で反応が変わりましたか？",
+      "説明の順番に違和感はありましたか？",
+      "特に気にしていた言葉はありますか？",
+    ],
+  };
+}
+
+function fallbackFinalPayload(body, rawText = "") {
+  const observationRaw = cleanText(body.observationRaw) || "";
+  const primaryContext =
+    cleanText(body.primaryContextDraft || body.contextDraft) || "";
+  const baseText =
+    normalizeFreeText(rawText) ||
+    normalizeFreeText(primaryContext) ||
+    normalizeFreeText(observationRaw) ||
+    "観察内容から最終Contextを十分に生成できませんでした。";
+
+  return {
+    finalContext: baseText,
+    analysis: {
+      MAX_DELTA: 2,
+      Trigger: "No",
+      R_Plus: "No",
+      AK_Break_Type: ["P"],
+      AK_Primary: "P",
+      APCE_Miss: "P",
+      R_Failure_Reason: "記述不足",
+      Case_Phase: "Trigger前",
+      Trigger_Memo:
+        "[主因AK] P によりΔ上昇。[補助要因] なし が重なりTrigger未成立。",
+      R_Memo: "主因AKはPで、修復状況は記述不足です。",
     },
-    required: ["finalContext", "analysis", "analysisText", "response"],
-  },
-};
+    analysisText: {},
+    response: {},
+  };
+}
+
+/* =========================
+   API: Context Draft
+========================= */
 
 app.post("/api/context-draft", async (req, res) => {
   try {
@@ -1132,7 +631,7 @@ app.post("/api/context-draft", async (req, res) => {
       });
     }
 
-    const userPrompt = buildContextPrompt({
+    const prompt = buildContextPrompt({
       observationRaw,
       emotion,
       urgency,
@@ -1141,7 +640,6 @@ app.post("/api/context-draft", async (req, res) => {
 
     const response = await client.responses.create({
       model: MODEL,
-      reasoning: { effort: "medium" },
       input: [
         {
           role: "system",
@@ -1149,86 +647,48 @@ app.post("/api/context-draft", async (req, res) => {
         },
         {
           role: "user",
-          content: [{ type: "input_text", text: userPrompt }],
+          content: [{ type: "input_text", text: prompt }],
         },
       ],
-      text: {
-        format: {
-          type: "json_schema",
-          ...CONTEXT_OUTPUT_SCHEMA,
-        },
-      },
-      max_output_tokens: 700,
+      max_output_tokens: 1200,
     });
 
-    let parsed = null;
-
-    try {
-      parsed = JSON.parse(response.output_text || "{}");
-    } catch {
-      parsed = null;
-    }
+    const raw = response.output_text || "";
+    let parsed = tryParseJSONObject(raw);
 
     if (!parsed || typeof parsed !== "object") {
-      parsed = {
-        contextDraft:
-          "患者さんはやり取りの中で何らかの引っかかりや不安を抱えたままになっている可能性がある。説明自体は行われているものの、その内容が自分の状況として十分に結びついて理解されておらず、納得感よりも距離感や置いていかれる感覚が残っているようにも見える。そのため、どの部分で理解や受け取りにずれが生じているのかを、もう少し具体的に見極める必要がある。",
-        followups: [
-          "患者さんは、どの説明のあとで反応が変わったように見えましたか？",
-          "内容そのものではなく、伝わり方や順番に引っかかりがあった可能性はありますか？",
-          "患者さんが繰り返し気にしていた言葉や場面はありましたか？",
-        ],
-      };
+      parsed = fallbackContextPayload(observationRaw);
     }
 
     return res.json({
-      contextDraft: normalizeContextDraft(parsed.contextDraft),
-      followups: normalizeFollowups(parsed.followups),
+      contextDraft: normalizeFreeText(
+        parsed.contextDraft,
+        fallbackContextPayload(observationRaw).contextDraft
+      ),
+      followups: safeStringArray(
+        parsed.followups,
+        fallbackContextPayload(observationRaw).followups,
+        3
+      ),
     });
-  } catch (error) {
-    console.error("OpenAI error (context-draft):", error);
-
-    return res.status(500).json({
-      error: error instanceof Error ? error.message : "AI生成エラー",
-      contextDraft:
-        "患者さんはやり取りの中で何らかの引っかかりや不安を抱えたままになっている可能性がある。説明自体は行われているものの、その内容が自分の状況として十分に結びついて理解されておらず、納得感よりも距離感や置いていかれる感覚が残っているようにも見える。そのため、どの部分で理解や受け取りにずれが生じているのかを、もう少し具体的に見極める必要がある。",
-      followups: [
-        "患者さんは、どの説明のあとで反応が変わったように見えましたか？",
-        "内容そのものではなく、伝わり方や順番に引っかかりがあった可能性はありますか？",
-        "患者さんが繰り返し気にしていた言葉や場面はありましたか？",
-      ],
-    });
+  } catch (e) {
+    console.error("OpenAI error (context-draft):", e);
+    const fallback = fallbackContextPayload(req.body?.observationRaw || "");
+    return res.status(200).json(fallback);
   }
 });
+
+/* =========================
+   API: Final Context + Analysis
+========================= */
 
 app.post("/api/final-context", async (req, res) => {
   try {
     const body = req.body || {};
-    const observationRaw = cleanText(body.observationRaw);
-    const contextDraft = cleanText(body.contextDraft || body.primaryContextDraft);
-    const userFollowupNote = cleanText(body.userFollowupNote || body.contextEdited);
-    const note = cleanText(body.note);
-    const selectedFollowups = Array.isArray(body.selectedFollowups)
-      ? body.selectedFollowups.map((item) => cleanText(String(item))).filter(Boolean)
-      : [];
-
-    if (!observationRaw && !contextDraft) {
-      return res.status(400).json({
-        error: "observationRaw or contextDraft is required",
-      });
-    }
-
-    const userPrompt = buildFinalContextPrompt({
-      observationRaw,
-      contextDraft,
-      selectedFollowups,
-      userFollowupNote,
-      note,
-    });
+    const userPrompt = buildFinalPrompt(body);
 
     const response = await client.responses.create({
       model: MODEL,
-      reasoning: { effort: "medium" },
       input: [
         {
           role: "system",
@@ -1239,99 +699,16 @@ app.post("/api/final-context", async (req, res) => {
           content: [{ type: "input_text", text: userPrompt }],
         },
       ],
-      text: {
-        format: {
-          type: "json_schema",
-          ...FINAL_OUTPUT_SCHEMA,
-        },
-      },
-      max_output_tokens: 1600,
+      max_output_tokens: 1800,
     });
 
-    let parsed = null;
-
-    try {
-      parsed = JSON.parse(response.output_text || "{}");
-    } catch {
-      parsed = null;
-    }
+    const raw = response.output_text || "";
+    let parsed = tryParseJSONObject(raw);
 
     if (!parsed || typeof parsed !== "object") {
-      parsed = {
-        finalContext:
-          "補足情報を踏まえると、表面上は不満や怒りとして現れていても、その背景には説明内容そのものへの拒否というより、自分の状況として十分に受け取れないまま不安や距離感が強まっていた可能性がある。やり取りの緊張は、情報不足だけでなく、説明と本人の理解実感がうまく接続しなかったことに由来していたと考えられる。",
-        analysis: {
-          MAX_DELTA: 2,
-          Trigger: "No",
-          R_Plus: "No",
-          AK_Break_Type: ["P"],
-          AK_Primary: "P",
-          APCE_Miss: "P",
-          R_Failure_Reason: "記述不足",
-          Case_Phase: "Trigger前",
-          Trigger_Memo:
-            "[主因AK] P によりΔ上昇。[補助要因] 補助要因なし が重なりTrigger未成立。",
-          R_Memo:
-            "主因AKはP、必要な関わりはPで、修復状況は記述不足です。",
-        },
-        analysisText: {
-          signal: "何らかの引っかかりが前面に出ています。",
-          delta: "不満や懸念が見え始めています。",
-          ak: "主因は見通しの不足です。",
-          apce: "まず説明を通じて見通しを補う必要があります。",
-          r: "関係はまだ回復方向に向いていません。",
-          trigger: "決定的な分岐イベントはまだ明確ではありません。",
-          phase: "このケースはまだ分岐前の段階です。",
-          insight: "見通し不足が不安を増幅している構造です。",
-        },
-        response: {
-          statusLabel: "安定",
-          statusSub: "まだ大きな崩れの手前にある",
-          statusIcon: "—",
-          statusColorClass: "text-stone-400",
-          actionSummary:
-            "まず見通しを補い、何が見えにくくなっているかを短く確かめる。",
-          flowItems: [
-            "まず、何が見えにくいまま残っているかを確認する。",
-            "次に、今わかっていることと次の流れを分けて伝える。",
-            "最後に、理解や納得が追いついたかを一言で確かめる。",
-          ],
-          ngItems: [
-            "確認せずに説明を続ける",
-            "急いで結論だけを返す",
-            "不安を軽く扱う",
-          ],
-          acexItems: [
-            {
-              key: "A",
-              label: "A",
-              title: "Accept",
-              body: "不安や見えにくさが残っていることを受け止める。",
-            },
-            {
-              key: "C",
-              label: "C",
-              title: "Clarify",
-              body: "何が見通せていないのかを一つに絞って確認する。",
-            },
-            {
-              key: "E",
-              label: "E",
-              title: "Explain",
-              body: "今わかっていることと次の流れを短く伝える。",
-            },
-            {
-              key: "X",
-              label: "X",
-              title: "Assist",
-              body: "必要なら説明順を整えて理解しやすくする。",
-            },
-          ],
-        },
-      };
+      parsed = fallbackFinalPayload(body, raw);
     }
 
-    const normalizedFinalContext = normalizeFinalContext(parsed.finalContext);
     const normalizedAnalysis = normalizeAnalysisPayload(parsed.analysis);
     const normalizedAnalysisText = normalizeAnalysisTextPayload(
       parsed.analysisText,
@@ -1343,89 +720,36 @@ app.post("/api/final-context", async (req, res) => {
     );
 
     return res.json({
-      finalContext: normalizedFinalContext,
+      finalContext:
+        normalizeFreeText(
+          parsed.finalContext,
+          fallbackFinalPayload(body, raw).finalContext
+        ) || fallbackFinalPayload(body, raw).finalContext,
       analysis: normalizedAnalysis,
       analysisText: normalizedAnalysisText,
       response: normalizedResponse,
     });
-  } catch (error) {
-    console.error("OpenAI error (final-context):", error);
-
-    return res.status(500).json({
-      error: error instanceof Error ? error.message : "AI生成エラー",
-      finalContext:
-        "補足情報を踏まえると、表面上は不満や怒りとして現れていても、その背景には説明内容そのものへの拒否というより、自分の状況として十分に受け取れないまま不安や距離感が強まっていた可能性がある。やり取りの緊張は、情報不足だけでなく、説明と本人の理解実感がうまく接続しなかったことに由来していたと考えられる。",
-      analysis: {
-        MAX_DELTA: 2,
-        Trigger: "No",
-        R_Plus: "No",
-        AK_Break_Type: ["P"],
-        AK_Primary: "P",
-        APCE_Miss: "P",
-        R_Failure_Reason: "記述不足",
-        Case_Phase: "Trigger前",
-        Trigger_Memo:
-          "[主因AK] P によりΔ上昇。[補助要因] 補助要因なし が重なりTrigger未成立。",
-        R_Memo:
-          "主因AKはP、必要な関わりはPで、修復状況は記述不足です。",
-      },
-      analysisText: {
-        signal: "何らかの引っかかりが前面に出ています。",
-        delta: "不満や懸念が見え始めています。",
-        ak: "主因は見通しの不足です。",
-        apce: "まず説明を通じて見通しを補う必要があります。",
-        r: "関係はまだ回復方向に向いていません。",
-        trigger: "決定的な分岐イベントはまだ明確ではありません。",
-        phase: "このケースはまだ分岐前の段階です。",
-        insight: "見通し不足が不安を増幅している構造です。",
-      },
-      response: {
-        statusLabel: "安定",
-        statusSub: "まだ大きな崩れの手前にある",
-        statusIcon: "—",
-        statusColorClass: "text-stone-400",
-        actionSummary:
-          "まず見通しを補い、何が見えにくくなっているかを短く確かめる。",
-        flowItems: [
-          "まず、何が見えにくいまま残っているかを確認する。",
-          "次に、今わかっていることと次の流れを分けて伝える。",
-          "最後に、理解や納得が追いついたかを一言で確かめる。",
-        ],
-        ngItems: [
-          "確認せずに説明を続ける",
-          "急いで結論だけを返す",
-          "不安を軽く扱う",
-        ],
-        acexItems: [
-          {
-            key: "A",
-            label: "A",
-            title: "Accept",
-            body: "不安や見えにくさが残っていることを受け止める。",
-          },
-          {
-            key: "C",
-            label: "C",
-            title: "Clarify",
-            body: "何が見通せていないのかを一つに絞って確認する。",
-          },
-          {
-            key: "E",
-            label: "E",
-            title: "Explain",
-            body: "今わかっていることと次の流れを短く伝える。",
-          },
-          {
-            key: "X",
-            label: "X",
-            title: "Assist",
-            body: "必要なら説明順を整えて理解しやすくする。",
-          },
-        ],
-      },
+  } catch (e) {
+    console.error("OpenAI error (final-context):", e);
+    const fallback = fallbackFinalPayload(req.body || {});
+    return res.status(200).json({
+      finalContext: fallback.finalContext,
+      analysis: normalizeAnalysisPayload(fallback.analysis),
+      analysisText: normalizeAnalysisTextPayload(
+        fallback.analysisText,
+        normalizeAnalysisPayload(fallback.analysis)
+      ),
+      response: normalizeResponsePayload(
+        fallback.response,
+        normalizeAnalysisPayload(fallback.analysis)
+      ),
     });
   }
 });
+
+/* =========================
+   Start Server
+========================= */
 
 app.listen(port, () => {
   console.log(`Server running http://localhost:${port}`);
