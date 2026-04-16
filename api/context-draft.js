@@ -1,8 +1,6 @@
 import OpenAI from "openai";
 
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+let client = null;
 
 const MODEL = process.env.RA_CONTEXT_MODEL || "gpt-5.4-mini";
 
@@ -176,6 +174,24 @@ export default async function handler(req, res) {
   const startedAt = Date.now();
 
   try {
+    if (!process.env.OPENAI_API_KEY) {
+      console.error("CONTEXT_DRAFT_ENV_MISSING:", {
+        durationMs: Date.now() - startedAt,
+        missing: "OPENAI_API_KEY",
+      });
+
+      return res.status(500).json({
+        error:
+          "OPENAI_API_KEY is not configured on the server. Set OPENAI_API_KEY in Vercel project environment variables.",
+      });
+    }
+
+    if (!client) {
+      client = new OpenAI({
+        apiKey: process.env.OPENAI_API_KEY,
+      });
+    }
+
     const body = req.body || {};
     const observationRaw = cleanText(body.observationRaw);
     const emotion = cleanText(body.emotion);

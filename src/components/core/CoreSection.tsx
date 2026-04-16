@@ -4,7 +4,17 @@ export default function CoreSection() {
   return (
     <section style={sectionStyle}>
       <div style={containerStyle}>
-        <p style={labelStyle}>Redefinition</p>
+        <div style={labelRowStyle}>
+          <span style={doubleCircleStyle}>
+            <span style={innerCircleStyle} />
+          </span>
+          <span>REDEFINITION</span>
+        </div>
+
+        <p style={introStyle}>
+          ここで言いたいのは、広報を情報の伝達としてではなく、
+          関係の状態を整える営みとして捉え直す必要があるということです。
+        </p>
 
         <div style={scriptWrapStyle}>
           <p style={scriptStyle}>
@@ -69,23 +79,54 @@ export default function CoreSection() {
 }
 
 const sectionStyle: React.CSSProperties = {
-  padding: "20px 48px 120px",
-  background: "#f7f5f2",
+  padding: "20px 24px 112px",
+  background: "#ffffff",
   color: "#111",
 };
 
 const containerStyle: React.CSSProperties = {
-  maxWidth: 1080,
+  maxWidth: 1040,
   margin: "0 auto",
   textAlign: "center",
 };
 
-const labelStyle: React.CSSProperties = {
+const labelRowStyle: React.CSSProperties = {
   margin: "0 0 28px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: 8,
   fontSize: 11,
-  letterSpacing: "0.18em",
+  letterSpacing: "0.22em",
   textTransform: "uppercase",
-  opacity: 0.48,
+  color: "#047857",
+  fontWeight: 500,
+};
+
+const doubleCircleStyle: React.CSSProperties = {
+  width: 12,
+  height: 12,
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  borderRadius: "999px",
+  border: "1px solid #047857",
+  boxSizing: "border-box",
+};
+
+const innerCircleStyle: React.CSSProperties = {
+  width: 6,
+  height: 6,
+  borderRadius: "999px",
+  background: "#047857",
+};
+
+const introStyle: React.CSSProperties = {
+  maxWidth: 720,
+  margin: "0 auto 28px",
+  fontSize: 17,
+  lineHeight: 1.95,
+  color: "#404040",
 };
 
 const scriptWrapStyle: React.CSSProperties = {
@@ -110,9 +151,9 @@ const scriptStrongStyle: React.CSSProperties = {
 const afterStyle: React.CSSProperties = {
   margin: "0 auto 44px",
   maxWidth: 620,
-  fontSize: 19,
-  lineHeight: 2,
-  opacity: 0.8,
+  fontSize: 18,
+  lineHeight: 1.95,
+  color: "#404040",
 };
 
 const expansionGridStyle: React.CSSProperties = {
@@ -154,5 +195,5 @@ const expansionBodyStyle: React.CSSProperties = {
   margin: 0,
   fontSize: 16,
   lineHeight: 1.95,
-  opacity: 0.82,
+  color: "#525252",
 };

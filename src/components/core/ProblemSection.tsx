@@ -4,7 +4,15 @@ export default function ProblemSection() {
   return (
     <section style={sectionStyle}>
       <div style={containerStyle}>
-        <p style={labelStyle}>Problem</p>
+        <div style={labelRowStyle}>
+          <span style={squareStyle} />
+          <span>PROBLEM</span>
+        </div>
+
+        <p style={introStyle}>
+          病院広報が難しいのは、情報の内容だけではなく、
+          その情報がどんな関係の中で受け取られるかまで影響するからです。
+        </p>
 
         <div style={scriptWrapStyle}>
           <p style={scriptStyle}>
@@ -45,23 +53,45 @@ export default function ProblemSection() {
 }
 
 const sectionStyle: React.CSSProperties = {
-  padding: "24px 48px 120px",
-  background: "#f7f5f2",
+  padding: "24px 24px 112px",
+  background: "rgba(245,245,244,0.7)",
   color: "#111",
 };
 
 const containerStyle: React.CSSProperties = {
-  maxWidth: 900,
+  maxWidth: 960,
   margin: "0 auto",
   textAlign: "center",
 };
 
-const labelStyle: React.CSSProperties = {
+const labelRowStyle: React.CSSProperties = {
   margin: "0 0 28px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: 8,
   fontSize: 11,
-  letterSpacing: "0.18em",
+  letterSpacing: "0.22em",
   textTransform: "uppercase",
-  opacity: 0.48,
+  color: "#737373",
+  fontWeight: 500,
+};
+
+const squareStyle: React.CSSProperties = {
+  display: "inline-block",
+  width: 10,
+  height: 10,
+  borderRadius: 2,
+  border: "1px solid #64748b",
+  boxSizing: "border-box",
+};
+
+const introStyle: React.CSSProperties = {
+  maxWidth: 720,
+  margin: "0 auto 28px",
+  fontSize: 17,
+  lineHeight: 1.95,
+  color: "#404040",
 };
 
 const scriptWrapStyle: React.CSSProperties = {
@@ -78,8 +108,8 @@ const scriptStyle: React.CSSProperties = {
 const noteStyle: React.CSSProperties = {
   margin: "0 0 14px",
   fontSize: 18,
-  lineHeight: 2,
-  opacity: 0.74,
+  lineHeight: 1.95,
+  color: "#525252",
 };
 
 const noteStrongStyle: React.CSSProperties = {

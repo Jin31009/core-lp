@@ -1,10 +1,24 @@
-
-
 type Props = {
   setPage: (page: string) => void;
+  currentPage?: string;
 };
 
-export default function SiteHeader({ setPage }: Props) {
+const NAV_ITEMS = [
+  { key: "structure", label: "理論の裏側", page: "structure" },
+  { key: "process", label: "再現性", page: "process" },
+  { key: "contact", label: "一緒に試す", page: "contact" },
+] as const;
+
+function isActive(currentPage: string | undefined, page: string) {
+  if (!currentPage) return false;
+  if (page === "corelp") return currentPage === "top" || currentPage === "corelp";
+  if (page === "demo-intro") {
+    return currentPage === "demo-intro" || currentPage === "demo" || currentPage === "prototype";
+  }
+  return currentPage === page;
+}
+
+export default function SiteHeader({ setPage, currentPage }: Props) {
   return (
     <header style={headerStyle}>
       <div style={innerStyle}>
@@ -13,24 +27,31 @@ export default function SiteHeader({ setPage }: Props) {
         </button>
 
         <nav style={navStyle}>
-          <button onClick={() => setPage("structure")} style={navItemStyle}>
-            <span style={navMainStyle}>理論の裏側</span>
-            <span style={navSubStyle}>Structure</span>
-          </button>
+          {NAV_ITEMS.map((item) => {
+            const active = isActive(currentPage, item.page);
 
-          <button onClick={() => setPage("process")} style={navItemStyle}>
-            <span style={navMainStyle}>再現性</span>
-            <span style={navSubStyle}>Process</span>
-          </button>
+            return (
+              <button
+                key={item.key}
+                onClick={() => setPage(item.page)}
+                style={{
+                  ...navItemStyle,
+                  ...(active ? navItemActiveStyle : null),
+                }}
+              >
+                {item.label}
+              </button>
+            );
+          })}
 
-          <button onClick={() => setPage("contact")} style={navItemStyle}>
-            <span style={navMainStyle}>一緒に試す</span>
-            <span style={navSubStyle}>Contact</span>
-          </button>
-
-          <button onClick={() => setPage("demo-intro")} style={demoItemStyle}>
-            <span style={demoMainStyle}>体験する</span>
-            <span style={demoSubStyle}>Demo</span>
+          <button
+            onClick={() => setPage("demo-intro")}
+            style={{
+              ...demoItemStyle,
+              ...(isActive(currentPage, "demo-intro") ? demoItemActiveStyle : null),
+            }}
+          >
+            体験する
           </button>
         </nav>
       </div>
@@ -42,15 +63,17 @@ const headerStyle: React.CSSProperties = {
   position: "sticky",
   top: 0,
   zIndex: 50,
+  height: 80,
   background: "rgba(247,245,242,0.92)",
-  backdropFilter: "blur(10px)",
+  backdropFilter: "blur(12px)",
   borderBottom: "1px solid rgba(0,0,0,0.06)",
 };
 
 const innerStyle: React.CSSProperties = {
   maxWidth: 1180,
+  height: "100%",
   margin: "0 auto",
-  padding: "14px 32px",
+  padding: "0 32px",
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
@@ -63,72 +86,51 @@ const brandStyle: React.CSSProperties = {
   padding: 0,
   margin: 0,
   cursor: "pointer",
-  fontSize: 12,
+  fontSize: 15,
   letterSpacing: "0.18em",
   textTransform: "uppercase",
-  color: "#111",
-  opacity: 0.88,
+  color: "#262626",
+  fontWeight: 500,
 };
 
 const navStyle: React.CSSProperties = {
   display: "flex",
   alignItems: "center",
-  gap: 16,
+  gap: 12,
+  flexWrap: "wrap",
+  justifyContent: "flex-end",
 };
 
 const navItemStyle: React.CSSProperties = {
   border: "none",
   background: "transparent",
-  padding: "4px 4px",
+  padding: "10px 12px",
   margin: 0,
   cursor: "pointer",
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  gap: 3,
+  fontSize: 15,
+  color: "#262626",
+  fontWeight: 500,
+  borderRadius: 999,
 };
 
-const navMainStyle: React.CSSProperties = {
-  fontSize: 11,
-  letterSpacing: "0.12em",
-  textTransform: "uppercase",
-  color: "#111",
-  opacity: 0.62,
-  lineHeight: 1.2,
-};
-
-const navSubStyle: React.CSSProperties = {
-  fontSize: 10,
-  color: "#111",
-  opacity: 0.38,
-  lineHeight: 1.2,
+const navItemActiveStyle: React.CSSProperties = {
+  background: "rgba(0,0,0,0.05)",
 };
 
 const demoItemStyle: React.CSSProperties = {
   border: "1px solid rgba(0,0,0,0.16)",
   background: "#111",
   color: "#fff",
-  padding: "6px 12px 5px",
+  padding: "10px 16px",
   margin: 0,
   cursor: "pointer",
-  borderRadius: 4,
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  gap: 3,
+  borderRadius: 999,
+  fontSize: 15,
+  fontWeight: 500,
+  minHeight: 44,
 };
 
-const demoMainStyle: React.CSSProperties = {
-  fontSize: 11,
-  letterSpacing: "0.12em",
-  textTransform: "uppercase",
-  color: "#fff",
-  opacity: 1,
-  lineHeight: 1.2,
-};
-
-const demoSubStyle: React.CSSProperties = {
-  fontSize: 10,
-  color: "rgba(255,255,255,0.78)",
-  lineHeight: 1.2,
+const demoItemActiveStyle: React.CSSProperties = {
+  background: "#262626",
+  borderColor: "rgba(0,0,0,0.24)",
 };

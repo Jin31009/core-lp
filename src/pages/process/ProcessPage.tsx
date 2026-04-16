@@ -1,71 +1,51 @@
+import SiteHeader from "../../components/shared/SiteHeader";
+import EditorialSectionHeader from "../../components/shared/EditorialSectionHeader";
+import FooterSection from "../../components/core/FooterSection";
+
 type ProcessPageProps = {
   setPage?: (page: string) => void;
 };
 
 export default function ProcessPage({ setPage }: ProcessPageProps) {
   return (
-    <div className="min-h-screen bg-[#f7f4ee] text-stone-900">
-      <header className="sticky top-0 z-40 border-b border-stone-200/80 bg-[#f7f4ee]/90 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4 md:px-10">
-          <button
-            type="button"
-            onClick={() => setPage?.("lp")}
-            className="text-left"
-          >
-            <p className="text-[10px] font-medium uppercase tracking-[0.28em] text-stone-400">
-              RA-SS / Reproducibility
-            </p>
-            <h1 className="mt-1 text-[15px] font-semibold text-stone-900">
-              再現性
-            </h1>
-          </button>
-
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setPage?.("demo")}
-              className="inline-flex bg-stone-900 px-4 py-2 text-[12px] font-medium uppercase tracking-[0.14em] text-white transition hover:opacity-90"
-            >
-              Demo
-            </button>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-[#f7f5f2] text-stone-900">
+      {setPage && <SiteHeader setPage={setPage} currentPage="process" />}
 
       <main>
-        <section className="border-b border-stone-200 bg-[#f2ede3] px-6 py-24 md:px-10 md:py-28">
-          <div className="mx-auto max-w-6xl">
-            <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.30em] text-stone-400">
-              Reproducibility
-            </p>
-
-            <h2 className="max-w-4xl text-4xl font-semibold leading-tight tracking-[-0.02em] text-stone-900 md:text-6xl">
-              この方法は、
-              <br />
-              どうすれば
-              <br />
-              再現可能になるのか。
-            </h2>
-
-            <p className="mt-8 max-w-2xl text-[16px] leading-9 text-stone-600">
-              ここでは、違和感の観察がどのように整理され、記録され、次の実践へ引き継がれるのかを見ます。
-            </p>
+        <section className="bg-white px-6 pt-32 pb-20 md:px-10 md:pt-40 md:pb-24">
+          <div className="mx-auto max-w-5xl">
+            <div className="mx-auto max-w-[960px] text-center">
+              <EditorialSectionHeader
+                label="PROCESS"
+                marker="flow"
+                hero
+                title={
+                  <>
+                    この方法は、
+                    <br />
+                    どうすれば
+                    <br />
+                    再現可能になるのか。
+                  </>
+                }
+                summary="ここでは、違和感の観察がどのように整理され、記録され、次の実践へ引き継がれるのかを見ます。"
+              />
+            </div>
           </div>
         </section>
 
-        <section className="bg-white px-6 py-20 md:px-10 md:py-24">
-          <div className="mx-auto max-w-6xl">
-            <div className="mb-12 max-w-3xl">
-              <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.28em] text-stone-400">
-                Flow
-              </p>
-
-              <h3 className="text-3xl font-semibold leading-tight tracking-[-0.02em] text-stone-900 md:text-4xl">
-                基本フロー
-              </h3>
+        <section className="bg-stone-50/70 px-6 py-16 md:px-10 md:py-24">
+          <div className="mx-auto max-w-5xl">
+            <div className="mx-auto mb-10 max-w-3xl">
+              <EditorialSectionHeader
+                label="FLOW"
+                marker="flow"
+                title="基本フロー"
+                summary="その場の対応で終わらせず、次に参照できる流れとして残すための最小単位です。"
+              />
             </div>
 
-            <div className="space-y-6">
+            <div className="mx-auto mt-12 max-w-3xl divide-y divide-black/8 border-y border-black/8">
               {[
                 "観察する",
                 "構造として整理する",
@@ -75,15 +55,13 @@ export default function ProcessPage({ setPage }: ProcessPageProps) {
               ].map((item, index) => (
                 <div
                   key={item}
-                  className="border-t border-stone-200 pt-6 first:border-t-0 first:pt-0"
+                  className="grid grid-cols-[56px_1fr] items-start gap-4 py-5 text-left md:grid-cols-[72px_1fr] md:gap-6 md:py-6"
                 >
-                  <div className="grid grid-cols-[56px_1fr] gap-4">
-                    <div className="text-[11px] font-medium uppercase tracking-[0.22em] text-stone-400">
-                      0{index + 1}
-                    </div>
-                    <div className="text-[15px] leading-8 text-stone-700">
-                      {item}
-                    </div>
+                  <div className="text-[11px] font-medium tracking-[0.18em] text-neutral-400">
+                    0{index + 1}
+                  </div>
+                  <div className="text-[17px] leading-[1.8] text-neutral-800 md:text-[18px]">
+                    {item}
                   </div>
                 </div>
               ))}
@@ -91,36 +69,37 @@ export default function ProcessPage({ setPage }: ProcessPageProps) {
           </div>
         </section>
 
-        <section className="bg-[#f3efe7] px-6 py-20 md:px-10 md:py-24">
-          <div className="mx-auto max-w-6xl">
-            <div className="grid gap-16 md:grid-cols-[0.95fr_1.05fr]">
-              <div>
-                <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.28em] text-stone-400">
-                  Operation
-                </p>
+        <section className="bg-white px-6 py-16 md:px-10 md:py-24">
+          <div className="mx-auto max-w-5xl">
+            <div className="mx-auto max-w-4xl">
+              <EditorialSectionHeader
+                label="STRUCTURE"
+                marker="lines"
+                title={
+                  <>
+                    運用とは、
+                    <br />
+                    繰り返しを支えることである。
+                  </>
+                }
+                summary="個別対応を一度きりで終わらせず、次の判断に接続できる流れへ変えるための視点です。"
+              />
 
-                <h3 className="text-3xl font-semibold leading-tight tracking-[-0.02em] text-stone-900 md:text-4xl">
-                  運用とは、
-                  <br />
-                  繰り返しを支えることである。
-                </h3>
-              </div>
-
-              <div className="space-y-6">
-                <div className="border-t border-stone-200 pt-6">
-                  <p className="text-[14px] leading-8 text-stone-700">
+              <div className="mx-auto mt-10 max-w-3xl space-y-2 text-center">
+                <div className="border-t border-black/8 pt-4">
+                  <p className="text-[16px] leading-[1.95] text-neutral-700 md:text-[17px]">
                     単発の良い対応ではなく、繰り返せる形にする。
                   </p>
                 </div>
 
-                <div className="border-t border-stone-200 pt-6">
-                  <p className="text-[14px] leading-8 text-stone-700">
+                <div className="border-t border-black/8 pt-4">
+                  <p className="text-[16px] leading-[1.95] text-neutral-700 md:text-[17px]">
                     記録が残ることで、他者も同じ構造を参照できる。
                   </p>
                 </div>
 
-                <div className="border-t border-stone-200 pt-6">
-                  <p className="text-[14px] leading-8 text-stone-700">
+                <div className="border-t border-black/8 pt-4">
+                  <p className="text-[16px] leading-[1.95] text-neutral-700 md:text-[17px]">
                     それが組織学習へ接続する。
                   </p>
                 </div>
@@ -129,31 +108,34 @@ export default function ProcessPage({ setPage }: ProcessPageProps) {
           </div>
         </section>
 
-        <section className="border-t border-stone-200 bg-white px-6 py-24 md:px-10 md:py-28">
+        <section className="bg-stone-50/70 px-6 py-16 md:px-10 md:py-24">
           <div className="mx-auto max-w-4xl text-center">
-            <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.28em] text-stone-400">
-              Next
-            </p>
+            <EditorialSectionHeader
+              label="CONTACT"
+              marker="none"
+              title={
+                <>
+                  実装は、
+                  <br />
+                  体験から始まる。
+                </>
+              }
+              summary="流れを読むだけでなく、実際のケースでこの手順がどう立ち上がるかを体験できます。"
+            />
 
-            <h3 className="text-4xl font-semibold leading-tight tracking-[-0.02em] text-stone-900 md:text-5xl">
-              実装は、
-              <br />
-              体験から始まる。
-            </h3>
-
-            <div className="mt-12 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+            <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
               <button
                 type="button"
-                onClick={() => setPage?.("demo")}
-                className="inline-flex items-center justify-center bg-stone-900 px-7 py-3 text-[12px] font-medium uppercase tracking-[0.16em] text-white transition hover:opacity-90"
+                onClick={() => setPage?.("demo-intro")}
+                className="inline-flex min-h-11 items-center justify-center rounded-full bg-neutral-900 px-6 text-[15px] font-medium text-white transition hover:bg-neutral-800"
               >
-                DEMOへ
+                体験する
               </button>
 
               <button
                 type="button"
                 onClick={() => setPage?.("lp")}
-                className="inline-flex items-center justify-center border border-stone-300 px-7 py-3 text-[12px] font-medium uppercase tracking-[0.16em] text-stone-700 transition hover:bg-[#f7f4ee]"
+                className="inline-flex min-h-11 items-center justify-center rounded-full border border-neutral-300 bg-white px-6 text-[15px] font-medium text-neutral-800 transition hover:bg-neutral-50"
               >
                 LPに戻る
               </button>
@@ -161,6 +143,7 @@ export default function ProcessPage({ setPage }: ProcessPageProps) {
           </div>
         </section>
       </main>
+      <FooterSection setPage={setPage} />
     </div>
   );
 }

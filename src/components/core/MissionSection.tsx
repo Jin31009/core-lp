@@ -4,7 +4,19 @@ export default function MissionSection() {
   return (
     <section style={sectionStyle}>
       <div style={containerStyle}>
-        <p style={labelStyle}>Method / RA-SS</p>
+        <div style={labelRowStyle}>
+          <span style={linesStyle}>
+            <span style={lineStyle} />
+            <span style={lineStyle} />
+            <span style={lineStyle} />
+          </span>
+          <span>METHOD</span>
+        </div>
+
+        <p style={introStyle}>
+          RA-SSは、違和感を感覚のままにせず、
+          観察し、整理し、対話に接続するための方法として設計されています。
+        </p>
 
         <div style={scriptWrapStyle}>
           <p style={scriptStyle}>
@@ -64,7 +76,7 @@ export default function MissionSection() {
 
 const sectionStyle: React.CSSProperties = {
   padding: "40px 48px 140px",
-  background: "#f7f5f2",
+  background: "rgba(245,245,244,0.6)",
   color: "#111",
 };
 
@@ -74,12 +86,37 @@ const containerStyle: React.CSSProperties = {
   textAlign: "center",
 };
 
-const labelStyle: React.CSSProperties = {
+const labelRowStyle: React.CSSProperties = {
   margin: "0 0 28px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: 8,
   fontSize: 11,
-  letterSpacing: "0.18em",
+  letterSpacing: "0.22em",
   textTransform: "uppercase",
-  opacity: 0.48,
+  color: "#475569",
+  fontWeight: 500,
+};
+
+const linesStyle: React.CSSProperties = {
+  display: "inline-flex",
+  flexDirection: "column",
+  gap: 2,
+};
+
+const lineStyle: React.CSSProperties = {
+  width: 12,
+  height: 1,
+  background: "#475569",
+};
+
+const introStyle: React.CSSProperties = {
+  maxWidth: 720,
+  margin: "0 auto 28px",
+  fontSize: 17,
+  lineHeight: 1.95,
+  color: "#404040",
 };
 
 const scriptWrapStyle: React.CSSProperties = {

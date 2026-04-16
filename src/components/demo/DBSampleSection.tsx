@@ -2,36 +2,12 @@ import type { RASSCaseRecord } from "../../lib/rassCaseCsv";
 
 type DBSampleSectionProps = {
   record: RASSCaseRecord | null;
-  finalContext: string;
-  delta: string;
-  eLevel: string;
-  text: string;
-  judgment: string;
-  actionSummary: string;
-  executedActions: string[];
-  resultType: string;
-  afterNote: string;
-  whyTags: string[];
-  whyMemo: string;
-  nextAssets: string[];
   onDownloadCsv: () => void;
   innerRef?: React.RefObject<HTMLDivElement | null>;
 };
 
 export default function DBSampleSection({
   record,
-  finalContext,
-  delta,
-  eLevel,
-  text,
-  judgment,
-  actionSummary,
-  executedActions,
-  resultType,
-  afterNote,
-  whyTags,
-  whyMemo,
-  nextAssets,
   onDownloadCsv,
   innerRef,
 }: DBSampleSectionProps) {
@@ -54,7 +30,7 @@ export default function DBSampleSection({
     "rounded-[18px] border border-stone-200 bg-white p-6 shadow-[0_3px_14px_rgba(15,23,42,0.04)]";
 
   const row =
-    "grid grid-cols-3 gap-4 border-b border-stone-200 py-4 last:border-b-0";
+    "grid grid-cols-[140px_1fr] gap-4 border-b border-stone-200 py-4 last:border-b-0";
 
   const label =
     "text-[13px] font-medium text-stone-500";
@@ -81,19 +57,6 @@ export default function DBSampleSection({
   const resolvedApce = record && record.apce_miss.length > 0
     ? record.apce_miss.join(" / ")
     : "未設定";
-  void text;
-  void judgment;
-  void actionSummary;
-  void whyTags;
-  void nextAssets;
-  void delta;
-  void eLevel;
-  void executedActions;
-  void resultType;
-  void afterNote;
-  void whyMemo;
-  void finalContext;
-
   return (
     <section ref={innerRef} className={sectionShell}>
       <div className={sectionHeader}>
@@ -102,8 +65,7 @@ export default function DBSampleSection({
         </p>
         <h2 className={sectionTitleClass}>このように構造化して残ります</h2>
         <p className={leadClass}>
-          Step4 で整理した学びは、このような記録構造として残せます。
-          単なるメモではなく、次回に再利用できる知見として見える形にします。
+          ここに表示されている内容が、そのままCSVとして保存されます。
         </p>
       </div>
 
@@ -111,7 +73,7 @@ export default function DBSampleSection({
         <div className={tableCard}>
           <div className={row}>
             <div className={label}>今回の分析対象</div>
-            <div className="col-span-2 text-[15px] leading-8 text-stone-800">
+            <div className="text-[15px] leading-8 text-stone-800">
               {record?.context_final || "未生成"}
             </div>
           </div>
@@ -119,65 +81,56 @@ export default function DBSampleSection({
           <div className={row}>
             <div className={label}>Delta</div>
             <div className={value}>Δ{record?.max_delta ?? "0"}</div>
-            <div className="text-[13px] text-stone-500">
-              関係の緊張の強さ
-            </div>
           </div>
 
           <div className={row}>
             <div className={label}>Trigger</div>
             <div className={value}>{record?.trigger || "No"}</div>
-            <div className="text-[13px] text-stone-500">
-              局所イベントの有無
-            </div>
           </div>
 
           <div className={row}>
             <div className={label}>AK Primary</div>
             <div className={value}>{record?.ak_primary || "未設定"}</div>
-            <div className="text-[13px] text-stone-500">
-              主因として見えているズレ
-            </div>
           </div>
 
           <div className={row}>
             <div className={label}>APCE Miss</div>
-            <div className="col-span-2 text-[15px] leading-8 text-stone-800">
+            <div className="text-[15px] leading-8 text-stone-800">
               {resolvedApce}
             </div>
           </div>
 
           <div className={row}>
             <div className={label}>Case Phase</div>
-            <div className="col-span-2 text-[15px] leading-8 text-stone-800">
+            <div className="text-[15px] leading-8 text-stone-800">
               {record?.case_phase || "未設定"}
             </div>
           </div>
 
           <div className={row}>
             <div className={label}>ACEX</div>
-            <div className="col-span-2 text-[15px] leading-8 text-stone-800">
+            <div className="text-[15px] leading-8 text-stone-800">
               {resolvedAction}
             </div>
           </div>
 
           <div className={row}>
             <div className={label}>Why Tags</div>
-            <div className="col-span-2 text-[15px] leading-8 text-stone-800">
+            <div className="text-[15px] leading-8 text-stone-800">
               {resolvedWhyTags}
             </div>
           </div>
 
           <div className={row}>
             <div className={label}>Next Pattern</div>
-            <div className="col-span-2 text-[15px] leading-8 text-stone-800">
+            <div className="text-[15px] leading-8 text-stone-800">
               {resolvedNextAssets}
             </div>
           </div>
 
           <div className={row}>
             <div className={label}>Notes</div>
-            <div className="col-span-2 text-[15px] leading-8 text-stone-800">
+            <div className="text-[15px] leading-8 text-stone-800">
               {resolvedNotes}
             </div>
           </div>

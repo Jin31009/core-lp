@@ -8,7 +8,15 @@ export default function CtaSection({ setPage }: Props) {
   return (
     <section style={sectionStyle}>
       <div style={containerStyle}>
-        <p style={labelStyle}>Value / Expansion / Participation</p>
+        <div style={labelRowStyle}>
+          <span style={arrowStyle}>→</span>
+          <span>CONTACT</span>
+        </div>
+
+        <p style={introStyle}>
+          この構想は、単発の対応支援で終わるものではなく、
+          組織に残る再現性へどうつなげるかまでを含んでいます。
+        </p>
 
         <div style={scriptWrapStyle}>
           <p style={scriptStyle}>
@@ -64,7 +72,7 @@ export default function CtaSection({ setPage }: Props) {
 
 const sectionStyle: React.CSSProperties = {
   padding: "60px 48px 160px",
-  background: "#f7f5f2",
+  background: "rgba(245,245,244,0.7)",
   color: "#111",
 };
 
@@ -74,12 +82,31 @@ const containerStyle: React.CSSProperties = {
   textAlign: "center",
 };
 
-const labelStyle: React.CSSProperties = {
+const labelRowStyle: React.CSSProperties = {
   margin: "0 0 28px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: 8,
   fontSize: 11,
-  letterSpacing: "0.18em",
+  letterSpacing: "0.22em",
   textTransform: "uppercase",
-  opacity: 0.48,
+  color: "#737373",
+  fontWeight: 500,
+};
+
+const arrowStyle: React.CSSProperties = {
+  fontSize: 11,
+  lineHeight: 1,
+  color: "#737373",
+};
+
+const introStyle: React.CSSProperties = {
+  maxWidth: 720,
+  margin: "0 auto 28px",
+  fontSize: 17,
+  lineHeight: 1.95,
+  color: "#404040",
 };
 
 const scriptWrapStyle: React.CSSProperties = {

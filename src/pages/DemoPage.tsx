@@ -5,6 +5,9 @@ import ResponseSection from "../components/demo/ResponseSection";
 import CaseReportSection from "../components/demo/CaseReportSection";
 import DBSampleSection from "../components/demo/DBSampleSection";
 import ReflectionPanel from "../components/demo/ReflectionPanel";
+import EditorialSectionHeader from "../components/shared/EditorialSectionHeader";
+import SiteHeader from "../components/shared/SiteHeader";
+import FooterSection from "../components/core/FooterSection";
 import { analyzeCase } from "../lib/rassEngine";
 import { exportRASSCaseToCSV, type RASSCaseRecord } from "../lib/rassCaseCsv";
 
@@ -49,6 +52,15 @@ type FinalContextResponse = {
   finalContext?: string;
   error?: string;
 };
+
+async function readErrorMessage(response: Response, fallback: string) {
+  try {
+    const data = (await response.json()) as { error?: string };
+    return data.error || fallback;
+  } catch {
+    return fallback;
+  }
+}
 
 function TabButton({
   stepNo,
@@ -252,7 +264,12 @@ export default function DemoPage({ setPage }: DemoPageProps) {
       });
 
       if (!response.ok) {
-        throw new Error("AI request failed");
+        throw new Error(
+          await readErrorMessage(
+            response,
+            "AIによる整理に失敗しました。もう一度お試しください。"
+          )
+        );
       }
 
       const data: ContextDraftResponse = await response.json();
@@ -264,7 +281,9 @@ export default function DemoPage({ setPage }: DemoPageProps) {
     } catch (error) {
       console.error(error);
       setPrimaryContextDraft(
-        "AIによる整理に失敗しました。もう一度お試しください。"
+        error instanceof Error
+          ? error.message
+          : "AIによる整理に失敗しました。もう一度お試しください。"
       );
       setContextFollowups([]);
     } finally {
@@ -294,7 +313,12 @@ export default function DemoPage({ setPage }: DemoPageProps) {
       });
 
       if (!response.ok) {
-        throw new Error("Final context request failed");
+        throw new Error(
+          await readErrorMessage(
+            response,
+            "Final Contextの生成に失敗しました。もう一度お試しください。"
+          )
+        );
       }
 
       const data: FinalContextResponse = await response.json();
@@ -305,7 +329,9 @@ export default function DemoPage({ setPage }: DemoPageProps) {
     } catch (error) {
       console.error(error);
       setFinalContextDraft(
-        "Final Contextの生成に失敗しました。もう一度お試しください。"
+        error instanceof Error
+          ? error.message
+          : "Final Contextの生成に失敗しました。もう一度お試しください。"
       );
     } finally {
       setIsGeneratingFinalContext(false);
@@ -404,55 +430,38 @@ export default function DemoPage({ setPage }: DemoPageProps) {
     : null;
 
   return (
-    <div className="min-h-screen bg-[#f4f1ea] text-slate-900">
+    <div className="min-h-screen bg-[#f7f5f2] text-slate-900">
+      {setPage && <SiteHeader setPage={setPage} currentPage="demo" />}
       <div className="mx-auto max-w-6xl px-6 py-8">
         {!hasEnteredFlow && (
-          <div className="overflow-hidden rounded-[18px] border border-stone-200 bg-[#fbfaf7] shadow-[0_8px_28px_rgba(15,23,42,0.05)]">
-            <div className="border-b border-stone-200 px-6 py-4 sm:px-8">
-              <p className="text-[11px] uppercase tracking-[0.28em] text-stone-500">
-                RA-SS Demo / Relational Architecture
-              </p>
-            </div>
+          <section className="bg-white px-6 pt-32 pb-20 md:px-10 md:pt-40 md:pb-24">
+            <div className="mx-auto max-w-[960px] text-center">
+              <EditorialSectionHeader
+                label="PROTOTYPE"
+                marker="triangle"
+                hero
+                title={
+                  <>
+                    違和感を、
+                    <br />
+                    関係の構造として
+                    <br />
+                    読み直す。
+                  </>
+                }
+                summary="気になった場面をそのまま書き出し、関係の状態として整理し、次の一手と記録につなげていくデモです。"
+              />
 
-            <div className="px-6 py-10 sm:px-8">
-              <div className="flex flex-wrap items-center gap-3">
-                <span className="rounded-full border border-stone-200 bg-white px-3 py-1 text-[11px] tracking-[0.08em] text-stone-600">
-                  面談用デモ
-                </span>
-                <span className="rounded-full border border-stone-200 bg-white px-3 py-1 text-[11px] tracking-[0.08em] text-stone-600">
-                  Prototype
-                </span>
-              </div>
-
-              <h1 className="mt-6 max-w-4xl text-4xl font-semibold leading-[1.22] tracking-[-0.02em] text-slate-900 sm:text-5xl">
-                違和感を、関係の構造として読み直す。
-              </h1>
-
-              <p className="mt-5 max-w-3xl text-[17px] leading-9 text-stone-700">
-                気になった場面をそのまま書き出し、関係の状態として整理し、
-                次の一手と記録につなげていくデモです。
+              <p className="mx-auto mt-8 max-w-2xl text-center text-[16px] leading-[1.95] text-neutral-700 md:text-[17px]">
+                違和感を書く、関係を読む、対応を考える、記録として残す。
+                <br />
+                この流れを、ひとつのケースでそのまま体験できます。
               </p>
 
-              <div className="mt-8 grid gap-4 sm:grid-cols-4">
-                {[
-                  "違和感を書く",
-                  "関係を読む",
-                  "対応を考える",
-                  "記録として残す",
-                ].map((item, i) => (
-                  <div
-                    key={i}
-                    className="rounded-[14px] border border-stone-200 bg-white px-4 py-4 text-center text-[14px] text-stone-700"
-                  >
-                    {item}
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-10 flex flex-wrap gap-3">
+              <div className="mt-8 flex flex-wrap justify-center gap-3">
                 <button
                   onClick={startFlow}
-                  className="rounded-[12px] bg-slate-900 px-6 py-3 text-sm font-medium text-white transition hover:bg-slate-800"
+                  className="inline-flex min-h-11 items-center justify-center rounded-full bg-neutral-900 px-6 text-[15px] font-medium text-white transition hover:bg-neutral-800"
                 >
                   Step1から始める
                 </button>
@@ -460,14 +469,14 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                 {setPage && (
                   <button
                     onClick={() => setPage("top")}
-                    className="rounded-[10px] border border-stone-300 bg-white px-4 py-2.5 text-sm text-stone-700 transition hover:bg-stone-50"
+                    className="inline-flex min-h-11 items-center justify-center rounded-full border border-neutral-300 bg-white px-6 text-[15px] font-medium text-neutral-800 transition hover:bg-neutral-50"
                   >
-                    ← TOPへ戻る
+                    TOPへ戻る
                   </button>
                 )}
               </div>
             </div>
-          </div>
+          </section>
         )}
 
         {hasEnteredFlow && (
@@ -648,18 +657,6 @@ export default function DemoPage({ setPage }: DemoPageProps) {
               {selectedStep === 5 && maxUnlockedStep >= 5 && (
                 <DBSampleSection
                   record={csvRecord}
-                  finalContext={analysisContext}
-                  delta={String(stepResult?.analysis.MAX_DELTA ?? 0)}
-                  eLevel={stepPhaseLabel}
-                  text={observationRaw}
-                  judgment={stepJudgment}
-                  actionSummary={step3Response?.actionSummary || "該当するACEX提案なし"}
-                  executedActions={executedActions}
-                  resultType={resultType}
-                  afterNote={afterNote}
-                  whyTags={whyTags}
-                  whyMemo={whyMemo}
-                  nextAssets={nextAssets}
                   onDownloadCsv={handleDownloadCsv}
                   innerRef={undefined}
                 />
@@ -670,6 +667,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
           </>
         )}
       </div>
+      <FooterSection setPage={setPage} />
     </div>
   );
 }

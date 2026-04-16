@@ -16,13 +16,13 @@ export default function CoreLPPage({ setPage }: Props) {
     <main style={{ background: "#f7f5f2", color: "#111" }}>
       <CoreHeader setPage={setPage} />
 
-      <HeroSection />
+      <HeroSection setPage={setPage} />
       <ProblemSection />
       <CoreSection />
       <MissionSection />
       <PrototypeSection setPage={setPage} />
       <CtaSection setPage={setPage} />
-      <FooterSection />
+      <FooterSection setPage={setPage} />
     </main>
   );
 }

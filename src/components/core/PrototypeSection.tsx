@@ -8,7 +8,15 @@ export default function PrototypeSection({ setPage }: Props) {
   return (
     <section style={sectionStyle}>
       <div style={containerStyle}>
-        <p style={labelStyle}>Experience</p>
+        <div style={labelRowStyle}>
+          <span style={triangleStyle} />
+          <span>PROTOTYPE</span>
+        </div>
+
+        <p style={introStyle}>
+          説明を読み進めるより先に、ひとつのケースを通して
+          この考え方がどう立ち上がるかを体験できます。
+        </p>
 
         <div style={scriptWrapStyle}>
           <p style={scriptStyle}>
@@ -46,23 +54,44 @@ export default function PrototypeSection({ setPage }: Props) {
 /* ===== styles ===== */
 
 const sectionStyle: React.CSSProperties = {
-  padding: "40px 48px 140px",
-  background: "#f7f5f2",
+  padding: "40px 24px 128px",
+  background: "#ffffff",
   color: "#111",
 };
 
 const containerStyle: React.CSSProperties = {
-  maxWidth: 900,
+  maxWidth: 960,
   margin: "0 auto",
   textAlign: "center",
 };
 
-const labelStyle: React.CSSProperties = {
+const labelRowStyle: React.CSSProperties = {
   margin: "0 0 28px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: 8,
   fontSize: 11,
-  letterSpacing: "0.18em",
+  letterSpacing: "0.22em",
   textTransform: "uppercase",
-  opacity: 0.48,
+  color: "#737373",
+  fontWeight: 500,
+};
+
+const triangleStyle: React.CSSProperties = {
+  width: 0,
+  height: 0,
+  borderTop: "4px solid transparent",
+  borderBottom: "4px solid transparent",
+  borderLeft: "6px solid #404040",
+};
+
+const introStyle: React.CSSProperties = {
+  maxWidth: 720,
+  margin: "0 auto 28px",
+  fontSize: 17,
+  lineHeight: 1.95,
+  color: "#404040",
 };
 
 const scriptWrapStyle: React.CSSProperties = {
@@ -91,15 +120,19 @@ const ctaWrapStyle: React.CSSProperties = {
 const noteStyle: React.CSSProperties = {
   margin: "0 auto",
   maxWidth: 640,
-  fontSize: 18,
+  fontSize: 17,
   lineHeight: 1.95,
-  opacity: 0.78,
+  color: "#404040",
 };
 
 const buttonStyle: React.CSSProperties = {
-  padding: "14px 30px",
-  border: "1px solid rgba(0,0,0,0.22)",
-  background: "transparent",
+  minHeight: 44,
+  padding: "0 24px",
+  border: "1px solid #171717",
+  borderRadius: 999,
+  background: "#171717",
+  color: "#fff",
   cursor: "pointer",
   fontSize: 15,
+  fontWeight: 500,
 };
