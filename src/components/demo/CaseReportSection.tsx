@@ -57,6 +57,20 @@ const RESULT_OPTIONS = [
   },
 ];
 
+const WHY_TAG_OPTIONS = [
+  { key: "alignment", label: "受け止めが効いた" },
+  { key: "clarity", label: "説明で見通しが出た" },
+  { key: "coordination", label: "調整で進みやすくなった" },
+  { key: "support", label: "補助導線が効いた" },
+];
+
+const NEXT_ASSET_OPTIONS = [
+  { key: "A-first", label: "Aを先に置く型" },
+  { key: "C-then-E", label: "C→Eで進める型" },
+  { key: "E-short", label: "短く説明する型" },
+  { key: "X-support", label: "補助導線を添える型" },
+];
+
 function toggle(list: string[], value: string) {
   return list.includes(value)
     ? list.filter((v) => v !== value)
@@ -108,8 +122,14 @@ export default function CaseReportSection({
   afterNote,
   onAfterNoteChange,
 
+  whyTags,
+  onWhyTagsChange,
+
   whyMemo,
   onWhyMemoChange,
+
+  nextAssets,
+  onNextAssetsChange,
 
   onNext,
 }: CaseReportSectionProps) {
@@ -306,6 +326,36 @@ export default function CaseReportSection({
                 className="w-full rounded-[16px] border border-stone-300 bg-white px-4 py-4 text-[15px] leading-8 text-stone-800 outline-none transition placeholder:text-stone-400 focus:border-slate-500"
               />
             </div>
+
+            <div className="mt-5">
+              <p className="text-[13px] uppercase tracking-[0.14em] text-stone-500">
+                Why Tags
+              </p>
+              <p className="mt-2 text-[14px] leading-7 text-stone-600">
+                この場面で何が効いたかを短いタグで残します。
+              </p>
+
+              <div className="mt-4 flex flex-wrap gap-3">
+                {WHY_TAG_OPTIONS.map((item) => {
+                  const active = whyTags.includes(item.key);
+
+                  return (
+                    <button
+                      key={item.key}
+                      type="button"
+                      onClick={() => onWhyTagsChange(toggle(whyTags, item.key))}
+                      className={`rounded-[12px] border px-4 py-3 text-[14px] font-medium transition ${
+                        active
+                          ? "border-slate-700 bg-slate-700 text-white"
+                          : "border-stone-300 bg-white text-stone-700 hover:bg-stone-50"
+                      }`}
+                    >
+                      {item.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           </div>
 
           <div className={card}>
@@ -327,6 +377,36 @@ export default function CaseReportSection({
 見通し不足のケースでは、最初に一つ確認を入れる`}
                 className="w-full rounded-[16px] border border-stone-300 bg-white px-4 py-4 text-[15px] leading-8 text-stone-800 outline-none transition placeholder:text-stone-400 focus:border-slate-500"
               />
+            </div>
+
+            <div className="mt-5">
+              <p className="text-[13px] uppercase tracking-[0.14em] text-stone-500">
+                Next Pattern
+              </p>
+              <p className="mt-2 text-[14px] leading-7 text-stone-600">
+                次回に再利用したい型を選んで残します。
+              </p>
+
+              <div className="mt-4 flex flex-wrap gap-3">
+                {NEXT_ASSET_OPTIONS.map((item) => {
+                  const active = nextAssets.includes(item.key);
+
+                  return (
+                    <button
+                      key={item.key}
+                      type="button"
+                      onClick={() => onNextAssetsChange(toggle(nextAssets, item.key))}
+                      className={`rounded-[12px] border px-4 py-3 text-[14px] font-medium transition ${
+                        active
+                          ? "border-slate-700 bg-slate-700 text-white"
+                          : "border-stone-300 bg-white text-stone-700 hover:bg-stone-50"
+                      }`}
+                    >
+                      {item.label}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>

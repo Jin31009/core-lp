@@ -1,4 +1,4 @@
-import { useState } from "react";
+type AcexKey = "A" | "C" | "E" | "X";
 
 type DBSampleSectionProps = {
   finalContext: string;
@@ -13,6 +13,7 @@ type DBSampleSectionProps = {
   whyTags: string[];
   whyMemo: string;
   nextAssets: string[];
+  onDownloadCsv: () => void;
   innerRef?: React.RefObject<HTMLDivElement | null>;
 };
 
@@ -29,11 +30,9 @@ export default function DBSampleSection({
   whyTags,
   whyMemo,
   nextAssets,
+  onDownloadCsv,
   innerRef,
 }: DBSampleSectionProps) {
-  const [registering, setRegistering] = useState(false);
-  const [registered, setRegistered] = useState(false);
-
   const sectionShell =
     "overflow-hidden rounded-[22px] border border-stone-200 bg-[#fbfaf7] shadow-[0_12px_36px_rgba(15,23,42,0.06)]";
 
@@ -61,23 +60,25 @@ export default function DBSampleSection({
   const value =
     "text-[15px] leading-8 text-stone-800";
 
-  const primaryButton =
-    "w-full rounded-[14px] bg-violet-600 py-4 text-[16px] font-medium text-white transition hover:bg-violet-700";
+  const secondaryButton =
+    "rounded-[14px] bg-violet-600 px-5 py-4 text-[15px] font-medium text-white transition hover:bg-violet-700";
 
   const resolvedObservation = text?.trim() || "未入力";
   const resolvedJudgment = judgment?.trim() || "未設定";
   const resolvedAction = actionSummary?.trim() || "未設定";
-  const acexMap = {
-  A: "A｜受け止め",
-  C: "C｜確認",
-  E: "E｜説明",
-  X: "X｜補助",
-};
+  const acexMap: Record<AcexKey, string> = {
+    A: "A｜受け止め",
+    C: "C｜確認",
+    E: "E｜説明",
+    X: "X｜補助",
+  };
 
-const resolvedExecuted =
-  executedActions.length > 0
-    ? executedActions.map(a => acexMap[a] || a).join(" / ")
-    : "未選択";
+  const resolvedExecuted =
+    executedActions.length > 0
+      ? executedActions
+          .map((action) => acexMap[action as AcexKey] || action)
+          .join(" / ")
+      : "未選択";
   const resolvedResult = resultType || "未選択";
   const resolvedAfterNote = afterNote?.trim() || "未記入";
   const resolvedWhyTags =
@@ -85,17 +86,6 @@ const resolvedExecuted =
   const resolvedWhyMemo = whyMemo?.trim() || "未記入";
   const resolvedNextAssets =
     nextAssets.length > 0 ? nextAssets.join(" / ") : "未選択";
-
-  const handleRegister = () => {
-    if (registering || registered) return;
-
-    setRegistering(true);
-
-    setTimeout(() => {
-      setRegistering(false);
-      setRegistered(true);
-    }, 1200);
-  };
 
   return (
     <section ref={innerRef} className={sectionShell}>
@@ -120,7 +110,7 @@ const resolvedExecuted =
           </div>
 
           <div className={row}>
-            <div className={label}>Final Context</div>
+            <div className={label}>分析対象Context</div>
             <div className="col-span-2 text-[15px] leading-8 text-stone-800">
               {finalContext || "未生成"}
             </div>
@@ -255,59 +245,24 @@ const resolvedExecuted =
 
         <div className={blockCard}>
           <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
-            Demo Action
+            Export
           </p>
           <p className="mt-2 text-[20px] font-semibold text-slate-900">
-            今の内容を登録しますか
+            このケースを保存する
           </p>
           <p className="mt-3 text-[15px] leading-8 text-stone-600">
-            このボタンはデモ用の演出です。実際の CSV 保存や Notion 連携は行いませんが、
-            「登録されるとこう見える」という体験を確認できます。
+            このボタンで、いま表示しているケース記録をCSVとして保存できます。
           </p>
 
           <div className="mt-6 flex flex-wrap items-center gap-4">
             <button
               type="button"
-              onClick={handleRegister}
-              disabled={registering || registered}
-              className={`${primaryButton} ${
-                registering || registered ? "cursor-not-allowed opacity-60" : ""
-              }`}
+              onClick={onDownloadCsv}
+              className={secondaryButton}
             >
-              {registering
-                ? "登録中..."
-                : registered
-                  ? "登録済み"
-                  : "今の内容を登録しますか"}
+              このケースを記録する（CSVダウンロード）
             </button>
-
-            {!registered && !registering && (
-              <p className="text-[14px] leading-7 text-stone-500">
-                CSV / Notion への登録演出を表示します
-              </p>
-            )}
           </div>
-
-          {registered && (
-            <div className="mt-6 rounded-[16px] border border-stone-200 bg-[#f8f5ef] p-5">
-              <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
-                Registration Result
-              </p>
-
-              <div className="mt-4 flex flex-wrap gap-3">
-                <div className="rounded-full border border-stone-300 bg-white px-4 py-2 text-[14px] font-medium text-stone-700">
-                  CSV に登録しました
-                </div>
-                <div className="rounded-full border border-stone-300 bg-white px-4 py-2 text-[14px] font-medium text-stone-700">
-                  Notion に登録しました
-                </div>
-              </div>
-
-              <p className="mt-4 text-[14px] leading-8 text-stone-600">
-                ※ これはデモ演出です。実際のファイル保存・DB登録は行っていません。
-              </p>
-            </div>
-          )}
         </div>
       </div>
     </section>

@@ -28,7 +28,7 @@ export default function CoreHeader({ setPage }: Props) {
             <span style={navSubStyle}>背景を知る</span>
           </button>
 
-          <button onClick={() => setPage("prototype")} style={demoItemStyle}>
+          <button onClick={() => setPage("demo-intro")} style={demoItemStyle}>
             <span style={demoMainStyle}>Demo</span>
             <span style={demoSubStyle}>触れてみる</span>
           </button>

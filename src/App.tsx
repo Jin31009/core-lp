@@ -3,6 +3,7 @@ import { useState } from "react";
 
 // ===== pages（直下）=====
 import DemoPage from "./pages/DemoPage";
+import DemoIntroPage from "./pages/DemoIntroPage";
 import CoreLPPage from "./pages/CoreLPPage";
 import ContactPage from "./pages/ContactPage";
 
@@ -23,6 +24,8 @@ export default function App() {
 
       {/* PROTOTYPE / DEMO */}
       {page === "prototype" && <DemoPage setPage={setPage} />}
+      {page === "demo-intro" && <DemoIntroPage setPage={setPage} />}
+      {page === "demo" && <DemoPage setPage={setPage} />}
 
       {/* STRUCTURE */}
       {page === "structure" && <StructurePage setPage={setPage} />}

@@ -26,7 +26,7 @@ export default function PrototypeSection({ setPage }: Props) {
 
         <div style={ctaWrapStyle}>
           <button
-            onClick={() => setPage("prototype")}
+            onClick={() => setPage("demo-intro")}
             style={buttonStyle}
           >
             DEMOを触れてみる

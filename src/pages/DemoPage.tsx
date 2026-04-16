@@ -5,6 +5,8 @@ import ResponseSection from "../components/demo/ResponseSection";
 import CaseReportSection from "../components/demo/CaseReportSection";
 import DBSampleSection from "../components/demo/DBSampleSection";
 import ReflectionPanel from "../components/demo/ReflectionPanel";
+import { analyzeCase } from "../lib/rassEngine";
+import { exportRASSCaseToCSV, type RASSCaseRecord } from "../lib/rassCaseCsv";
 
 type DemoPageProps = {
   setPage?: (page: string) => void;
@@ -30,6 +32,17 @@ type ContextDraftResponse = {
   contextDraft?: string;
   followups?: string[];
   error?: string;
+};
+
+type ResponseData = {
+  actionSummary: string;
+  acexItems: AcexItem[];
+  flowItems: string[];
+  ngItems: string[];
+  statusLabel: string;
+  statusSub: string;
+  statusIcon: string;
+  statusColorClass: string;
 };
 
 type FinalContextResponse = {
@@ -111,9 +124,6 @@ export default function DemoPage({ setPage }: DemoPageProps) {
   const [primaryContextDraft, setPrimaryContextDraft] = useState("");
   const [contextFollowups, setContextFollowups] = useState<string[]>([]);
 
-  const [analysis, setAnalysis] = useState(null);
-  const [analysisText, setAnalysisText] = useState(null);
-  const [response, setResponse] = useState(null);
   const [finalContextDraft, setFinalContextDraft] = useState("");
   const [isGeneratingFinalContext, setIsGeneratingFinalContext] = useState(false);
 
@@ -127,165 +137,67 @@ export default function DemoPage({ setPage }: DemoPageProps) {
   const [whyMemo, setWhyMemo] = useState("");
   const [nextAssets, setNextAssets] = useState<string[]>([]);
 
-  const finalContext =
+  const caseContext =
     finalContextDraft.trim() || contextEdited.trim() || primaryContextDraft;
 
-  const hasAnxiety =
-    observationRaw.includes("不安") ||
-    emotion === "不安" ||
-    finalContext.includes("不安");
+  const analysisContext =
+    caseContext.trim() || observationRaw.trim();
 
-  const deltaValue: 1 | 3 | 4 =
-    urgency === "緊急対応" ? 4 : urgency === "対応必要" || hasAnxiety ? 3 : 1;
+  const contextSource: RASSCaseRecord["context_source"] = contextEdited.trim()
+    ? "edited"
+    : primaryContextDraft.trim()
+      ? "draft"
+      : "raw";
 
-  const phaseCode: "e1" | "e2" | "e3" =
-    deltaValue === 4 ? "e3" : deltaValue === 3 ? "e2" : "e1";
+  const stepResult = analysisContext ? analyzeCase({ context: analysisContext }) : null;
 
-  const phaseLabel =
-    phaseCode === "e3"
-      ? "e3（臨界の段階）"
-      : phaseCode === "e2"
-        ? "e2（対処の段階）"
-        : "e1（予防の段階）";
+  const step2Analysis = stepResult
+    ? {
+        MAX_DELTA: stepResult.analysis.MAX_DELTA,
+        Trigger: stepResult.analysis.Trigger,
+        AK_Primary: stepResult.analysis.AK_Primary ?? undefined,
+        APCE_Miss: stepResult.analysis.APCE_Miss[0] ?? "",
+        R_Plus: stepResult.analysis.R_plus,
+        AK_Break_Type: stepResult.analysis.AK_Break_Type,
+        R_Failure_Reason: stepResult.analysis.R_Failure_Reason ?? undefined,
+        Case_Phase: stepResult.analysis.Case_Phase,
+        Trigger_Memo: stepResult.analysis.Trigger_Memo,
+        R_Memo: stepResult.analysis.R_Memo,
+      }
+    : null;
 
-  const insightDraft =
-    urgency === "緊急対応"
-      ? "関係の緊張が強く、慎重な介入が必要な状態"
-      : urgency === "対応必要" && emotion === "怒り"
-        ? "関係の緊張が高まりつつあり、受理と説明整理が必要な状態"
-        : hasAnxiety
-          ? "関係の緊張が高まりつつある可能性"
-          : "大きな緊張はまだ表面化していない状態";
+  const stepJudgment = stepResult
+    ? `${stepResult.analysis.Trigger_Memo} / ${stepResult.analysis.R_Memo}`
+    : "";
 
-  const triggerState: "pre" | "sign" | "risk" =
-    deltaValue === 4 ? "risk" : deltaValue === 3 ? "sign" : "pre";
+  const stepPhaseLabel = stepResult?.analysis.Case_Phase || "Trigger前";
 
-  const responseSummary =
-    deltaValue === 4
-      ? "まず安全を確保し、急がず受け止めと確認を行いながら説明を組み直す"
-      : deltaValue === 3
-        ? "まず不安や怒りの言葉を受け止め、何が足りないと感じているかを確認する"
-        : "現状の関わりを維持しつつ、追加の違和感が出ないかを見守る";
-
-  const acexItems: AcexItem[] =
-    deltaValue === 4
-      ? [
-          {
-            key: "A",
-            label: "A",
-            title: "Accept",
-            body: "まず受け止め、安全に関する反応を否定しない",
-          },
-          {
-            key: "C",
-            label: "C",
-            title: "Clarify",
-            body: "何が危険・不安と感じられているかを確認する",
-          },
-          {
-            key: "E",
-            label: "E",
-            title: "Explain",
-            body: "対応の順序と見通しを短く明確に伝える",
-          },
-          {
-            key: "X",
-            label: "X",
-            title: "Assist",
-            body: "必要なら役割調整や上位者介入を行う",
-          },
-        ]
-      : deltaValue === 3
-        ? [
-            {
-              key: "A",
-              label: "A",
-              title: "Accept",
-              body: "不安や怒りの言葉をそのまま受け止める",
-            },
-            {
-              key: "C",
-              label: "C",
-              title: "Clarify",
-              body: "何が足りないと感じているかを確認する",
-            },
-            {
-              key: "E",
-              label: "E",
-              title: "Explain",
-              body: "これから何をどう説明するかを伝える",
-            },
-            {
-              key: "X",
-              label: "X",
-              title: "Assist",
-              body: "説明順の整理や確認メモを使う",
-            },
-          ]
-        : [
-            {
-              key: "A",
-              label: "A",
-              title: "Accept",
-              body: "現在の反応を維持しながら丁寧に観察する",
-            },
-            {
-              key: "C",
-              label: "C",
-              title: "Clarify",
-              body: "必要があれば追加で確認する",
-            },
-            {
-              key: "E",
-              label: "E",
-              title: "Explain",
-              body: "今後の流れを簡潔に共有する",
-            },
-            {
-              key: "X",
-              label: "X",
-              title: "Assist",
-              body: "特別な追加支援はせず通常対応を維持する",
-            },
-          ];
-
-  const flowItems =
-    deltaValue === 4
-      ? [
-          "まず安全に関わる不安や怒りを受け止める",
-          "次に何が危険・不足と感じられているかを確認する",
-          "そのうえで対応の順序と見通しを簡潔に伝える",
-        ]
-      : deltaValue === 3
-        ? [
-            "まず不安や怒りの言葉を受け止める",
-            "次に不足感の中身を確認する",
-            "そのうえで説明の見通しを伝える",
-          ]
-        : [
-            "現在の反応を維持する",
-            "必要時のみ追加確認する",
-            "今後の流れを簡潔に共有する",
-          ];
-
-  const ngItems =
-    deltaValue === 4
-      ? [
-          "不安や怒りを否定する",
-          "確認せずに説明だけを進める",
-          "急いで結論だけを返す",
-        ]
-      : deltaValue === 3
-        ? [
-            "不安を軽く扱う",
-            "確認せずに説明を進める",
-            "急いで結論だけを返す",
-          ]
-        : [
-            "変化がないのに過剰対応する",
-            "説明を省きすぎる",
-            "観察を止めてしまう",
-          ];
+  const step3Response: ResponseData | null = stepResult
+    ? {
+        actionSummary:
+          stepResult.acex.length > 0
+            ? stepResult.acex.map((action) => `${action.code}｜${action.label}`).join(" → ")
+            : "該当するACEX提案なし",
+        acexItems: stepResult.acex.map((action) => ({
+          key: action.code,
+          label: action.code,
+          title: action.label,
+          body: action.reason,
+        })),
+        flowItems:
+          stepResult.acex.length > 0
+            ? stepResult.acex.map(
+                (action) => `${action.code}｜${action.label}：${action.reason}`
+              )
+            : ["該当するACEX提案はありません。"],
+        ngItems: [],
+        statusLabel: `Δ${stepResult.analysis.MAX_DELTA} / ${stepResult.analysis.Case_Phase}`,
+        statusSub: stepResult.analysis.Trigger_Memo,
+        statusIcon: stepResult.analysis.Trigger === "Yes" ? "●" : "○",
+        statusColorClass:
+          stepResult.analysis.Trigger === "Yes" ? "text-rose-500" : "text-stone-500",
+      }
+    : null;
 
   const stepMeta =
     selectedStep === 1
@@ -324,10 +236,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
     setIsGeneratingFinalContext(true);
     setPrimaryContextDraft("AIが整理しています...");
     setContextFollowups([]);
-    setAnalysis(null);
-    setAnalysisText(null);
-                    setResponse(null);
-setFinalContextDraft("");
+    setFinalContextDraft("");
 
     try {
       const response = await fetch(`${API_BASE}/api/context-draft`, {
@@ -358,10 +267,7 @@ setFinalContextDraft("");
         "AIによる整理に失敗しました。もう一度お試しください。"
       );
       setContextFollowups([]);
-    setAnalysis(null);
-    setAnalysisText(null);
-                    setResponse(null);
-} finally {
+    } finally {
       setIsGeneratingFinalContext(false);
     }
   };
@@ -391,12 +297,7 @@ setFinalContextDraft("");
         throw new Error("Final context request failed");
       }
 
-      console.log("FINAL CONTEXT CLICKED");
       const data: FinalContextResponse = await response.json();
-
-      setAnalysis(data.analysis);
-      setAnalysisText(data.analysisText);
-      setResponse(data.response);
 
       setFinalContextDraft(
         data.finalContext || "Final Contextを取得できませんでした。"
@@ -450,6 +351,53 @@ setFinalContextDraft("");
   const goToStep5 = () => {
     setMaxUnlockedStep((prev) => (prev < 5 ? 5 : prev));
     setSelectedStep(5);
+  };
+
+  const handleDownloadCsv = () => {
+    if (!stepResult) return;
+
+    const timestamp = new Date().toISOString();
+    const compactTimestamp = timestamp.replace(/[-:.TZ]/g, "").slice(0, 14);
+    const caseId = `rass-case-${compactTimestamp}`;
+
+    const record: RASSCaseRecord = {
+      case_id: caseId,
+      created_at: timestamp,
+      updated_at: timestamp,
+      context_raw: observationRaw.trim(),
+      context_final: analysisContext,
+      context_source: contextSource,
+      max_delta: stepResult.analysis.MAX_DELTA,
+      trigger: stepResult.analysis.Trigger,
+      r_plus: stepResult.analysis.R_plus,
+      ak_break_type: stepResult.analysis.AK_Break_Type,
+      ak_primary: stepResult.analysis.AK_Primary,
+      apce_miss: stepResult.analysis.APCE_Miss,
+      r_failure_reason: stepResult.analysis.R_Failure_Reason,
+      case_phase: stepResult.analysis.Case_Phase,
+      trigger_memo: stepResult.analysis.Trigger_Memo,
+      r_memo: stepResult.analysis.R_Memo,
+      acex_codes: stepResult.acex.map((action) => action.code),
+      acex_labels: stepResult.acex.map((action) => action.label),
+      acex_reasons: stepResult.acex.map((action) => action.reason),
+      engine_version: "rassEngine@1",
+      analysis_version: "rass_cases_csv@1",
+      why_tags: whyTags,
+      next_assets: nextAssets,
+      notes: [afterNote.trim(), whyMemo.trim()].filter(Boolean).join(" | "),
+    };
+
+    const csv = exportRASSCaseToCSV(record);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = `${caseId}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -587,10 +535,7 @@ setFinalContextDraft("");
                     setContextRequested(false);
                     setPrimaryContextDraft("");
                     setContextFollowups([]);
-                    setAnalysis(null);
-                    setAnalysisText(null);
-                    setResponse(null);
-setFinalContextDraft("");
+                    setFinalContextDraft("");
                     resetLearningState();
                     setMaxUnlockedStep(1);
                     setSelectedStep(1);
@@ -601,10 +546,7 @@ setFinalContextDraft("");
                     setContextRequested(false);
                     setPrimaryContextDraft("");
                     setContextFollowups([]);
-                    setAnalysis(null);
-                    setAnalysisText(null);
-                    setResponse(null);
-setFinalContextDraft("");
+                    setFinalContextDraft("");
                     resetLearningState();
                     setMaxUnlockedStep(1);
                     setSelectedStep(1);
@@ -615,10 +557,7 @@ setFinalContextDraft("");
                     setContextRequested(false);
                     setPrimaryContextDraft("");
                     setContextFollowups([]);
-                    setAnalysis(null);
-                    setAnalysisText(null);
-                    setResponse(null);
-setFinalContextDraft("");
+                    setFinalContextDraft("");
                     resetLearningState();
                     setMaxUnlockedStep(1);
                     setSelectedStep(1);
@@ -640,10 +579,7 @@ setFinalContextDraft("");
                     setContextRequested(false);
                     setPrimaryContextDraft("");
                     setContextFollowups([]);
-                    setAnalysis(null);
-                    setAnalysisText(null);
-                    setResponse(null);
-setFinalContextDraft("");
+                    setFinalContextDraft("");
                     resetLearningState();
                     setSelectedStep(1);
                     setMaxUnlockedStep(1);
@@ -657,59 +593,39 @@ setFinalContextDraft("");
 
               {selectedStep === 2 && maxUnlockedStep >= 2 && (
                 <AnalysisSection
-                  analysis={analysis}
-                  analysisText={analysisText}
-                  delta={String(deltaValue)}
-                  eLevel={phaseLabel}
+                  analysis={step2Analysis}
+                  analysisText={null}
+                  delta={String(stepResult?.analysis.MAX_DELTA ?? 0)}
+                  eLevel={stepPhaseLabel}
                   text={observationRaw}
-                  judgment={insightDraft}
-                  contextText={finalContext}
+                  judgment={stepJudgment}
+                  contextText={analysisContext}
                   onNext={goToStep3}
                 />
               )}
 
               {selectedStep === 3 && maxUnlockedStep >= 3 && (
                 <ResponseSection
-                  actionSummary={response?.actionSummary || responseSummary}
-                  acexItems={response?.acexItems || acexItems}
-                  flowItems={response?.flowItems || flowItems}
-                  ngItems={response?.ngItems || ngItems}
-                  statusLabel={
-                    response?.statusLabel ||
-                    (deltaValue === 4 ? "危険" : deltaValue === 3 ? "注意" : "安定")
-                  }
-                  statusSub={
-                    response?.statusSub ||
-                    (deltaValue === 4
-                      ? "関係が崩れ始めている可能性"
-                      : deltaValue === 3
-                        ? "緊張が高まりつつある"
-                        : "大きな緊張は見られない")
-                  }
-                  statusIcon={
-                    response?.statusIcon ||
-                    (deltaValue === 4 ? "🔥🔥" : deltaValue === 3 ? "🔥" : "—")
-                  }
-                  statusColorClass={
-                    response?.statusColorClass ||
-                    (deltaValue === 4
-                      ? "text-red-500"
-                      : deltaValue === 3
-                        ? "text-yellow-500"
-                        : "text-stone-400")
-                  }
+                  actionSummary={step3Response?.actionSummary || "該当するACEX提案なし"}
+                  acexItems={step3Response?.acexItems || []}
+                  flowItems={step3Response?.flowItems || ["該当するACEX提案はありません。"]}
+                  ngItems={step3Response?.ngItems || []}
+                  statusLabel={step3Response?.statusLabel || "Δ0 / Trigger前"}
+                  statusSub={step3Response?.statusSub || "主因不明 によりΔ上昇。Trigger No"}
+                  statusIcon={step3Response?.statusIcon || "○"}
+                  statusColorClass={step3Response?.statusColorClass || "text-stone-500"}
                   onNext={goToStep4}
                 />
               )}
 
               {selectedStep === 4 && maxUnlockedStep >= 4 && (
                 <CaseReportSection
-                  finalContext={finalContext}
-                  delta={String(deltaValue)}
-                  eLevel={phaseLabel}
+                  finalContext={analysisContext}
+                  delta={String(stepResult?.analysis.MAX_DELTA ?? 0)}
+                  eLevel={stepPhaseLabel}
                   text={observationRaw}
-                  judgment={insightDraft}
-                  actionSummary={responseSummary}
+                  judgment={stepJudgment}
+                  actionSummary={step3Response?.actionSummary || "該当するACEX提案なし"}
                   executedActions={executedActions}
                   onExecutedActionsChange={setExecutedActions}
                   resultType={resultType}
@@ -728,17 +644,19 @@ setFinalContextDraft("");
 
               {selectedStep === 5 && maxUnlockedStep >= 5 && (
                 <DBSampleSection
-                  delta={String(deltaValue)}
-                  eLevel={phaseLabel}
+                  finalContext={analysisContext}
+                  delta={String(stepResult?.analysis.MAX_DELTA ?? 0)}
+                  eLevel={stepPhaseLabel}
                   text={observationRaw}
-                  judgment={`${insightDraft} / trigger: ${triggerState}`}
-                  actionSummary={responseSummary}
+                  judgment={stepJudgment}
+                  actionSummary={step3Response?.actionSummary || "該当するACEX提案なし"}
                   executedActions={executedActions}
                   resultType={resultType}
                   afterNote={afterNote}
                   whyTags={whyTags}
                   whyMemo={whyMemo}
                   nextAssets={nextAssets}
+                  onDownloadCsv={handleDownloadCsv}
                   innerRef={undefined}
                 />
               )}

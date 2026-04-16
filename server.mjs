@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import OpenAI from "openai";
+import { analyzeCase } from "./src/lib/rassEngineCore.js";
 
 const app = express();
 const port = 8787;
@@ -709,43 +710,74 @@ app.post("/api/final-context", async (req, res) => {
       parsed = fallbackFinalPayload(body, raw);
     }
 
-    const normalizedAnalysis = normalizeAnalysisPayload(parsed.analysis);
-    const normalizedAnalysisText = normalizeAnalysisTextPayload(
-      parsed.analysisText,
-      normalizedAnalysis
-    );
-    const normalizedResponse = normalizeResponsePayload(
-      parsed.response,
-      normalizedAnalysis
-    );
+    const finalContext =
+      normalizeFreeText(
+        parsed.finalContext,
+        fallbackFinalPayload(body, raw).finalContext
+      ) || fallbackFinalPayload(body, raw).finalContext;
+
+    const result = analyzeCase({ context: finalContext });
 
     return res.json({
-      finalContext:
-        normalizeFreeText(
-          parsed.finalContext,
-          fallbackFinalPayload(body, raw).finalContext
-        ) || fallbackFinalPayload(body, raw).finalContext,
-      analysis: normalizedAnalysis,
-      analysisText: normalizedAnalysisText,
-      response: normalizedResponse,
+      finalContext,
+      analysis: mapAnalysisToApi(result.analysis),
+      analysisText: {},
+      response: mapResponseToApi(result),
     });
   } catch (e) {
     console.error("OpenAI error (final-context):", e);
     const fallback = fallbackFinalPayload(req.body || {});
+    const result = analyzeCase({ context: fallback.finalContext });
     return res.status(200).json({
       finalContext: fallback.finalContext,
-      analysis: normalizeAnalysisPayload(fallback.analysis),
-      analysisText: normalizeAnalysisTextPayload(
-        fallback.analysisText,
-        normalizeAnalysisPayload(fallback.analysis)
-      ),
-      response: normalizeResponsePayload(
-        fallback.response,
-        normalizeAnalysisPayload(fallback.analysis)
-      ),
+      analysis: mapAnalysisToApi(result.analysis),
+      analysisText: {},
+      response: mapResponseToApi(result),
     });
   }
 });
+
+function mapAnalysisToApi(analysis) {
+  return {
+    MAX_DELTA: analysis.MAX_DELTA,
+    Trigger: analysis.Trigger,
+    R_Plus: analysis.R_plus,
+    AK_Break_Type: analysis.AK_Break_Type,
+    AK_Primary: analysis.AK_Primary,
+    APCE_Miss: analysis.APCE_Miss[0] || "",
+    R_Failure: analysis.R_Failure_Reason || "",
+    Case_Phase: analysis.Case_Phase,
+    Trigger_Memo: analysis.Trigger_Memo,
+    R_Memo: analysis.R_Memo,
+  };
+}
+
+function mapResponseToApi(result) {
+  return {
+    actionSummary:
+      result.acex.length > 0
+        ? result.acex.map((action) => `${action.code}｜${action.label}`).join(" → ")
+        : "該当するACEX提案なし",
+    acexItems: result.acex.map((action) => ({
+      key: action.code,
+      label: action.code,
+      title: action.label,
+      body: action.reason,
+    })),
+    flowItems:
+      result.acex.length > 0
+        ? result.acex.map(
+            (action) => `${action.code}｜${action.label}：${action.reason}`
+          )
+        : ["該当するACEX提案はありません。"],
+    ngItems: [],
+    statusLabel: `Δ${result.analysis.MAX_DELTA} / ${result.analysis.Case_Phase}`,
+    statusSub: result.analysis.Trigger_Memo,
+    statusIcon: result.analysis.Trigger === "Yes" ? "●" : "○",
+    statusColorClass:
+      result.analysis.Trigger === "Yes" ? "text-rose-500" : "text-stone-500",
+  };
+}
 
 /* =========================
    Start Server

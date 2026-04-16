@@ -143,6 +143,7 @@ function getDeltaMeta(delta: string) {
     case "0":
       return {
         label: "Δ0",
+        meaning: "大きな揺れはまだない",
         title: "大きな緊張はまだ明確ではない",
         copy: "大きな緊張はまだ明確ではありません。",
         width: "8%",
@@ -150,6 +151,7 @@ function getDeltaMeta(delta: string) {
     case "1":
       return {
         label: "Δ1",
+        meaning: "小さな違和感がある",
         title: "まだ大きく表面化していない",
         copy: "小さな違和感が残っている状態です。",
         width: "25%",
@@ -157,6 +159,7 @@ function getDeltaMeta(delta: string) {
     case "2":
       return {
         label: "Δ2",
+        meaning: "ズレが続いている",
         title: "小さなズレが続いている",
         copy: "不満や懸念が見え始めています。",
         width: "50%",
@@ -164,6 +167,7 @@ function getDeltaMeta(delta: string) {
     case "3":
       return {
         label: "Δ3",
+        meaning: "関係が揺れている",
         title: "緊張が高まり始めている",
         copy: "関係の緊張は臨界域に入りつつあります。",
         width: "75%",
@@ -171,6 +175,7 @@ function getDeltaMeta(delta: string) {
     default:
       return {
         label: "Δ4",
+        meaning: "崩れが表面化している",
         title: "強い緊張状態",
         copy: "関係の緊張は強く、崩れが表面化しています。",
         width: "100%",
@@ -272,10 +277,10 @@ function getPhaseFallback(phase?: string, eLevel?: string) {
   if (phase === "Trigger前") {
     return "このケースはまだ分岐前の段階です。";
   }
-  if (eLevel === "e3" || eLevel.includes("e3")) {
+  if (eLevel === "e3" || eLevel?.includes("e3")) {
     return "このケースは強い介入が必要な段階です。";
   }
-  if (eLevel === "e2" || eLevel.includes("e2")) {
+  if (eLevel === "e2" || eLevel?.includes("e2")) {
     return "このケースは対処が必要な段階です。";
   }
   return "このケースはまだ大きく崩れる前の段階です。";
@@ -327,6 +332,22 @@ export default function AnalysisSection({
           text: "text-emerald-700",
         };
 
+  const deltaTone =
+    effectiveDelta === "4"
+      ? {
+          card: "border-rose-300 bg-rose-50",
+          chip: "border-rose-300 bg-white text-rose-700",
+        }
+      : effectiveDelta === "3"
+        ? {
+            card: "border-amber-300 bg-amber-50",
+            chip: "border-amber-300 bg-white text-amber-700",
+          }
+        : {
+            card: "border-stone-300 bg-stone-50",
+            chip: "border-stone-300 bg-white text-stone-700",
+          };
+
   const sectionShell =
     "overflow-hidden rounded-[22px] border border-stone-200 bg-[#fbfaf7] shadow-[0_12px_36px_rgba(15,23,42,0.05)]";
 
@@ -348,6 +369,9 @@ export default function AnalysisSection({
   const contextCard =
     "rounded-[18px] border-2 border-stone-300 bg-white p-6 shadow-[0_8px_22px_rgba(15,23,42,0.05)]";
 
+  const summaryCard =
+    "rounded-[18px] border bg-white p-5 shadow-[0_3px_14px_rgba(15,23,42,0.04)]";
+
   const primaryButton =
     "w-full rounded-[14px] bg-blue-600 py-4 text-[16px] font-medium text-white transition hover:bg-blue-700";
 
@@ -366,28 +390,71 @@ export default function AnalysisSection({
         </p>
         <h2 className={sectionTitleClass}>関係の読み取り</h2>
         <p className={leadClass}>
-          Final Contextをもとに、いま何が起きていて、どこにズレがあるかを見ます。
+          整理したContextをもとに、いま表に出ている状態を短く確認します。
         </p>
       </div>
 
-      {analysis && (
-        <div className="mx-6 mt-6 rounded-[16px] border border-sky-200 bg-sky-50 px-5 py-4 text-[14px] text-slate-800 sm:mx-8">
-          <p className="text-[11px] uppercase tracking-[0.18em] text-sky-700">
-            AI Analysis / Step2
-          </p>
-          <div className="mt-2 grid gap-2 sm:grid-cols-2">
-            <div>Δ：{String(analysis.MAX_DELTA ?? "")}</div>
-            <div>Trigger：{String(analysis.Trigger ?? "")}</div>
-            <div>AK：{String(analysis.AK_Primary ?? "")}</div>
-            <div>Miss：{String(analysis.APCE_Miss ?? "")}</div>
+      <div className="space-y-8 p-6 sm:p-8">
+        <div className="grid gap-4 lg:grid-cols-3">
+          <div className={`${summaryCard} ${deltaTone.card}`}>
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
+                  MAX_DELTA
+                </p>
+                <p className="mt-2 text-[28px] font-semibold tracking-[-0.02em] text-slate-900">
+                  {`${deltaMeta.label}（${deltaMeta.meaning}）`}
+                </p>
+              </div>
+              <span
+                className={`rounded-full border px-3 py-1 text-[12px] font-medium ${deltaTone.chip}`}
+              >
+                {deltaMeta.title}
+              </span>
+            </div>
+            <p className="mt-4 text-[14px] leading-7 text-stone-700">{deltaBody}</p>
+          </div>
+
+          <div className={`${summaryCard} ${triggerTone.card}`}>
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
+                  Trigger
+                </p>
+                <p className="mt-2 text-[28px] font-semibold tracking-[-0.02em] text-slate-900">
+                  {effectiveTrigger === "Yes" ? "Yes（局所イベントあり）" : "No（局所イベントなし）"}
+                </p>
+              </div>
+              <span
+                className={`rounded-full border px-3 py-1 text-[12px] font-medium ${triggerTone.chip}`}
+              >
+                {getTriggerLabel(effectiveTrigger)}
+              </span>
+            </div>
+            <p className="mt-4 text-[14px] leading-7 text-stone-700">{triggerBody}</p>
+          </div>
+
+          <div className={summaryCard}>
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
+                  AK_Primary
+                </p>
+                <p className="mt-2 text-[28px] font-semibold tracking-[-0.02em] text-slate-900">
+                  {`${effectiveAK}（主因）`}
+                </p>
+              </div>
+              <span className="rounded-full border border-stone-300 bg-[#faf8f3] px-3 py-1 text-[12px] font-medium text-stone-700">
+                {getAkLabel(effectiveAK)}
+              </span>
+            </div>
+            <p className="mt-4 text-[14px] leading-7 text-stone-700">{akBody}</p>
           </div>
         </div>
-      )}
 
-      <div className="space-y-8 p-6 sm:p-8">
         <div className={contextCard}>
           <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
-            01 / Final Context
+            01 / 今回の分析対象
           </p>
           <p className="mt-2 text-[24px] font-semibold tracking-[-0.01em] text-slate-900">
             整理された状況
@@ -396,7 +463,7 @@ export default function AnalysisSection({
             {finalContextBase}
           </p>
           <div className={nextStepNote}>
-            次の一手：まず、いま表に出ている状態と、その強さを見ます。
+            次の一手：上の3つで全体をつかんだら、下で状態の内訳を確認します。
           </div>
         </div>
 
@@ -406,7 +473,7 @@ export default function AnalysisSection({
           </p>
           <p className={groupTitle}>いま何が起きているか</p>
           <p className={groupLead}>
-            ここでは、「どんな状態が出ているか」と「どのくらい強いか」を分けて見ます。
+            Signal と Δ を並べて、出ている状態と強さを分けて見ます。
           </p>
 
           <div className="mt-6 grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
@@ -446,7 +513,7 @@ export default function AnalysisSection({
           </div>
 
           <div className={nextStepNote}>
-            次の一手：次に、何が足りていないかと、今の関わりがそこに合っているかを見ます。
+            次の一手：次に、何が不足しているかを確認します。
           </div>
         </div>
 
@@ -456,13 +523,13 @@ export default function AnalysisSection({
           </p>
           <p className={groupTitle}>何が不足しているか</p>
           <p className={groupLead}>
-            必要なもの、求められる関わり、その適合を一つの流れで見ます。
+            AK・APCE・R を並べて、必要な関わりの不足を確認します。
           </p>
 
           <div className="mt-6 grid gap-4 lg:grid-cols-3">
             <div className={subCard}>
               <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
-                AK
+                AK / ズレの原因
               </p>
               <p className="mt-2 text-[22px] font-semibold text-slate-900">
                 {getAkLabel(effectiveAK)}
@@ -472,7 +539,7 @@ export default function AnalysisSection({
 
             <div className={subCard}>
               <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
-                APCE
+                APCE / 不足している関わり
               </p>
               <p className="mt-2 text-[22px] font-semibold text-slate-900">
                 {getApceLabel(effectiveApce)}
@@ -492,7 +559,7 @@ export default function AnalysisSection({
           </div>
 
           <div className={nextStepNote}>
-            次の一手：最後に、このまま進むとどうなるかをまとめて見ます。
+            次の一手：最後に、Trigger と Phase をまとめて確認します。
           </div>
         </div>
 
@@ -502,7 +569,7 @@ export default function AnalysisSection({
           </p>
           <p className={groupTitle}>このまま行くとどうなるか</p>
           <p className={groupLead}>
-            最後に、崩れやすさ・段階・見立てをまとめます。
+            Trigger と Phase を中心に、現在の局面を確認します。
           </p>
 
           <div className="mt-6 grid gap-5 lg:grid-cols-[1.05fr_0.95fr]">

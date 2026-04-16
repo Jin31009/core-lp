@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 type InputSectionProps = {
   text: string;
   onTextChange: (value: string) => void;
@@ -184,6 +186,7 @@ export default function InputSection({
   isGeneratingFinalContext,
   onGenerateFinalContext,
 }: InputSectionProps) {
+  const [showSecondaryInputs, setShowSecondaryInputs] = useState(false);
   const sectionShell =
     "overflow-hidden rounded-[22px] border border-stone-200 bg-[#fbfaf7] shadow-[0_10px_30px_rgba(15,23,42,0.06)]";
 
@@ -301,46 +304,78 @@ export default function InputSection({
           />
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-2">
-          <div className={panelCard}>
-            <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
-              Sensor 01
-            </p>
-            <p className="mt-2 text-[18px] font-semibold text-slate-900">
-              いちばん近い反応
-            </p>
-
-            <div className="mt-5 flex flex-wrap gap-3">
-              {emotionOptions.map((option) => (
-                <ChoiceButton
-                  key={option}
-                  label={option}
-                  active={emotion === option}
-                  onClick={() => onEmotionChange(option)}
-                />
-              ))}
+        <div className={panelCard}>
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
+                Optional Detail
+              </p>
+              <p className="mt-2 text-[18px] font-semibold text-slate-900">
+                補足入力を開く
+              </p>
+              <p className="mt-3 text-[15px] leading-8 text-stone-600">
+                反応と対応の優先度を選ぶと、Context の整理が進めやすくなります。
+              </p>
             </div>
+
+            <button
+              type="button"
+              onClick={() => setShowSecondaryInputs((prev) => !prev)}
+              className="rounded-[12px] border border-stone-300 bg-white px-4 py-2.5 text-[14px] font-medium text-stone-700 transition hover:bg-stone-50"
+            >
+              {showSecondaryInputs ? "補足入力を閉じる" : "補足入力を開く"}
+            </button>
           </div>
 
-          <div className={panelCard}>
-            <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
-              Sensor 02
-            </p>
-            <p className="mt-2 text-[18px] font-semibold text-slate-900">
-              いま感じる対応意図
-            </p>
-
-            <div className="mt-5 flex flex-wrap gap-3">
-              {urgencyOptions.map((option) => (
-                <ChoiceButton
-                  key={option}
-                  label={option}
-                  active={urgency === option}
-                  onClick={() => onUrgencyChange(option)}
-                />
-              ))}
+          {!showSecondaryInputs && (
+            <div className="mt-5 rounded-[14px] border border-dashed border-stone-300 bg-[#faf8f3] px-4 py-3 text-[14px] leading-7 text-stone-600">
+              まずは場面を書き出し、必要になったら補足入力を開きます。
             </div>
-          </div>
+          )}
+
+          {showSecondaryInputs && (
+            <div className="mt-6 grid gap-6 lg:grid-cols-2">
+              <div>
+                <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
+                  Sensor 01
+                </p>
+                <p className="mt-2 text-[18px] font-semibold text-slate-900">
+                  いちばん近い反応
+                </p>
+
+                <div className="mt-5 flex flex-wrap gap-3">
+                  {emotionOptions.map((option) => (
+                    <ChoiceButton
+                      key={option}
+                      label={option}
+                      active={emotion === option}
+                      onClick={() => onEmotionChange(option)}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
+                  Sensor 02
+                </p>
+                <p className="mt-2 text-[18px] font-semibold text-slate-900">
+                  いま感じる対応意図
+                </p>
+
+                <div className="mt-5 flex flex-wrap gap-3">
+                  {urgencyOptions.map((option) => (
+                    <ChoiceButton
+                      key={option}
+                      label={option}
+                      active={urgency === option}
+                      onClick={() => onUrgencyChange(option)}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className={panelCard}>

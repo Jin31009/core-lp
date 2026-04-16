@@ -111,65 +111,75 @@ function StepItem({
   );
 }
 
-function PrimaryCard({
+function OrderedActionCard({
   item,
+  order,
+  tone = "default",
 }: {
   item: AcexItem;
+  order: number;
+  tone?: "primary" | "default";
 }) {
   const meta = getAcexMeta(item.key);
+  const frameClass =
+    tone === "primary"
+      ? "border-slate-600 bg-[linear-gradient(180deg,#f5f8fd_0%,#e7eff9_100%)] shadow-[0_14px_30px_rgba(15,23,42,0.11)]"
+      : "border-stone-200 bg-[#fdfcf9]";
+  const badgeClass =
+    tone === "primary"
+      ? "bg-slate-900 text-white shadow-sm"
+      : "border border-stone-200 bg-white text-stone-500";
+  const bodyCardClass =
+    tone === "primary"
+      ? "border-slate-300 bg-white/90"
+      : "border-stone-200 bg-[#fffdfa]";
+  const cardPaddingClass = tone === "primary" ? "p-7" : "p-5";
+  const titleClass =
+    tone === "primary"
+      ? "mt-2 text-[26px] font-semibold text-slate-950"
+      : "mt-2 text-[18px] font-semibold text-slate-900";
+  const noteClass =
+    tone === "primary"
+      ? "mt-2 text-[14px] leading-6 text-stone-700"
+      : "mt-2 text-[12px] leading-6 text-stone-500";
+  const stepLabelClass =
+    tone === "primary"
+      ? "text-[12px] uppercase tracking-[0.16em] text-slate-600"
+      : "text-[12px] uppercase tracking-[0.16em] text-stone-500";
+  const verbByKey: Record<string, string> = {
+    A: "受け止める",
+    C: "確認する",
+    E: "説明する",
+    X: "補助する",
+    P: "整理する",
+  };
+  const verbTitle =
+    order === 1
+      ? `まず${verbByKey[item.key] || `${meta.label}する`}`
+      : order === 2
+        ? `次に${verbByKey[item.key] || `${meta.label}する`}`
+        : `最後に${verbByKey[item.key] || `${meta.label}する`}`;
 
   return (
-    <div className="rounded-[18px] border-2 border-blue-500 shadow-md bg-blue-50 p-5 shadow-[0_3px_12px_rgba(15,23,42,0.03)]">
-      <div className="flex items-start justify-between gap-3">
+    <div className={`rounded-[18px] border shadow-[0_3px_12px_rgba(15,23,42,0.03)] ${frameClass} ${cardPaddingClass}`}>
+      <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-[12px] uppercase tracking-[0.16em] text-blue-600">
-            Primary
+          <p className={stepLabelClass}>
+            Step {order}
           </p>
-          <p className="mt-2 text-[20px] font-semibold text-slate-900">
-            {meta.label}
+          <p className={titleClass}>
+            {verbTitle}
           </p>
+          <p className={noteClass}>{meta.note}</p>
         </div>
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-700 text-[12px] font-semibold text-white">
-          {item.key}
+
+        <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[13px] font-semibold ${badgeClass}`}>
+          {order}
         </div>
       </div>
 
-      <p className="mt-3 text-[14px] leading-7 text-stone-700">{meta.note}</p>
-
-      <div className="mt-4 rounded-[12px] border border-blue-200 bg-white/70 p-3">
+      <div className={`mt-4 rounded-[12px] border p-4 ${bodyCardClass}`}>
         <p className="text-[14px] leading-7 text-stone-800">{item.body}</p>
-      </div>
-    </div>
-  );
-}
-
-function SupportCard({
-  item,
-}: {
-  item: AcexItem;
-}) {
-  const meta = getAcexMeta(item.key);
-
-  return (
-    <div className="rounded-[16px] border border-stone-200 bg-white p-4 shadow-[0_2px_10px_rgba(15,23,42,0.03)]">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className="text-[12px] uppercase tracking-[0.16em] text-stone-400">
-            Support
-          </p>
-          <p className="mt-1 text-[17px] font-semibold text-slate-900">
-            {meta.label}
-          </p>
-        </div>
-        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-stone-300 bg-white text-[11px] font-semibold text-stone-700">
-          {item.key}
-        </div>
-      </div>
-
-      <p className="mt-3 text-[13px] leading-6 text-stone-600">{meta.note}</p>
-
-      <div className="mt-3 rounded-[12px] border border-stone-200 bg-[#faf8f3] p-3">
-        <p className="text-[13px] leading-6 text-stone-700">{item.body}</p>
       </div>
     </div>
   );
@@ -216,9 +226,6 @@ export default function ResponseSection({
   statusColorClass,
   onNext,
 }: ResponseSectionProps) {
-  const primary = acexItems[0];
-  const support = acexItems.slice(1);
-
   const sectionShell =
     "overflow-hidden rounded-[22px] border border-stone-200 bg-[#fbfaf7] shadow-[0_10px_30px_rgba(15,23,42,0.06)]";
 
@@ -233,6 +240,8 @@ export default function ResponseSection({
 
   const mainCard =
     "rounded-[18px] border border-stone-200 bg-white p-6 shadow-[0_4px_16px_rgba(15,23,42,0.04)]";
+  const quietCard =
+    "rounded-[18px] border border-stone-200 bg-[#f8f6f1] p-5 shadow-[0_1px_8px_rgba(15,23,42,0.025)]";
 
   const sectionLabel =
     "text-[12px] uppercase tracking-[0.18em] text-stone-500";
@@ -253,62 +262,69 @@ export default function ResponseSection({
         </p>
         <h2 className={sectionTitleClass}>次の対応</h2>
         <p className={leadClass}>
-          Step2 の読み取りをもとに、ここでは「最初に何をするか」を中心に、
-          順番・使う要素・避けたい対応を一つの流れで整理します。
+          Step2 の読み取りをもとに、ここでは ACEX の順番をそのまま行動の流れとして確認します。
         </p>
       </div>
 
       <div className="space-y-6 p-6 sm:p-8">
-        <div className={mainCard}>
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div>
-              <p className={sectionLabel}>① 判断</p>
-              <p className="mt-2 text-[24px] font-semibold text-slate-900">
-                {statusLabel}
-              </p>
-              <p className="mt-1 text-[15px] leading-7 text-stone-600">
-                {statusSub}
-              </p>
-            </div>
-
-            <div className="flex items-center gap-2 rounded-full border border-stone-200 bg-[#faf8f3] px-4 py-2">
-              <span className={`text-[20px] leading-none ${statusColorClass}`}>
-                {statusIcon}
-              </span>
-              <span className="text-[13px] text-stone-600">{statusLabel}</span>
-            </div>
-          </div>
-        </div>
-
         <div className="rounded-[20px] border-2 border-slate-300 bg-white p-6 shadow-[0_8px_22px_rgba(15,23,42,0.05)]">
-          <p className={sectionLabel}>② 行動</p>
+          <p className={sectionLabel}>① ACEX Sequence</p>
           <p className="mt-2 text-[26px] font-semibold text-slate-900">
-            最初の一手
+            この順で検討する
+          </p>
+          <p className="mt-3 text-[15px] leading-8 text-stone-600">
+            まず最初の一手を置き、次の行動を順に重ねます。
           </p>
 
-          <div className="mt-5 rounded-[16px] border border-sky-200 bg-sky-50 p-5">
-            <p className="text-[13px] uppercase tracking-[0.14em] text-sky-700">
-              Action Summary
-            </p>
-            <p className="mt-2 text-[20px] leading-9 text-slate-900">
-              {actionSummary}
-            </p>
+          <div className="mt-6 grid gap-4 xl:grid-cols-3">
+            {acexItems.map((item, index) => (
+              <OrderedActionCard
+                key={`${item.key}-${index}`}
+                item={item}
+                order={index + 1}
+                tone={index === 0 ? "primary" : "default"}
+              />
+            ))}
           </div>
 
+          {acexItems.length === 0 && (
+            <div className="mt-6 rounded-[16px] border border-stone-200 bg-[#faf8f3] p-5">
+              <p className="text-[14px] leading-7 text-stone-700">
+                該当するACEX提案はありません。
+              </p>
+            </div>
+          )}
+
           <div className={nextStepNote}>
-            次の一手：方向が定まったら、その下で「順番」「使う要素」「避けたい対応」を続けて確認します。
+            次の一手：順番が見えたら、下で要約と補足情報を確認します。
           </div>
         </div>
 
-        <div className="grid gap-6 xl:grid-cols-[1.02fr_0.98fr]">
+        <div className="grid gap-6 xl:grid-cols-[1.06fr_0.94fr]">
           <div className="space-y-6">
-            <div className={mainCard}>
-              <p className={sectionLabel}>③ どう動くか</p>
-              <p className="mt-2 text-[23px] font-semibold text-slate-900">
-                対応の順番
+            <div className={quietCard}>
+              <p className={sectionLabel}>② Action Summary</p>
+              <p className="mt-2 text-[20px] font-semibold text-slate-900">
+                行動の要約
+              </p>
+
+              <div className="mt-5 rounded-[16px] border border-sky-200 bg-sky-50 p-5">
+                <p className="text-[13px] uppercase tracking-[0.14em] text-sky-700">
+                  Summary
+                </p>
+                <p className="mt-2 text-[17px] leading-8 text-slate-900">
+                  {actionSummary}
+                </p>
+              </div>
+            </div>
+
+            <div className={quietCard}>
+              <p className={sectionLabel}>③ Sequence Notes</p>
+              <p className="mt-2 text-[20px] font-semibold text-slate-900">
+                順番の補足
               </p>
               <p className={bodyText}>
-                実際の接点では、何をどの順で行うかが重要です。
+                この順で整理すると考えやすい。
               </p>
 
               <div className="mt-5 space-y-3">
@@ -317,57 +333,45 @@ export default function ResponseSection({
                 ))}
               </div>
             </div>
-
-            <div className={mainCard}>
-              <p className={sectionLabel}>④ この場面で使う</p>
-              <p className="mt-2 text-[23px] font-semibold text-slate-900">
-                主と補で見る
-              </p>
-              <p className={bodyText}>
-                最初に使う要素を一つ決め、そのあとを補助要素で支える形にしています。
-              </p>
-
-              {primary && (
-                <div className="mt-5">
-                  <PrimaryCard item={primary} />
-                </div>
-              )}
-
-              <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                {support.map((item, index) => (
-                  <SupportCard key={`${item.key}-${index}`} item={item} />
-                ))}
-              </div>
-            </div>
           </div>
 
           <div className="space-y-6">
-            <div className={mainCard}>
-              <p className={sectionLabel}>⑤ 注意</p>
-              <p className="mt-2 text-[23px] font-semibold text-slate-900">
-                避けたい対応
-              </p>
-              <p className={bodyText}>
-                やりがちなズレを短く押さえつつ、代わりにどうするかを一緒に確認します。
-              </p>
+            <div className={quietCard}>
+              <p className={sectionLabel}>Status</p>
+              <div className="mt-3 flex flex-wrap items-start justify-between gap-4">
+                <div>
+                  <p className="text-[18px] font-semibold text-slate-900">
+                    {statusLabel}
+                  </p>
+                  <p className="mt-2 text-[13px] leading-7 text-stone-600">
+                    {statusSub}
+                  </p>
+                </div>
 
-              <div className="mt-5 space-y-4">
-                {ngItems.map((item, index) => (
-                  <CompactNgCard key={`${item}-${index}`} text={item} />
-                ))}
+                <div className="flex items-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-2">
+                  <span className={`text-[20px] leading-none ${statusColorClass}`}>
+                    {statusIcon}
+                  </span>
+                  <span className="text-[12px] text-stone-500">{statusLabel}</span>
+                </div>
               </div>
             </div>
 
-            <div className={mainCard}>
-              <p className={sectionLabel}>Editorial Note</p>
-              <p className="mt-2 text-[22px] font-semibold text-slate-900">
-                この画面の見方
-              </p>
-              <p className={bodyText}>
-                上から順に読むだけで、「最初の一手」→「どう動くか」→「主と補」→「避けたい対応」
-                が一続きで見えるようにしています。
-              </p>
-            </div>
+            {ngItems.length > 0 && (
+              <div className={mainCard}>
+                <p className={sectionLabel}>注意</p>
+                <p className="mt-2 text-[23px] font-semibold text-slate-900">
+                  避けたい対応
+                </p>
+
+                <div className="mt-5 space-y-4">
+                  {ngItems.map((item, index) => (
+                    <CompactNgCard key={`${item}-${index}`} text={item} />
+                  ))}
+                </div>
+              </div>
+            )}
+
           </div>
         </div>
 
