@@ -217,10 +217,7 @@ export default function InputSection({
   const nextStepNote =
     "mt-5 rounded-[14px] border border-dashed border-stone-300 bg-white/80 px-4 py-3 text-[14px] leading-7 text-stone-600";
 
-  const canRequestContext =
-    text.trim().length > 0 &&
-    emotion.trim().length > 0 &&
-    urgency.trim().length > 0;
+  const canRequestContext = text.trim().length > 0;
 
   const isGenerating =
     contextRequested &&
@@ -283,7 +280,7 @@ export default function InputSection({
             発言、表情、場面のズレなど、気になったことを書いてください。
           </p>
           <div className={nextStepNote}>
-            次の一手：場面を書いたら、下で感情と対応意図を選びます。
+            次の一手：まず場面を書いたら、そのまま整理に進めます。必要なら補足入力を開きます。
           </div>
         </div>
 
@@ -311,10 +308,10 @@ export default function InputSection({
                 Optional Detail
               </p>
               <p className="mt-2 text-[18px] font-semibold text-slate-900">
-                補足入力を開く
+                補足入力（任意）
               </p>
               <p className="mt-3 text-[15px] leading-8 text-stone-600">
-                反応と対応の優先度を選ぶと、Context の整理が進めやすくなります。
+                感情や優先度を添えると整理の精度が上がります。未入力でも先に進めます。
               </p>
             </div>
 
@@ -329,7 +326,7 @@ export default function InputSection({
 
           {!showSecondaryInputs && (
             <div className="mt-5 rounded-[14px] border border-dashed border-stone-300 bg-[#faf8f3] px-4 py-3 text-[14px] leading-7 text-stone-600">
-              まずは場面を書き出し、必要になったら補足入力を開きます。
+              まずは場面だけ書けば大丈夫です。必要になったら補足入力を開きます。
             </div>
           )}
 
@@ -360,7 +357,7 @@ export default function InputSection({
                   Sensor 02
                 </p>
                 <p className="mt-2 text-[18px] font-semibold text-slate-900">
-                  いま感じる対応意図
+                  いまの対応優先度
                 </p>
 
                 <div className="mt-5 flex flex-wrap gap-3">
@@ -386,7 +383,7 @@ export default function InputSection({
             いまの内容を整理する
           </p>
           <p className="mt-3 text-[15px] leading-8 text-stone-600">
-            RA-AIが一次的にContextを整えます。
+            書いた内容から、RA-AIが一次的にContextを整えます。
           </p>
 
           <div className="mt-5 flex flex-wrap items-center gap-3">
@@ -403,13 +400,13 @@ export default function InputSection({
 
             {!canRequestContext && (
               <p className="text-[15px] leading-7 text-stone-500">
-                入力がそろうと整理できます。
+                場面を書くと整理できます。
               </p>
             )}
 
             {canRequestContext && !isGenerating && !contextRequested && (
               <p className="text-[15px] leading-7 text-stone-500">
-                入力がそろいました。
+                そのまま整理に進めます。
               </p>
             )}
 
@@ -423,7 +420,7 @@ export default function InputSection({
 
           {!contextRequested && (
             <div className={nextStepNote}>
-              次の一手：一次整理が返ってきたら、必要なら短く補足します。
+              次の一手：一次整理が返ってきたら、必要に応じて短く補足します。
             </div>
           )}
 
@@ -555,7 +552,7 @@ export default function InputSection({
 
         <div className="rounded-[16px] border-t border-stone-200 pt-6">
           <p className="text-[15px] leading-8 text-stone-600">
-            ここまで整理できれば、次に進めます。
+            一次整理が出れば、次に進めます。
           </p>
 
           <div className="mt-4 flex flex-wrap items-center gap-3">

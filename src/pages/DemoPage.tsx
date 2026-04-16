@@ -112,7 +112,7 @@ function TabButton({
 }
 
 export default function DemoPage({ setPage }: DemoPageProps) {
-  const API_BASE = import.meta.env.DEV ? "http://localhost:8787" : "";
+  const API_BASE = "";
   const [hasEnteredFlow, setHasEnteredFlow] = useState(false);
 
   const [observationRaw, setObservationRaw] = useState("");
@@ -230,7 +230,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
   }, [selectedStep]);
 
   const handleRequestContext = async () => {
-    if (!observationRaw.trim() && !emotion && !urgency) return;
+    if (!observationRaw.trim()) return;
 
     setContextRequested(true);
     setIsGeneratingFinalContext(true);
