@@ -262,7 +262,7 @@ export default function ResponseSection({
         </p>
         <h2 className={sectionTitleClass}>次の対応</h2>
         <p className={leadClass}>
-          Step2 の読み取りをもとに、ここでは ACEX の順番をそのまま行動の流れとして確認します。
+          Step2 の読み取りをもとに、ここでは ACEX を対応案として順に確認します。
         </p>
       </div>
 
@@ -270,7 +270,7 @@ export default function ResponseSection({
         <div className="rounded-[20px] border-2 border-slate-300 bg-white p-6 shadow-[0_8px_22px_rgba(15,23,42,0.05)]">
           <p className={sectionLabel}>① ACEX Sequence</p>
           <p className="mt-2 text-[26px] font-semibold text-slate-900">
-            この順で検討する
+            この順で対応案を確認する
           </p>
           <p className="mt-3 text-[15px] leading-8 text-stone-600">
             まず最初の一手を置き、次の行動を順に重ねます。

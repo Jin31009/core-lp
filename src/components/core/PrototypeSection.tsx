@@ -8,28 +8,34 @@ export default function PrototypeSection({ setPage }: Props) {
   return (
     <section style={sectionStyle}>
       <div style={containerStyle}>
-        <p style={labelStyle}>Prototype</p>
+        <p style={labelStyle}>Experience</p>
 
         <div style={scriptWrapStyle}>
           <p style={scriptStyle}>
-            だから、
+            ここで必要なのは、
             <br />
-            この構想を試している
+            読み足すことではなく
           </p>
 
           <p style={scriptStrongStyle}>
-            関係を構造として捉えることで、
+            実際に体験してみること
             <br />
-            広報の見え方は少し変わる
+            それがいちばん早い
           </p>
         </div>
+
+        <p style={noteStyle}>
+          デモでは、違和感を書くところから始めて、
+          <br />
+          関係のズレを見て、次の一手を考え、記録として残す流れをそのまま体験できます。
+        </p>
 
         <div style={ctaWrapStyle}>
           <button
             onClick={() => setPage("demo-intro")}
             style={buttonStyle}
           >
-            DEMOを触れてみる
+            体験を始める
           </button>
         </div>
       </div>
@@ -80,6 +86,14 @@ const scriptStrongStyle: React.CSSProperties = {
 
 const ctaWrapStyle: React.CSSProperties = {
   marginTop: 28,
+};
+
+const noteStyle: React.CSSProperties = {
+  margin: "0 auto",
+  maxWidth: 640,
+  fontSize: 18,
+  lineHeight: 1.95,
+  opacity: 0.78,
 };
 
 const buttonStyle: React.CSSProperties = {

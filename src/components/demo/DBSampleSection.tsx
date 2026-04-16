@@ -1,6 +1,7 @@
-type AcexKey = "A" | "C" | "E" | "X";
+import type { RASSCaseRecord } from "../../lib/rassCaseCsv";
 
 type DBSampleSectionProps = {
+  record: RASSCaseRecord | null;
   finalContext: string;
   delta: string;
   eLevel: string;
@@ -18,6 +19,7 @@ type DBSampleSectionProps = {
 };
 
 export default function DBSampleSection({
+  record,
   finalContext,
   delta,
   eLevel,
@@ -63,29 +65,34 @@ export default function DBSampleSection({
   const secondaryButton =
     "rounded-[14px] bg-violet-600 px-5 py-4 text-[15px] font-medium text-white transition hover:bg-violet-700";
 
-  const resolvedObservation = text?.trim() || "未入力";
-  const resolvedJudgment = judgment?.trim() || "未設定";
-  const resolvedAction = actionSummary?.trim() || "未設定";
-  const acexMap: Record<AcexKey, string> = {
-    A: "A｜受け止め",
-    C: "C｜確認",
-    E: "E｜説明",
-    X: "X｜補助",
-  };
-
-  const resolvedExecuted =
-    executedActions.length > 0
-      ? executedActions
-          .map((action) => acexMap[action as AcexKey] || action)
-          .join(" / ")
-      : "未選択";
-  const resolvedResult = resultType || "未選択";
-  const resolvedAfterNote = afterNote?.trim() || "未記入";
-  const resolvedWhyTags =
-    whyTags.length > 0 ? whyTags.join(" / ") : "未選択";
-  const resolvedWhyMemo = whyMemo?.trim() || "未記入";
-  const resolvedNextAssets =
-    nextAssets.length > 0 ? nextAssets.join(" / ") : "未選択";
+  const resolvedAction = record && record.acex_labels.length > 0
+    ? record.acex_labels.map((label, index) => {
+        const code = record.acex_codes[index];
+        return code ? `${code}｜${label}` : label;
+      }).join(" / ")
+    : "未設定";
+  const resolvedWhyTags = record && record.why_tags.length > 0
+    ? record.why_tags.join(" / ")
+    : "未選択";
+  const resolvedNextAssets = record && record.next_assets.length > 0
+    ? record.next_assets.join(" / ")
+    : "未選択";
+  const resolvedNotes = record?.notes?.trim() || "未記入";
+  const resolvedApce = record && record.apce_miss.length > 0
+    ? record.apce_miss.join(" / ")
+    : "未設定";
+  void text;
+  void judgment;
+  void actionSummary;
+  void whyTags;
+  void nextAssets;
+  void delta;
+  void eLevel;
+  void executedActions;
+  void resultType;
+  void afterNote;
+  void whyMemo;
+  void finalContext;
 
   return (
     <section ref={innerRef} className={sectionShell}>
@@ -103,67 +110,54 @@ export default function DBSampleSection({
       <div className="space-y-8 p-6 sm:p-8">
         <div className={tableCard}>
           <div className={row}>
-            <div className={label}>Observation</div>
+            <div className={label}>今回の分析対象</div>
             <div className="col-span-2 text-[15px] leading-8 text-stone-800">
-              {resolvedObservation}
-            </div>
-          </div>
-
-          <div className={row}>
-            <div className={label}>分析対象Context</div>
-            <div className="col-span-2 text-[15px] leading-8 text-stone-800">
-              {finalContext || "未生成"}
-            </div>
-          </div>
-
-          <div className={row}>
-            <div className={label}>Insight</div>
-            <div className="col-span-2 text-[15px] leading-8 text-stone-800">
-              {resolvedJudgment}
+              {record?.context_final || "未生成"}
             </div>
           </div>
 
           <div className={row}>
             <div className={label}>Delta</div>
-            <div className={value}>Δ{delta}</div>
+            <div className={value}>Δ{record?.max_delta ?? "0"}</div>
             <div className="text-[13px] text-stone-500">
               関係の緊張の強さ
             </div>
           </div>
 
           <div className={row}>
-            <div className={label}>Phase</div>
-            <div className={value}>{eLevel}</div>
+            <div className={label}>Trigger</div>
+            <div className={value}>{record?.trigger || "No"}</div>
             <div className="text-[13px] text-stone-500">
-              関係の局面
+              局所イベントの有無
             </div>
           </div>
 
           <div className={row}>
-            <div className={label}>Planned Response</div>
+            <div className={label}>AK Primary</div>
+            <div className={value}>{record?.ak_primary || "未設定"}</div>
+            <div className="text-[13px] text-stone-500">
+              主因として見えているズレ
+            </div>
+          </div>
+
+          <div className={row}>
+            <div className={label}>APCE Miss</div>
+            <div className="col-span-2 text-[15px] leading-8 text-stone-800">
+              {resolvedApce}
+            </div>
+          </div>
+
+          <div className={row}>
+            <div className={label}>Case Phase</div>
+            <div className="col-span-2 text-[15px] leading-8 text-stone-800">
+              {record?.case_phase || "未設定"}
+            </div>
+          </div>
+
+          <div className={row}>
+            <div className={label}>ACEX</div>
             <div className="col-span-2 text-[15px] leading-8 text-stone-800">
               {resolvedAction}
-            </div>
-          </div>
-
-          <div className={row}>
-            <div className={label}>Executed ACE+X</div>
-            <div className="col-span-2 text-[15px] leading-8 text-stone-800">
-              {resolvedExecuted}
-            </div>
-          </div>
-
-          <div className={row}>
-            <div className={label}>Outcome</div>
-            <div className="col-span-2 text-[15px] leading-8 text-stone-800">
-              {resolvedResult}
-            </div>
-          </div>
-
-          <div className={row}>
-            <div className={label}>After Note</div>
-            <div className="col-span-2 text-[15px] leading-8 text-stone-800">
-              {resolvedAfterNote}
             </div>
           </div>
 
@@ -175,72 +169,18 @@ export default function DBSampleSection({
           </div>
 
           <div className={row}>
-            <div className={label}>Why Memo</div>
-            <div className="col-span-2 text-[15px] leading-8 text-stone-800">
-              {resolvedWhyMemo}
-            </div>
-          </div>
-
-          <div className={row}>
             <div className={label}>Next Pattern</div>
             <div className="col-span-2 text-[15px] leading-8 text-stone-800">
               {resolvedNextAssets}
             </div>
           </div>
-        </div>
 
-        <div className="grid gap-6 lg:grid-cols-2">
-          <div className={blockCard}>
-            <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
-              Learning Summary
-            </p>
-            <p className="mt-2 text-[20px] font-semibold text-slate-900">
-              今回の学び
-            </p>
-
-            <div className="mt-4 space-y-3 text-[15px] leading-8 text-stone-700">
-              <p>
-                <span className="font-medium text-slate-900">Action：</span>
-                {resolvedExecuted}
-              </p>
-              <p>
-                <span className="font-medium text-slate-900">Outcome：</span>
-                {resolvedResult}
-              </p>
-              <p>
-                <span className="font-medium text-slate-900">Why：</span>
-                {resolvedWhyTags}
-              </p>
-              <p>
-                <span className="font-medium text-slate-900">Next：</span>
-                {resolvedNextAssets}
-              </p>
+          <div className={row}>
+            <div className={label}>Notes</div>
+            <div className="col-span-2 text-[15px] leading-8 text-stone-800">
+              {resolvedNotes}
             </div>
           </div>
-
-          <div className={blockCard}>
-            <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
-              Insight
-            </p>
-            <p className="mt-2 text-[20px] font-semibold text-slate-900">
-              構造化して残す意味
-            </p>
-            <p className="mt-4 text-[15px] leading-8 text-stone-700">
-              個別の対応を、結果だけでなく「なぜそうなったか」「次に何を残すか」
-              まで含めて記録することで、場面ごとの揺れと有効な一手が少しずつ見えるようになります。
-            </p>
-          </div>
-        </div>
-
-        <div className="rounded-[18px] border border-stone-200 bg-[#f8f5ef] p-6">
-          <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
-            Record Preview
-          </p>
-          <p className="mt-3 text-[16px] leading-9 text-stone-700">
-            この画面は、Step4 で整理した内容が「学習可能なケース記録」として
-            並ぶイメージを示しています。今後はここに Context Log や Signal、
-            Alignment Key などを追加していく土台にもできます。
-          </p>
         </div>
 
         <div className={blockCard}>

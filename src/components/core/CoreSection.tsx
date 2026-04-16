@@ -6,70 +6,60 @@ export default function CoreSection() {
       <div style={containerStyle}>
         <p style={labelStyle}>Redefinition</p>
 
-        <p style={bridgeStyle}>
-          広報は、
-          <br />
-          情報を届ける行為だと
-          <br />
-          思われてきた
-        </p>
-
         <div style={scriptWrapStyle}>
           <p style={scriptStyle}>
-            けれど、
+            本構想の中心にあるのは、
             <br />
-            広報は
+            この再定義です
           </p>
 
           <p style={scriptStrongStyle}>
-            関係の状態に働きかける営みとして
+            広報は、
             <br />
-            捉え直すことができる
+            関係の状態を整える体系である
           </p>
         </div>
 
         <p style={afterStyle}>
-          関係の状態が変われば、
+          伝える内容そのものより先に、
           <br />
-          同じ言葉でも
+          関係の状態が届き方を決めている。
           <br />
-          意味の届き方は変わる
+          だから広報は、情報ではなく関係から捉え直される必要がある。
         </p>
 
         <div style={expansionGridStyle}>
           <div style={expansionCardStyle}>
-            <p style={expansionHeadStyle}>Reframe</p>
-            <p style={expansionLeadStyle}>関係からの再構築</p>
+            <p style={expansionHeadStyle}>Why</p>
+            <p style={expansionLeadStyle}>なぜ伝達だけでは足りないのか</p>
             <p style={expansionBodyStyle}>
-              広報を、
+              同じ説明でも、相手との関係が違えば
               <br />
-              情報伝達ではなく
-              <br />
-              関係の状態から捉え直す。
+              意味の届き方は変わる。
             </p>
           </div>
 
           <div style={expansionCardStyle}>
-            <p style={expansionHeadStyle}>Co-create</p>
-            <p style={expansionLeadStyle}>AIとの共創</p>
+            <p style={expansionHeadStyle}>Shift</p>
+            <p style={expansionLeadStyle}>広報の扱う対象を変える</p>
             <p style={expansionBodyStyle}>
-              AIは答えを代行するためではなく、
+              情報を届ける営みから、
               <br />
-              構造化を支援し、
+              関係の状態を整える営みへ
               <br />
-              人の判断を補助する。
+              見方を切り替える。
             </p>
           </div>
 
           <div style={expansionCardStyle}>
-            <p style={expansionHeadStyle}>Structure</p>
-            <p style={expansionLeadStyle}>構造としての広報</p>
+            <p style={expansionHeadStyle}>Result</p>
+            <p style={expansionLeadStyle}>属人技を体系に変える</p>
             <p style={expansionBodyStyle}>
-              属人技として扱われてきた広報を、
+              感覚で扱われてきた広報を、
               <br />
-              再現可能な知として
+              観察できる・整理できる・
               <br />
-              組織に残していく。
+              残せる対象に変えていく。
             </p>
           </div>
         </div>
@@ -96,13 +86,6 @@ const labelStyle: React.CSSProperties = {
   letterSpacing: "0.18em",
   textTransform: "uppercase",
   opacity: 0.48,
-};
-
-const bridgeStyle: React.CSSProperties = {
-  margin: "0 0 26px",
-  fontSize: 18,
-  lineHeight: 2,
-  opacity: 0.72,
 };
 
 const scriptWrapStyle: React.CSSProperties = {

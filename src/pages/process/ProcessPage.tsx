@@ -13,10 +13,10 @@ export default function ProcessPage({ setPage }: ProcessPageProps) {
             className="text-left"
           >
             <p className="text-[10px] font-medium uppercase tracking-[0.28em] text-stone-400">
-              RA-SS / Process
+              RA-SS / Reproducibility
             </p>
             <h1 className="mt-1 text-[15px] font-semibold text-stone-900">
-              Process Page
+              再現性
             </h1>
           </button>
 
@@ -36,20 +36,19 @@ export default function ProcessPage({ setPage }: ProcessPageProps) {
         <section className="border-b border-stone-200 bg-[#f2ede3] px-6 py-24 md:px-10 md:py-28">
           <div className="mx-auto max-w-6xl">
             <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.30em] text-stone-400">
-              Process
+              Reproducibility
             </p>
 
             <h2 className="max-w-4xl text-4xl font-semibold leading-tight tracking-[-0.02em] text-stone-900 md:text-6xl">
-              違和感は、
+              この方法は、
               <br />
-              どのように運用へ
+              どうすれば
               <br />
-              接続されるのか。
+              再現可能になるのか。
             </h2>
 
             <p className="mt-8 max-w-2xl text-[16px] leading-9 text-stone-600">
-              RA-SSは思想だけではなく、観察・整理・対応・記録の流れを持つ。
-              そのプロセスが、個人の経験を組織の知へ変えていく。
+              ここでは、違和感の観察がどのように整理され、記録され、次の実践へ引き継がれるのかを見ます。
             </p>
           </div>
         </section>

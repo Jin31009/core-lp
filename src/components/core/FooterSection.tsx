@@ -6,10 +6,10 @@ export default function FooterSection() {
       <div style={innerStyle}>
         <p style={brandStyle}>CORE</p>
         <p style={textStyle}>
-          Relational Architecture Sensing System
+          RA-SS｜広報再定義プロジェクト
         </p>
         <p style={subTextStyle}>
-          広報を、関係の構造として捉え直すための実践と検証
+          広報を、関係の状態を整える体系として捉え直すための実践と検証
         </p>
       </div>
     </footer>

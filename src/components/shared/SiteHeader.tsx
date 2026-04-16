@@ -14,23 +14,23 @@ export default function SiteHeader({ setPage }: Props) {
 
         <nav style={navStyle}>
           <button onClick={() => setPage("structure")} style={navItemStyle}>
-            <span style={navMainStyle}>Structure</span>
-            <span style={navSubStyle}>理解する</span>
+            <span style={navMainStyle}>理論の裏側</span>
+            <span style={navSubStyle}>Structure</span>
           </button>
 
-          <button onClick={() => setPage("case")} style={navItemStyle}>
-            <span style={navMainStyle}>Case</span>
-            <span style={navSubStyle}>実装を見る</span>
+          <button onClick={() => setPage("process")} style={navItemStyle}>
+            <span style={navMainStyle}>再現性</span>
+            <span style={navSubStyle}>Process</span>
           </button>
 
-          <button onClick={() => setPage("evidence")} style={navItemStyle}>
-            <span style={navMainStyle}>Evidence</span>
-            <span style={navSubStyle}>背景を知る</span>
+          <button onClick={() => setPage("contact")} style={navItemStyle}>
+            <span style={navMainStyle}>一緒に試す</span>
+            <span style={navSubStyle}>Contact</span>
           </button>
 
-          <button onClick={() => setPage("prototype")} style={demoItemStyle}>
-            <span style={demoMainStyle}>Demo</span>
-            <span style={demoSubStyle}>触れてみる</span>
+          <button onClick={() => setPage("demo-intro")} style={demoItemStyle}>
+            <span style={demoMainStyle}>体験する</span>
+            <span style={demoSubStyle}>Demo</span>
           </button>
         </nav>
       </div>

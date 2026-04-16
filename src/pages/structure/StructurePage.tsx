@@ -12,9 +12,9 @@ export default function StructurePage({ setPage }: Props) {
 
       <main style={mainStyle}>
         <div style={containerStyle}>
-          <p style={labelStyle}>Structure</p>
+          <p style={labelStyle}>理論の裏側</p>
 
-          <h1 style={titleStyle}>なぜ広報は機能しないのか</h1>
+          <h1 style={titleStyle}>理論の裏側から、広報の再定義を読む</h1>
 
           {/* Executive Summary */}
           <section style={summaryWrap}>
@@ -27,9 +27,8 @@ export default function StructurePage({ setPage }: Props) {
             </h2>
 
             <div style={summaryBox}>
-              <p style={summaryText}>
-                広報はこれまで、表現力・経験・勘に依存する属人技として扱われてきた。
-              </p>
+              <p style={summaryText}>ここは、DEMOの前提にある考え方を深く読むためのページです。</p>
+              <p style={summaryText}>広報はこれまで、表現力・経験・勘に依存する属人技として扱われてきた。</p>
               <p style={summaryText}>
                 その結果、再現できず、組織に残らず、学習されにくい。
               </p>

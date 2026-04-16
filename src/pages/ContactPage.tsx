@@ -24,21 +24,21 @@ export default function ContactPage({ setPage }: Props) {
 
       <main style={mainStyle}>
         <div style={containerStyle}>
-          <p style={labelStyle}>PoC Participation</p>
+          <p style={labelStyle}>一緒に試す</p>
 
           <h1 style={titleStyle}>
-            この構想は、
+            関心を持ったあとに、
             <br />
-            まだ途中にあります
+            一緒に試していく入口
           </h1>
 
           {/* Opening */}
           <section style={sectionStyle}>
             <p style={sectionLabelStyle}>Opening</p>
             <h2 style={sectionTitleStyle}>
-              一緒に試しながら、
+              この構想は、
               <br />
-              少しずつ形にしていく
+              現場との往復で育てていく
             </h2>
 
             <div style={textBlockStyle}>

@@ -354,51 +354,54 @@ export default function DemoPage({ setPage }: DemoPageProps) {
   };
 
   const handleDownloadCsv = () => {
-    if (!stepResult) return;
+    if (!csvRecord) return;
 
-    const timestamp = new Date().toISOString();
-    const compactTimestamp = timestamp.replace(/[-:.TZ]/g, "").slice(0, 14);
-    const caseId = `rass-case-${compactTimestamp}`;
-
-    const record: RASSCaseRecord = {
-      case_id: caseId,
-      created_at: timestamp,
-      updated_at: timestamp,
-      context_raw: observationRaw.trim(),
-      context_final: analysisContext,
-      context_source: contextSource,
-      max_delta: stepResult.analysis.MAX_DELTA,
-      trigger: stepResult.analysis.Trigger,
-      r_plus: stepResult.analysis.R_plus,
-      ak_break_type: stepResult.analysis.AK_Break_Type,
-      ak_primary: stepResult.analysis.AK_Primary,
-      apce_miss: stepResult.analysis.APCE_Miss,
-      r_failure_reason: stepResult.analysis.R_Failure_Reason,
-      case_phase: stepResult.analysis.Case_Phase,
-      trigger_memo: stepResult.analysis.Trigger_Memo,
-      r_memo: stepResult.analysis.R_Memo,
-      acex_codes: stepResult.acex.map((action) => action.code),
-      acex_labels: stepResult.acex.map((action) => action.label),
-      acex_reasons: stepResult.acex.map((action) => action.reason),
-      engine_version: "rassEngine@1",
-      analysis_version: "rass_cases_csv@1",
-      why_tags: whyTags,
-      next_assets: nextAssets,
-      notes: [afterNote.trim(), whyMemo.trim()].filter(Boolean).join(" | "),
-    };
-
-    const csv = exportRASSCaseToCSV(record);
+    const csv = exportRASSCaseToCSV(csvRecord);
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
 
     link.href = url;
-    link.download = `${caseId}.csv`;
+    link.download = `${csvRecord.case_id}.csv`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
   };
+
+  const csvRecord: RASSCaseRecord | null = stepResult
+    ? (() => {
+        const timestamp = new Date().toISOString();
+        const compactTimestamp = timestamp.replace(/[-:.TZ]/g, "").slice(0, 14);
+
+        return {
+          case_id: `rass-case-${compactTimestamp}`,
+          created_at: timestamp,
+          updated_at: timestamp,
+          context_raw: observationRaw.trim(),
+          context_final: analysisContext,
+          context_source: contextSource,
+          max_delta: stepResult.analysis.MAX_DELTA,
+          trigger: stepResult.analysis.Trigger,
+          r_plus: stepResult.analysis.R_plus,
+          ak_break_type: stepResult.analysis.AK_Break_Type,
+          ak_primary: stepResult.analysis.AK_Primary,
+          apce_miss: stepResult.analysis.APCE_Miss,
+          r_failure_reason: stepResult.analysis.R_Failure_Reason,
+          case_phase: stepResult.analysis.Case_Phase,
+          trigger_memo: stepResult.analysis.Trigger_Memo,
+          r_memo: stepResult.analysis.R_Memo,
+          acex_codes: stepResult.acex.map((action) => action.code),
+          acex_labels: stepResult.acex.map((action) => action.label),
+          acex_reasons: stepResult.acex.map((action) => action.reason),
+          engine_version: "rassEngine@1",
+          analysis_version: "rass_cases_csv@1",
+          why_tags: whyTags,
+          next_assets: nextAssets,
+          notes: [afterNote.trim(), whyMemo.trim()].filter(Boolean).join(" | "),
+        };
+      })()
+    : null;
 
   return (
     <div className="min-h-screen bg-[#f4f1ea] text-slate-900">
@@ -644,6 +647,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
 
               {selectedStep === 5 && maxUnlockedStep >= 5 && (
                 <DBSampleSection
+                  record={csvRecord}
                   finalContext={analysisContext}
                   delta={String(stepResult?.analysis.MAX_DELTA ?? 0)}
                   eLevel={stepPhaseLabel}
