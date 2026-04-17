@@ -33,7 +33,7 @@ export default function TopPage({ setPage }: Props) {
 
       {/* ===== 新LP ===== */}
       <div style={{ marginBottom: 20 }}>
-        <button style={buttonStyle} onClick={() => setPage("corelp")}>
+        <button style={buttonStyle} onClick={() => setPage("lp")}>
           新LPを見る
         </button>
       </div>

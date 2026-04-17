@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 // ===== pages（直下）=====
 import DemoPage from "./pages/DemoPage";
 import DemoIntroPage from "./pages/DemoIntroPage";
+import TopPage from "./pages/TopPage";
+import CoreLPPage from "./pages/CoreLPPage";
 import LPPage from "./pages/LPPage";
 import ContactPage from "./pages/ContactPage";
 
@@ -19,13 +21,24 @@ export default function App() {
     initAnalytics();
   }, []);
 
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "auto",
+    });
+  }, [page]);
+
   return (
     <div>
       {/* TOP */}
-      {page === "top" && <LPPage setPage={setPage} />}
+      {page === "top" && <TopPage setPage={setPage} />}
 
       {/* CORE LP */}
-      {page === "corelp" && <LPPage setPage={setPage} />}
+      {page === "corelp" && <CoreLPPage setPage={setPage} />}
+
+      {/* NEW LP */}
+      {page === "lp" && <LPPage setPage={setPage} />}
 
       {/* PROTOTYPE / DEMO */}
       {page === "prototype" && <DemoPage setPage={setPage} />}
