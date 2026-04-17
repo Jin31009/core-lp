@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 // ===== pages（直下）=====
 import DemoPage from "./pages/DemoPage";
 import DemoIntroPage from "./pages/DemoIntroPage";
-import CoreLPPage from "./pages/CoreLPPage";
+import LPPage from "./pages/LPPage";
 import ContactPage from "./pages/ContactPage";
 
 // ===== pages（フォルダ内）=====
@@ -22,10 +22,10 @@ export default function App() {
   return (
     <div>
       {/* TOP */}
-      {page === "top" && <CoreLPPage setPage={setPage} />}
+      {page === "top" && <LPPage setPage={setPage} />}
 
       {/* CORE LP */}
-      {page === "corelp" && <CoreLPPage setPage={setPage} />}
+      {page === "corelp" && <LPPage setPage={setPage} />}
 
       {/* PROTOTYPE / DEMO */}
       {page === "prototype" && <DemoPage setPage={setPage} />}
