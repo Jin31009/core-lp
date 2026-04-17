@@ -299,8 +299,6 @@ export default function DemoPage({ setPage }: DemoPageProps) {
   };
 
   const handleGenerateFinalContext = async () => {
-    if (!primaryContextDraft.trim() && !contextEdited.trim()) return;
-
     setIsGeneratingFinalContext(true);
     setFinalContextDraft("Final Contextを生成しています...");
 
