@@ -38,26 +38,27 @@ export function initAnalytics() {
   if (!gaId) return;
 
   ensureAnalyticsBootstrap();
+  const existingScript = document.querySelector(
+    `script[src*="googletagmanager.com/gtag/js?id=${gaId}"]`
+  );
 
-  if (document.querySelector(`script[src*="googletagmanager.com/gtag/js?id=${gaId}"]`)) {
-    configureAnalytics(gaId);
-    return;
+  if (!existingScript && !window.__gaScriptLoading) {
+    window.__gaScriptLoading = true;
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
+    script.onload = () => {
+      window.__gaScriptLoading = false;
+      configureAnalytics(gaId);
+    };
+    script.onerror = () => {
+      window.__gaScriptLoading = false;
+    };
+    document.head.appendChild(script);
   }
 
-  if (window.__gaScriptLoading) return;
-  window.__gaScriptLoading = true;
-
-  const script = document.createElement("script");
-  script.async = true;
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
-  script.onload = () => {
-    window.__gaScriptLoading = false;
-    configureAnalytics(gaId);
-  };
-  script.onerror = () => {
-    window.__gaScriptLoading = false;
-  };
-  document.head.appendChild(script);
+  configureAnalytics(gaId);
 }
 
 export const trackEvent = (name: string, params: EventParams = {}) => {
