@@ -32,13 +32,16 @@ export default function App() {
   return (
     <div>
       {/* TOP */}
-      {page === "top" && <TopPage setPage={setPage} />}
+      {page === "top" && <CoreLPPage setPage={setPage} />}
 
       {/* CORE LP */}
       {page === "corelp" && <CoreLPPage setPage={setPage} />}
 
       {/* NEW LP */}
       {page === "lp" && <LPPage setPage={setPage} />}
+
+      {/* DEV TOP */}
+      {page === "devtop" && <TopPage setPage={setPage} />}
 
       {/* PROTOTYPE / DEMO */}
       {page === "prototype" && <DemoPage setPage={setPage} />}
