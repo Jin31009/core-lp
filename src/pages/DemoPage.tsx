@@ -126,6 +126,7 @@ function TabButton({
 export default function DemoPage({ setPage }: DemoPageProps) {
   const API_BASE = "";
   const [hasEnteredFlow, setHasEnteredFlow] = useState(false);
+  const [recordTimestamp, setRecordTimestamp] = useState<string | null>(null);
 
   const [observationRaw, setObservationRaw] = useState("");
   const [emotion, setEmotion] = useState("");
@@ -236,6 +237,10 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                 title: "Step5 / Structured Record",
                 body: "構造化された記録として、今回の学びがどう残るかを確認する段階です。",
               };
+
+  useEffect(() => {
+    setRecordTimestamp(new Date().toISOString());
+  }, []);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -395,9 +400,9 @@ export default function DemoPage({ setPage }: DemoPageProps) {
     URL.revokeObjectURL(url);
   };
 
-  const csvRecord: RASSCaseRecord | null = stepResult
+  const csvRecord: RASSCaseRecord | null = stepResult && recordTimestamp
     ? (() => {
-        const timestamp = new Date().toISOString();
+        const timestamp = recordTimestamp;
         const compactTimestamp = timestamp.replace(/[-:.TZ]/g, "").slice(0, 14);
 
         return {

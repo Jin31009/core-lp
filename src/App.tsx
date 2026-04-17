@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
 // ===== pages（直下）=====
@@ -10,9 +10,14 @@ import ContactPage from "./pages/ContactPage";
 // ===== pages（フォルダ内）=====
 import StructurePage from "./pages/structure/StructurePage";
 import ProcessPage from "./pages/process/ProcessPage";
+import { initAnalytics } from "./lib/analytics";
 
 export default function App() {
   const [page, setPage] = useState("top");
+
+  useEffect(() => {
+    initAnalytics();
+  }, []);
 
   return (
     <div>
