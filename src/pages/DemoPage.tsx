@@ -487,7 +487,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
 
                 {setPage && (
                   <button
-                    onClick={() => setPage("corelp")}
+                    onClick={() => setPage("top")}
                     className="inline-flex min-h-11 items-center justify-center border border-neutral-300 px-7 text-[12px] font-medium uppercase tracking-[0.16em] text-neutral-800 transition hover:bg-white"
                   >
                     TOPへ戻る

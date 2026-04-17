@@ -4,15 +4,14 @@ type Props = {
 };
 
 const NAV_ITEMS = [
-  { key: "structure", label: "理論の裏側", page: "structure" },
-  { key: "process", label: "再現性", page: "process" },
-  { key: "contact", label: "一緒に試す", page: "contact" },
+  { key: "top", label: "TOP", page: "top" },
+  { key: "contact", label: "CONTACT", page: "contact" },
 ] as const;
 
 function isActive(currentPage: string | undefined, page: string) {
   if (!currentPage) return false;
-  if (page === "corelp") return currentPage === "top" || currentPage === "corelp";
-  if (page === "demo-intro") {
+  if (page === "top") return currentPage === "top" || currentPage === "corelp";
+  if (page === "demo") {
     return currentPage === "demo-intro" || currentPage === "demo" || currentPage === "prototype";
   }
   return currentPage === page;
@@ -22,7 +21,7 @@ export default function SiteHeader({ setPage, currentPage }: Props) {
   return (
     <header style={headerStyle}>
       <div style={innerStyle}>
-        <button onClick={() => setPage("corelp")} style={brandStyle}>
+        <button onClick={() => setPage("top")} style={brandStyle}>
           CORE
         </button>
 
@@ -45,13 +44,13 @@ export default function SiteHeader({ setPage, currentPage }: Props) {
           })}
 
           <button
-            onClick={() => setPage("demo-intro")}
+            onClick={() => setPage("demo")}
             style={{
               ...demoItemStyle,
-              ...(isActive(currentPage, "demo-intro") ? demoItemActiveStyle : null),
+              ...(isActive(currentPage, "demo") ? demoItemActiveStyle : null),
             }}
           >
-            体験する
+            DEMO
           </button>
         </nav>
       </div>
@@ -63,7 +62,7 @@ const headerStyle: React.CSSProperties = {
   position: "sticky",
   top: 0,
   zIndex: 50,
-  height: 80,
+  minHeight: 72,
   background: "rgba(247,245,242,0.92)",
   backdropFilter: "blur(12px)",
   borderBottom: "1px solid rgba(0,0,0,0.06)",
@@ -71,13 +70,14 @@ const headerStyle: React.CSSProperties = {
 
 const innerStyle: React.CSSProperties = {
   maxWidth: 1180,
-  height: "100%",
+  minHeight: 72,
   margin: "0 auto",
-  padding: "0 32px",
+  padding: "12px 16px",
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
-  gap: 24,
+  gap: 12,
+  flexWrap: "wrap",
 };
 
 const brandStyle: React.CSSProperties = {
@@ -86,7 +86,7 @@ const brandStyle: React.CSSProperties = {
   padding: 0,
   margin: 0,
   cursor: "pointer",
-  fontSize: 15,
+  fontSize: 14,
   letterSpacing: "0.18em",
   textTransform: "uppercase",
   color: "#262626",
@@ -96,7 +96,7 @@ const brandStyle: React.CSSProperties = {
 const navStyle: React.CSSProperties = {
   display: "flex",
   alignItems: "center",
-  gap: 12,
+  gap: 8,
   flexWrap: "wrap",
   justifyContent: "flex-end",
 };
@@ -104,10 +104,10 @@ const navStyle: React.CSSProperties = {
 const navItemStyle: React.CSSProperties = {
   border: "none",
   background: "transparent",
-  padding: "10px 12px",
+  padding: "10px 10px",
   margin: 0,
   cursor: "pointer",
-  fontSize: 15,
+  fontSize: 13,
   color: "#262626",
   fontWeight: 500,
   borderRadius: 999,
@@ -121,11 +121,11 @@ const demoItemStyle: React.CSSProperties = {
   border: "1px solid rgba(0,0,0,0.16)",
   background: "rgba(255,255,255,0.72)",
   color: "#262626",
-  padding: "10px 14px",
+  padding: "10px 12px",
   margin: 0,
   cursor: "pointer",
   borderRadius: 999,
-  fontSize: 14,
+  fontSize: 13,
   fontWeight: 500,
   minHeight: 44,
 };

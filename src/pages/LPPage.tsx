@@ -16,8 +16,9 @@ export default function LPPage({ setPage }: Props) {
   return (
     <main className="bg-[#f7f5f2] text-stone-900">
       <Header
-        onOpenTop={() => setPage("corelp")}
+        onOpenTop={() => setPage("top")}
         onOpenDemo={() => setPage("demo")}
+        onOpenContact={() => setPage("contact")}
       />
 
       <HeroSection onOpenDemo={() => setPage("demo")} />
@@ -29,8 +30,9 @@ export default function LPPage({ setPage }: Props) {
       <PrototypeCTASection onNavigateContact={() => setPage("contact")} />
 
       <Footer
-        onOpenTop={() => setPage("corelp")}
+        onOpenTop={() => setPage("top")}
         onOpenDemo={() => setPage("demo")}
+        onOpenContact={() => setPage("contact")}
       />
     </main>
   );

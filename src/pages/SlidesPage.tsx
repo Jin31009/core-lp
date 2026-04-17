@@ -39,7 +39,7 @@ export default function SlidesPage({
           onClick={() => onNavigate("top")}
           className="w-full border border-black/15 px-4 py-3 text-sm text-slate-600 transition hover:bg-white sm:w-auto sm:py-2"
         >
-          ← TOPへ戻る
+          TOPへ戻る
         </button>
       </div>
 

@@ -62,7 +62,7 @@ export default function PrototypeSection({ setPage }: Props) {
 /* ===== styles ===== */
 
 const sectionStyle: React.CSSProperties = {
-  padding: "88px 24px 172px",
+  padding: "72px 20px clamp(96px, 16vw, 172px)",
   background: "#ffffff",
   color: "#111",
 };
@@ -97,8 +97,8 @@ const triangleStyle: React.CSSProperties = {
 const introStyle: React.CSSProperties = {
   maxWidth: 720,
   margin: "0 auto 22px",
-  fontSize: 17,
-  lineHeight: 1.95,
+  fontSize: "clamp(15px, 3.8vw, 17px)",
+  lineHeight: 1.85,
   color: "#404040",
 };
 
@@ -108,40 +108,40 @@ const scriptWrapStyle: React.CSSProperties = {
 
 const scriptStyle: React.CSSProperties = {
   margin: "0 0 18px",
-  fontSize: 30,
-  lineHeight: 1.9,
+  fontSize: "clamp(22px, 6vw, 30px)",
+  lineHeight: 1.7,
   letterSpacing: "-0.02em",
 };
 
 const scriptStrongStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: 34,
-  lineHeight: 1.85,
+  fontSize: "clamp(26px, 7vw, 34px)",
+  lineHeight: 1.55,
   letterSpacing: "-0.025em",
   fontWeight: 500,
 };
 
 const ctaWrapStyle: React.CSSProperties = {
-  marginTop: 52,
+  marginTop: 36,
 };
 
 const noteStyle: React.CSSProperties = {
   margin: "0 auto",
   maxWidth: 640,
-  fontSize: 17,
-  lineHeight: 1.95,
+  fontSize: "clamp(15px, 3.8vw, 17px)",
+  lineHeight: 1.85,
   color: "#404040",
 };
 
 const buttonStyle: React.CSSProperties = {
   minHeight: 44,
-  padding: "0 28px",
+  padding: "0 24px",
   border: "1px solid #171717",
   borderRadius: 999,
   background: "#171717",
   color: "#fff",
   cursor: "pointer",
-  fontSize: 15,
+  fontSize: 14,
   fontWeight: 500,
   boxShadow: "0 10px 24px rgba(0,0,0,0.06)",
 };

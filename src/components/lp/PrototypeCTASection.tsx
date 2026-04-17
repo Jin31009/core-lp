@@ -6,7 +6,7 @@ export default function PrototypeCTASection({
   onNavigateContact,
 }: PrototypeCTASectionProps) {
   return (
-    <section id="next-step" className="bg-[#f3efe7] px-6 py-[140px] md:px-10 md:py-[160px]">
+    <section id="next-step" className="bg-[#f3efe7] px-6 py-32 md:px-10 md:py-36">
       <div className="mx-auto max-w-[880px] text-center">
         <p className="text-[11px] uppercase tracking-[0.18em] text-stone-400">
           Contact

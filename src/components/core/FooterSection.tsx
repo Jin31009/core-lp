@@ -3,11 +3,9 @@ type Props = {
 };
 
 const NAV_ITEMS = [
-  { label: "TOP", page: "corelp" },
-  { label: "理論の裏側", page: "structure" },
-  { label: "再現性", page: "process" },
-  { label: "一緒に試す", page: "contact" },
-  { label: "体験する", page: "demo-intro" },
+  { label: "TOP", page: "top" },
+  { label: "DEMO", page: "demo" },
+  { label: "CONTACT", page: "contact" },
 ] as const;
 
 export default function FooterSection({ setPage }: Props) {
@@ -45,7 +43,7 @@ export default function FooterSection({ setPage }: Props) {
 }
 
 const footerStyle: React.CSSProperties = {
-  padding: "56px 24px 72px",
+  padding: "48px 20px 64px",
   borderTop: "1px solid rgba(0,0,0,0.08)",
   background: "#f7f5f2",
 };
@@ -67,7 +65,7 @@ const brandStyle: React.CSSProperties = {
 
 const textStyle: React.CSSProperties = {
   margin: "0 0 10px",
-  fontSize: 15,
+  fontSize: 14,
   lineHeight: 1.8,
   color: "#262626",
   fontWeight: 500,
@@ -76,8 +74,8 @@ const textStyle: React.CSSProperties = {
 const subTextStyle: React.CSSProperties = {
   margin: "0 auto",
   maxWidth: 720,
-  fontSize: 15,
-  lineHeight: 1.9,
+  fontSize: 14,
+  lineHeight: 1.8,
   color: "#525252",
 };
 
@@ -86,16 +84,16 @@ const navWrapStyle: React.CSSProperties = {
   display: "flex",
   justifyContent: "center",
   flexWrap: "wrap",
-  gap: 12,
+  gap: 8,
 };
 
 const navButtonStyle: React.CSSProperties = {
   border: "none",
   background: "transparent",
-  padding: "8px 12px",
+  padding: "10px 12px",
   margin: 0,
   cursor: "pointer",
-  fontSize: 15,
+  fontSize: 14,
   color: "#262626",
   fontWeight: 500,
 };

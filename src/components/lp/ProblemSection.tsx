@@ -2,7 +2,7 @@ export default function ProblemSection() {
   return (
     <section
       id="problem"
-      className="border-t border-black/8 px-6 py-[120px] text-center md:px-12"
+      className="border-t border-black/8 px-6 py-28 text-center md:px-12 md:py-32"
     >
       <p className="mb-5 text-[11px] font-medium uppercase tracking-[0.22em] text-stone-400">
         なぜ、実践は積み上がらないのか

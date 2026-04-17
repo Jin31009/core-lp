@@ -1,13 +1,13 @@
 type FooterProps = {
   onOpenTop?: () => void;
   onOpenDemo?: () => void;
-  onOpenSlides?: () => void;
+  onOpenContact?: () => void;
 };
 
 export default function Footer({
   onOpenTop,
   onOpenDemo,
-  onOpenSlides,
+  onOpenContact,
 }: FooterProps) {
   return (
     <footer className="border-t border-stone-200 bg-[#f3efe7]">
@@ -43,7 +43,7 @@ export default function Footer({
                   onClick={onOpenTop}
                   className="text-left text-[14px] text-stone-600 transition hover:text-stone-900"
                 >
-                  LP Top
+                  TOP
                 </button>
                 <button
                   type="button"
@@ -54,44 +54,41 @@ export default function Footer({
                 </button>
                 <button
                   type="button"
-                  onClick={onOpenSlides}
+                  onClick={onOpenContact}
                   className="text-left text-[14px] text-stone-600 transition hover:text-stone-900"
                 >
-                  学会発表
+                  CONTACT
                 </button>
               </div>
             </div>
 
             <div>
               <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-stone-400">
-                Sections
+                Flow
               </p>
 
               <div className="mt-4 flex flex-col gap-3">
-                <a
-                  href="#problem"
-                  className="text-[14px] text-stone-600 transition hover:text-stone-900"
+                <button
+                  type="button"
+                  onClick={onOpenTop}
+                  className="text-left text-[14px] text-stone-600 transition hover:text-stone-900"
                 >
-                  Problem
-                </a>
-                <a
-                  href="#redefinition"
-                  className="text-[14px] text-stone-600 transition hover:text-stone-900"
+                  TOP
+                </button>
+                <button
+                  type="button"
+                  onClick={onOpenDemo}
+                  className="text-left text-[14px] text-stone-600 transition hover:text-stone-900"
                 >
-                  Redefinition
-                </a>
-                <a
-                  href="#method"
-                  className="text-[14px] text-stone-600 transition hover:text-stone-900"
+                  DEMO
+                </button>
+                <button
+                  type="button"
+                  onClick={onOpenContact}
+                  className="text-left text-[14px] text-stone-600 transition hover:text-stone-900"
                 >
-                  Method
-                </a>
-                <a
-                  href="#demo"
-                  className="text-[14px] text-stone-600 transition hover:text-stone-900"
-                >
-                  Demo
-                </a>
+                  CONTACT
+                </button>
               </div>
             </div>
           </div>

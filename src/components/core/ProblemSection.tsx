@@ -57,7 +57,7 @@ export default function ProblemSection() {
 }
 
 const sectionStyle: React.CSSProperties = {
-  padding: "56px 24px 144px",
+  padding: "56px 20px clamp(88px, 14vw, 144px)",
   background: "rgba(245,245,244,0.7)",
   color: "#111",
 };
@@ -93,33 +93,33 @@ const squareStyle: React.CSSProperties = {
 const introStyle: React.CSSProperties = {
   maxWidth: 780,
   margin: "0 auto 36px",
-  fontSize: 17,
-  lineHeight: 1.95,
+  fontSize: "clamp(15px, 3.8vw, 17px)",
+  lineHeight: 1.85,
   color: "#404040",
 };
 
 const scriptWrapStyle: React.CSSProperties = {
-  margin: "12px 0 56px",
+  margin: "12px 0 40px",
 };
 
 const scriptStyle: React.CSSProperties = {
   margin: "0 0 28px",
-  fontSize: 30,
-  lineHeight: 1.95,
+  fontSize: "clamp(22px, 6vw, 30px)",
+  lineHeight: 1.7,
   letterSpacing: "-0.02em",
 };
 
 const noteStyle: React.CSSProperties = {
   margin: "0 0 14px",
-  fontSize: 18,
-  lineHeight: 1.95,
+  fontSize: "clamp(16px, 4vw, 18px)",
+  lineHeight: 1.8,
   color: "#525252",
 };
 
 const noteStrongStyle: React.CSSProperties = {
   margin: "18px 0 0",
-  fontSize: 24,
-  lineHeight: 1.9,
+  fontSize: "clamp(20px, 5vw, 24px)",
+  lineHeight: 1.75,
   letterSpacing: "-0.01em",
   fontWeight: 600,
 };

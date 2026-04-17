@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type InputSectionProps = {
   text: string;
@@ -187,6 +187,7 @@ export default function InputSection({
   onGenerateFinalContext,
 }: InputSectionProps) {
   const [showSecondaryInputs, setShowSecondaryInputs] = useState(false);
+  const finalContextRef = useRef<HTMLDivElement | null>(null);
   const sectionShell =
     "border-y border-stone-200 bg-white";
 
@@ -255,6 +256,21 @@ export default function InputSection({
     !!finalContextDraft.trim() &&
     !isGeneratingFinalContext &&
     !finalContextDraft.includes("失敗しました");
+
+  useEffect(() => {
+    if (!hasFinalContext) return;
+
+    finalContextRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }, [hasFinalContext]);
+
+  const isFollowupSelected = (value: string) =>
+    contextEdited
+      .split("\n")
+      .map((item) => item.trim())
+      .includes(value.trim());
 
   return (
     <section className={sectionShell}>
@@ -444,8 +460,11 @@ export default function InputSection({
               </div>
             </div>
 
-            <div className="mt-5 rounded-[16px] border-2 border-stone-300 bg-white p-6">
-              <p className="text-[21px] font-semibold leading-10 text-stone-700">
+            <div className="mt-5 rounded-[18px] border border-stone-200 bg-[linear-gradient(180deg,#fffdfa_0%,#f6efe4_100%)] p-6 shadow-[0_12px_28px_rgba(15,23,42,0.08)]">
+              <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
+                RA-AI Summary
+              </p>
+              <p className="mt-3 text-[24px] font-semibold leading-[1.9] text-slate-900 md:text-[28px]">
                 {contextDraft || "整理結果がここに表示されます。"}
               </p>
             </div>
@@ -462,15 +481,26 @@ export default function InputSection({
 
               {hasFollowups && (
                 <div className="mt-5 space-y-3">
+                  <p className="text-[14px] leading-7 text-stone-600">
+                    気になる項目を押すと、下の補足欄に追加されます。
+                  </p>
                   {followups.map((item, index) => (
                     <button
                       key={`${item}-${index}`}
                       type="button"
                       onClick={() => appendFollowupToContextEdited(item)}
-                      className="w-full rounded-[14px] border border-stone-200 bg-white px-4 py-4 text-left transition hover:bg-stone-50"
+                      className={`w-full rounded-[14px] border px-4 py-4 text-left transition ${
+                        isFollowupSelected(item)
+                          ? "border-slate-400 bg-slate-50 shadow-[0_4px_12px_rgba(15,23,42,0.06)]"
+                          : "border-stone-200 bg-white hover:border-slate-300 hover:bg-stone-50"
+                      }`}
                     >
                       <div className="flex items-start gap-3">
-                        <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-slate-700 text-[12px] font-semibold text-white">
+                        <div className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[12px] font-semibold ${
+                          isFollowupSelected(item)
+                            ? "bg-slate-900 text-white"
+                            : "bg-slate-700 text-white"
+                        }`}>
                           {index + 1}
                         </div>
                         <p className="text-[16px] leading-8 text-stone-700">
@@ -494,15 +524,15 @@ export default function InputSection({
                 次の一手：必要なら補足し、下で Final Context を生成します。
               </div>
 
-              <div className="mt-5 flex flex-wrap items-center gap-3">
+              <div className="mt-5">
                 <button
                   type="button"
                   onClick={onGenerateFinalContext}
                   disabled={!canGenerateFinalContext || isGeneratingFinalContext}
-                  className={`rounded-[12px] border px-6 py-3.5 text-[15px] font-medium transition ${
+                  className={`${primaryButton} ${
                     canGenerateFinalContext
-                      ? "border-slate-700 bg-slate-700 text-white hover:bg-slate-800"
-                      : "border-stone-300 bg-white text-stone-400"
+                      ? ""
+                      : "cursor-not-allowed bg-stone-300 hover:bg-stone-300"
                   } ${isGeneratingFinalContext ? "cursor-wait opacity-90" : ""}`}
                 >
                   {isGeneratingFinalContext
@@ -514,7 +544,7 @@ export default function InputSection({
               {isGeneratingFinalContext && <FinalLoadingCard />}
 
               {hasFinalContext && (
-                <div className="mt-5 rounded-[16px] border-2 border-slate-300 bg-white p-6 shadow-[0_6px_18px_rgba(15,23,42,0.04)]">
+                <div ref={finalContextRef} className="mt-5 rounded-[16px] border-2 border-slate-300 bg-white p-6 shadow-[0_6px_18px_rgba(15,23,42,0.04)]">
                   <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
                     Final Context
                   </p>

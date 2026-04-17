@@ -85,7 +85,7 @@ export default function MissionSection() {
 /* ===== styles ===== */
 
 const sectionStyle: React.CSSProperties = {
-  padding: "72px 48px 168px",
+  padding: "72px 20px clamp(96px, 16vw, 168px)",
   background: "rgba(245,245,244,0.6)",
   color: "#111",
 };
@@ -124,16 +124,16 @@ const lineStyle: React.CSSProperties = {
 const introStyle: React.CSSProperties = {
   maxWidth: 720,
   margin: "0 auto 28px",
-  fontSize: 17,
-  lineHeight: 1.95,
+  fontSize: "clamp(15px, 3.8vw, 17px)",
+  lineHeight: 1.85,
   color: "#404040",
 };
 
 const bridgeStyle: React.CSSProperties = {
   maxWidth: 680,
   margin: "0 auto 18px",
-  fontSize: 17,
-  lineHeight: 1.95,
+  fontSize: "clamp(15px, 3.8vw, 17px)",
+  lineHeight: 1.85,
   color: "#525252",
 };
 
@@ -143,15 +143,15 @@ const scriptWrapStyle: React.CSSProperties = {
 
 const scriptStyle: React.CSSProperties = {
   margin: "0 0 18px",
-  fontSize: 30,
-  lineHeight: 1.9,
+  fontSize: "clamp(22px, 6vw, 30px)",
+  lineHeight: 1.7,
   letterSpacing: "-0.02em",
 };
 
 const scriptStrongStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: 36,
-  lineHeight: 1.85,
+  fontSize: "clamp(26px, 7vw, 36px)",
+  lineHeight: 1.55,
   letterSpacing: "-0.025em",
   fontWeight: 500,
 };
@@ -159,21 +159,21 @@ const scriptStrongStyle: React.CSSProperties = {
 const afterStyle: React.CSSProperties = {
   margin: "0 auto",
   maxWidth: 560,
-  fontSize: 18,
-  lineHeight: 2,
+  fontSize: "clamp(16px, 4vw, 18px)",
+  lineHeight: 1.85,
   opacity: 0.8,
 };
 
 const dividerStyle: React.CSSProperties = {
   width: 1,
-  height: 56,
+  height: 40,
   background: "rgba(0,0,0,0.14)",
-  margin: "36px auto",
+  margin: "28px auto",
 };
 
 const methodGridStyle: React.CSSProperties = {
   display: "grid",
-  gridTemplateColumns: "repeat(3, 1fr)",
+  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 220px), 1fr))",
   gap: 24,
   marginTop: 8,
 };
@@ -181,8 +181,8 @@ const methodGridStyle: React.CSSProperties = {
 const methodCardStyle: React.CSSProperties = {
   border: "1px solid rgba(0,0,0,0.1)",
   background: "rgba(255,255,255,0.42)",
-  padding: "26px 22px 24px",
-  minHeight: 196,
+  padding: "22px 18px 20px",
+  minHeight: 0,
   textAlign: "center",
 };
 
@@ -196,15 +196,15 @@ const methodHeadStyle: React.CSSProperties = {
 
 const methodLeadStyle: React.CSSProperties = {
   margin: "0 0 14px",
-  fontSize: 22,
-  lineHeight: 1.55,
+  fontSize: "clamp(18px, 5vw, 22px)",
+  lineHeight: 1.45,
   fontWeight: 600,
   letterSpacing: "-0.01em",
 };
 
 const methodBodyStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: 15,
-  lineHeight: 1.9,
+  fontSize: "clamp(14px, 3.6vw, 15px)",
+  lineHeight: 1.8,
   opacity: 0.82,
 };

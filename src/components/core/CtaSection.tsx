@@ -82,7 +82,7 @@ export default function CtaSection({ setPage }: Props) {
 /* ===== styles ===== */
 
 const sectionStyle: React.CSSProperties = {
-  padding: "92px 48px 188px",
+  padding: "72px 20px clamp(96px, 18vw, 188px)",
   background: "rgba(245,245,244,0.7)",
   color: "#111",
 };
@@ -115,46 +115,46 @@ const arrowStyle: React.CSSProperties = {
 const introStyle: React.CSSProperties = {
   maxWidth: 720,
   margin: "0 auto 40px",
-  fontSize: 17,
-  lineHeight: 1.95,
+  fontSize: "clamp(15px, 3.8vw, 17px)",
+  lineHeight: 1.85,
   color: "#404040",
 };
 
 const scriptWrapStyle: React.CSSProperties = {
-  marginBottom: 48,
+  marginBottom: 36,
 };
 
 const scriptStyle: React.CSSProperties = {
   margin: "0 0 18px",
-  fontSize: 28,
-  lineHeight: 1.9,
+  fontSize: "clamp(22px, 6vw, 28px)",
+  lineHeight: 1.7,
   letterSpacing: "-0.02em",
   opacity: 0.78,
 };
 
 const scriptStrongStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: 38,
-  lineHeight: 1.85,
+  fontSize: "clamp(26px, 7vw, 38px)",
+  lineHeight: 1.55,
   letterSpacing: "-0.025em",
   fontWeight: 600,
 };
 
 const ctaWrapStyle: React.CSSProperties = {
-  marginTop: 56,
+  marginTop: 40,
 };
 
 const closingNoteStyle: React.CSSProperties = {
   maxWidth: 640,
   margin: "28px auto 0",
-  fontSize: 16,
-  lineHeight: 1.9,
+  fontSize: "clamp(14px, 3.6vw, 16px)",
+  lineHeight: 1.8,
   color: "#525252",
 };
 
 const valueGridStyle: React.CSSProperties = {
   display: "grid",
-  gridTemplateColumns: "repeat(3, 1fr)",
+  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 220px), 1fr))",
   gap: 24,
   marginTop: 12,
   marginBottom: 12,
@@ -163,8 +163,8 @@ const valueGridStyle: React.CSSProperties = {
 const valueCardStyle: React.CSSProperties = {
   border: "1px solid rgba(0,0,0,0.1)",
   background: "rgba(255,255,255,0.38)",
-  padding: "28px 22px 24px",
-  minHeight: 210,
+  padding: "22px 18px 20px",
+  minHeight: 0,
   textAlign: "center",
 };
 
@@ -178,24 +178,25 @@ const valueHeadStyle: React.CSSProperties = {
 
 const valueLeadStyle: React.CSSProperties = {
   margin: "0 0 14px",
-  fontSize: 22,
-  lineHeight: 1.6,
+  fontSize: "clamp(18px, 5vw, 22px)",
+  lineHeight: 1.45,
   fontWeight: 600,
   letterSpacing: "-0.01em",
 };
 
 const valueBodyStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: 15,
-  lineHeight: 1.9,
+  fontSize: "clamp(14px, 3.6vw, 15px)",
+  lineHeight: 1.8,
   opacity: 0.82,
 };
 
 const buttonStyle: React.CSSProperties = {
-  padding: "14px 30px",
+  minHeight: 44,
+  padding: "12px 24px",
   border: "1px solid rgba(0,0,0,0.22)",
   background: "transparent",
   cursor: "pointer",
-  fontSize: 15,
+  fontSize: 14,
   fontWeight: 500,
 };

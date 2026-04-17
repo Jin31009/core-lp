@@ -58,8 +58,8 @@ export default function DemoIntroPage({ setPage }: Props) {
           </div>
 
           <div style={backWrapStyle}>
-            <button type="button" onClick={() => setPage("corelp")} style={backStyle}>
-              LPへ戻る
+            <button type="button" onClick={() => setPage("top")} style={backStyle}>
+              TOPへ戻る
             </button>
           </div>
         </div>

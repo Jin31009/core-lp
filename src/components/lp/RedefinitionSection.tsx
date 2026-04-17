@@ -10,7 +10,7 @@ export default function RedefinitionSection({
   onOpenExpansion,
 }: RedefinitionSectionProps) {
   return (
-    <section className="border-y border-stone-200 bg-[#f3efe7] px-6 py-40 md:px-10 md:py-48">
+    <section className="border-y border-stone-200 bg-[#f3efe7] px-6 py-28 md:px-10 md:py-32">
       <div className="mx-auto max-w-4xl text-center">
         <p className="mb-5 text-[11px] font-medium uppercase tracking-[0.22em] text-stone-400">
           広報の起点を、置き直す

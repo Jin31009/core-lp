@@ -83,7 +83,7 @@ export default function CoreSection() {
 }
 
 const sectionStyle: React.CSSProperties = {
-  padding: "92px 24px 188px",
+  padding: "72px 20px clamp(96px, 18vw, 188px)",
   background: "#ffffff",
   color: "#111",
 };
@@ -128,8 +128,8 @@ const innerCircleStyle: React.CSSProperties = {
 const introStyle: React.CSSProperties = {
   maxWidth: 620,
   margin: "0 auto 36px",
-  fontSize: 17,
-  lineHeight: 1.95,
+  fontSize: "clamp(15px, 3.8vw, 17px)",
+  lineHeight: 1.85,
   color: "#404040",
 };
 
@@ -139,15 +139,15 @@ const scriptWrapStyle: React.CSSProperties = {
 
 const scriptStyle: React.CSSProperties = {
   margin: "0 0 18px",
-  fontSize: 30,
-  lineHeight: 1.9,
+  fontSize: "clamp(22px, 6vw, 30px)",
+  lineHeight: 1.7,
   letterSpacing: "-0.02em",
 };
 
 const scriptStrongStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: 36,
-  lineHeight: 1.85,
+  fontSize: "clamp(26px, 7vw, 36px)",
+  lineHeight: 1.55,
   letterSpacing: "-0.025em",
   fontWeight: 500,
 };
@@ -155,15 +155,15 @@ const scriptStrongStyle: React.CSSProperties = {
 const afterStyle: React.CSSProperties = {
   margin: "0 auto 56px",
   maxWidth: 560,
-  fontSize: 18,
-  lineHeight: 1.95,
+  fontSize: "clamp(16px, 4vw, 18px)",
+  lineHeight: 1.85,
   color: "#404040",
   fontWeight: 500,
 };
 
 const expansionGridStyle: React.CSSProperties = {
   display: "grid",
-  gridTemplateColumns: "repeat(3, 1fr)",
+  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 220px), 1fr))",
   gap: 24,
   marginTop: 12,
   alignItems: "stretch",
@@ -172,8 +172,8 @@ const expansionGridStyle: React.CSSProperties = {
 const expansionCardStyle: React.CSSProperties = {
   border: "1px solid rgba(0,0,0,0.1)",
   background: "rgba(255,255,255,0.34)",
-  padding: "30px 24px 28px",
-  minHeight: 240,
+  padding: "24px 20px 22px",
+  minHeight: 0,
   display: "flex",
   flexDirection: "column",
   justifyContent: "flex-start",
@@ -190,15 +190,15 @@ const expansionHeadStyle: React.CSSProperties = {
 
 const expansionLeadStyle: React.CSSProperties = {
   margin: "0 0 16px",
-  fontSize: 22,
-  lineHeight: 1.65,
+  fontSize: "clamp(18px, 5vw, 22px)",
+  lineHeight: 1.5,
   fontWeight: 600,
   letterSpacing: "-0.01em",
 };
 
 const expansionBodyStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: 16,
-  lineHeight: 1.95,
+  fontSize: "clamp(14px, 3.6vw, 16px)",
+  lineHeight: 1.8,
   color: "#525252",
 };

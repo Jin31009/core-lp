@@ -380,7 +380,7 @@ export default function ContactPage({ setPage }: Props) {
             </div>
 
             <button
-              onClick={() => setPage("corelp")}
+              onClick={() => setPage("top")}
               className="mt-12 inline-flex min-h-11 items-center justify-center border border-stone-300 px-7 text-[12px] font-medium uppercase tracking-[0.16em] text-stone-700 transition hover:bg-[#f7f4ee]"
             >
               TOPへ戻る

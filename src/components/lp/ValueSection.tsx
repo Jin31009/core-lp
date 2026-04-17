@@ -15,7 +15,7 @@ export default function ValueSection() {
   ];
 
   return (
-    <section className="bg-[#f7f5f2] px-6 py-28 md:px-10 md:py-28">
+    <section className="bg-[#f7f5f2] px-6 py-28 md:px-10 md:py-32">
       <div className="mx-auto max-w-6xl">
         <div className="max-w-3xl">
           <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.28em] text-stone-400">

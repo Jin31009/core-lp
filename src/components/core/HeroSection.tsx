@@ -8,7 +8,7 @@ type Props = {
 
 export default function HeroSection({ setPage }: Props) {
   return (
-    <section id="hero" className="min-h-[85vh] scroll-mt-24" style={sectionStyle}>
+    <section id="hero" className="scroll-mt-24" style={sectionStyle}>
       <div style={containerStyle}>
         <h1 style={titleStyle}>
           なぜ、伝えているのに
@@ -60,7 +60,7 @@ export default function HeroSection({ setPage }: Props) {
 }
 
 const sectionStyle: React.CSSProperties = {
-  padding: "200px 24px 160px",
+  padding: "clamp(104px, 16vw, 200px) 20px clamp(96px, 14vw, 160px)",
   background: "#ffffff",
   color: "#111",
 };
@@ -73,33 +73,33 @@ const containerStyle: React.CSSProperties = {
 
 const titleStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: "clamp(3.8rem, 8vw, 6rem)",
-  lineHeight: 1.18,
+  fontSize: "clamp(2.6rem, 9vw, 6rem)",
+  lineHeight: 1.16,
   letterSpacing: "-0.03em",
   fontWeight: 600,
 };
 
 const summaryWrapStyle: React.CSSProperties = {
   maxWidth: 620,
-  margin: "64px auto 0",
+  margin: "48px auto 0",
 };
 
 const summaryStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: 17,
-  lineHeight: 1.95,
+  fontSize: "clamp(15px, 3.8vw, 17px)",
+  lineHeight: 1.85,
   color: "#404040",
 };
 
 const summaryParagraphStyle: React.CSSProperties = {
-  margin: "24px 0 0",
-  fontSize: 17,
-  lineHeight: 1.95,
+  margin: "20px 0 0",
+  fontSize: "clamp(15px, 3.8vw, 17px)",
+  lineHeight: 1.85,
   color: "#404040",
 };
 
 const ctaWrapStyle: React.CSSProperties = {
-  marginTop: 40,
+  marginTop: 28,
   display: "flex",
   justifyContent: "center",
   gap: 12,
@@ -108,24 +108,24 @@ const ctaWrapStyle: React.CSSProperties = {
 
 const primaryButtonStyle: React.CSSProperties = {
   minHeight: 44,
-  padding: "0 24px",
+  padding: "0 22px",
   borderRadius: 999,
   border: "1px solid #171717",
   background: "#171717",
   color: "#fff",
-  fontSize: 15,
+  fontSize: 14,
   fontWeight: 500,
   cursor: "pointer",
 };
 
 const secondaryButtonStyle: React.CSSProperties = {
   minHeight: 44,
-  padding: "0 24px",
+  padding: "0 22px",
   borderRadius: 999,
   border: "1px solid #d4d4d4",
   background: "#fff",
   color: "#262626",
-  fontSize: 15,
+  fontSize: 14,
   fontWeight: 500,
   cursor: "pointer",
 };

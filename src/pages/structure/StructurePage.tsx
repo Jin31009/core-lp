@@ -296,7 +296,7 @@ export default function StructurePage({ setPage }: Props) {
                 個人の経験から、組織の再現可能な力へと転換される。
               </p>
               <button
-                onClick={() => setPage("corelp")}
+                onClick={() => setPage("top")}
                 className="mt-12 inline-flex min-h-11 items-center justify-center border border-stone-300 px-7 text-[12px] font-medium uppercase tracking-[0.16em] text-stone-700 transition hover:bg-white"
               >
                 TOPへ戻る
