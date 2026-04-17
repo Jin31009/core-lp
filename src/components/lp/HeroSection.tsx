@@ -4,7 +4,7 @@ type HeroSectionProps = {
 
 export default function HeroSection({ onOpenDemo }: HeroSectionProps) {
   return (
-    <section className="border-b border-stone-200 bg-[#f2ede3] px-6 py-40 md:px-10 md:py-40">
+    <section className="border-b border-stone-200 bg-[#f2ede3] px-6 py-24 md:px-10 md:py-28">
       <div className="mx-auto max-w-6xl">
         <div className="mb-12 border-b border-stone-200 pb-4">
           <p className="text-[11px] font-medium uppercase tracking-[0.30em] text-stone-400">
