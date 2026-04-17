@@ -124,7 +124,6 @@ function TabButton({
 }
 
 export default function DemoPage({ setPage }: DemoPageProps) {
-  const API_BASE = "";
   const [hasEnteredFlow, setHasEnteredFlow] = useState(false);
   const [recordTimestamp, setRecordTimestamp] = useState<string | null>(null);
 
@@ -256,7 +255,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
     setFinalContextDraft("");
 
     try {
-      const response = await fetch(`${API_BASE}/api/context-draft`, {
+      const response = await fetch("/api/context-draft", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -278,11 +277,14 @@ export default function DemoPage({ setPage }: DemoPageProps) {
       }
 
       const data: ContextDraftResponse = await response.json();
+      const normalizedFollowups = Array.isArray(data.followups)
+        ? data.followups.filter((item): item is string => typeof item === "string")
+        : [];
 
       setPrimaryContextDraft(
         data.contextDraft || "整理結果を取得できませんでした。"
       );
-      setContextFollowups(Array.isArray(data.followups) ? data.followups : []);
+      setContextFollowups(normalizedFollowups);
     } catch (error) {
       console.error(error);
       setPrimaryContextDraft(
@@ -303,7 +305,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
     setFinalContextDraft("Final Contextを生成しています...");
 
     try {
-      const response = await fetch(`${API_BASE}/api/final-context`, {
+      const response = await fetch("/api/final-context", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
