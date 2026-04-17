@@ -349,10 +349,10 @@ export default function AnalysisSection({
           };
 
   const sectionShell =
-    "overflow-hidden rounded-[22px] border border-stone-200 bg-[#fbfaf7] shadow-[0_12px_36px_rgba(15,23,42,0.05)]";
+    "border-y border-stone-200 bg-white";
 
   const sectionHeader =
-    "border-b border-stone-200 bg-[linear-gradient(180deg,#ede8dd_0%,#e6e1d6_100%)] px-6 py-7 sm:px-8";
+    "border-b border-stone-200 px-6 py-8 sm:px-8";
 
   const sectionTitleClass =
     "mt-3 text-[34px] font-semibold tracking-[-0.02em] text-slate-900";
@@ -361,16 +361,16 @@ export default function AnalysisSection({
     "mt-4 max-w-4xl text-[18px] leading-9 text-stone-700";
 
   const groupWrap =
-    "rounded-[18px] border border-stone-200 bg-white p-6 shadow-[0_3px_14px_rgba(15,23,42,0.04)]";
+    "border-t border-stone-200 bg-white py-6";
 
   const subCard =
-    "rounded-[16px] border border-stone-200 bg-[#fcfbf8] p-5";
+    "border-t border-stone-200 bg-[#fcfbf8] p-5";
 
   const contextCard =
-    "rounded-[18px] border-2 border-stone-300 bg-white p-6 shadow-[0_8px_22px_rgba(15,23,42,0.05)]";
+    "border-t-2 border-stone-300 bg-white p-6";
 
   const summaryCard =
-    "rounded-[18px] border bg-white p-5 shadow-[0_3px_14px_rgba(15,23,42,0.04)]";
+    "border-t bg-white p-5";
 
   const primaryButton =
     "w-full rounded-[14px] bg-blue-600 py-4 text-[16px] font-medium text-white transition hover:bg-blue-700";

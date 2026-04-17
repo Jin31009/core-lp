@@ -1,4 +1,3 @@
-
 import SiteHeader from "../../components/shared/SiteHeader";
 import EditorialSectionHeader from "../../components/shared/EditorialSectionHeader";
 import FooterSection from "../../components/core/FooterSection";
@@ -7,142 +6,188 @@ type Props = {
   setPage: (page: string) => void;
 };
 
+const conventionalItems = [
+  "表現に依存する",
+  "経験と勘に依存する",
+  "属人的に対応する",
+];
+
+const conventionalResults = [
+  "再現できない",
+  "組織に残らない",
+  "学習されない",
+];
+
+const relationalItems = [
+  "関係の状態を観察する",
+  "構造として捉える",
+  "介入可能にする",
+];
+
+const relationalResults = [
+  "再現できる",
+  "組織に残る",
+  "学習される",
+];
+
+const expansionItems = [
+  {
+    label: "Reframe",
+    title: "関係の再認識が始まる",
+    body: "不満や違和感を、感情的な反応としてではなく、関係の状態変化として捉え直す。",
+  },
+  {
+    label: "Co-create",
+    title: "AIと共に整理し、考える",
+    body: "AIは判断を代行する道具ではない。構造化を支援し、人の観察・解釈・判断を補助する共考のパートナーである。",
+  },
+  {
+    label: "Structure",
+    title: "組織の技として定着する",
+    body: "個人の経験に閉じていた対応が、再現可能な知識となり、次の実践へ引き継がれていく。",
+  },
+];
+
+function FigureColumn({
+  heading,
+  items,
+  results,
+}: {
+  heading: string;
+  items: string[];
+  results: string[];
+}) {
+  return (
+    <div>
+      <p className="text-[12px] uppercase tracking-[0.16em] text-stone-400">{heading}</p>
+      <div className="mt-6 border-t border-stone-200">
+        {items.map((item) => (
+          <p key={item} className="border-b border-stone-200 py-4 text-[18px] leading-9 text-stone-800">
+            {item}
+          </p>
+        ))}
+      </div>
+      <div className="mt-6 border-t border-stone-300 pt-5">
+        {results.map((result, index) => (
+          <p
+            key={result}
+            className={`text-[15px] leading-8 text-stone-600 ${index > 0 ? "mt-2" : ""}`}
+          >
+            {result}
+          </p>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function StructurePage({ setPage }: Props) {
   return (
-    <>
+    <div className="min-h-screen bg-[#f7f4ee] text-stone-900">
       <SiteHeader setPage={setPage} currentPage="structure" />
 
-      <main style={mainStyle}>
-        <div style={containerStyle}>
-          <section style={emphasisBandStyle}>
+      <main className="pt-20">
+        <section className="px-6 py-24 md:px-10 md:py-32">
+          <div className="mx-auto max-w-5xl">
             <EditorialSectionHeader
               label="STRUCTURE"
               marker="lines"
               hero
               title="理論の裏側から、広報の再定義を読む"
-              summary="ここでは、DEMOの背後にある考え方を、広報の再定義という観点から順に読み解きます。"
+              summary="DEMOの背後にある考え方を、TOPページと同じ余白中心の誌面構成で読み解きます。"
             />
-          </section>
+          </div>
+        </section>
 
-          {/* Executive Summary */}
-          <section style={baseSectionStyle}>
-            <EditorialSectionHeader
-              label="STRUCTURE"
-              marker="lines"
-              title={
-                <>
-                  広報は、情報ではなく
-                  <br />
-                  関係の状態として扱われるべきである
-                </>
-              }
-              summary="最初に、この構想全体を支えている論点を短く確認します。"
-            />
-
-            <div style={summaryBox}>
-              <p style={summaryText}>ここは、DEMOの前提にある考え方を深く読むためのページです。</p>
-              <p style={summaryText}>広報はこれまで、表現力・経験・勘に依存する属人技として扱われてきた。</p>
-              <p style={summaryText}>
-                その結果、再現できず、組織に残らず、学習されにくい。
-              </p>
-              <p style={summaryText}>問題は能力ではなく構造にある。</p>
-              <p style={summaryText}>
-                本構想では広報を「関係の状態を整える体系」として再定義し、
-                観察・分析・介入可能な構造として扱う。
-              </p>
-              <p style={summaryTextLast}>そのためのモデルがRA-SSである。</p>
-            </div>
-          </section>
-
-          {/* Figure */}
-          <section style={frameSectionStyle}>
-            <div style={framePanelStyle}>
+        <section className="border-y border-stone-200 bg-white px-6 py-20 md:px-10 md:py-24">
+          <div className="mx-auto max-w-5xl">
+            <div className="max-w-4xl">
               <EditorialSectionHeader
                 label="STRUCTURE"
                 marker="lines"
-                title="広報の再定義"
-                summary="従来の広報観と、関係の状態を扱う構想との差を図として示します。"
+                title={
+                  <>
+                    広報は、情報ではなく
+                    <br />
+                    関係の状態として扱われるべきである
+                  </>
+                }
+                summary="この構想全体を支えている論点を、最初に短く確認します。"
               />
-
-              <div style={figureWrap}>
-                <div style={figureColumn}>
-                  <p style={figureHeading}>Conventional PR</p>
-
-                  <div style={figureCard}>
-                    <p style={figureItem}>表現に依存する</p>
-                    <p style={figureItem}>経験と勘に依存する</p>
-                    <p style={figureItem}>属人的に対応する</p>
-                  </div>
-
-                  <div style={figureArrow}>↓</div>
-
-                  <div style={figureOutcomeBox}>
-                    <p style={figureOutcome}>再現できない</p>
-                    <p style={figureOutcome}>組織に残らない</p>
-                    <p style={figureOutcome}>学習されない</p>
-                  </div>
-                </div>
-
-                <div style={figureCenter}>→</div>
-
-                <div style={figureColumn}>
-                  <p style={figureHeading}>Relational Architecture</p>
-
-                  <div style={figureCard}>
-                    <p style={figureItem}>関係の状態を観察する</p>
-                    <p style={figureItem}>構造として捉える</p>
-                    <p style={figureItem}>介入可能にする</p>
-                  </div>
-
-                  <div style={figureArrow}>↓</div>
-
-                  <div style={figureOutcomeBox}>
-                    <p style={figureOutcome}>再現できる</p>
-                    <p style={figureOutcome}>組織に残る</p>
-                    <p style={figureOutcome}>学習される</p>
-                  </div>
-                </div>
-              </div>
-
-              <p style={figureNote}>
-                広報の課題は、表現力の不足ではない。
-                <br />
-                関係を扱う構造を持たなかったことにある。
-              </p>
             </div>
-          </section>
 
-          <div style={baseBandStyle}>
-            {/* Problem */}
-            <section style={sectionStyle}>
+            <div className="mx-auto mt-16 max-w-3xl border-t border-stone-200">
+              {[
+                "ここは、DEMOの前提にある考え方を深く読むためのページです。",
+                "広報はこれまで、表現力・経験・勘に依存する属人技として扱われてきた。",
+                "その結果、再現できず、組織に残らず、学習されにくい。",
+                "問題は能力ではなく構造にある。",
+                "本構想では広報を「関係の状態を整える体系」として再定義し、観察・分析・介入可能な構造として扱う。",
+                "そのためのモデルがRA-SSである。",
+              ].map((item) => (
+                <p key={item} className="border-b border-stone-200 py-5 text-[17px] leading-9 text-stone-700">
+                  {item}
+                </p>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-[#f3efe7] px-6 py-20 md:px-10 md:py-24">
+          <div className="mx-auto max-w-6xl">
+            <EditorialSectionHeader
+              label="STRUCTURE"
+              marker="lines"
+              title="広報の再定義"
+              summary="従来の広報観と、関係の状態を扱う構想との差を図ではなく誌面構成として並置します。"
+            />
+
+            <div className="mt-16 grid gap-12 lg:grid-cols-[1fr_80px_1fr] lg:items-start">
+              <FigureColumn
+                heading="Conventional PR"
+                items={conventionalItems}
+                results={conventionalResults}
+              />
+              <div className="hidden items-center justify-center text-[32px] text-stone-400 lg:flex">
+                →
+              </div>
+              <FigureColumn
+                heading="Relational Architecture"
+                items={relationalItems}
+                results={relationalResults}
+              />
+            </div>
+
+            <p className="mx-auto mt-12 max-w-3xl text-center text-[17px] leading-9 text-stone-700">
+              広報の課題は、表現力の不足ではない。
+              <br />
+              関係を扱う構造を持たなかったことにある。
+            </p>
+          </div>
+        </section>
+
+        <section className="border-y border-stone-200 bg-white px-6 py-20 md:px-10 md:py-24">
+          <div className="mx-auto max-w-5xl space-y-20">
+            <section>
               <EditorialSectionHeader
                 label="PROBLEM"
                 marker="square"
                 title="構造的な課題"
                 summary="属人性に依存した広報は、再現性と学習可能性を失いやすくなります。"
               />
-
-              <div style={flowStyle}>
+              <div className="mt-14 text-center text-[28px] leading-[2.1] text-stone-900">
                 <div>属人性への依存</div>
-                <div style={{ opacity: 0.3 }}>↓</div>
+                <div className="opacity-35">↓</div>
                 <div>再現性の欠如</div>
-                <div style={{ opacity: 0.3 }}>↓</div>
+                <div className="opacity-35">↓</div>
                 <div>効果測定の不可能性</div>
               </div>
-
-              <p style={noteStyle}>
+              <p className="mt-10 text-center text-[18px] font-semibold leading-9 text-stone-900">
                 これは能力の問題ではなく、構造の問題である。
-              </p>
-
-              <p style={logicStyle}>
-                したがって、広報は「情報」ではなく、
-                <br />
-                関係の状態として扱われなければならない。
               </p>
             </section>
 
-            {/* Redefinition */}
-            <section style={sectionStyle}>
+            <section>
               <EditorialSectionHeader
                 label="REDEFINITION"
                 marker="double-circle"
@@ -157,40 +202,33 @@ export default function StructurePage({ setPage }: Props) {
               />
             </section>
 
-            {/* Observation */}
-            <section style={sectionStyle}>
+            <section>
               <EditorialSectionHeader
                 label="STRUCTURE"
                 marker="lines"
                 title="関係は、すでに現場に現れている"
                 summary="違和感や投書は感情の断片ではなく、関係の状態変化として読み直すことができます。"
               />
-
-              <div style={quoteBox}>
-                <p style={quoteStyle}>
-                  「待たされた」ではなく、
-                  <br />
-                  「見てもらえていない」という認識
-                </p>
+              <div className="mx-auto mt-12 max-w-2xl border-y border-stone-200 py-8 text-center text-[21px] leading-10 text-stone-800">
+                「待たされた」ではなく、
+                <br />
+                「見てもらえていない」という認識
               </div>
-
-              <p style={textStyle}>
+              <p className="mt-10 text-center text-[17px] leading-9 text-stone-700">
                 これは偶然ではなく、
                 <br />
                 関係構造が変化した結果である。
               </p>
             </section>
 
-            {/* Model */}
-            <section style={sectionStyle}>
+            <section>
               <EditorialSectionHeader
                 label="METHOD"
                 marker="lines"
                 title="RA-SS"
                 summary="この構造を扱うために、観察と分析と介入を支えるモデルとしてRA-SSを置きます。"
               />
-
-              <p style={textStyle}>
+              <p className="mt-12 text-center text-[18px] leading-10 text-stone-700">
                 RA-SSは、
                 <br />
                 関係を構造として捉え、
@@ -199,22 +237,19 @@ export default function StructurePage({ setPage }: Props) {
               </p>
             </section>
 
-            {/* Result */}
-            <section style={sectionStyle}>
+            <section>
               <EditorialSectionHeader
                 label="STRUCTURE"
                 marker="lines"
                 title="関係は、扱える対象になる"
                 summary="構造として捉えることで、これまで感覚的だった対応も観察・介入・再現の対象になります。"
               />
-
-              <div style={resultFlowWrap}>
-                <p style={resultFlowItem}>観察できる</p>
-                <p style={resultFlowItem}>介入できる</p>
-                <p style={resultFlowItem}>再現できる</p>
+              <div className="mx-auto mt-12 max-w-xl border-y border-stone-200 py-6 text-center text-[22px] leading-[1.9] text-stone-900">
+                <p>観察できる</p>
+                <p>介入できる</p>
+                <p>再現できる</p>
               </div>
-
-              <p style={textStyle}>
+              <p className="mt-10 text-center text-[17px] leading-9 text-stone-700">
                 構造として捉えることで、
                 <br />
                 関係は「扱えないもの」ではなく、
@@ -223,9 +258,10 @@ export default function StructurePage({ setPage }: Props) {
               </p>
             </section>
           </div>
+        </section>
 
-          {/* Expansion */}
-          <section style={emphasisSectionStyle}>
+        <section className="bg-[#f3efe7] px-6 py-20 md:px-10 md:py-24">
+          <div className="mx-auto max-w-6xl">
             <EditorialSectionHeader
               label="STRUCTURE"
               marker="lines"
@@ -239,320 +275,38 @@ export default function StructurePage({ setPage }: Props) {
               summary="構造として残された知見は、次の現場に展開され、組織の技として蓄積されていきます。"
             />
 
-            <div style={expansionGridStyle}>
-              <div style={expansionCardStyle}>
-                <p style={expansionHeadStyle}>Reframe</p>
-                <p style={expansionLeadStyle}>関係の再認識が始まる</p>
-                <p style={expansionBodyStyle}>
-                  不満や違和感を、感情的な反応としてではなく、
-                  <br />
-                  関係の状態変化として捉え直す。
-                </p>
-              </div>
-
-              <div style={expansionCardStyle}>
-                <p style={expansionHeadStyle}>Co-create</p>
-                <p style={expansionLeadStyle}>AIと共に整理し、考える</p>
-                <p style={expansionBodyStyle}>
-                  AIは判断を代行する道具ではない。
-                  <br />
-                  構造化を支援し、人の観察・解釈・判断を補助する
-                  <br />
-                  共考のパートナーである。
-                </p>
-              </div>
-
-              <div style={expansionCardStyle}>
-                <p style={expansionHeadStyle}>Structure</p>
-                <p style={expansionLeadStyle}>組織の技として定着する</p>
-                <p style={expansionBodyStyle}>
-                  個人の経験に閉じていた対応が、
-                  <br />
-                  再現可能な知識となり、
-                  <br />
-                  次の実践へ引き継がれていく。
-                </p>
-              </div>
+            <div className="mt-16 grid gap-10 md:grid-cols-3">
+              {expansionItems.map((item) => (
+                <div key={item.label} className="border-t border-stone-300 pt-5">
+                  <p className="text-[12px] uppercase tracking-[0.16em] text-stone-400">
+                    {item.label}
+                  </p>
+                  <p className="mt-4 text-[24px] font-semibold leading-10 tracking-[-0.01em] text-stone-900">
+                    {item.title}
+                  </p>
+                  <p className="mt-5 text-[17px] leading-9 text-stone-700">{item.body}</p>
+                </div>
+              ))}
             </div>
 
-            <p style={expansionClosingStyle}>
-              属人技は構造化されることで、
-              <br />
-              個人の経験から、組織の再現可能な力へと転換される。
-            </p>
-          </section>
-
-          <div style={ctaWrap}>
-            <button onClick={() => setPage("corelp")} style={buttonStyle}>
-              TOPへ戻る
-            </button>
+            <div className="mt-16 text-center">
+              <p className="text-[18px] leading-9 text-stone-700">
+                属人技は構造化されることで、
+                <br />
+                個人の経験から、組織の再現可能な力へと転換される。
+              </p>
+              <button
+                onClick={() => setPage("corelp")}
+                className="mt-12 inline-flex min-h-11 items-center justify-center border border-stone-300 px-7 text-[12px] font-medium uppercase tracking-[0.16em] text-stone-700 transition hover:bg-white"
+              >
+                TOPへ戻る
+              </button>
+            </div>
           </div>
-        </div>
+        </section>
       </main>
+
       <FooterSection setPage={setPage} />
-    </>
+    </div>
   );
 }
-
-
-const mainStyle: React.CSSProperties = {
-  background: "#f7f5f2",
-  color: "#111",
-  minHeight: "100vh",
-  padding: "128px 24px 96px",
-};
-
-const containerStyle: React.CSSProperties = {
-  maxWidth: 1120,
-  margin: "0 auto",
-};
-
-const textStyle: React.CSSProperties = {
-  maxWidth: 720,
-  margin: "0 auto",
-  fontSize: 17,
-  lineHeight: 1.95,
-  color: "#404040",
-  textAlign: "center",
-};
-
-const noteStyle: React.CSSProperties = {
-  marginTop: 42,
-  fontSize: 18,
-  lineHeight: 1.9,
-  fontWeight: 700,
-  textAlign: "center",
-};
-
-const logicStyle: React.CSSProperties = {
-  marginTop: 36,
-  fontSize: 20,
-  lineHeight: 1.95,
-  textAlign: "center",
-  fontWeight: 600,
-};
-
-const emphasisBandStyle: React.CSSProperties = {
-  background: "#fff",
-  padding: "160px 24px 112px",
-};
-
-const baseSectionStyle: React.CSSProperties = {
-  background: "rgba(245,245,244,0.7)",
-  marginTop: 88,
-  padding: "56px 32px",
-  textAlign: "center",
-};
-
-const frameSectionStyle: React.CSSProperties = {
-  marginTop: 88,
-};
-
-const framePanelStyle: React.CSSProperties = {
-  background: "rgba(255,255,255,0.75)",
-  border: "1px solid rgba(0,0,0,0.05)",
-  borderRadius: 24,
-  padding: "56px 32px",
-};
-
-const baseBandStyle: React.CSSProperties = {
-  background: "rgba(245,245,244,0.6)",
-  marginTop: 88,
-  padding: "56px 32px",
-};
-
-const emphasisSectionStyle: React.CSSProperties = {
-  background: "rgba(245,245,244,0.7)",
-  marginTop: 88,
-  padding: "56px 32px",
-};
-
-const sectionStyle: React.CSSProperties = {
-  marginTop: 88,
-};
-
-const summaryBox: React.CSSProperties = {
-  maxWidth: 720,
-  margin: "0 auto",
-  padding: "10px 0 0",
-};
-
-const summaryText: React.CSSProperties = {
-  fontSize: 17,
-  lineHeight: 1.95,
-  color: "#404040",
-  margin: "0 0 12px",
-};
-
-const summaryTextLast: React.CSSProperties = {
-  fontSize: 17,
-  lineHeight: 1.95,
-  color: "#404040",
-  margin: 0,
-};
-
-const figureWrap: React.CSSProperties = {
-  marginTop: 32,
-  display: "grid",
-  gridTemplateColumns: "1fr 72px 1fr",
-  alignItems: "center",
-  gap: 24,
-};
-
-const figureColumn: React.CSSProperties = {
-  minHeight: 100,
-};
-
-const figureCenter: React.CSSProperties = {
-  textAlign: "center",
-  fontSize: 34,
-  opacity: 0.42,
-};
-
-const figureHeading: React.CSSProperties = {
-  textAlign: "center",
-  fontSize: 16,
-  letterSpacing: "0.06em",
-  marginBottom: 18,
-  opacity: 0.76,
-};
-
-const figureCard: React.CSSProperties = {
-  border: "1px solid rgba(0,0,0,0.05)",
-  padding: "26px 24px",
-  minHeight: 168,
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "center",
-  background: "rgba(255,255,255,0.72)",
-  borderRadius: 24,
-};
-
-const figureItem: React.CSSProperties = {
-  margin: "0 0 14px",
-  textAlign: "center",
-  fontSize: 20,
-  lineHeight: 1.75,
-};
-
-const figureArrow: React.CSSProperties = {
-  textAlign: "center",
-  fontSize: 30,
-  opacity: 0.34,
-  margin: "18px 0",
-};
-
-const figureOutcomeBox: React.CSSProperties = {
-  borderTop: "1px solid rgba(0,0,0,0.12)",
-  paddingTop: 18,
-};
-
-const figureOutcome: React.CSSProperties = {
-  margin: "0 0 10px",
-  textAlign: "center",
-  fontSize: 16,
-  lineHeight: 1.85,
-  opacity: 0.86,
-};
-
-const figureNote: React.CSSProperties = {
-  marginTop: 32,
-  fontSize: 17,
-  lineHeight: 1.95,
-  textAlign: "center",
-  color: "#404040",
-};
-
-const flowStyle: React.CSSProperties = {
-  textAlign: "center",
-  fontSize: 28,
-  lineHeight: 2.25,
-};
-
-const quoteBox: React.CSSProperties = {
-  maxWidth: 620,
-  margin: "30px auto",
-  padding: "10px 0",
-};
-
-const quoteStyle: React.CSSProperties = {
-  margin: 0,
-  fontSize: 20,
-  lineHeight: 1.9,
-  textAlign: "center",
-};
-
-const resultFlowWrap: React.CSSProperties = {
-  maxWidth: 560,
-  margin: "30px auto",
-  padding: "26px 22px",
-  borderTop: "1px solid rgba(0,0,0,0.12)",
-  borderBottom: "1px solid rgba(0,0,0,0.12)",
-};
-
-const resultFlowItem: React.CSSProperties = {
-  margin: "0 0 12px",
-  textAlign: "center",
-  fontSize: 22,
-  lineHeight: 1.9,
-};
-
-const expansionGridStyle: React.CSSProperties = {
-  marginTop: 38,
-  display: "grid",
-  gridTemplateColumns: "repeat(3, 1fr)",
-  gap: 24,
-  alignItems: "stretch",
-};
-
-const expansionCardStyle: React.CSSProperties = {
-  padding: "8px 16px",
-  minHeight: 0,
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "flex-start",
-};
-
-const expansionHeadStyle: React.CSSProperties = {
-  margin: "0 0 10px",
-  fontSize: 12,
-  letterSpacing: "0.12em",
-  textTransform: "uppercase",
-  opacity: 0.68,
-};
-
-const expansionLeadStyle: React.CSSProperties = {
-  margin: "0 0 16px",
-  fontSize: 24,
-  lineHeight: 1.65,
-  fontWeight: 600,
-  letterSpacing: "-0.01em",
-};
-
-const expansionBodyStyle: React.CSSProperties = {
-  margin: 0,
-  fontSize: 17,
-  lineHeight: 2,
-  opacity: 0.88,
-};
-
-const expansionClosingStyle: React.CSSProperties = {
-  marginTop: 36,
-  fontSize: 18,
-  lineHeight: 2,
-  textAlign: "center",
-  opacity: 0.86,
-};
-
-const ctaWrap: React.CSSProperties = {
-  marginTop: 108,
-  textAlign: "center",
-};
-
-const buttonStyle: React.CSSProperties = {
-  padding: "13px 26px",
-  border: "1px solid rgba(0,0,0,0.24)",
-  background: "transparent",
-  cursor: "pointer",
-  fontSize: 15,
-};

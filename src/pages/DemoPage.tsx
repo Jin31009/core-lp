@@ -77,10 +77,10 @@ function TabButton({
       disabled={!isReached}
       className={`flex min-w-[150px] flex-1 items-center gap-3 border-r border-stone-200 px-4 py-4 text-left transition last:border-r-0 ${
         isActive
-          ? "bg-[#f2eee6]"
+          ? "bg-white"
           : isReached
-            ? "bg-[#fbfaf7] hover:bg-[#f6f2eb]"
-            : "cursor-not-allowed bg-white opacity-60"
+            ? "bg-[#f7f4ee] hover:bg-white"
+            : "cursor-not-allowed bg-[#f7f4ee] opacity-60"
       }`}
     >
       <div
@@ -430,11 +430,11 @@ export default function DemoPage({ setPage }: DemoPageProps) {
     : null;
 
   return (
-    <div className="min-h-screen bg-[#f7f5f2] text-slate-900">
+    <div className="min-h-screen bg-[#f7f4ee] text-slate-900">
       {setPage && <SiteHeader setPage={setPage} currentPage="demo" />}
       <div className="mx-auto max-w-6xl px-6 py-8">
         {!hasEnteredFlow && (
-          <section className="bg-white px-6 pt-32 pb-20 md:px-10 md:pt-40 md:pb-24">
+          <section className="px-6 pt-28 pb-20 md:px-10 md:pt-36 md:pb-24">
             <div className="mx-auto max-w-[960px] text-center">
               <EditorialSectionHeader
                 label="PROTOTYPE"
@@ -458,18 +458,32 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                 この流れを、ひとつのケースでそのまま体験できます。
               </p>
 
+              <div className="mx-auto mt-12 max-w-3xl border-t border-stone-200">
+                {[
+                  "DEMOページも独立したツールではなく、LPの延長として読める構成に整えています。",
+                  "観察から記録までを、誌面を読み進めるように順番に体験できます。",
+                ].map((item) => (
+                  <p
+                    key={item}
+                    className="border-b border-stone-200 py-5 text-[16px] leading-8 text-stone-700"
+                  >
+                    {item}
+                  </p>
+                ))}
+              </div>
+
               <div className="mt-8 flex flex-wrap justify-center gap-3">
                 <button
                   onClick={startFlow}
-                  className="inline-flex min-h-11 items-center justify-center rounded-full bg-neutral-900 px-6 text-[15px] font-medium text-white transition hover:bg-neutral-800"
+                  className="inline-flex min-h-11 items-center justify-center bg-neutral-900 px-7 text-[12px] font-medium uppercase tracking-[0.16em] text-white transition hover:opacity-90"
                 >
                   Step1から始める
                 </button>
 
                 {setPage && (
                   <button
-                    onClick={() => setPage("top")}
-                    className="inline-flex min-h-11 items-center justify-center rounded-full border border-neutral-300 bg-white px-6 text-[15px] font-medium text-neutral-800 transition hover:bg-neutral-50"
+                    onClick={() => setPage("corelp")}
+                    className="inline-flex min-h-11 items-center justify-center border border-neutral-300 px-7 text-[12px] font-medium uppercase tracking-[0.16em] text-neutral-800 transition hover:bg-white"
                   >
                     TOPへ戻る
                   </button>
@@ -481,7 +495,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
 
         {hasEnteredFlow && (
           <>
-            <div className="sticky top-0 z-20 mt-2 overflow-hidden rounded-[16px] border border-stone-200 bg-[#fbfaf7]/95 shadow-[0_4px_16px_rgba(15,23,42,0.03)] backdrop-blur">
+            <div className="sticky top-20 z-20 mt-6 border-y border-stone-200 bg-[#f7f4ee]/95 backdrop-blur">
               <div className="flex flex-wrap items-stretch">
                 <TabButton
                   stepNo="01"
@@ -525,7 +539,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                 />
               </div>
 
-              <div className="border-t border-stone-200 bg-[#f7f4ee] px-5 py-4">
+              <div className="border-t border-stone-200 bg-white px-5 py-4">
                 <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
                   Current Step
                 </p>
@@ -538,7 +552,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
               </div>
             </div>
 
-            <div className="mt-8">
+            <div className="mt-10">
               {selectedStep === 1 && (
                 <InputSection
                   text={observationRaw}

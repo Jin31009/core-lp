@@ -1,6 +1,6 @@
 export default function ExpansionSection() {
   return (
-    <section className="bg-white px-6 py-20 md:px-10 md:py-24">
+    <section className="bg-white px-6 py-28 md:px-10 md:py-28">
       <div className="mx-auto max-w-6xl">
         <div className="max-w-3xl">
           <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.28em] text-stone-400">

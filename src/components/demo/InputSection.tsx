@@ -188,10 +188,10 @@ export default function InputSection({
 }: InputSectionProps) {
   const [showSecondaryInputs, setShowSecondaryInputs] = useState(false);
   const sectionShell =
-    "overflow-hidden rounded-[22px] border border-stone-200 bg-[#fbfaf7] shadow-[0_10px_30px_rgba(15,23,42,0.06)]";
+    "border-y border-stone-200 bg-white";
 
   const sectionHeader =
-    "border-b border-stone-200 bg-[linear-gradient(180deg,#ece8de_0%,#e6e1d6_100%)] px-6 py-6 sm:px-8";
+    "border-b border-stone-200 px-6 py-8 sm:px-8";
 
   const sectionTitleClass =
     "mt-3 text-[34px] font-semibold tracking-[-0.02em] text-slate-900";
@@ -200,13 +200,13 @@ export default function InputSection({
     "mt-4 max-w-4xl text-[18px] leading-9 text-stone-700";
 
   const softCard =
-    "rounded-[16px] border border-stone-200 bg-[#f8f5ef] p-6";
+    "border-t border-stone-200 bg-[#f7f4ee] p-6";
 
   const panelCard =
-    "rounded-[16px] border border-stone-200 bg-white p-6 shadow-[0_3px_12px_rgba(15,23,42,0.035)]";
+    "border-t border-stone-200 bg-white py-6";
 
   const contextWrap =
-    "rounded-[18px] border border-stone-200 bg-[#f3efe7] p-6 shadow-[0_6px_18px_rgba(15,23,42,0.04)]";
+    "border-t border-stone-300 bg-[#f3efe7] p-6";
 
   const primaryButton =
     "w-full rounded-[14px] bg-slate-900 py-4 text-[16px] font-medium text-white transition hover:bg-slate-800";

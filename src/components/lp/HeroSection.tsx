@@ -4,7 +4,7 @@ type HeroSectionProps = {
 
 export default function HeroSection({ onOpenDemo }: HeroSectionProps) {
   return (
-    <section className="border-b border-stone-200 bg-[#f2ede3] px-6 py-28 md:px-10 md:py-36">
+    <section className="border-b border-stone-200 bg-[#f2ede3] px-6 py-40 md:px-10 md:py-40">
       <div className="mx-auto max-w-6xl">
         <div className="mb-12 border-b border-stone-200 pb-4">
           <p className="text-[11px] font-medium uppercase tracking-[0.30em] text-stone-400">
@@ -12,19 +12,30 @@ export default function HeroSection({ onOpenDemo }: HeroSectionProps) {
           </p>
         </div>
 
-        <div className="max-w-4xl">
-          <h1 className="text-5xl font-semibold leading-[1.12] tracking-[-0.03em] text-stone-900 md:text-7xl">
-            関係の構造に立脚して、
+        <div className="mx-auto max-w-4xl text-center">
+          <p className="mb-5 text-[11px] font-medium uppercase tracking-[0.22em] text-stone-400">
+            序文
+          </p>
+
+          <h1 className="text-center text-[3.8rem] font-semibold leading-[1.16] tracking-[-0.03em] text-stone-900 md:text-[6rem]">
+            なぜ、伝えているのに
             <br />
-            広報を
-            <br />
-            組み立て直しませんか？
+            伝わらないのか。
           </h1>
 
-          <p className="mt-10 max-w-xl text-[16px] leading-9 text-stone-600">
-            広報は、伝えることから始まっている。
-            しかし本来は、関係の状態を捉えることから始まる。
-          </p>
+          <div className="mx-auto mt-16 max-w-xl text-[16px] leading-[1.95] text-stone-600 md:text-[17px]">
+            <p>伝えているはずなのに、伝わらない。</p>
+            <p className="mt-6">
+              正しく対応しているつもりなのに、
+              <br />
+              関係はなぜか積み上がっていかない。
+            </p>
+            <p className="mt-6">
+              そのズレは、やり方ではなく、
+              <br />
+              見方そのものにあるのかもしれない。
+            </p>
+          </div>
 
           <div className="mt-14">
             <button

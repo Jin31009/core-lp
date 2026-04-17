@@ -119,18 +119,18 @@ const navItemActiveStyle: React.CSSProperties = {
 
 const demoItemStyle: React.CSSProperties = {
   border: "1px solid rgba(0,0,0,0.16)",
-  background: "#111",
-  color: "#fff",
-  padding: "10px 16px",
+  background: "rgba(255,255,255,0.72)",
+  color: "#262626",
+  padding: "10px 14px",
   margin: 0,
   cursor: "pointer",
   borderRadius: 999,
-  fontSize: 15,
+  fontSize: 14,
   fontWeight: 500,
   minHeight: 44,
 };
 
 const demoItemActiveStyle: React.CSSProperties = {
-  background: "#262626",
+  background: "rgba(0,0,0,0.08)",
   borderColor: "rgba(0,0,0,0.24)",
 };

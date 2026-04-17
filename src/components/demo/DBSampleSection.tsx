@@ -12,10 +12,10 @@ export default function DBSampleSection({
   innerRef,
 }: DBSampleSectionProps) {
   const sectionShell =
-    "overflow-hidden rounded-[22px] border border-stone-200 bg-[#fbfaf7] shadow-[0_12px_36px_rgba(15,23,42,0.06)]";
+    "border-y border-stone-200 bg-white";
 
   const sectionHeader =
-    "border-b border-stone-200 bg-[linear-gradient(180deg,#ede8dd_0%,#e6e1d6_100%)] px-6 py-7 sm:px-8";
+    "border-b border-stone-200 px-6 py-8 sm:px-8";
 
   const sectionTitleClass =
     "mt-3 text-[36px] font-semibold tracking-[-0.02em] text-slate-900";
@@ -24,10 +24,10 @@ export default function DBSampleSection({
     "mt-4 max-w-4xl text-[18px] leading-9 text-stone-700";
 
   const tableCard =
-    "rounded-[18px] border border-stone-200 bg-white p-6 shadow-[0_3px_14px_rgba(15,23,42,0.04)]";
+    "border-t border-stone-200 bg-white py-6";
 
   const blockCard =
-    "rounded-[18px] border border-stone-200 bg-white p-6 shadow-[0_3px_14px_rgba(15,23,42,0.04)]";
+    "border-t border-stone-200 bg-[#f7f4ee] py-6";
 
   const row =
     "grid grid-cols-[140px_1fr] gap-4 border-b border-stone-200 py-4 last:border-b-0";
@@ -39,7 +39,7 @@ export default function DBSampleSection({
     "text-[15px] leading-8 text-stone-800";
 
   const secondaryButton =
-    "rounded-[14px] bg-violet-600 px-5 py-4 text-[15px] font-medium text-white transition hover:bg-violet-700";
+    "border border-stone-300 bg-white px-5 py-4 text-[12px] font-medium uppercase tracking-[0.14em] text-stone-700 transition hover:bg-[#f7f4ee]";
 
   const resolvedAction = record && record.acex_labels.length > 0
     ? record.acex_labels.map((label, index) => {

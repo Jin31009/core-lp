@@ -8,6 +8,39 @@ type Props = {
   setPage: (page: string) => void;
 };
 
+const whoItems = [
+  {
+    title: "違和感を持っている方",
+    body: "日々の現場の中で、小さな違和感を感じている方。",
+  },
+  {
+    title: "限界を感じている方",
+    body: "広報やコミュニケーションが、情報だけでは扱えないと感じている方。",
+  },
+  {
+    title: "小さく試せる方",
+    body: "無理のない範囲で、小さく試す環境をお持ちの方。",
+  },
+];
+
+const participationItems = [
+  {
+    label: "01",
+    title: "話を聞いてみる",
+    body: "まずは内容を知りたい、という方。",
+  },
+  {
+    label: "02",
+    title: "小さく試してみる",
+    body: "ご自身の現場で、一部だけ試してみたい方。",
+  },
+  {
+    label: "03",
+    title: "一緒に設計する",
+    body: "継続的に関わりながら、構造を整えていきたい方。",
+  },
+];
+
 export default function ContactPage({ setPage }: Props) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -22,12 +55,12 @@ export default function ContactPage({ setPage }: Props) {
   };
 
   return (
-    <>
+    <div className="min-h-screen bg-[#f7f4ee] text-stone-900">
       <SiteHeader setPage={setPage} currentPage="contact" />
 
-      <main style={mainStyle}>
-        <div style={containerStyle}>
-          <section style={emphasisSectionStyle}>
+      <main className="pt-20">
+        <section className="px-6 py-24 md:px-10 md:py-32">
+          <div className="mx-auto max-w-5xl">
             <EditorialSectionHeader
               label="CONTACT"
               marker="none"
@@ -39,13 +72,14 @@ export default function ContactPage({ setPage }: Props) {
                   一緒に試していく入口
                 </>
               }
-              summary="このページでは、RA-SS を小さく試しながら対話を始めるための入り口を整理しています。"
+              summary="このページは、LPの延長として、RA-SS を小さく試しながら対話を始めるための入口を整理しています。"
             />
-          </section>
+          </div>
+        </section>
 
-          <div style={baseBandStyle}>
-            {/* Opening */}
-            <section style={sectionStyle}>
+        <section className="border-y border-stone-200 bg-white px-6 py-20 md:px-10 md:py-24">
+          <div className="mx-auto max-w-5xl space-y-20">
+            <section>
               <EditorialSectionHeader
                 label="CONTACT"
                 marker="none"
@@ -59,29 +93,20 @@ export default function ContactPage({ setPage }: Props) {
                 summary="完成品を渡すのではなく、現場との往復を通じて少しずつ形にしていく前提を共有します。"
               />
 
-              <div style={textBlockStyle}>
-                <p style={textStyle}>
-                  広報を、関係の状態として捉えるという試みは、
-                  <br />
-                  まだ完成されたものではありません。
-                </p>
-
-                <p style={textStyle}>
-                  むしろ、現場との往復の中で、
-                  <br />
-                  少しずつ形になりつつある段階にあります。
-                </p>
-
-                <p style={textStyle}>
-                  だからこそ、
-                  <br />
-                  一緒に試しながら考えていく余地があります。
-                </p>
+              <div className="mx-auto mt-14 max-w-3xl border-t border-stone-200">
+                {[
+                  "広報を、関係の状態として捉えるという試みは、まだ完成されたものではありません。",
+                  "むしろ、現場との往復の中で、少しずつ形になりつつある段階にあります。",
+                  "だからこそ、一緒に試しながら考えていく余地があります。",
+                ].map((item) => (
+                  <p key={item} className="border-b border-stone-200 py-5 text-[17px] leading-9 text-stone-700">
+                    {item}
+                  </p>
+                ))}
               </div>
             </section>
 
-            {/* What is PoC */}
-            <section style={sectionStyle}>
+            <section>
               <EditorialSectionHeader
                 label="STRUCTURE"
                 marker="lines"
@@ -95,88 +120,58 @@ export default function ContactPage({ setPage }: Props) {
                 summary="ここで確かめたいのは、関係の状態をどう観察し、どう扱えるかという構造そのものです。"
               />
 
-              <div style={textBlockStyle}>
-                <p style={textStyle}>
-                  ここで行いたいのは、
-                  <br />
-                  関係の状態を観察すること、
-                  <br />
-                  それを構造として整理すること、
-                  <br />
-                  そこから次の関係行為を考えることです。
-                </p>
-
-                <p style={textStyle}>
-                  RA-SS DEMOは、そのための道具として機能しますが、
-                  <br />
-                  答えを代わりに出すものではありません。
-                </p>
-
-                <p style={textStyle}>
-                  あくまで、
-                  <br />
-                  関係をどう扱えるかを確かめるための
-                  <br />
-                  試行の場です。
-                </p>
+              <div className="mx-auto mt-14 max-w-3xl border-t border-stone-200">
+                {[
+                  "ここで行いたいのは、関係の状態を観察すること、それを構造として整理すること、そこから次の関係行為を考えることです。",
+                  "RA-SS DEMOは、そのための道具として機能しますが、答えを代わりに出すものではありません。",
+                  "あくまで、関係をどう扱えるかを確かめるための試行の場です。",
+                ].map((item) => (
+                  <p key={item} className="border-b border-stone-200 py-5 text-[17px] leading-9 text-stone-700">
+                    {item}
+                  </p>
+                ))}
               </div>
-            </section>
-
-            {/* Who */}
-            <section style={sectionStyle}>
-              <EditorialSectionHeader
-                label="CONTACT"
-                marker="none"
-                title={
-                  <>
-                    このような方と、
-                    <br />
-                    ご一緒できると嬉しいです
-                  </>
-                }
-                summary="大きな導入前提ではなく、小さく違和感を持ち寄れる方との対話を想定しています。"
-              />
-
-              <div style={cardWrapStyle}>
-                <div style={cardStyle}>
-                  <p style={cardTitleStyle}>違和感を持っている方</p>
-                  <p style={cardTextStyle}>
-                    日々の現場の中で、
-                    <br />
-                    小さな違和感を感じている方
-                  </p>
-                </div>
-
-                <div style={cardStyle}>
-                  <p style={cardTitleStyle}>限界を感じている方</p>
-                  <p style={cardTextStyle}>
-                    広報やコミュニケーションが、
-                    <br />
-                    情報だけでは扱えないと感じている方
-                  </p>
-                </div>
-
-                <div style={cardStyle}>
-                  <p style={cardTitleStyle}>小さく試せる方</p>
-                  <p style={cardTextStyle}>
-                    無理のない範囲で、
-                    <br />
-                    小さく試す環境をお持ちの方
-                  </p>
-                </div>
-              </div>
-
-              <p style={textStyle}>
-                特別な準備は必要ありません。
-                <br />
-                ただ、「少し試してみたい」という関心があれば十分です。
-              </p>
             </section>
           </div>
+        </section>
 
-          <div style={frameBandStyle}>
-            {/* How it works */}
-            <section style={sectionStyle}>
+        <section className="bg-[#f3efe7] px-6 py-20 md:px-10 md:py-24">
+          <div className="mx-auto max-w-6xl">
+            <EditorialSectionHeader
+              label="CONTACT"
+              marker="none"
+              title={
+                <>
+                  このような方と、
+                  <br />
+                  ご一緒できると嬉しいです
+                </>
+              }
+              summary="大きな導入前提ではなく、小さく違和感を持ち寄れる方との対話を想定しています。"
+            />
+
+            <div className="mt-16 grid gap-10 md:grid-cols-3">
+              {whoItems.map((item) => (
+                <div key={item.title} className="border-t border-stone-300 pt-5">
+                  <p className="text-[24px] font-semibold leading-10 tracking-[-0.01em] text-stone-900">
+                    {item.title}
+                  </p>
+                  <p className="mt-5 text-[17px] leading-9 text-stone-700">{item.body}</p>
+                </div>
+              ))}
+            </div>
+
+            <p className="mt-12 text-center text-[17px] leading-9 text-stone-700">
+              特別な準備は必要ありません。
+              <br />
+              ただ、「少し試してみたい」という関心があれば十分です。
+            </p>
+          </div>
+        </section>
+
+        <section className="border-y border-stone-200 bg-white px-6 py-20 md:px-10 md:py-24">
+          <div className="mx-auto max-w-5xl space-y-20">
+            <section>
               <EditorialSectionHeader
                 label="PROTOTYPE"
                 marker="triangle"
@@ -190,25 +185,22 @@ export default function ContactPage({ setPage }: Props) {
                 summary="まずは小さなケースを扱い、DEMO を通して整理し、その場で一緒に振り返ります。"
               />
 
-              <div style={flowWrapStyle}>
-                <div style={flowItemStyle}>小さなケースを扱う</div>
-                <div style={flowArrowStyle}>↓</div>
-                <div style={flowItemStyle}>DEMOを使って整理する</div>
-                <div style={flowArrowStyle}>↓</div>
-                <div style={flowItemStyle}>一緒に振り返る</div>
+              <div className="mx-auto mt-14 max-w-xl border-y border-stone-200 py-6 text-center text-[22px] leading-[1.9] text-stone-900">
+                <div>小さなケースを扱う</div>
+                <div className="opacity-35">↓</div>
+                <div>DEMOを使って整理する</div>
+                <div className="opacity-35">↓</div>
+                <div>一緒に振り返る</div>
               </div>
 
-              <p style={textStyle}>
+              <p className="mt-10 text-center text-[17px] leading-9 text-stone-700">
                 大きな導入や設計は行いません。
                 <br />
-                まずは小さく始め、
-                <br />
-                その中で見えてきたものを少しずつ次の形にしていきます。
+                まずは小さく始め、その中で見えてきたものを少しずつ次の形にしていきます。
               </p>
             </section>
 
-            {/* Participation */}
-            <section style={sectionStyle}>
+            <section>
               <EditorialSectionHeader
                 label="CONTACT"
                 marker="none"
@@ -222,145 +214,146 @@ export default function ContactPage({ setPage }: Props) {
                 summary="話を聞くところから、小さく試すこと、一緒に設計することまで、関わり方は段階的に選べます。"
               />
 
-              <div style={participationGridStyle}>
-                <div style={participationCardStyle}>
-                  <p style={participationNumberStyle}>01</p>
-                  <p style={participationTitleStyle}>話を聞いてみる</p>
-                  <p style={participationTextStyle}>
-                    まずは内容を知りたい、
-                    <br />
-                    という方
-                  </p>
-                </div>
-
-                <div style={participationCardStyle}>
-                  <p style={participationNumberStyle}>02</p>
-                  <p style={participationTitleStyle}>小さく試してみる</p>
-                  <p style={participationTextStyle}>
-                    ご自身の現場で、
-                    <br />
-                    一部だけ試してみたい方
-                  </p>
-                </div>
-
-                <div style={participationCardStyle}>
-                  <p style={participationNumberStyle}>03</p>
-                  <p style={participationTitleStyle}>一緒に設計する</p>
-                  <p style={participationTextStyle}>
-                    継続的に関わりながら、
-                    <br />
-                    構造を整えていきたい方
-                  </p>
-                </div>
+              <div className="mt-16 grid gap-10 md:grid-cols-3">
+                {participationItems.map((item) => (
+                  <div key={item.label} className="border-t border-stone-200 pt-5">
+                    <p className="text-[11px] font-medium tracking-[0.22em] text-stone-400">
+                      {item.label}
+                    </p>
+                    <p className="mt-4 text-[24px] font-semibold leading-10 tracking-[-0.01em] text-stone-900">
+                      {item.title}
+                    </p>
+                    <p className="mt-5 text-[17px] leading-9 text-stone-700">{item.body}</p>
+                  </div>
+                ))}
               </div>
 
-              <p style={textStyle}>
+              <p className="mt-12 text-center text-[17px] leading-9 text-stone-700">
                 どの段階からでも構いません。
                 <br />
                 無理のない形で関わっていただければ十分です。
               </p>
             </section>
+          </div>
+        </section>
 
-            {/* Form */}
-            <section style={sectionStyle}>
-              <EditorialSectionHeader
-                label="CONTACT"
-                marker="none"
-                title={
-                  <>
-                    小さく共有いただければ
-                    <br />
-                    大丈夫です
-                  </>
-                }
-                summary="まずは簡単な共有だけで十分です。そこから無理のない対話を始めます。"
-              />
+        <section className="bg-[#f3efe7] px-6 py-20 md:px-10 md:py-24">
+          <div className="mx-auto max-w-4xl">
+            <EditorialSectionHeader
+              label="CONTACT"
+              marker="none"
+              title={
+                <>
+                  小さく共有いただければ
+                  <br />
+                  大丈夫です
+                </>
+              }
+              summary="まずは簡単な共有だけで十分です。そこから無理のない対話を始めます。"
+            />
 
-              {!submitted ? (
-                <form onSubmit={handleSubmit} style={formStyle}>
-                  <p style={formLeadStyle}>
-                    ご関心をお持ちいただけた方は、メールアドレスをご記入ください。
-                    <br />
-                    詳細のご案内をお送りします。
-                  </p>
+            {!submitted ? (
+              <form onSubmit={handleSubmit} className="mx-auto mt-16 max-w-2xl border-t border-stone-300 pt-8">
+                <p className="text-center text-[16px] leading-8 text-stone-700">
+                  ご関心をお持ちいただけた方は、メールアドレスをご記入ください。
+                  <br />
+                  詳細のご案内をお送りします。
+                </p>
 
-                  <div style={fieldStyle}>
-                    <label style={fieldLabelStyle}>お名前（または仮名）</label>
+                <div className="mt-10 space-y-8">
+                  <label className="block">
+                    <span className="block text-[13px] uppercase tracking-[0.14em] text-stone-500">
+                      お名前（または仮名）
+                    </span>
                     <input
                       type="text"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="例）黒江 仁"
-                      style={inputStyle}
+                      className="mt-3 w-full border-0 border-b border-stone-400 bg-transparent px-0 py-3 text-[16px] outline-none placeholder:text-stone-400"
                     />
-                  </div>
+                  </label>
 
-                  <div style={fieldStyle}>
-                    <label style={fieldLabelStyle}>メールアドレス</label>
+                  <label className="block">
+                    <span className="block text-[13px] uppercase tracking-[0.14em] text-stone-500">
+                      メールアドレス
+                    </span>
                     <input
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="example@hospital.jp"
-                      style={inputStyle}
+                      className="mt-3 w-full border-0 border-b border-stone-400 bg-transparent px-0 py-3 text-[16px] outline-none placeholder:text-stone-400"
                     />
-                  </div>
+                  </label>
 
-                  <div style={fieldStyle}>
-                    <label style={fieldLabelStyle}>所属（任意）</label>
+                  <label className="block">
+                    <span className="block text-[13px] uppercase tracking-[0.14em] text-stone-500">
+                      所属（任意）
+                    </span>
                     <input
                       type="text"
                       value={organization}
                       onChange={(e) => setOrganization(e.target.value)}
                       placeholder="例）医療機関名 / 団体名 / 個人"
-                      style={inputStyle}
+                      className="mt-3 w-full border-0 border-b border-stone-400 bg-transparent px-0 py-3 text-[16px] outline-none placeholder:text-stone-400"
                     />
-                  </div>
+                  </label>
 
-                  <div style={fieldStyle}>
-                    <label style={fieldLabelStyle}>関わり方</label>
+                  <label className="block">
+                    <span className="block text-[13px] uppercase tracking-[0.14em] text-stone-500">
+                      関わり方
+                    </span>
                     <select
                       value={participation}
                       onChange={(e) => setParticipation(e.target.value)}
-                      style={selectStyle}
+                      className="mt-3 w-full border-0 border-b border-stone-400 bg-transparent px-0 py-3 text-[16px] outline-none"
                     >
                       <option>話を聞いてみる</option>
                       <option>小さく試してみる</option>
                       <option>一緒に設計する</option>
                     </select>
-                  </div>
+                  </label>
 
-                  <div style={fieldStyle}>
-                    <label style={fieldLabelStyle}>一言（任意）</label>
+                  <label className="block">
+                    <span className="block text-[13px] uppercase tracking-[0.14em] text-stone-500">
+                      一言（任意）
+                    </span>
                     <textarea
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
                       placeholder="気になっていること、試してみたいことなど"
-                      style={textareaStyle}
+                      className="mt-3 min-h-40 w-full border border-stone-300 bg-white/40 px-4 py-4 text-[16px] leading-8 outline-none placeholder:text-stone-400"
                     />
-                  </div>
-
-                  <div style={formButtonWrapStyle}>
-                    <button type="submit" style={buttonStyle}>
-                      内容を共有する
-                    </button>
-                  </div>
-                </form>
-              ) : (
-                <div style={thanksBoxStyle}>
-                  <p style={thanksTitleStyle}>ありがとうございます</p>
-                  <p style={thanksTextStyle}>
-                    内容を受け取りました。
-                    <br />
-                    ここから、無理のない形で対話を始めていければと思います。
-                  </p>
+                  </label>
                 </div>
-              )}
-            </section>
-          </div>
 
-          {/* Closing */}
-          <section style={closingEmphasisStyle}>
+                <div className="mt-10 text-center">
+                  <button
+                    type="submit"
+                    className="inline-flex min-h-11 items-center justify-center bg-stone-900 px-7 text-[12px] font-medium uppercase tracking-[0.16em] text-white transition hover:opacity-90"
+                  >
+                    内容を共有する
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <div className="mx-auto mt-16 max-w-2xl border-t border-stone-300 pt-8 text-center">
+                <p className="text-[28px] font-semibold tracking-[-0.02em] text-stone-900">
+                  ありがとうございます
+                </p>
+                <p className="mt-6 text-[17px] leading-9 text-stone-700">
+                  内容を受け取りました。
+                  <br />
+                  ここから、無理のない形で対話を始めていければと思います。
+                </p>
+              </div>
+            )}
+          </div>
+        </section>
+
+        <section className="border-y border-stone-200 bg-white px-6 py-20 md:px-10 md:py-24">
+          <div className="mx-auto max-w-4xl text-center">
             <EditorialSectionHeader
               label="CONTACT"
               marker="none"
@@ -374,298 +367,29 @@ export default function ContactPage({ setPage }: Props) {
               summary="ここまでの蓄積はありますが、実装可能な形にするには現場との往復が欠かせません。"
             />
 
-            <div style={textBlockStyle}>
-              <p style={textStyle}>
-                ここまでの積み重ねはありますが、
-                <br />
-                まだ十分とは言えません。
-              </p>
-
-              <p style={textStyle}>
-                だからこそ、
-                <br />
-                現場とともに試しながら、
-                <br />
-                関係の構造として扱える形を整えていきたいと考えています。
-              </p>
-
-              <p style={textStyle}>
-                このページは、
-                <br />
-                その最初の接点のひとつです。
-              </p>
+            <div className="mx-auto mt-14 max-w-3xl border-t border-stone-200">
+              {[
+                "ここまでの積み重ねはありますが、まだ十分とは言えません。",
+                "だからこそ、現場とともに試しながら、関係の構造として扱える形を整えていきたいと考えています。",
+                "このページは、その最初の接点のひとつです。",
+              ].map((item) => (
+                <p key={item} className="border-b border-stone-200 py-5 text-[17px] leading-9 text-stone-700">
+                  {item}
+                </p>
+              ))}
             </div>
-          </section>
 
-          <div style={bottomNavStyle}>
-            <button onClick={() => setPage("corelp")} style={ghostButtonStyle}>
+            <button
+              onClick={() => setPage("corelp")}
+              className="mt-12 inline-flex min-h-11 items-center justify-center border border-stone-300 px-7 text-[12px] font-medium uppercase tracking-[0.16em] text-stone-700 transition hover:bg-[#f7f4ee]"
+            >
               TOPへ戻る
             </button>
           </div>
-        </div>
+        </section>
       </main>
+
       <FooterSection setPage={setPage} />
-    </>
+    </div>
   );
 }
-
-
-/* ===== styles ===== */
-
-const mainStyle: React.CSSProperties = {
-  background: "#f7f5f2",
-  color: "#111",
-  minHeight: "100vh",
-  padding: "128px 24px 96px",
-};
-
-const containerStyle: React.CSSProperties = {
-  maxWidth: 1120,
-  margin: "0 auto",
-};
-
-const emphasisSectionStyle: React.CSSProperties = {
-  background: "#fff",
-  padding: "160px 24px 112px",
-};
-
-const baseBandStyle: React.CSSProperties = {
-  background: "rgba(245,245,244,0.7)",
-  marginTop: 88,
-  padding: "56px 32px",
-};
-
-const frameBandStyle: React.CSSProperties = {
-  background: "#fff",
-  marginTop: 88,
-  padding: "56px 32px",
-};
-
-const closingEmphasisStyle: React.CSSProperties = {
-  background: "rgba(245,245,244,0.7)",
-  marginTop: 88,
-  padding: "56px 32px",
-};
-
-const sectionStyle: React.CSSProperties = {
-  marginTop: 88,
-};
-
-const textBlockStyle: React.CSSProperties = {
-  maxWidth: 720,
-  margin: "0 auto",
-};
-
-const textStyle: React.CSSProperties = {
-  fontSize: 17,
-  lineHeight: 1.95,
-  color: "#404040",
-  textAlign: "center",
-  margin: "0 0 14px",
-};
-
-const cardWrapStyle: React.CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(3, 1fr)",
-  gap: 24,
-  marginTop: 36,
-  marginBottom: 28,
-};
-
-const cardStyle: React.CSSProperties = {
-  padding: "10px 14px",
-  minHeight: 0,
-};
-
-const cardTitleStyle: React.CSSProperties = {
-  margin: "0 0 14px",
-  fontSize: 22,
-  lineHeight: 1.6,
-  textAlign: "center",
-};
-
-const cardTextStyle: React.CSSProperties = {
-  margin: 0,
-  fontSize: 16,
-  lineHeight: 1.9,
-  opacity: 0.84,
-  textAlign: "center",
-};
-
-const flowWrapStyle: React.CSSProperties = {
-  maxWidth: 560,
-  margin: "30px auto",
-  padding: "26px 22px",
-  borderTop: "1px solid rgba(0,0,0,0.08)",
-  borderBottom: "1px solid rgba(0,0,0,0.08)",
-};
-
-const flowItemStyle: React.CSSProperties = {
-  margin: "0 0 12px",
-  textAlign: "center",
-  fontSize: 22,
-  lineHeight: 1.9,
-};
-
-const flowArrowStyle: React.CSSProperties = {
-  margin: "0 0 12px",
-  textAlign: "center",
-  fontSize: 24,
-  lineHeight: 1.6,
-  opacity: 0.32,
-};
-
-const participationGridStyle: React.CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(3, 1fr)",
-  gap: 24,
-  marginTop: 36,
-  marginBottom: 28,
-};
-
-const participationCardStyle: React.CSSProperties = {
-  padding: "10px 14px",
-  minHeight: 0,
-};
-
-const participationNumberStyle: React.CSSProperties = {
-  margin: "0 0 10px",
-  fontSize: 12,
-  letterSpacing: "0.12em",
-  textTransform: "uppercase",
-  opacity: 0.62,
-  textAlign: "center",
-};
-
-const participationTitleStyle: React.CSSProperties = {
-  margin: "0 0 14px",
-  fontSize: 22,
-  lineHeight: 1.6,
-  textAlign: "center",
-};
-
-const participationTextStyle: React.CSSProperties = {
-  margin: 0,
-  fontSize: 16,
-  lineHeight: 1.9,
-  opacity: 0.86,
-  textAlign: "center",
-};
-
-const formStyle: React.CSSProperties = {
-  maxWidth: 640,
-  margin: "30px auto 0",
-  padding: "34px 30px",
-  border: "1px solid rgba(0,0,0,0.05)",
-  background: "rgba(255,255,255,0.75)",
-  borderRadius: 28,
-};
-
-const formLeadStyle: React.CSSProperties = {
-  margin: "0 0 24px",
-  fontSize: 16,
-  lineHeight: 1.9,
-  color: "#404040",
-  textAlign: "center",
-};
-
-const fieldStyle: React.CSSProperties = {
-  marginBottom: 22,
-};
-
-const fieldLabelStyle: React.CSSProperties = {
-  display: "block",
-  fontSize: 14,
-  marginBottom: 10,
-  opacity: 0.78,
-};
-
-const inputStyle: React.CSSProperties = {
-  width: "100%",
-  padding: "14px 16px",
-  fontSize: 16,
-  border: "1px solid rgba(0,0,0,0.14)",
-  background: "#fff",
-  outline: "none",
-  boxSizing: "border-box",
-};
-
-const selectStyle: React.CSSProperties = {
-  width: "100%",
-  padding: "14px 16px",
-  fontSize: 16,
-  border: "1px solid rgba(0,0,0,0.14)",
-  background: "#fff",
-  outline: "none",
-  boxSizing: "border-box",
-};
-
-const textareaStyle: React.CSSProperties = {
-  width: "100%",
-  minHeight: 160,
-  padding: "14px 16px",
-  fontSize: 16,
-  lineHeight: 1.8,
-  border: "1px solid rgba(0,0,0,0.14)",
-  background: "#fff",
-  outline: "none",
-  resize: "vertical",
-  boxSizing: "border-box",
-};
-
-const formButtonWrapStyle: React.CSSProperties = {
-  marginTop: 34,
-  textAlign: "center",
-};
-
-const buttonStyle: React.CSSProperties = {
-  minHeight: 44,
-  padding: "0 24px",
-  border: "1px solid #171717",
-  background: "#171717",
-  cursor: "pointer",
-  fontSize: 15,
-  fontWeight: 500,
-  color: "#fff",
-  borderRadius: 999,
-};
-
-const thanksBoxStyle: React.CSSProperties = {
-  maxWidth: 720,
-  margin: "30px auto 0",
-  padding: "34px 30px",
-  border: "1px solid rgba(0,0,0,0.05)",
-  background: "rgba(255,255,255,0.75)",
-  borderRadius: 28,
-  textAlign: "center",
-};
-
-const thanksTitleStyle: React.CSSProperties = {
-  margin: "0 0 16px",
-  fontSize: 24,
-  lineHeight: 1.6,
-};
-
-const thanksTextStyle: React.CSSProperties = {
-  margin: 0,
-  fontSize: 17,
-  lineHeight: 1.95,
-  color: "#404040",
-};
-
-const bottomNavStyle: React.CSSProperties = {
-  marginTop: 110,
-  textAlign: "center",
-};
-
-const ghostButtonStyle: React.CSSProperties = {
-  minHeight: 44,
-  padding: "0 24px",
-  border: "1px solid #d4d4d4",
-  background: "#fff",
-  cursor: "pointer",
-  fontSize: 15,
-  fontWeight: 500,
-  color: "#262626",
-  borderRadius: 999,
-};

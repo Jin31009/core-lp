@@ -1,4 +1,5 @@
 
+import { trackEvent } from "../../lib/analytics";
 
 type Props = {
   setPage: (page: string) => void;
@@ -6,7 +7,7 @@ type Props = {
 
 export default function CtaSection({ setPage }: Props) {
   return (
-    <section style={sectionStyle}>
+    <section id="cta" className="scroll-mt-24" style={sectionStyle}>
       <div style={containerStyle}>
         <div style={labelRowStyle}>
           <span style={arrowStyle}>→</span>
@@ -58,8 +59,18 @@ export default function CtaSection({ setPage }: Props) {
           </div>
         </div>
 
+        <p style={closingNoteStyle}>
+          その一歩が、属人的だった実践を構造へ変える始まりになります。
+        </p>
+
         <div style={ctaWrapStyle}>
-          <button onClick={() => setPage("contact")} style={buttonStyle}>
+          <button
+            onClick={() => {
+              trackEvent("lp_cta_click");
+              setPage("contact");
+            }}
+            style={buttonStyle}
+          >
             一緒に試してみる
           </button>
         </div>
@@ -71,7 +82,7 @@ export default function CtaSection({ setPage }: Props) {
 /* ===== styles ===== */
 
 const sectionStyle: React.CSSProperties = {
-  padding: "60px 48px 160px",
+  padding: "92px 48px 188px",
   background: "rgba(245,245,244,0.7)",
   color: "#111",
 };
@@ -103,14 +114,14 @@ const arrowStyle: React.CSSProperties = {
 
 const introStyle: React.CSSProperties = {
   maxWidth: 720,
-  margin: "0 auto 28px",
+  margin: "0 auto 40px",
   fontSize: 17,
   lineHeight: 1.95,
   color: "#404040",
 };
 
 const scriptWrapStyle: React.CSSProperties = {
-  marginBottom: 36,
+  marginBottom: 48,
 };
 
 const scriptStyle: React.CSSProperties = {
@@ -123,14 +134,22 @@ const scriptStyle: React.CSSProperties = {
 
 const scriptStrongStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: 34,
+  fontSize: 38,
   lineHeight: 1.85,
   letterSpacing: "-0.025em",
-  fontWeight: 500,
+  fontWeight: 600,
 };
 
 const ctaWrapStyle: React.CSSProperties = {
-  marginTop: 28,
+  marginTop: 56,
+};
+
+const closingNoteStyle: React.CSSProperties = {
+  maxWidth: 640,
+  margin: "28px auto 0",
+  fontSize: 16,
+  lineHeight: 1.9,
+  color: "#525252",
 };
 
 const valueGridStyle: React.CSSProperties = {
@@ -178,4 +197,5 @@ const buttonStyle: React.CSSProperties = {
   background: "transparent",
   cursor: "pointer",
   fontSize: 15,
+  fontWeight: 500,
 };

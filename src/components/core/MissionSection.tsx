@@ -1,8 +1,10 @@
 
 
+import SectionScrollCue from "./SectionScrollCue";
+
 export default function MissionSection() {
   return (
-    <section style={sectionStyle}>
+    <section id="method" className="scroll-mt-24" style={sectionStyle}>
       <div style={containerStyle}>
         <div style={labelRowStyle}>
           <span style={linesStyle}>
@@ -12,6 +14,12 @@ export default function MissionSection() {
           </span>
           <span>METHOD</span>
         </div>
+
+        <p style={bridgeStyle}>
+          再定義された視点も、
+          <br />
+          現場で扱える形にならなければ残らない。
+        </p>
 
         <p style={introStyle}>
           RA-SSは、違和感を感覚のままにせず、
@@ -67,6 +75,8 @@ export default function MissionSection() {
             </p>
           </div>
         </div>
+
+        <SectionScrollCue targetId="demo" />
       </div>
     </section>
   );
@@ -75,7 +85,7 @@ export default function MissionSection() {
 /* ===== styles ===== */
 
 const sectionStyle: React.CSSProperties = {
-  padding: "40px 48px 140px",
+  padding: "72px 48px 168px",
   background: "rgba(245,245,244,0.6)",
   color: "#111",
 };
@@ -117,6 +127,14 @@ const introStyle: React.CSSProperties = {
   fontSize: 17,
   lineHeight: 1.95,
   color: "#404040",
+};
+
+const bridgeStyle: React.CSSProperties = {
+  maxWidth: 680,
+  margin: "0 auto 18px",
+  fontSize: 17,
+  lineHeight: 1.95,
+  color: "#525252",
 };
 
 const scriptWrapStyle: React.CSSProperties = {

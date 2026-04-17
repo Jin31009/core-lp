@@ -1,12 +1,15 @@
 
 
+import SectionScrollCue from "./SectionScrollCue";
+import { trackEvent } from "../../lib/analytics";
+
 type Props = {
   setPage: (page: string) => void;
 };
 
 export default function PrototypeSection({ setPage }: Props) {
   return (
-    <section style={sectionStyle}>
+    <section id="demo" className="scroll-mt-24" style={sectionStyle}>
       <div style={containerStyle}>
         <div style={labelRowStyle}>
           <span style={triangleStyle} />
@@ -40,12 +43,17 @@ export default function PrototypeSection({ setPage }: Props) {
 
         <div style={ctaWrapStyle}>
           <button
-            onClick={() => setPage("demo-intro")}
+            onClick={() => {
+              trackEvent("lp_demo_click", { section: "demo" });
+              setPage("demo-intro");
+            }}
             style={buttonStyle}
           >
             体験を始める
           </button>
         </div>
+
+        <SectionScrollCue targetId="cta" emphasis="soft" subdued />
       </div>
     </section>
   );
@@ -54,7 +62,7 @@ export default function PrototypeSection({ setPage }: Props) {
 /* ===== styles ===== */
 
 const sectionStyle: React.CSSProperties = {
-  padding: "40px 24px 128px",
+  padding: "88px 24px 172px",
   background: "#ffffff",
   color: "#111",
 };
@@ -88,14 +96,14 @@ const triangleStyle: React.CSSProperties = {
 
 const introStyle: React.CSSProperties = {
   maxWidth: 720,
-  margin: "0 auto 28px",
+  margin: "0 auto 22px",
   fontSize: 17,
   lineHeight: 1.95,
   color: "#404040",
 };
 
 const scriptWrapStyle: React.CSSProperties = {
-  marginBottom: 36,
+  marginBottom: 28,
 };
 
 const scriptStyle: React.CSSProperties = {
@@ -114,7 +122,7 @@ const scriptStrongStyle: React.CSSProperties = {
 };
 
 const ctaWrapStyle: React.CSSProperties = {
-  marginTop: 28,
+  marginTop: 52,
 };
 
 const noteStyle: React.CSSProperties = {
@@ -127,7 +135,7 @@ const noteStyle: React.CSSProperties = {
 
 const buttonStyle: React.CSSProperties = {
   minHeight: 44,
-  padding: "0 24px",
+  padding: "0 28px",
   border: "1px solid #171717",
   borderRadius: 999,
   background: "#171717",
@@ -135,4 +143,5 @@ const buttonStyle: React.CSSProperties = {
   cursor: "pointer",
   fontSize: 15,
   fontWeight: 500,
+  boxShadow: "0 10px 24px rgba(0,0,0,0.06)",
 };

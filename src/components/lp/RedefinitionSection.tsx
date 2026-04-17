@@ -10,29 +10,40 @@ export default function RedefinitionSection({
   onOpenExpansion,
 }: RedefinitionSectionProps) {
   return (
-    <section className="border-y border-stone-200 bg-[#f3efe7] px-6 py-32 md:px-10 md:py-40">
+    <section className="border-y border-stone-200 bg-[#f3efe7] px-6 py-40 md:px-10 md:py-48">
       <div className="mx-auto max-w-4xl text-center">
-        <p className="mb-6 text-[11px] font-medium uppercase tracking-[0.30em] text-stone-400">
-          Redefinition
+        <p className="mb-5 text-[11px] font-medium uppercase tracking-[0.22em] text-stone-400">
+          広報の起点を、置き直す
         </p>
 
-        <h2 className="text-5xl font-semibold leading-[1.08] tracking-[-0.03em] text-stone-900 md:text-6xl">
+        <h2 className="text-center text-4xl font-semibold leading-[1.18] tracking-[-0.02em] text-stone-900 md:text-5xl">
           広報は、
           <br />
-          関係の状態を整える
-          <br />
-          体系である。
+          関係の状態を整える営みである。
         </h2>
 
-        <p className="mx-auto mt-16 max-w-xl text-[16px] leading-9 text-stone-600">
-          伝える前に、
-          関係はすでに存在している。
+        <p className="mx-auto mt-10 max-w-xl text-[16px] leading-[1.95] text-stone-700 md:text-[17px]">
+          広報は、情報を届ける前に、
+          <br />
+          すでに存在している関係の上で成立しています。
         </p>
 
-        <p className="mx-auto mt-10 max-w-xl text-[16px] leading-9 text-stone-600">
-          その状態を捉えない限り、
-          関係は変わらない。
-        </p>
+        <blockquote className="mx-auto my-36 max-w-3xl border-y border-stone-300 py-10 text-center text-[24px] leading-[2.1] text-stone-700 md:text-[30px]">
+          広報とは、情報を届ける前に、
+          <br />
+          すでに生まれている関係を読む仕事である。
+        </blockquote>
+
+        <div className="mx-auto max-w-xl text-[16px] leading-[1.95] text-stone-700 md:text-[17px]">
+          <p>
+            広報は「伝える技術」ではなく、
+          </p>
+          <p className="mt-6">
+            関係を観察し、整え、変化させる構造として
+            <br />
+            扱うことができるようになります。
+          </p>
+        </div>
 
         <div className="mt-16 flex flex-wrap justify-center gap-3">
           <button

@@ -1,8 +1,10 @@
 
 
+import SectionScrollCue from "./SectionScrollCue";
+
 export default function CoreSection() {
   return (
-    <section style={sectionStyle}>
+    <section id="redefinition" className="scroll-mt-24" style={sectionStyle}>
       <div style={containerStyle}>
         <div style={labelRowStyle}>
           <span style={doubleCircleStyle}>
@@ -73,13 +75,15 @@ export default function CoreSection() {
             </p>
           </div>
         </div>
+
+        <SectionScrollCue targetId="method" emphasis="strong" />
       </div>
     </section>
   );
 }
 
 const sectionStyle: React.CSSProperties = {
-  padding: "20px 24px 112px",
+  padding: "92px 24px 188px",
   background: "#ffffff",
   color: "#111",
 };
@@ -122,15 +126,15 @@ const innerCircleStyle: React.CSSProperties = {
 };
 
 const introStyle: React.CSSProperties = {
-  maxWidth: 720,
-  margin: "0 auto 28px",
+  maxWidth: 620,
+  margin: "0 auto 36px",
   fontSize: 17,
   lineHeight: 1.95,
   color: "#404040",
 };
 
 const scriptWrapStyle: React.CSSProperties = {
-  marginBottom: 34,
+  marginBottom: 48,
 };
 
 const scriptStyle: React.CSSProperties = {
@@ -149,11 +153,12 @@ const scriptStrongStyle: React.CSSProperties = {
 };
 
 const afterStyle: React.CSSProperties = {
-  margin: "0 auto 44px",
-  maxWidth: 620,
+  margin: "0 auto 56px",
+  maxWidth: 560,
   fontSize: 18,
   lineHeight: 1.95,
   color: "#404040",
+  fontWeight: 500,
 };
 
 const expansionGridStyle: React.CSSProperties = {
