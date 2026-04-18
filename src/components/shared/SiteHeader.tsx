@@ -4,15 +4,15 @@ type Props = {
 };
 
 const NAV_ITEMS = [
-  { key: "top", label: "TOP", page: "top" },
-  { key: "contact", label: "CONTACT", page: "contact" },
+  { key: "structure", label: "理論", page: "structure" },
+  { key: "case", label: "事例", page: "demo-intro" },
 ] as const;
 
 function isActive(currentPage: string | undefined, page: string) {
   if (!currentPage) return false;
-  if (page === "top") return currentPage === "top" || currentPage === "corelp";
+  if (page === "demo-intro") return currentPage === "demo-intro";
   if (page === "demo") {
-    return currentPage === "demo-intro" || currentPage === "demo" || currentPage === "prototype";
+    return currentPage === "demo" || currentPage === "prototype";
   }
   return currentPage === page;
 }
