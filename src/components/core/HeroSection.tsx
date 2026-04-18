@@ -16,6 +16,10 @@ export default function HeroSection({ setPage }: Props) {
           伝わらないのか。
         </h1>
 
+        <p style={authorLineStyle}>
+          黒江仁による、病院広報と関係性設計の実証プロジェクト
+        </p>
+
         <div style={summaryWrapStyle}>
           <p style={summaryStyle}>伝えているはずなのに、伝わらない。</p>
 
@@ -77,6 +81,15 @@ const titleStyle: React.CSSProperties = {
   lineHeight: 1.16,
   letterSpacing: "-0.03em",
   fontWeight: 600,
+};
+
+const authorLineStyle: React.CSSProperties = {
+  margin: "18px auto 0",
+  maxWidth: 520,
+  fontSize: "clamp(12px, 3.2vw, 14px)",
+  lineHeight: 1.7,
+  letterSpacing: "0.01em",
+  color: "#6b7280",
 };
 
 const summaryWrapStyle: React.CSSProperties = {
