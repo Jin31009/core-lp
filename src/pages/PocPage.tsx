@@ -6,6 +6,9 @@ import {
   contentWidthClass,
   centeredCtaWidthClass,
   editorialBodyBlockClass,
+  figureCardClass,
+  figureCardCompactClass,
+  figureLineClass,
   editorialFigureBlockClass,
   editorialSectionBlockClass,
   heroSectionClass,
@@ -115,16 +118,16 @@ export default function PocPage({
               />
             </div>
 
-            <div className={`${editorialFigureBlockClass} grid gap-4 md:grid-cols-3`}>
+            <div className={`${editorialFigureBlockClass} grid gap-5 md:grid-cols-3`}>
               {POC_SIGNALS.map((item, index) => (
                 <div
                   key={item}
-                  className="border-t border-stone-300 pt-5"
+                  className={`border-t ${figureLineClass} pt-4 sm:pt-5`}
                 >
                   <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-stone-400">
                     0{index + 1}
                   </p>
-                  <p className="mt-4 text-[17px] leading-8 text-stone-800">{item}</p>
+                  <p className="mt-3 text-center text-[16px] leading-7 text-stone-800 sm:mt-4 sm:text-[17px] sm:leading-8">{item}</p>
                 </div>
               ))}
             </div>
@@ -146,12 +149,12 @@ export default function PocPage({
               />
             </div>
 
-            <div className={`${editorialFigureBlockClass} grid gap-8 lg:grid-cols-[0.96fr_1.04fr] lg:items-start`}>
-              <div className="rounded-[28px] border border-stone-300 px-6 py-8 md:px-8 md:py-10">
+            <div className={`${editorialFigureBlockClass} grid gap-5 md:gap-6 lg:grid-cols-[0.96fr_1.04fr] lg:items-start`}>
+              <div className={figureCardClass}>
                 <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-stone-400">
                   Case Note
                 </p>
-                <p className="mt-6 text-[22px] font-medium leading-[1.9] text-stone-900 md:text-[26px]">
+                <p className="mt-5 text-left text-[18px] font-medium leading-[1.8] text-stone-900 sm:text-[21px] md:text-[26px] md:leading-[1.9]">
                   外来で長く待った患者さんから、
                   <br />
                   「説明は受けたけれど、
@@ -162,7 +165,7 @@ export default function PocPage({
                 </p>
               </div>
 
-              <div className="rounded-[28px] border border-stone-200 px-6 py-4 md:px-8">
+              <div className={`${figureCardClass} py-3 sm:py-4 md:py-5`}>
                 {[
                   {
                     label: "Observation",
@@ -177,11 +180,11 @@ export default function PocPage({
                     body: "次の一手は謝罪表現の工夫ではなく、どの接点で関係を戻すかを順番で考えることになります。",
                   },
                 ].map((item) => (
-                  <div key={item.label} className="border-b border-stone-200 py-6 last:border-b-0">
+                  <div key={item.label} className={`border-b ${figureLineClass} py-5 last:border-b-0`}>
                     <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-stone-500">
                       {item.label}
                     </p>
-                    <p className="mt-3 text-[16px] leading-8 text-stone-700">{item.body}</p>
+                    <p className="mt-3 text-left text-[15px] leading-7 text-stone-700 sm:text-[16px] sm:leading-8">{item.body}</p>
                   </div>
                 ))}
               </div>
@@ -208,13 +211,13 @@ export default function PocPage({
               {JUDGMENT_POINTS.map((item, index) => (
                 <div
                   key={item.title}
-                  className="rounded-[24px] border border-stone-200 px-5 py-5"
+                  className={`${figureCardCompactClass} py-5 sm:py-6`}
                 >
                   <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-stone-400">
                     0{index + 1}
                   </p>
-                  <p className="mt-4 text-[21px] leading-8 text-stone-900">{item.title}</p>
-                  <p className="mt-3 text-[15px] leading-7 text-stone-700">{item.body}</p>
+                  <p className="mt-3 text-center text-[18px] leading-7 text-stone-900 sm:text-left sm:text-[21px] sm:leading-8">{item.title}</p>
+                  <p className="mt-3 text-left text-[15px] leading-7 text-stone-700">{item.body}</p>
                 </div>
               ))}
             </div>

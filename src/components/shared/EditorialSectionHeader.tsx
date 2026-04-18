@@ -85,16 +85,18 @@ const wrapStyle: React.CSSProperties = {
 };
 
 const labelRowStyle: React.CSSProperties = {
-  marginBottom: 20,
+  marginBottom: 16,
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
   gap: 8,
-  fontSize: 11,
+  fontSize: 10,
   fontWeight: 500,
-  letterSpacing: "0.22em",
+  letterSpacing: "0.2em",
   textTransform: "uppercase",
   color: "#737373",
+  rowGap: 6,
+  flexWrap: "wrap",
 };
 
 const markerWrapStyle: React.CSSProperties = {
@@ -106,29 +108,29 @@ const markerWrapStyle: React.CSSProperties = {
 
 const titleStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: "clamp(1.95rem, 4.8vw, 2.75rem)",
+  fontSize: "clamp(1.68rem, 5.4vw, 2.75rem)",
   fontWeight: 600,
-  lineHeight: 1.32,
-  letterSpacing: "-0.02em",
+  lineHeight: 1.28,
+  letterSpacing: "-0.018em",
   color: "#171717",
   textWrap: "balance",
 };
 
 const heroTitleStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: "clamp(2.5rem, 7vw, 4.9rem)",
+  fontSize: "clamp(1.92rem, 8vw, 4.9rem)",
   fontWeight: 600,
-  lineHeight: 1.2,
-  letterSpacing: "-0.03em",
+  lineHeight: 1.16,
+  letterSpacing: "-0.025em",
   color: "#171717",
   textWrap: "balance",
 };
 
 const summaryStyle: React.CSSProperties = {
-  maxWidth: 640,
-  margin: "24px auto 0",
-  fontSize: "clamp(15px, 3.8vw, 17px)",
-  lineHeight: 1.85,
+  maxWidth: 680,
+  margin: "20px auto 0",
+  fontSize: "clamp(14px, 3.8vw, 17px)",
+  lineHeight: 1.8,
   color: "#404040",
   textWrap: "pretty",
 };

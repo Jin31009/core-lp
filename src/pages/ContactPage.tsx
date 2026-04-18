@@ -6,6 +6,7 @@ import EditorialSectionHeader from "../components/shared/EditorialSectionHeader"
 import FooterSection from "../components/core/FooterSection";
 import {
   contentWidthClass,
+  figureCardCompactClass,
   editorialFigureBlockClass,
   editorialSectionBlockClass,
   heroSectionClass,
@@ -85,19 +86,19 @@ export default function ContactPage({ setPage }: Props) {
                 summary="大きく始める必要はありません。まずは小さく試し、振り返り、続け方を決めるところから始められます。"
               />
 
-              <div className={`${editorialFigureBlockClass} grid gap-5 md:grid-cols-3`}>
+              <div className={`${editorialFigureBlockClass} grid gap-4 md:grid-cols-3`}>
                 {collaborationItems.map((item, index) => (
                   <div
                     key={item.title}
-                    className="rounded-[24px] border border-stone-200 px-5 py-6"
+                    className={figureCardCompactClass}
                   >
                     <p className="text-[11px] font-medium tracking-[0.22em] text-stone-400">
                       0{index + 1}
                     </p>
-                    <p className="text-[22px] font-semibold leading-9 tracking-[-0.02em] text-stone-900">
+                    <p className="mt-3 text-center text-[19px] font-semibold leading-8 tracking-[-0.018em] text-stone-900 sm:text-left sm:text-[22px] sm:leading-9">
                       {item.title}
                     </p>
-                    <p className="mt-4 text-[15px] leading-7 text-stone-700 sm:text-[16px] sm:leading-8">{item.body}</p>
+                    <p className="mt-3 text-left text-[15px] leading-7 text-stone-700 sm:mt-4 sm:text-[16px] sm:leading-8">{item.body}</p>
                   </div>
                 ))}
               </div>
@@ -127,7 +128,7 @@ export default function ContactPage({ setPage }: Props) {
             <div className={`${editorialFigureBlockClass} flex flex-wrap justify-center gap-3`}>
               <button
                 type="button"
-                onClick={() => setPage("demo")}
+                onClick={() => setPage("demo-intro")}
                 className="inline-flex min-h-11 items-center justify-center bg-stone-900 px-7 text-[12px] font-medium uppercase tracking-[0.16em] text-white transition hover:opacity-90"
               >
                 DEMOを体験する
@@ -153,7 +154,7 @@ export default function ContactPage({ setPage }: Props) {
                   そこから無理のない対話を始めます。
                 </p>
 
-                <div className="mt-10 space-y-8">
+                <div className="mt-8 space-y-7 sm:mt-10 sm:space-y-8">
                   <label className="block">
                     <span className="block text-[13px] uppercase tracking-[0.14em] text-stone-500">
                       メールアドレス
@@ -175,7 +176,7 @@ export default function ContactPage({ setPage }: Props) {
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
                       placeholder="気になっていること、試してみたいことなど"
-                      className="mt-3 min-h-40 w-full border border-stone-300 bg-white/40 px-4 py-4 text-[16px] leading-8 outline-none placeholder:text-stone-400"
+                      className="mt-3 min-h-36 w-full border border-stone-300 bg-white/40 px-4 py-4 text-[15px] leading-7 outline-none placeholder:text-stone-400 sm:min-h-40 sm:text-[16px] sm:leading-8"
                     />
                   </label>
                 </div>
@@ -190,11 +191,11 @@ export default function ContactPage({ setPage }: Props) {
                 </div>
               </form>
             ) : (
-              <div className="mx-auto mt-16 max-w-2xl border-t border-stone-300 pt-8 text-center">
+              <div className="mx-auto mt-14 max-w-2xl border-t border-stone-300 pt-8 text-center sm:mt-16">
                 <p className="text-[28px] font-semibold tracking-[-0.02em] text-stone-900">
                   ありがとうございます
                 </p>
-                <p className="mt-6 text-[17px] leading-9 text-stone-700">
+                <p className="mt-5 text-[15px] leading-8 text-stone-700 sm:mt-6 sm:text-[17px] sm:leading-9">
                   内容を受け取りました。
                   <br />
                   ここから、無理のない形で対話を始めていければと思います。
@@ -219,11 +220,11 @@ export default function ContactPage({ setPage }: Props) {
               summary="現場と往復しながら、コーディネーター／ファシリテーターとして伴走します。"
             />
 
-            <div className="mx-auto mt-14 max-w-3xl border-t border-stone-200">
+            <div className="mx-auto mt-12 max-w-3xl border-t border-stone-200 sm:mt-14">
               {[
                 "COREプロジェクトとして進行しています",
               ].map((item) => (
-                <p key={item} className="border-b border-stone-200 py-5 text-[17px] leading-9 text-stone-700">
+                <p key={item} className="border-b border-stone-200 py-4 text-[15px] leading-8 text-stone-700 sm:py-5 sm:text-[17px] sm:leading-9">
                   {item}
                 </p>
               ))}

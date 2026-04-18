@@ -70,13 +70,13 @@ const pageStyle: React.CSSProperties = {
   minHeight: "100vh",
   background: "#f7f5f2",
   color: "#111",
-  padding: "48px 24px 72px",
+  padding: "32px 20px 56px",
 };
 
 const shellStyle: React.CSSProperties = {
   maxWidth: 960,
   margin: "0 auto",
-  padding: "96px 0 44px",
+  padding: "72px 0 40px",
 };
 
 const heroStyle: React.CSSProperties = {
@@ -86,9 +86,9 @@ const heroStyle: React.CSSProperties = {
 };
 
 const eyebrowStyle: React.CSSProperties = {
-  margin: "0 0 20px",
-  fontSize: 11,
-  letterSpacing: "0.22em",
+  margin: "0 0 16px",
+  fontSize: 10,
+  letterSpacing: "0.2em",
   textTransform: "uppercase",
   color: "#737373",
   fontWeight: 500,
@@ -96,45 +96,46 @@ const eyebrowStyle: React.CSSProperties = {
 
 const headlineStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: "3.25rem",
-  lineHeight: 1.28,
+  fontSize: "clamp(2rem, 7.8vw, 3.25rem)",
+  lineHeight: 1.2,
   letterSpacing: "-0.02em",
   fontWeight: 600,
   textAlign: "center",
+  textWrap: "balance",
 };
 
 const leadStyle: React.CSSProperties = {
-  margin: "28px auto 0",
-  maxWidth: 720,
-  fontSize: 17,
-  lineHeight: 1.95,
+  margin: "22px auto 0",
+  maxWidth: 680,
+  fontSize: "clamp(14px, 3.8vw, 17px)",
+  lineHeight: 1.8,
   color: "#404040",
   textAlign: "center",
 };
 
 const stepsGridStyle: React.CSSProperties = {
   display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-  gap: 24,
-  marginTop: 40,
+  gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+  gap: 18,
+  marginTop: 32,
 };
 
 const stepCardStyle: React.CSSProperties = {
-  padding: "12px 10px",
+  padding: "10px 8px",
 };
 
 const stepTextStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: 17,
-  lineHeight: 1.7,
+  fontSize: "clamp(15px, 3.6vw, 17px)",
+  lineHeight: 1.65,
   color: "#111",
   whiteSpace: "pre-line",
   textAlign: "center",
 };
 
 const noteCardStyle: React.CSSProperties = {
-  marginTop: 24,
-  maxWidth: 720,
+  marginTop: 18,
+  maxWidth: 680,
   padding: "6px 0 0",
   marginLeft: "auto",
   marginRight: "auto",
@@ -142,30 +143,31 @@ const noteCardStyle: React.CSSProperties = {
 
 const noteTextStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: 16,
-  lineHeight: 1.85,
+  fontSize: "clamp(14px, 3.6vw, 16px)",
+  lineHeight: 1.8,
   color: "#404040",
   textAlign: "center",
 };
 
 const ctaBlockStyle: React.CSSProperties = {
-  marginTop: 28,
+  marginTop: 24,
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  gap: 10,
+  gap: 8,
 };
 
 const ctaIntroStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: 16,
-  lineHeight: 1.9,
+  fontSize: "clamp(14px, 3.6vw, 16px)",
+  lineHeight: 1.8,
   color: "#525252",
   textAlign: "center",
 };
 
 const ctaStyle: React.CSSProperties = {
   minHeight: 44,
+  minWidth: 180,
   padding: "0 24px",
   border: "1px solid #171717",
   borderRadius: 999,

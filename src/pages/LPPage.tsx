@@ -17,21 +17,21 @@ export default function LPPage({ setPage }: Props) {
     <main className="bg-[#f7f5f2] text-stone-900">
       <Header
         onOpenTop={() => setPage("top")}
-        onOpenDemo={() => setPage("demo")}
+        onOpenDemo={() => setPage("demo-intro")}
         onOpenContact={() => setPage("contact")}
       />
 
-      <HeroSection onOpenDemo={() => setPage("demo")} />
+      <HeroSection onOpenDemo={() => setPage("demo-intro")} />
       <ProblemSection />
       <RedefinitionSection />
       <DemoBridgeSection />
-      <PrototypeSection onNavigateDemo={() => setPage("demo")} />
+      <PrototypeSection onNavigateDemo={() => setPage("demo-intro")} />
       <ValueSection />
       <PrototypeCTASection onNavigateContact={() => setPage("contact")} />
 
       <Footer
         onOpenTop={() => setPage("top")}
-        onOpenDemo={() => setPage("demo")}
+        onOpenDemo={() => setPage("demo-intro")}
         onOpenContact={() => setPage("contact")}
       />
     </main>

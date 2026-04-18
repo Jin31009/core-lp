@@ -71,16 +71,16 @@ export default function ProcessPage({ setPage }: ProcessPageProps) {
               />
             </div>
 
-            <div className={`${editorialFigureBlockClass} border-t border-stone-200`}>
+            <div className={`${editorialFigureBlockClass} border-t border-stone-200/70`}>
               {flowItems.map((item, index) => (
                 <div
                   key={item}
-                  className="grid gap-4 border-b border-stone-200 py-6 md:grid-cols-[72px_1fr]"
+                  className="grid gap-3 border-b border-stone-200/70 py-6 md:grid-cols-[72px_1fr]"
                 >
-                  <div className="text-[11px] font-medium tracking-[0.22em] text-stone-400">
+                  <div className="text-center text-[11px] font-medium tracking-[0.22em] text-stone-400 sm:text-left">
                     0{index + 1}
                   </div>
-                  <div className="text-[18px] leading-9 text-stone-800">{item}</div>
+                  <div className="text-center text-[16px] leading-8 text-stone-800 sm:text-left sm:text-[18px] sm:leading-9">{item}</div>
                 </div>
               ))}
             </div>
@@ -108,13 +108,13 @@ export default function ProcessPage({ setPage }: ProcessPageProps) {
               />
             </div>
 
-            <div className={`${editorialFigureBlockClass} grid gap-8 md:grid-cols-3`}>
+            <div className={`${editorialFigureBlockClass} grid gap-6 md:grid-cols-3`}>
               {principles.map((item, index) => (
-                <div key={item} className="border-t border-stone-300 pt-5">
+                <div key={item} className="border-t border-stone-200/70 pt-5 sm:pt-6">
                   <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-stone-400">
                     0{index + 1}
                   </p>
-                  <p className="mt-4 text-[18px] leading-9 text-stone-700">{item}</p>
+                  <p className="mt-4 text-left text-[16px] leading-8 text-stone-700 sm:text-[18px] sm:leading-9">{item}</p>
                 </div>
               ))}
             </div>

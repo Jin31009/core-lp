@@ -37,7 +37,7 @@ export default function HeroSection({ setPage }: Props) {
             type="button"
             onClick={() => {
               trackEvent("lp_demo_click", { section: "hero" });
-              setPage("demo");
+              setPage("demo-intro");
             }}
             style={primaryButtonStyle}
           >
@@ -60,7 +60,7 @@ export default function HeroSection({ setPage }: Props) {
 }
 
 const sectionStyle: React.CSSProperties = {
-  padding: "clamp(104px, 16vw, 200px) 20px clamp(96px, 14vw, 160px)",
+  padding: "clamp(88px, 14vw, 200px) 20px clamp(80px, 12vw, 160px)",
   background: "#ffffff",
   color: "#111",
 };
@@ -73,33 +73,34 @@ const containerStyle: React.CSSProperties = {
 
 const titleStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: "clamp(2.6rem, 9vw, 6rem)",
-  lineHeight: 1.16,
+  fontSize: "clamp(2.15rem, 8vw, 6rem)",
+  lineHeight: 1.12,
   letterSpacing: "-0.03em",
   fontWeight: 600,
+  textWrap: "balance",
 };
 
 const summaryWrapStyle: React.CSSProperties = {
   maxWidth: 620,
-  margin: "48px auto 0",
+  margin: "36px auto 0",
 };
 
 const summaryStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: "clamp(15px, 3.8vw, 17px)",
-  lineHeight: 1.85,
+  fontSize: "clamp(14px, 3.8vw, 17px)",
+  lineHeight: 1.8,
   color: "#404040",
 };
 
 const summaryParagraphStyle: React.CSSProperties = {
   margin: "20px 0 0",
-  fontSize: "clamp(15px, 3.8vw, 17px)",
-  lineHeight: 1.85,
+  fontSize: "clamp(14px, 3.8vw, 17px)",
+  lineHeight: 1.8,
   color: "#404040",
 };
 
 const ctaWrapStyle: React.CSSProperties = {
-  marginTop: 28,
+  marginTop: 24,
   display: "flex",
   justifyContent: "center",
   gap: 12,
@@ -116,6 +117,7 @@ const primaryButtonStyle: React.CSSProperties = {
   fontSize: 14,
   fontWeight: 500,
   cursor: "pointer",
+  minWidth: 168,
 };
 
 const secondaryButtonStyle: React.CSSProperties = {
@@ -128,4 +130,5 @@ const secondaryButtonStyle: React.CSSProperties = {
   fontSize: 14,
   fontWeight: 500,
   cursor: "pointer",
+  minWidth: 168,
 };

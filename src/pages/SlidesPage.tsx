@@ -6,6 +6,7 @@ import EditorialSectionHeader from "../components/shared/EditorialSectionHeader"
 import {
   contentWidthClass,
   editorialBodyBlockClass,
+  figureCardCompactClass,
   editorialFigureBlockClass,
   editorialSectionBlockClass,
   heroSectionClass,
@@ -88,11 +89,11 @@ export default function SlidesPage({
               </div>
             </div>
 
-            <div className={`${editorialFigureBlockClass} grid gap-4 md:grid-cols-2`}>
+            <div className={`${editorialFigureBlockClass} grid gap-5`}>
               {SLIDE_CARDS.map((c) => (
-                <div key={c.title} className="border-b border-black/10 pb-4">
+                <div key={c.title} className="border-b border-black/10 py-2 pb-5 sm:py-3 sm:pb-6">
                   <div className="font-medium text-stone-900">{c.title}</div>
-                  <p className="mt-1 text-sm text-stone-600">{c.desc}</p>
+                  <p className="mt-2.5 text-[14px] leading-6 text-stone-600 sm:text-sm">{c.desc}</p>
                 </div>
               ))}
             </div>
@@ -108,13 +109,13 @@ export default function SlidesPage({
               summary="このページでは、理論背景を読んだあとに何を見ればよいかを、図版単位で静かに整理しています。"
             />
 
-            <div className={`${editorialFigureBlockClass} grid gap-4 lg:grid-cols-3`}>
+            <div className={`${editorialFigureBlockClass} grid gap-4 sm:grid-cols-2 lg:grid-cols-3`}>
               <MiniStat title="役割" value="判断材料" note="導入前の理解を深める" />
               <MiniStat title="内容" value="理論＋実証" note="抽象ではなく検証ベース" />
               <MiniStat title="次" value="DEMO" note="実際に触って確かめる" />
             </div>
 
-            <div className={`${editorialBodyBlockClass} grid gap-4 md:grid-cols-3`}>
+            <div className={`${editorialBodyBlockClass} grid gap-4 sm:grid-cols-2 md:grid-cols-3`}>
               {SLIDE_FRAMES.map((c) => (
                 <FrameCard key={c.title} {...c} />
               ))}
@@ -169,21 +170,21 @@ function MiniStat({
   note: string;
 }) {
   return (
-    <div className="rounded-[24px] border border-black/10 bg-white p-4">
+    <div className={figureCardCompactClass}>
       <div className="text-xs tracking-widest text-stone-400">{title}</div>
-      <div className="mt-1 text-xl font-medium text-stone-900">{value}</div>
-      <div className="mt-1 text-xs text-stone-500">{note}</div>
+      <div className="mt-2 text-[19px] font-medium text-stone-900 sm:text-xl">{value}</div>
+      <div className="mt-2 text-[12px] leading-6 text-stone-500">{note}</div>
     </div>
   );
 }
 
 function FrameCard({ title, desc }: Card) {
   return (
-    <div className="rounded-[24px] border border-black/10 bg-white p-5">
-      <div className="flex aspect-[4/3] items-center justify-center border border-dashed border-black/10 bg-white text-sm tracking-[0.18em] text-stone-400">
+    <div className={figureCardCompactClass}>
+      <div className="flex aspect-[4/3] items-center justify-center border border-dashed border-black/10 bg-white px-3 text-[13px] tracking-[0.16em] text-stone-400 sm:text-sm">
         {title}
       </div>
-      <div className="mt-4 text-sm leading-7 text-stone-600">{desc}</div>
+      <div className="mt-4 text-[14px] leading-7 text-stone-600 sm:text-sm">{desc}</div>
     </div>
   );
 }

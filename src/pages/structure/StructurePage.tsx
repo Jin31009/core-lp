@@ -6,6 +6,8 @@ import {
   centeredCtaWidthClass,
   contentWidthClass,
   editorialBodyBlockClass,
+  figureCardClass,
+  figureLineClass,
   editorialFigureBlockClass,
   editorialSectionBlockClass,
   heroSectionClass,
@@ -32,20 +34,20 @@ function FigureColumn({
   results: string[];
 }) {
   return (
-    <div className="rounded-[28px] border border-stone-200 bg-white p-6 md:p-8">
+    <div className={figureCardClass}>
       <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-stone-400">{heading}</p>
-      <div className="mt-6 border-t border-stone-200">
+      <div className={`mt-5 border-t ${figureLineClass}`}>
         {items.map((item) => (
-          <p key={item} className="border-b border-stone-200 py-4 text-[16px] leading-8 text-stone-800">
+          <p key={item} className={`border-b ${figureLineClass} py-4 text-left text-[15px] leading-7 text-stone-800 sm:text-[16px] sm:leading-8`}>
             {item}
           </p>
         ))}
       </div>
-      <div className="mt-6 border-t border-stone-200 pt-5">
+      <div className={`mt-5 border-t ${figureLineClass} pt-4`}>
         {results.map((result, index) => (
           <p
             key={result}
-            className={`text-[15px] leading-8 text-stone-600 ${index > 0 ? "mt-2" : ""}`}
+            className={`text-left text-[14px] leading-7 text-stone-600 sm:text-[15px] sm:leading-8 ${index > 0 ? "mt-2" : ""}`}
           >
             {result}
           </p>
@@ -121,7 +123,7 @@ export default function StructurePage({ setPage }: Props) {
               />
             </div>
 
-            <div className={`${editorialFigureBlockClass} grid gap-6 lg:grid-cols-[1fr_56px_1fr] lg:items-start`}>
+            <div className={`${editorialFigureBlockClass} grid gap-5 lg:grid-cols-[1fr_56px_1fr] lg:items-start`}>
               <FigureColumn
                 heading="違和感"
                 items={["現場で起きたズレに気づく", "関係の揺れとして観察する", "感情の反応から距離を取る"]}
@@ -137,7 +139,7 @@ export default function StructurePage({ setPage }: Props) {
               />
             </div>
 
-            <p className="mx-auto mt-12 max-w-3xl text-center text-[17px] leading-9 text-stone-700">
+            <p className="mx-auto mt-10 max-w-[44rem] text-center text-[15px] leading-8 text-stone-700 sm:text-[17px] sm:leading-9">
               重要なのは評価ではなく、
               <br />
               違和感から次の行為までをどう立ち上げるかです。
@@ -160,7 +162,7 @@ export default function StructurePage({ setPage }: Props) {
               />
             </div>
 
-            <div className={`mx-auto max-w-xl rounded-[28px] border border-stone-200 px-6 py-7 text-center text-[21px] leading-[1.9] text-stone-900 ${editorialFigureBlockClass}`}>
+            <div className={`mx-auto max-w-xl text-center text-[18px] leading-[1.75] text-stone-900 sm:text-[21px] sm:leading-[1.9] ${figureCardClass} ${editorialFigureBlockClass}`}>
               <p>観察できる</p>
               <p>介入できる</p>
               <p>再現できる</p>

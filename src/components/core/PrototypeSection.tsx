@@ -45,7 +45,7 @@ export default function PrototypeSection({ setPage }: Props) {
           <button
             onClick={() => {
               trackEvent("lp_demo_click", { section: "demo" });
-              setPage("demo");
+              setPage("demo-intro");
             }}
             style={buttonStyle}
           >
@@ -62,7 +62,7 @@ export default function PrototypeSection({ setPage }: Props) {
 /* ===== styles ===== */
 
 const sectionStyle: React.CSSProperties = {
-  padding: "72px 20px clamp(96px, 16vw, 172px)",
+  padding: "64px 20px clamp(80px, 14vw, 172px)",
   background: "#ffffff",
   color: "#111",
 };
@@ -74,7 +74,7 @@ const containerStyle: React.CSSProperties = {
 };
 
 const labelRowStyle: React.CSSProperties = {
-  margin: "0 0 28px",
+  margin: "0 0 20px",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -96,40 +96,41 @@ const triangleStyle: React.CSSProperties = {
 
 const introStyle: React.CSSProperties = {
   maxWidth: 720,
-  margin: "0 auto 22px",
-  fontSize: "clamp(15px, 3.8vw, 17px)",
-  lineHeight: 1.85,
+  margin: "0 auto 18px",
+  fontSize: "clamp(14px, 3.8vw, 17px)",
+  lineHeight: 1.8,
   color: "#404040",
 };
 
 const scriptWrapStyle: React.CSSProperties = {
-  marginBottom: 28,
+  marginBottom: 22,
 };
 
 const scriptStyle: React.CSSProperties = {
-  margin: "0 0 18px",
-  fontSize: "clamp(22px, 6vw, 30px)",
-  lineHeight: 1.7,
+  margin: "0 0 14px",
+  fontSize: "clamp(20px, 5.8vw, 30px)",
+  lineHeight: 1.6,
   letterSpacing: "-0.02em",
 };
 
 const scriptStrongStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: "clamp(26px, 7vw, 34px)",
-  lineHeight: 1.55,
+  fontSize: "clamp(23px, 6.6vw, 34px)",
+  lineHeight: 1.45,
   letterSpacing: "-0.025em",
   fontWeight: 500,
+  textWrap: "balance",
 };
 
 const ctaWrapStyle: React.CSSProperties = {
-  marginTop: 36,
+  marginTop: 28,
 };
 
 const noteStyle: React.CSSProperties = {
   margin: "0 auto",
   maxWidth: 640,
-  fontSize: "clamp(15px, 3.8vw, 17px)",
-  lineHeight: 1.85,
+  fontSize: "clamp(14px, 3.8vw, 17px)",
+  lineHeight: 1.8,
   color: "#404040",
 };
 
@@ -144,4 +145,5 @@ const buttonStyle: React.CSSProperties = {
   fontSize: 14,
   fontWeight: 500,
   boxShadow: "0 10px 24px rgba(0,0,0,0.06)",
+  minWidth: 168,
 };

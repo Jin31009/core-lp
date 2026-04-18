@@ -6,6 +6,7 @@ import EditorialSectionHeader from "../components/shared/EditorialSectionHeader"
 import {
   contentWidthClass,
   editorialBodyBlockClass,
+  figureCardCompactClass,
   editorialFigureBlockClass,
   editorialSectionBlockClass,
   heroSectionClass,
@@ -131,7 +132,7 @@ export default function ParticipationPage({
               summary="まず試すか、検証を見るか、少し戻って整理するかを、このページの終わりで静かに選べるようにしています。"
             />
 
-            <div className={`${editorialFigureBlockClass} grid gap-4 lg:grid-cols-3`}>
+            <div className={`${editorialFigureBlockClass} grid gap-4 sm:grid-cols-2 lg:grid-cols-3`}>
               <MiniStat title="基本思想" value="共創" note="一緒に設計・検証する" />
               <MiniStat title="提供形態" value="OSS + 協賛" note="開きながら育てる" />
               <MiniStat title="費用" value="Time Fee" note="必要な分だけ支援" />
@@ -187,10 +188,10 @@ function MiniStat({
   note: string;
 }) {
   return (
-    <div className="rounded-[24px] border border-black/10 bg-white p-4">
+    <div className={figureCardCompactClass}>
       <div className="text-xs tracking-widest text-stone-400">{title}</div>
-      <div className="mt-1 text-xl font-medium text-stone-900">{value}</div>
-      <div className="mt-1 text-xs text-stone-500">{note}</div>
+      <div className="mt-2 text-[19px] font-medium text-stone-900 sm:text-xl">{value}</div>
+      <div className="mt-2 text-[12px] leading-6 text-stone-500">{note}</div>
     </div>
   );
 }
@@ -203,9 +204,9 @@ function ListCard({
   items: readonly string[];
 }) {
   return (
-    <div className="rounded-[24px] border border-black/10 bg-white p-5">
-      <div className="font-medium text-stone-900">{title}</div>
-      <ul className="mt-3 space-y-2 text-sm leading-6 text-stone-600">
+    <div className={figureCardCompactClass}>
+      <div className="font-medium leading-7 text-stone-900">{title}</div>
+      <ul className="mt-3 list-none space-y-2.5 text-[14px] leading-6 text-stone-600 sm:text-sm">
         {items.map((item) => (
           <li key={item}>・{item}</li>
         ))}
