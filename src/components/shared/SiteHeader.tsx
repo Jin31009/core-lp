@@ -4,13 +4,16 @@ type Props = {
 };
 
 const NAV_ITEMS = [
-  { key: "structure", label: "理論", page: "structure" },
-  { key: "case", label: "事例", page: "demo-intro" },
+  { key: "top", label: "理論の裏側", page: "top" },
+  { key: "case", label: "事例", page: "poc" },
+  { key: "contact", label: "一緒に試す", page: "contact" },
 ] as const;
 
 function isActive(currentPage: string | undefined, page: string) {
   if (!currentPage) return false;
-  if (page === "demo-intro") return currentPage === "demo-intro";
+  if (page === "top") return currentPage === "top" || currentPage === "corelp";
+  if (page === "poc") return currentPage === "poc";
+  if (page === "contact") return currentPage === "contact" || currentPage === "participation";
   if (page === "demo") {
     return currentPage === "demo" || currentPage === "prototype";
   }
@@ -50,7 +53,7 @@ export default function SiteHeader({ setPage, currentPage }: Props) {
               ...(isActive(currentPage, "demo") ? demoItemActiveStyle : null),
             }}
           >
-            DEMO
+            体験する
           </button>
         </nav>
       </div>

@@ -8,6 +8,8 @@ import TopPage from "./pages/TopPage";
 import CoreLPPage from "./pages/CoreLPPage";
 import LPPage from "./pages/LPPage";
 import ContactPage from "./pages/ContactPage";
+import ParticipationPage from "./pages/ParticipationPage";
+import PocPage from "./pages/PocPage";
 
 // ===== pages（フォルダ内）=====
 import StructurePage from "./pages/structure/StructurePage";
@@ -60,6 +62,12 @@ export default function App() {
 
       {/* CONTACT / PoC参加ページ */}
       {page === "contact" && <ContactPage setPage={setPage} />}
+      {page === "poc" && (
+        <PocPage onNavigate={setPage} onBackPrev={() => setPage("top")} />
+      )}
+      {page === "participation" && (
+        <ParticipationPage onNavigate={setPage} onBackPrev={() => setPage("poc")} />
+      )}
 
       {/* 旧 participation ページを残す場合 */}
 
