@@ -18,49 +18,41 @@ function isActive(currentPage: string | undefined, page: string) {
 }
 
 export default function SiteHeader({ setPage, currentPage }: Props) {
-  const showAuthorLine = currentPage === "corelp";
-
   return (
     <header style={headerStyle}>
       <div style={innerStyle}>
         <button onClick={() => setPage("top")} style={brandStyle}>
-          CORE
+          CORE｜黒江仁｜医療広報・関係性設計
         </button>
 
-        <div style={navGroupStyle}>
-          <nav style={navStyle}>
-            {NAV_ITEMS.map((item) => {
-              const active = isActive(currentPage, item.page);
+        <nav style={navStyle}>
+          {NAV_ITEMS.map((item) => {
+            const active = isActive(currentPage, item.page);
 
-              return (
-                <button
-                  key={item.key}
-                  onClick={() => setPage(item.page)}
-                  style={{
-                    ...navItemStyle,
-                    ...(active ? navItemActiveStyle : null),
-                  }}
-                >
-                  {item.label}
-                </button>
-              );
-            })}
+            return (
+              <button
+                key={item.key}
+                onClick={() => setPage(item.page)}
+                style={{
+                  ...navItemStyle,
+                  ...(active ? navItemActiveStyle : null),
+                }}
+              >
+                {item.label}
+              </button>
+            );
+          })}
 
-            <button
-              onClick={() => setPage("demo")}
-              style={{
-                ...demoItemStyle,
-                ...(isActive(currentPage, "demo") ? demoItemActiveStyle : null),
-              }}
-            >
-              DEMO
-            </button>
-          </nav>
-
-          {showAuthorLine ? (
-            <p style={authorLineStyle}>黒江仁｜医療広報・関係性設計</p>
-          ) : null}
-        </div>
+          <button
+            onClick={() => setPage("demo")}
+            style={{
+              ...demoItemStyle,
+              ...(isActive(currentPage, "demo") ? demoItemActiveStyle : null),
+            }}
+          >
+            DEMO
+          </button>
+        </nav>
       </div>
     </header>
   );
@@ -94,19 +86,13 @@ const brandStyle: React.CSSProperties = {
   padding: 0,
   margin: 0,
   cursor: "pointer",
-  fontSize: 14,
-  letterSpacing: "0.18em",
-  textTransform: "uppercase",
+  fontSize: "clamp(12px, 2.8vw, 14px)",
+  lineHeight: 1.5,
+  letterSpacing: "0.01em",
   color: "#262626",
   fontWeight: 500,
-};
-
-const navGroupStyle: React.CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "flex-end",
-  gap: 4,
-  flex: "1 1 auto",
+  textAlign: "left",
+  whiteSpace: "normal",
 };
 
 const navStyle: React.CSSProperties = {
@@ -115,15 +101,6 @@ const navStyle: React.CSSProperties = {
   gap: 8,
   flexWrap: "wrap",
   justifyContent: "flex-end",
-};
-
-const authorLineStyle: React.CSSProperties = {
-  margin: 0,
-  fontSize: "clamp(11px, 2.8vw, 12px)",
-  lineHeight: 1.5,
-  letterSpacing: "0.01em",
-  color: "#737373",
-  textAlign: "right",
 };
 
 const navItemStyle: React.CSSProperties = {
