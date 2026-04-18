@@ -37,7 +37,7 @@ export default function HeroSection({ setPage }: Props) {
             type="button"
             onClick={() => {
               trackEvent("lp_demo_click", { section: "hero" });
-              setPage("demo-intro");
+              setPage("demo");
             }}
             style={primaryButtonStyle}
           >

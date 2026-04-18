@@ -1,6 +1,18 @@
 import SiteHeader from "../../components/shared/SiteHeader";
+import SectionScrollCue from "../../components/core/SectionScrollCue";
 import EditorialSectionHeader from "../../components/shared/EditorialSectionHeader";
 import FooterSection from "../../components/core/FooterSection";
+import {
+  contentWidthClass,
+  editorialBodyBlockClass,
+  editorialFigureBlockClass,
+  editorialSectionBlockClass,
+  heroSectionClass,
+  pageMainClass,
+  pageShellClass,
+  surfaceSectionClass,
+  tintedSectionClass,
+} from "../../components/shared/pageLayout";
 
 type ProcessPageProps = {
   setPage?: (page: string) => void;
@@ -22,12 +34,12 @@ const principles = [
 
 export default function ProcessPage({ setPage }: ProcessPageProps) {
   return (
-    <div className="min-h-screen bg-[#f7f4ee] text-stone-900">
+    <div className={pageShellClass}>
       {setPage && <SiteHeader setPage={setPage} currentPage="process" />}
 
-      <main className="pt-20">
-        <section className="px-6 py-24 md:px-10 md:py-32">
-          <div className="mx-auto max-w-5xl">
+      <main className={pageMainClass}>
+        <section id="process-intro" className={`scroll-mt-24 ${heroSectionClass}`}>
+          <div className={contentWidthClass}>
             <EditorialSectionHeader
               label="PROCESS"
               marker="flow"
@@ -43,12 +55,14 @@ export default function ProcessPage({ setPage }: ProcessPageProps) {
               }
               summary="違和感の観察がどのように整理され、記録され、次の実践へ引き継がれるのかを、LPと同じ誌面構成で辿ります。"
             />
+
+            <SectionScrollCue targetId="process-flow" emphasis="soft" subdued />
           </div>
         </section>
 
-        <section className="border-y border-stone-200 bg-white px-6 py-20 md:px-10 md:py-24">
-          <div className="mx-auto max-w-5xl">
-            <div className="max-w-3xl">
+        <section id="process-flow" className={`scroll-mt-24 ${surfaceSectionClass}`}>
+          <div className={contentWidthClass}>
+            <div className={`max-w-3xl ${editorialSectionBlockClass}`}>
               <EditorialSectionHeader
                 label="FLOW"
                 marker="flow"
@@ -57,7 +71,7 @@ export default function ProcessPage({ setPage }: ProcessPageProps) {
               />
             </div>
 
-            <div className="mt-16 border-t border-stone-200">
+            <div className={`${editorialFigureBlockClass} border-t border-stone-200`}>
               {flowItems.map((item, index) => (
                 <div
                   key={item}
@@ -70,12 +84,16 @@ export default function ProcessPage({ setPage }: ProcessPageProps) {
                 </div>
               ))}
             </div>
+
+            <div className="mt-12 flex justify-center">
+              <SectionScrollCue targetId="process-structure" emphasis="soft" subdued />
+            </div>
           </div>
         </section>
 
-        <section className="bg-[#f3efe7] px-6 py-20 md:px-10 md:py-24">
-          <div className="mx-auto max-w-5xl">
-            <div className="max-w-4xl">
+        <section id="process-structure" className={`scroll-mt-24 ${tintedSectionClass}`}>
+          <div className={contentWidthClass}>
+            <div className={`max-w-4xl ${editorialSectionBlockClass}`}>
               <EditorialSectionHeader
                 label="STRUCTURE"
                 marker="lines"
@@ -90,7 +108,7 @@ export default function ProcessPage({ setPage }: ProcessPageProps) {
               />
             </div>
 
-            <div className="mt-16 grid gap-8 md:grid-cols-3">
+            <div className={`${editorialFigureBlockClass} grid gap-8 md:grid-cols-3`}>
               {principles.map((item, index) => (
                 <div key={item} className="border-t border-stone-300 pt-5">
                   <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-stone-400">
@@ -100,11 +118,15 @@ export default function ProcessPage({ setPage }: ProcessPageProps) {
                 </div>
               ))}
             </div>
+
+            <div className="mt-12 flex justify-center">
+              <SectionScrollCue targetId="process-next" emphasis="soft" subdued />
+            </div>
           </div>
         </section>
 
-        <section className="border-y border-stone-200 bg-white px-6 py-20 md:px-10 md:py-24">
-          <div className="mx-auto max-w-4xl text-center">
+        <section id="process-next" className={`scroll-mt-24 ${surfaceSectionClass}`}>
+          <div className={`mx-auto max-w-4xl text-center ${editorialSectionBlockClass}`}>
             <EditorialSectionHeader
               label="CONTACT"
               marker="none"
@@ -118,7 +140,7 @@ export default function ProcessPage({ setPage }: ProcessPageProps) {
               summary="流れを読むだけでなく、実際のケースでこの手順がどう立ち上がるかを体験できます。"
             />
 
-            <div className="mt-14 flex flex-wrap justify-center gap-3">
+            <div className={`${editorialBodyBlockClass} flex flex-wrap justify-center gap-3`}>
               <button
                 type="button"
                 onClick={() => setPage?.("demo-intro")}

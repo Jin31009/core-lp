@@ -5,6 +5,7 @@ import HeroSection from "../components/core/HeroSection";
 import ProblemSection from "../components/core/ProblemSection";
 import CoreSection from "../components/core/CoreSection";
 import MissionSection from "../components/core/MissionSection";
+import PocBridgeSection from "../components/core/PocBridgeSection";
 import PrototypeSection from "../components/core/PrototypeSection";
 import CtaSection from "../components/core/CtaSection";
 import FooterSection from "../components/core/FooterSection";
@@ -16,7 +17,7 @@ type Props = {
 
 export default function CoreLPPage({ setPage }: Props) {
   useEffect(() => {
-    const sectionIds = ["hero", "problem", "redefinition", "method", "demo", "cta"];
+    const sectionIds = ["hero", "problem", "redefinition", "method", "poc-bridge", "demo", "cta"];
     const seen = new Set<string>();
     const sections = sectionIds
       .map((id) => document.getElementById(id))
@@ -59,6 +60,7 @@ export default function CoreLPPage({ setPage }: Props) {
       <ProblemSection />
       <CoreSection />
       <MissionSection />
+      <PocBridgeSection setPage={setPage} />
       <PrototypeSection setPage={setPage} />
       <CtaSection setPage={setPage} />
       <FooterSection setPage={setPage} />

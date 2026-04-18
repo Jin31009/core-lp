@@ -76,7 +76,7 @@ export default function MissionSection() {
           </div>
         </div>
 
-        <SectionScrollCue targetId="demo" />
+        <SectionScrollCue targetId="poc-bridge" />
       </div>
     </section>
   );

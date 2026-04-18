@@ -24,8 +24,9 @@ export default function SiteHeader({ setPage, currentPage }: Props) {
   return (
     <header style={headerStyle}>
       <div style={innerStyle}>
-        <button onClick={() => setPage("top")} style={brandStyle}>
-          CORE｜黒江仁｜医療広報・関係性設計
+        <button onClick={() => setPage("top")} style={brandButtonStyle}>
+          <span style={brandSubStyle}>CORE project</span>
+          <span style={brandStyle}>黒江仁｜医療広報・関係性設計</span>
         </button>
 
         <nav style={navStyle}>
@@ -83,17 +84,33 @@ const innerStyle: React.CSSProperties = {
   flexWrap: "wrap",
 };
 
-const brandStyle: React.CSSProperties = {
+const brandButtonStyle: React.CSSProperties = {
   border: "none",
   background: "transparent",
   padding: 0,
   margin: 0,
   cursor: "pointer",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "flex-start",
+};
+
+const brandSubStyle: React.CSSProperties = {
+  margin: "0 0 2px",
+  fontSize: 10,
+  lineHeight: 1.4,
+  letterSpacing: "0.16em",
+  textTransform: "uppercase",
+  color: "#8a8a8a",
+  fontWeight: 500,
+};
+
+const brandStyle: React.CSSProperties = {
   fontSize: "clamp(12px, 2.8vw, 14px)",
   lineHeight: 1.5,
   letterSpacing: "0.01em",
   color: "#262626",
-  fontWeight: 500,
+  fontWeight: 400,
   textAlign: "left",
   whiteSpace: "normal",
 };

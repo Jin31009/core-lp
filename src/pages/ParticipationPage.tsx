@@ -1,4 +1,19 @@
 
+import FooterSection from "../components/core/FooterSection";
+import SectionScrollCue from "../components/core/SectionScrollCue";
+import SiteHeader from "../components/shared/SiteHeader";
+import EditorialSectionHeader from "../components/shared/EditorialSectionHeader";
+import {
+  contentWidthClass,
+  editorialBodyBlockClass,
+  editorialFigureBlockClass,
+  editorialSectionBlockClass,
+  heroSectionClass,
+  pageMainClass,
+  pageShellClass,
+  surfaceSectionClass,
+  tintedSectionClass,
+} from "../components/shared/pageLayout";
 import type { Page } from "../types";
 
 type ParticipationItem = {
@@ -44,67 +59,99 @@ export default function ParticipationPage({
   onNavigate: (page: Page) => void;
   onBackPrev: () => void;
 }) {
+  const handlePageChange = (page: string) => onNavigate(page as Page);
+
   return (
-    <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
-      <div className="mb-6 flex flex-col gap-2 sm:mb-8 sm:flex-row">
-        <button
-          onClick={onBackPrev}
-          className="w-full border border-black/15 px-4 py-3 text-sm text-slate-600 transition hover:bg-white sm:w-auto sm:py-2"
-        >
-          ← 前のページへ戻る
-        </button>
-        <button
-          onClick={() => onNavigate("top")}
-          className="w-full border border-black/15 px-4 py-3 text-sm text-slate-600 transition hover:bg-white sm:w-auto sm:py-2"
-        >
-          TOPへ戻る
-        </button>
-      </div>
+    <div className={pageShellClass}>
+      <SiteHeader setPage={handlePageChange} currentPage="participation" />
 
-      <div className="mb-12 border-t border-black/10 pt-8">
-        <p className="text-xs tracking-[0.3em] text-slate-400">PARTICIPATION</p>
-        <h2 className="mt-2 font-serif text-2xl leading-tight sm:text-3xl md:text-5xl">
-          共創で進めるという選択肢
-        </h2>
-      </div>
-
-      <div className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr]">
-        <div className="space-y-4 text-slate-600 leading-8">
-          <p>
-            これは完成品を導入するプロジェクトではありません。
-          </p>
-          <p>
-            関係マネジメントという未整備領域を、協賛者と共に検証しながら形にしていく進め方です。
-          </p>
-          <p>
-            現在、医療機関の現場で小さく実証が始まっており、共に育てる前提で動いています。
-          </p>
-        </div>
-
-        <div className="grid gap-4 md:grid-cols-3">
-          {PARTICIPATION.map((p) => (
-            <ListCard
-              key={p.title}
-              title={`${p.subtitle} / ${p.title}`}
-              items={p.items}
+      <main className={pageMainClass}>
+        <section id="participation-intro" className={`scroll-mt-24 ${heroSectionClass}`}>
+          <div className={contentWidthClass}>
+            <EditorialSectionHeader
+              label="PARTICIPATION"
+              marker="none"
+              hero
+              title="共創で進めるという選択肢"
+              summary="完成品を導入するのではなく、現場と往復しながら少しずつ検証し、育てていく関わり方を整理しています。"
             />
-          ))}
-        </div>
-      </div>
 
-      <div className="mt-10 grid gap-4 lg:grid-cols-3">
-        <MiniStat title="基本思想" value="共創" note="一緒に設計・検証する" />
-        <MiniStat title="提供形態" value="OSS + 協賛" note="開きながら育てる" />
-        <MiniStat title="費用" value="Time Fee" note="必要な分だけ支援" />
-      </div>
+            <SectionScrollCue targetId="participation-models" emphasis="soft" subdued />
+          </div>
+        </section>
 
-      <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-        <LinkButton onClick={() => onNavigate("demo")}>まず試す</LinkButton>
-        <LinkButton variant="secondary" onClick={() => onNavigate("poc")}>
-          検証を見る
-        </LinkButton>
-      </div>
-    </section>
+        <section id="participation-models" className={`scroll-mt-24 ${surfaceSectionClass}`}>
+          <div className={`${contentWidthClass} grid gap-10 lg:grid-cols-[0.95fr_1.05fr]`}>
+            <div className={editorialSectionBlockClass}>
+              <EditorialSectionHeader
+                label="PARTICIPATION"
+                marker="none"
+                title="共創の進め方"
+                summary="完成品を導入するのではなく、現場との往復を通じて小さく実証しながら形にしていく関わり方を整理しています。"
+              />
+
+              <div className={`${editorialBodyBlockClass} border-t border-black/10`}>
+                {[
+                  "これは完成品を導入するプロジェクトではありません。",
+                  "関係マネジメントという未整備領域を、協賛者と共に検証しながら形にしていく進め方です。",
+                  "現在、医療機関の現場で小さく実証が始まっており、共に育てる前提で動いています。",
+                ].map((item) => (
+                  <p
+                    key={item}
+                    className="border-b border-black/10 py-5 text-left text-[15px] leading-8 text-stone-700 sm:text-[16px]"
+                  >
+                    {item}
+                  </p>
+                ))}
+              </div>
+            </div>
+
+            <div className={`${editorialFigureBlockClass} grid gap-4 md:grid-cols-3`}>
+              {PARTICIPATION.map((p) => (
+                <ListCard
+                  key={p.title}
+                  title={`${p.subtitle} / ${p.title}`}
+                  items={p.items}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className={`${contentWidthClass} mt-12 flex justify-center`}>
+            <SectionScrollCue targetId="participation-next" emphasis="soft" subdued />
+          </div>
+        </section>
+
+        <section id="participation-next" className={`scroll-mt-24 ${tintedSectionClass}`}>
+          <div className={`${contentWidthClass} ${editorialSectionBlockClass}`}>
+            <EditorialSectionHeader
+              label="NEXT"
+              marker="triangle"
+              title="次に進むための判断材料"
+              summary="まず試すか、検証を見るか、少し戻って整理するかを、このページの終わりで静かに選べるようにしています。"
+            />
+
+            <div className={`${editorialFigureBlockClass} grid gap-4 lg:grid-cols-3`}>
+              <MiniStat title="基本思想" value="共創" note="一緒に設計・検証する" />
+              <MiniStat title="提供形態" value="OSS + 協賛" note="開きながら育てる" />
+              <MiniStat title="費用" value="Time Fee" note="必要な分だけ支援" />
+            </div>
+
+            <div className={`${editorialBodyBlockClass} flex flex-col gap-3 sm:flex-row sm:justify-center`}>
+              <LinkButton onClick={() => onNavigate("demo")}>まず試す</LinkButton>
+              <LinkButton variant="secondary" onClick={() => onNavigate("poc")}>
+                検証を見る
+              </LinkButton>
+              <LinkButton variant="secondary" onClick={onBackPrev}>
+                前のページへ戻る
+              </LinkButton>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <FooterSection setPage={handlePageChange} />
+    </div>
   );
 }
 
@@ -120,8 +167,8 @@ function LinkButton({
   const base = "w-full px-6 py-3 text-sm transition sm:w-auto";
   const style =
     variant === "primary"
-      ? "bg-black text-white shadow-sm hover:scale-[1.01] hover:shadow-md"
-      : "border border-black bg-transparent text-black hover:bg-slate-50";
+      ? "border border-stone-900 bg-stone-900 text-white hover:opacity-90"
+      : "border border-stone-300 bg-transparent text-stone-700 hover:bg-[#f7f4ee]";
 
   return (
     <button type="button" onClick={onClick} className={`${base} ${style}`}>
@@ -140,10 +187,10 @@ function MiniStat({
   note: string;
 }) {
   return (
-    <div className="border border-black/10 bg-white p-4">
-      <div className="text-xs tracking-widest text-slate-400">{title}</div>
-      <div className="mt-1 text-xl font-medium">{value}</div>
-      <div className="mt-1 text-xs text-slate-500">{note}</div>
+    <div className="rounded-[24px] border border-black/10 bg-white p-4">
+      <div className="text-xs tracking-widest text-stone-400">{title}</div>
+      <div className="mt-1 text-xl font-medium text-stone-900">{value}</div>
+      <div className="mt-1 text-xs text-stone-500">{note}</div>
     </div>
   );
 }
@@ -156,9 +203,9 @@ function ListCard({
   items: readonly string[];
 }) {
   return (
-    <div className="border border-black/10 bg-white p-5">
-      <div className="font-medium text-slate-900">{title}</div>
-      <ul className="mt-3 space-y-2 text-sm leading-6 text-slate-600">
+    <div className="rounded-[24px] border border-black/10 bg-white p-5">
+      <div className="font-medium text-stone-900">{title}</div>
+      <ul className="mt-3 space-y-2 text-sm leading-6 text-stone-600">
         {items.map((item) => (
           <li key={item}>・{item}</li>
         ))}

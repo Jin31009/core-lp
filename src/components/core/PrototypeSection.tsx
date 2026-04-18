@@ -45,7 +45,7 @@ export default function PrototypeSection({ setPage }: Props) {
           <button
             onClick={() => {
               trackEvent("lp_demo_click", { section: "demo" });
-              setPage("demo-intro");
+              setPage("demo");
             }}
             style={buttonStyle}
           >

@@ -1,52 +1,26 @@
 import SiteHeader from "../../components/shared/SiteHeader";
+import SectionScrollCue from "../../components/core/SectionScrollCue";
 import EditorialSectionHeader from "../../components/shared/EditorialSectionHeader";
 import FooterSection from "../../components/core/FooterSection";
+import {
+  centeredCtaWidthClass,
+  contentWidthClass,
+  editorialBodyBlockClass,
+  editorialFigureBlockClass,
+  editorialSectionBlockClass,
+  heroSectionClass,
+  pageMainClass,
+  pageShellClass,
+  readingBodyClass,
+  readingColumnClass,
+  surfaceSectionClass,
+  tintedSectionClass,
+  wideContentWidthClass,
+} from "../../components/shared/pageLayout";
 
 type Props = {
   setPage: (page: string) => void;
 };
-
-const conventionalItems = [
-  "表現に依存する",
-  "経験と勘に依存する",
-  "属人的に対応する",
-];
-
-const conventionalResults = [
-  "再現できない",
-  "組織に残らない",
-  "学習されない",
-];
-
-const relationalItems = [
-  "関係の状態を観察する",
-  "構造として捉える",
-  "介入可能にする",
-];
-
-const relationalResults = [
-  "再現できる",
-  "組織に残る",
-  "学習される",
-];
-
-const expansionItems = [
-  {
-    label: "Reframe",
-    title: "関係の再認識が始まる",
-    body: "不満や違和感を、感情的な反応としてではなく、関係の状態変化として捉え直す。",
-  },
-  {
-    label: "Co-create",
-    title: "AIと共に整理し、考える",
-    body: "AIは判断を代行する道具ではない。構造化を支援し、人の観察・解釈・判断を補助する共考のパートナーである。",
-  },
-  {
-    label: "Structure",
-    title: "組織の技として定着する",
-    body: "個人の経験に閉じていた対応が、再現可能な知識となり、次の実践へ引き継がれていく。",
-  },
-];
 
 function FigureColumn({
   heading,
@@ -58,16 +32,16 @@ function FigureColumn({
   results: string[];
 }) {
   return (
-    <div>
-      <p className="text-[12px] uppercase tracking-[0.16em] text-stone-400">{heading}</p>
+    <div className="rounded-[28px] border border-stone-200 bg-white p-6 md:p-8">
+      <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-stone-400">{heading}</p>
       <div className="mt-6 border-t border-stone-200">
         {items.map((item) => (
-          <p key={item} className="border-b border-stone-200 py-4 text-[18px] leading-9 text-stone-800">
+          <p key={item} className="border-b border-stone-200 py-4 text-[16px] leading-8 text-stone-800">
             {item}
           </p>
         ))}
       </div>
-      <div className="mt-6 border-t border-stone-300 pt-5">
+      <div className="mt-6 border-t border-stone-200 pt-5">
         {results.map((result, index) => (
           <p
             key={result}
@@ -83,28 +57,30 @@ function FigureColumn({
 
 export default function StructurePage({ setPage }: Props) {
   return (
-    <div className="min-h-screen bg-[#f7f4ee] text-stone-900">
+    <div className={pageShellClass}>
       <SiteHeader setPage={setPage} currentPage="structure" />
 
-      <main className="pt-20">
-        <section className="px-6 py-24 md:px-10 md:py-32">
-          <div className="mx-auto max-w-5xl">
+      <main className={pageMainClass}>
+        <section id="structure-intro" className={`scroll-mt-24 ${heroSectionClass}`}>
+          <div className={contentWidthClass}>
             <EditorialSectionHeader
-              label="STRUCTURE"
+              label="WHY"
               marker="lines"
               hero
               title="理論の裏側から、広報の再定義を読む"
               summary="DEMOの背後にある考え方を、TOPページと同じ余白中心の誌面構成で読み解きます。"
             />
+
+            <SectionScrollCue targetId="structure-premise" emphasis="soft" subdued />
           </div>
         </section>
 
-        <section className="border-y border-stone-200 bg-white px-6 py-20 md:px-10 md:py-24">
-          <div className="mx-auto max-w-5xl">
-            <div className="max-w-4xl">
+        <section id="structure-premise" className={`scroll-mt-24 ${surfaceSectionClass}`}>
+          <div className={contentWidthClass}>
+            <div className={`max-w-4xl ${editorialSectionBlockClass}`}>
               <EditorialSectionHeader
-                label="STRUCTURE"
-                marker="lines"
+                label="WHAT"
+                marker="double-circle"
                 title={
                   <>
                     広報は、情報ではなく
@@ -112,20 +88,120 @@ export default function StructurePage({ setPage }: Props) {
                     関係の状態として扱われるべきである
                   </>
                 }
-                summary="この構想全体を支えている論点を、最初に短く確認します。"
+                summary="ここで行う再定義は、広報を情報伝達としてではなく、関係の状態を観察し整える実践として捉え直すことです。"
               />
             </div>
 
-            <div className="mx-auto mt-16 max-w-3xl border-t border-stone-200">
+            <div className={`${readingColumnClass} ${editorialBodyBlockClass} border-t border-stone-200`}>
               {[
-                "ここは、DEMOの前提にある考え方を深く読むためのページです。",
-                "広報はこれまで、表現力・経験・勘に依存する属人技として扱われてきた。",
-                "その結果、再現できず、組織に残らず、学習されにくい。",
-                "問題は能力ではなく構造にある。",
-                "本構想では広報を「関係の状態を整える体系」として再定義し、観察・分析・介入可能な構造として扱う。",
-                "そのためのモデルがRA-SSである。",
+                "広報はこれまで、表現力や経験に依存する属人的な技として扱われがちでした。",
+                "その結果、再現しにくく、組織に残らず、次の学びにつながりにくくなります。",
+                "必要なのは能力論ではなく、関係を扱える構造として広報を見直すことです。",
               ].map((item) => (
-                <p key={item} className="border-b border-stone-200 py-5 text-[17px] leading-9 text-stone-700">
+                <p key={item} className={`border-b border-stone-200 py-5 ${readingBodyClass}`}>
+                  {item}
+                </p>
+              ))}
+            </div>
+
+            <div className="mt-12 flex justify-center">
+              <SectionScrollCue targetId="structure-compare" emphasis="soft" subdued />
+            </div>
+          </div>
+        </section>
+
+        <section id="structure-compare" className={`scroll-mt-24 ${tintedSectionClass}`}>
+          <div className={wideContentWidthClass}>
+            <div className={editorialSectionBlockClass}>
+              <EditorialSectionHeader
+                label="HOW"
+                marker="lines"
+                title="違和感を、構造として読む"
+                summary="RA-SS は、現場の違和感を感覚のまま終わらせず、関係のズレとして整理し、次の一手へつなぐための枠組みです。"
+              />
+            </div>
+
+            <div className={`${editorialFigureBlockClass} grid gap-6 lg:grid-cols-[1fr_56px_1fr] lg:items-start`}>
+              <FigureColumn
+                heading="違和感"
+                items={["現場で起きたズレに気づく", "関係の揺れとして観察する", "感情の反応から距離を取る"]}
+                results={["観察の起点ができる"]}
+              />
+              <div className="hidden items-center justify-center text-[26px] text-stone-300 lg:flex">
+                →
+              </div>
+              <FigureColumn
+                heading="構造化"
+                items={["関係のズレとして整理する", "どこで崩れたかを読む", "次の一手を順番で考える"]}
+                results={["介入の方向が見える"]}
+              />
+            </div>
+
+            <p className="mx-auto mt-12 max-w-3xl text-center text-[17px] leading-9 text-stone-700">
+              重要なのは評価ではなく、
+              <br />
+              違和感から次の行為までをどう立ち上げるかです。
+            </p>
+
+            <div className="mt-12 flex justify-center">
+              <SectionScrollCue targetId="structure-details" emphasis="soft" subdued />
+            </div>
+          </div>
+        </section>
+
+        <section id="structure-details" className={`scroll-mt-24 ${surfaceSectionClass}`}>
+          <div className={contentWidthClass}>
+            <div className={`max-w-4xl ${editorialSectionBlockClass}`}>
+              <EditorialSectionHeader
+                label="SO WHAT"
+                marker="lines"
+                title="構造として捉えることで、広報は再現可能になる"
+                summary="観察し、介入し、記録できるようになることで、広報は属人的な対応から組織の実践へ変わります。"
+              />
+            </div>
+
+            <div className={`mx-auto max-w-xl rounded-[28px] border border-stone-200 px-6 py-7 text-center text-[21px] leading-[1.9] text-stone-900 ${editorialFigureBlockClass}`}>
+              <p>観察できる</p>
+              <p>介入できる</p>
+              <p>再現できる</p>
+            </div>
+
+            <div className={`${readingColumnClass} ${editorialBodyBlockClass} border-t border-stone-200`}>
+              {[
+                "扱えなかった違和感が、観察と介入の対象になります。",
+                "その記録が残ることで、個人の判断は次の実践へ引き継げる知識になります。",
+                "ここで目指しているのは、広報を再現できる実践として組織に残すことです。",
+              ].map((item) => (
+                <p key={item} className={`border-b border-stone-200 py-5 ${readingBodyClass}`}>
+                  {item}
+                </p>
+              ))}
+            </div>
+
+            <div className="mt-12 flex justify-center">
+              <SectionScrollCue targetId="structure-next" emphasis="soft" subdued />
+            </div>
+          </div>
+        </section>
+
+        <section id="structure-evidence" className={`scroll-mt-24 ${surfaceSectionClass}`}>
+          <div className={contentWidthClass}>
+            <div className={`max-w-3xl ${editorialSectionBlockClass}`}>
+              <EditorialSectionHeader
+                label="EVIDENCE"
+                marker="square"
+                title="進行中の実証"
+                summary="構造の説明に留まらず、実際の現場で検証が進められています。"
+              />
+            </div>
+
+            <div className={`${readingColumnClass} ${editorialBodyBlockClass} border-t border-stone-200`}>
+              {[
+                "国内基幹病院にてPoC進行中",
+                "日本医療マネジメント学会 愛知県大会",
+                "発表準備中",
+              ].map((item) => (
+                <p key={item} className={`border-b border-stone-200 py-5 ${readingBodyClass}`}>
                   {item}
                 </p>
               ))}
@@ -133,173 +209,21 @@ export default function StructurePage({ setPage }: Props) {
           </div>
         </section>
 
-        <section className="bg-[#f3efe7] px-6 py-20 md:px-10 md:py-24">
-          <div className="mx-auto max-w-6xl">
+        <section id="structure-next" className={`scroll-mt-24 ${tintedSectionClass}`}>
+          <div className={`${centeredCtaWidthClass} ${editorialSectionBlockClass}`}>
             <EditorialSectionHeader
-              label="STRUCTURE"
-              marker="lines"
-              title="広報の再定義"
-              summary="従来の広報観と、関係の状態を扱う構想との差を図ではなく誌面構成として並置します。"
+              label="NEXT"
+              marker="triangle"
+              title="実際にどう機能するかは、事例で確認できます"
+              summary="理論の位置づけを読んだあとに、実際のケースを通してどう立ち上がるかを見られます。"
             />
 
-            <div className="mt-16 grid gap-12 lg:grid-cols-[1fr_80px_1fr] lg:items-start">
-              <FigureColumn
-                heading="Conventional PR"
-                items={conventionalItems}
-                results={conventionalResults}
-              />
-              <div className="hidden items-center justify-center text-[32px] text-stone-400 lg:flex">
-                →
-              </div>
-              <FigureColumn
-                heading="Relational Architecture"
-                items={relationalItems}
-                results={relationalResults}
-              />
-            </div>
-
-            <p className="mx-auto mt-12 max-w-3xl text-center text-[17px] leading-9 text-stone-700">
-              広報の課題は、表現力の不足ではない。
-              <br />
-              関係を扱う構造を持たなかったことにある。
-            </p>
-          </div>
-        </section>
-
-        <section className="border-y border-stone-200 bg-white px-6 py-20 md:px-10 md:py-24">
-          <div className="mx-auto max-w-5xl space-y-20">
-            <section>
-              <EditorialSectionHeader
-                label="PROBLEM"
-                marker="square"
-                title="構造的な課題"
-                summary="属人性に依存した広報は、再現性と学習可能性を失いやすくなります。"
-              />
-              <div className="mt-14 text-center text-[28px] leading-[2.1] text-stone-900">
-                <div>属人性への依存</div>
-                <div className="opacity-35">↓</div>
-                <div>再現性の欠如</div>
-                <div className="opacity-35">↓</div>
-                <div>効果測定の不可能性</div>
-              </div>
-              <p className="mt-10 text-center text-[18px] font-semibold leading-9 text-stone-900">
-                これは能力の問題ではなく、構造の問題である。
-              </p>
-            </section>
-
-            <section>
-              <EditorialSectionHeader
-                label="REDEFINITION"
-                marker="double-circle"
-                title={
-                  <>
-                    広報は、
-                    <br />
-                    関係の状態を整える体系である
-                  </>
-                }
-                summary="本構想では、広報を単なる情報伝達ではなく、関係を整える営みとして捉え直します。"
-              />
-            </section>
-
-            <section>
-              <EditorialSectionHeader
-                label="STRUCTURE"
-                marker="lines"
-                title="関係は、すでに現場に現れている"
-                summary="違和感や投書は感情の断片ではなく、関係の状態変化として読み直すことができます。"
-              />
-              <div className="mx-auto mt-12 max-w-2xl border-y border-stone-200 py-8 text-center text-[21px] leading-10 text-stone-800">
-                「待たされた」ではなく、
-                <br />
-                「見てもらえていない」という認識
-              </div>
-              <p className="mt-10 text-center text-[17px] leading-9 text-stone-700">
-                これは偶然ではなく、
-                <br />
-                関係構造が変化した結果である。
-              </p>
-            </section>
-
-            <section>
-              <EditorialSectionHeader
-                label="METHOD"
-                marker="lines"
-                title="RA-SS"
-                summary="この構造を扱うために、観察と分析と介入を支えるモデルとしてRA-SSを置きます。"
-              />
-              <p className="mt-12 text-center text-[18px] leading-10 text-stone-700">
-                RA-SSは、
-                <br />
-                関係を構造として捉え、
-                <br />
-                観察・分析・介入するための視点であり装置である。
-              </p>
-            </section>
-
-            <section>
-              <EditorialSectionHeader
-                label="STRUCTURE"
-                marker="lines"
-                title="関係は、扱える対象になる"
-                summary="構造として捉えることで、これまで感覚的だった対応も観察・介入・再現の対象になります。"
-              />
-              <div className="mx-auto mt-12 max-w-xl border-y border-stone-200 py-6 text-center text-[22px] leading-[1.9] text-stone-900">
-                <p>観察できる</p>
-                <p>介入できる</p>
-                <p>再現できる</p>
-              </div>
-              <p className="mt-10 text-center text-[17px] leading-9 text-stone-700">
-                構造として捉えることで、
-                <br />
-                関係は「扱えないもの」ではなく、
-                <br />
-                扱える対象へと変わる。
-              </p>
-            </section>
-          </div>
-        </section>
-
-        <section className="bg-[#f3efe7] px-6 py-20 md:px-10 md:py-24">
-          <div className="mx-auto max-w-6xl">
-            <EditorialSectionHeader
-              label="STRUCTURE"
-              marker="lines"
-              title={
-                <>
-                  構造化された広報は、
-                  <br />
-                  次の実践へ展開できる
-                </>
-              }
-              summary="構造として残された知見は、次の現場に展開され、組織の技として蓄積されていきます。"
-            />
-
-            <div className="mt-16 grid gap-10 md:grid-cols-3">
-              {expansionItems.map((item) => (
-                <div key={item.label} className="border-t border-stone-300 pt-5">
-                  <p className="text-[12px] uppercase tracking-[0.16em] text-stone-400">
-                    {item.label}
-                  </p>
-                  <p className="mt-4 text-[24px] font-semibold leading-10 tracking-[-0.01em] text-stone-900">
-                    {item.title}
-                  </p>
-                  <p className="mt-5 text-[17px] leading-9 text-stone-700">{item.body}</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-16 text-center">
-              <p className="text-[18px] leading-9 text-stone-700">
-                属人技は構造化されることで、
-                <br />
-                個人の経験から、組織の再現可能な力へと転換される。
-              </p>
+            <div className={`${editorialBodyBlockClass} flex justify-center`}>
               <button
-                onClick={() => setPage("top")}
-                className="mt-12 inline-flex min-h-11 items-center justify-center border border-stone-300 px-7 text-[12px] font-medium uppercase tracking-[0.16em] text-stone-700 transition hover:bg-white"
+                onClick={() => setPage("poc")}
+                className="inline-flex min-h-11 items-center justify-center border border-stone-300 px-7 text-[12px] font-medium uppercase tracking-[0.16em] text-stone-700 transition hover:bg-white"
               >
-                TOPへ戻る
+                事例を見る
               </button>
             </div>
           </div>

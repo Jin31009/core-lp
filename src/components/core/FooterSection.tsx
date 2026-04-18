@@ -3,21 +3,21 @@ type Props = {
 };
 
 const NAV_ITEMS = [
-  { label: "TOP", page: "top" },
-  { label: "DEMO", page: "demo" },
-  { label: "CONTACT", page: "contact" },
+  { label: "理論の裏側", page: "structure" },
+  { label: "事例", page: "poc" },
+  { label: "一緒に試す", page: "contact" },
+  { label: "体験する", page: "demo" },
 ] as const;
 
 export default function FooterSection({ setPage }: Props) {
   return (
     <footer style={footerStyle}>
       <div style={innerStyle}>
-        <p style={brandStyle}>CORE</p>
-        <p style={textStyle}>RA-SS｜広報再定義プロジェクト</p>
+        <p style={brandStyle}>CORE project</p>
         <p style={subTextStyle}>
-          広報を、関係の状態を整える体系として捉え直し、
+          理論から実証、そして実装へ。
           <br />
-          理論の理解から体験、対話の入口までをつなぐサイトです。
+          関係の構造として広報を捉え直すためのサイトです。
         </p>
 
         <div style={navWrapStyle}>
@@ -55,19 +55,11 @@ const innerStyle: React.CSSProperties = {
 };
 
 const brandStyle: React.CSSProperties = {
-  margin: "0 0 10px",
-  fontSize: 11,
-  letterSpacing: "0.18em",
+  margin: "0 0 8px",
+  fontSize: 10,
+  letterSpacing: "0.16em",
   textTransform: "uppercase",
-  color: "#525252",
-  fontWeight: 500,
-};
-
-const textStyle: React.CSSProperties = {
-  margin: "0 0 10px",
-  fontSize: 14,
-  lineHeight: 1.8,
-  color: "#262626",
+  color: "#737373",
   fontWeight: 500,
 };
 
@@ -88,20 +80,21 @@ const navWrapStyle: React.CSSProperties = {
 };
 
 const navButtonStyle: React.CSSProperties = {
-  border: "none",
+  border: "1px solid rgba(0,0,0,0.12)",
   background: "transparent",
-  padding: "10px 12px",
+  padding: "10px 14px",
   margin: 0,
   cursor: "pointer",
-  fontSize: 14,
+  borderRadius: 999,
+  fontSize: 13,
   color: "#262626",
   fontWeight: 500,
 };
 
 const guideTextStyle: React.CSSProperties = {
-  margin: "20px auto 0",
+  margin: "18px auto 0",
   maxWidth: 680,
-  fontSize: 14,
+  fontSize: 13,
   lineHeight: 1.8,
   color: "#525252",
 };

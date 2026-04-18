@@ -1,1 +1,1 @@
-export type Page = "top" | "slides" | "demo" | "participation" | "poc";
+export type Page = "top" | "slides" | "demo" | "participation" | "poc" | "contact";

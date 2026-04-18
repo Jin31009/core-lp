@@ -6,10 +6,10 @@ type Props = {
 };
 
 const STEPS = [
-  "① 状況を書く\n起きた場面を、そのまま書き出します",
-  "② 関係のズレが見える\n入力した内容から、関係のズレが整理されます",
-  "③ 次の一手を考える\n最初に何を置くかが、順番で見えてきます",
-  "④ 記録として残す\n対応と学びを、あとで使える形で残します",
+  "① 状況を書く\n起きた場面を書き出します",
+  "② ズレが見える\n関係のズレを整理します",
+  "③ 次の一手を考える\n最初の一歩を見ます",
+  "④ 記録として残す\nあとで使える形にします",
 ];
 
 export default function DemoIntroPage({ setPage }: Props) {
@@ -28,9 +28,6 @@ export default function DemoIntroPage({ setPage }: Props) {
             <p style={leadStyle}>
               現場で起きた場面を入力すると、関係のズレが整理され、次にどう動くかを順番で確認できます。
             </p>
-            <p style={leadSubStyle}>
-              実際に1つの場面を入力しながら、この流れを体験します。
-            </p>
           </div>
 
           <div style={stepsGridStyle}>
@@ -43,13 +40,13 @@ export default function DemoIntroPage({ setPage }: Props) {
 
           <div style={noteCardStyle}>
             <p style={noteTextStyle}>
-              これは自動で判断するツールではありません。関係の状態を整理し、最初の一手を考えやすくするためのデモです。
+              自動で判断するのではなく、関係の状態を整理し、最初の一手を考えやすくするためのデモです。
             </p>
           </div>
 
           <div style={ctaBlockStyle}>
             <p style={ctaIntroStyle}>
-              1つのケースを使って、この流れをそのまま体験できます（約3分）
+              1つのケースで、そのまま体験できます。
             </p>
             <button type="button" onClick={() => setPage("demo")} style={ctaStyle}>
               デモを体験する
@@ -115,20 +112,11 @@ const leadStyle: React.CSSProperties = {
   textAlign: "center",
 };
 
-const leadSubStyle: React.CSSProperties = {
-  margin: "16px auto 0",
-  maxWidth: 720,
-  fontSize: 17,
-  lineHeight: 1.9,
-  color: "#525252",
-  textAlign: "center",
-};
-
 const stepsGridStyle: React.CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
   gap: 24,
-  marginTop: 48,
+  marginTop: 40,
 };
 
 const stepCardStyle: React.CSSProperties = {
@@ -137,31 +125,31 @@ const stepCardStyle: React.CSSProperties = {
 
 const stepTextStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: 18,
-  lineHeight: 1.8,
+  fontSize: 17,
+  lineHeight: 1.7,
   color: "#111",
   whiteSpace: "pre-line",
   textAlign: "center",
 };
 
 const noteCardStyle: React.CSSProperties = {
-  marginTop: 32,
+  marginTop: 24,
   maxWidth: 720,
-  padding: "10px 0 0",
+  padding: "6px 0 0",
   marginLeft: "auto",
   marginRight: "auto",
 };
 
 const noteTextStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: 17,
-  lineHeight: 1.95,
+  fontSize: 16,
+  lineHeight: 1.85,
   color: "#404040",
   textAlign: "center",
 };
 
 const ctaBlockStyle: React.CSSProperties = {
-  marginTop: 36,
+  marginTop: 28,
   display: "flex",
   flexDirection: "column",
   alignItems: "center",

@@ -106,28 +106,31 @@ const markerWrapStyle: React.CSSProperties = {
 
 const titleStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: 32,
+  fontSize: "clamp(1.95rem, 4.8vw, 2.75rem)",
   fontWeight: 600,
-  lineHeight: 1.35,
-  letterSpacing: "-0.01em",
+  lineHeight: 1.32,
+  letterSpacing: "-0.02em",
   color: "#171717",
+  textWrap: "balance",
 };
 
 const heroTitleStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: "3.25rem",
+  fontSize: "clamp(2.5rem, 7vw, 4.9rem)",
   fontWeight: 600,
-  lineHeight: 1.28,
-  letterSpacing: "-0.02em",
+  lineHeight: 1.2,
+  letterSpacing: "-0.03em",
   color: "#171717",
+  textWrap: "balance",
 };
 
 const summaryStyle: React.CSSProperties = {
-  maxWidth: 720,
-  margin: "28px auto 0",
-  fontSize: 17,
-  lineHeight: 1.95,
+  maxWidth: 640,
+  margin: "24px auto 0",
+  fontSize: "clamp(15px, 3.8vw, 17px)",
+  lineHeight: 1.85,
   color: "#404040",
+  textWrap: "pretty",
 };
 
 const dotStyle: React.CSSProperties = {

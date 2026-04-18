@@ -1,17 +1,43 @@
-
+import FooterSection from "../components/core/FooterSection";
+import SectionScrollCue from "../components/core/SectionScrollCue";
+import SiteHeader from "../components/shared/SiteHeader";
+import EditorialSectionHeader from "../components/shared/EditorialSectionHeader";
+import {
+  contentWidthClass,
+  centeredCtaWidthClass,
+  editorialBodyBlockClass,
+  editorialFigureBlockClass,
+  editorialSectionBlockClass,
+  heroSectionClass,
+  pageMainClass,
+  pageShellClass,
+  readingBodyClass,
+  readingColumnClass,
+  surfaceSectionClass,
+  tintedSectionClass,
+} from "../components/shared/pageLayout";
 import type { Page } from "../types";
 
-type Card = {
-  title: string;
-  desc: string;
-};
+const POC_SIGNALS = [
+  "違和感を構造として捉えられるか",
+  "関係のズレとして整理できるか",
+  "次の一手を順番で描けるか",
+] as const;
 
-const POC_CARDS: Card[] = [
-  { title: "ケース共有", desc: "投書・現場の違和感・採用時のズレなどを共有" },
-  { title: "構造可視化", desc: "Δを軸に関係のズレを整理する" },
-  { title: "次の一手", desc: "Pre-Assetの観点から行動案を設計する" },
-  { title: "短期検証", desc: "オンライン・短期間で再現性を確認する" },
-];
+const JUDGMENT_POINTS = [
+  {
+    title: "現場で使えるか",
+    body: "短時間でも扱える",
+  },
+  {
+    title: "構造として残せるか",
+    body: "次に参照できる",
+  },
+  {
+    title: "続ける価値があるか",
+    body: "次の検証へ進める",
+  },
+] as const;
 
 export default function PocPage({
   onNavigate,
@@ -20,123 +46,230 @@ export default function PocPage({
   onNavigate: (page: Page) => void;
   onBackPrev: () => void;
 }) {
+  const handlePageChange = (page: string) => onNavigate(page as Page);
+
   return (
-    <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
-      <div className="mb-6 flex flex-col gap-2 sm:mb-8 sm:flex-row">
-        <button
-          onClick={onBackPrev}
-          className="w-full border border-black/15 px-4 py-3 text-sm text-slate-600 transition hover:bg-white sm:w-auto sm:py-2"
-        >
-          ← 前のページへ戻る
-        </button>
-        <button
-          onClick={() => onNavigate("top")}
-          className="w-full border border-black/15 px-4 py-3 text-sm text-slate-600 transition hover:bg-white sm:w-auto sm:py-2"
-        >
-          TOPへ戻る
-        </button>
-      </div>
+    <div className={pageShellClass}>
+      <SiteHeader setPage={handlePageChange} currentPage="poc" />
 
-      <div className="mb-12 border-t border-black/10 pt-8">
-        <p className="text-xs tracking-[0.3em] text-slate-400">PoC</p>
-        <h2 className="mt-2 font-serif text-2xl leading-tight sm:text-3xl md:text-5xl">
-          導入前に、判断するための検証
-        </h2>
-      </div>
-
-      <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-        <div className="space-y-4 text-slate-600 leading-8">
-          <p className="text-lg text-slate-700">
-            この取り組みが本当に使えるのか。
-          </p>
-          <p>自組織のケースで、小さく確認することができます。</p>
-          <p>この段階で、導入する価値があるかを判断できます。</p>
-        </div>
-
-        <div className="grid gap-4 md:grid-cols-2">
-          {POC_CARDS.map((c, i) => (
-            <PocCard
-              key={c.title}
-              step={`0${i + 1}`}
-              title={c.title}
-              desc={c.desc}
+      <main className={pageMainClass}>
+        <section id="poc-intro" className={`scroll-mt-24 ${heroSectionClass}`}>
+          <div className={contentWidthClass}>
+            <EditorialSectionHeader
+              label="PoC"
+              marker="flow"
+              hero
+              title={
+                <>
+                  なぜ、PoCが必要なのか。
+                  <br />
+                  読むだけではなく、
+                  <br />
+                  小さく確かめるために。
+                </>
+              }
+              summary="このページは、PoC が何を判断するためのものかを、いまのLPと同じ余白中心の誌面構成で整理した入口です。"
             />
-          ))}
-        </div>
-      </div>
 
-      <div className="mt-8 grid gap-4 md:grid-cols-3">
-        <MiniStat title="期間" value="短期" note="2週間程度" />
-        <MiniStat title="負担" value="最小" note="現場を止めない" />
-        <MiniStat title="成果" value="判断可能" note="続けるか決められる" />
-      </div>
+            <SectionScrollCue targetId="poc-why" emphasis="soft" subdued />
+          </div>
+        </section>
 
-      <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-        <LinkButton onClick={() => onNavigate("participation")}>
-          共創モデルを見る
-        </LinkButton>
-        <LinkButton variant="secondary" onClick={() => onNavigate("top")}>
-          TOPへ戻る
-        </LinkButton>
-      </div>
-    </section>
-  );
-}
+        <section id="poc-why" className={`scroll-mt-24 ${surfaceSectionClass}`}>
+          <div className={contentWidthClass}>
+            <div className={`max-w-4xl ${editorialSectionBlockClass}`}>
+              <EditorialSectionHeader
+                label="WHY POC"
+                marker="flow"
+                title="PoCが必要な理由"
+                summary="確かめたいのは、説明に納得できるかではありません。実際の現場の違和感を前にしたときに、関係のズレが見え、次の一手が立ち上がるかです。"
+              />
+            </div>
 
-function LinkButton({
-  children,
-  onClick,
-  variant = "primary",
-}: {
-  children: React.ReactNode;
-  onClick?: () => void;
-  variant?: "primary" | "secondary";
-}) {
-  const base = "w-full px-6 py-3 text-sm transition sm:w-auto";
-  const style =
-    variant === "primary"
-      ? "bg-black text-white shadow-sm hover:scale-[1.01] hover:shadow-md"
-      : "border border-black bg-transparent text-black hover:bg-slate-50";
+            <div className={`${readingColumnClass} ${editorialBodyBlockClass} border-t border-stone-200`}>
+              {[
+                "この構想は、理論として読めるだけでは十分ではありません。",
+                "実際のケースに触れたときに、感覚的な違和感が構造として整理できるかを見たい。",
+                "PoCは、その手触りを小さく確かめるための入口です。",
+              ].map((item) => (
+                <p key={item} className={`border-b border-stone-200 py-5 ${readingBodyClass}`}>
+                  {item}
+                </p>
+              ))}
+            </div>
 
-  return (
-    <button type="button" onClick={onClick} className={`${base} ${style}`}>
-      {children}
-    </button>
-  );
-}
+            <div className="mt-12 flex justify-center">
+              <SectionScrollCue targetId="poc-shows" emphasis="soft" subdued />
+            </div>
+          </div>
+        </section>
 
-function MiniStat({
-  title,
-  value,
-  note,
-}: {
-  title: string;
-  value: string;
-  note: string;
-}) {
-  return (
-    <div className="border border-black/10 bg-white p-4">
-      <div className="text-xs tracking-widest text-slate-400">{title}</div>
-      <div className="mt-1 text-xl font-medium">{value}</div>
-      <div className="mt-1 text-xs text-slate-500">{note}</div>
-    </div>
-  );
-}
+        <section id="poc-shows" className={`scroll-mt-24 ${tintedSectionClass}`}>
+          <div className={contentWidthClass}>
+            <div className={editorialSectionBlockClass}>
+              <EditorialSectionHeader
+                label="WHAT THIS SHOWS"
+                marker="lines"
+                title="このPoCで見たいこと"
+                summary="ここで見るのは、PoC が成立するかを見極めるための3つの軸です。"
+              />
+            </div>
 
-function PocCard({
-  step,
-  title,
-  desc,
-}: {
-  step: string;
-  title: string;
-  desc: string;
-}) {
-  return (
-    <div className="border border-black/10 bg-white p-6">
-      <div className="text-xs tracking-[0.2em] text-slate-500">Step {step}</div>
-      <div className="mt-2 text-lg font-medium text-slate-950">{title}</div>
-      <div className="mt-3 text-sm leading-7 text-slate-600">{desc}</div>
+            <div className={`${editorialFigureBlockClass} grid gap-4 md:grid-cols-3`}>
+              {POC_SIGNALS.map((item, index) => (
+                <div
+                  key={item}
+                  className="border-t border-stone-300 pt-5"
+                >
+                  <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-stone-400">
+                    0{index + 1}
+                  </p>
+                  <p className="mt-4 text-[17px] leading-8 text-stone-800">{item}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-12 flex justify-center">
+              <SectionScrollCue targetId="poc-case" emphasis="soft" subdued />
+            </div>
+          </div>
+        </section>
+
+        <section id="poc-case" className={`scroll-mt-24 ${surfaceSectionClass}`}>
+          <div className={contentWidthClass}>
+            <div className={editorialSectionBlockClass}>
+              <EditorialSectionHeader
+                label="CASE"
+                marker="square"
+                title="たとえば、こんな場面です"
+                summary="PoC は抽象論ではなく、現場で起きた違和感から何が立ち上がるかを見るためのものです。"
+              />
+            </div>
+
+            <div className={`${editorialFigureBlockClass} grid gap-8 lg:grid-cols-[0.96fr_1.04fr] lg:items-start`}>
+              <div className="rounded-[28px] border border-stone-300 px-6 py-8 md:px-8 md:py-10">
+                <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-stone-400">
+                  Case Note
+                </p>
+                <p className="mt-6 text-[22px] font-medium leading-[1.9] text-stone-900 md:text-[26px]">
+                  外来で長く待った患者さんから、
+                  <br />
+                  「説明は受けたけれど、
+                  <br />
+                  見てもらえていない感じが残った」
+                  <br />
+                  という言葉が出た。
+                </p>
+              </div>
+
+              <div className="rounded-[28px] border border-stone-200 px-6 py-4 md:px-8">
+                {[
+                  {
+                    label: "Observation",
+                    body: "まず見るのは、クレームの強さではなく、どこで関係のズレが生じたかです。",
+                  },
+                  {
+                    label: "Reframe",
+                    body: "「待ち時間の問題」だけでなく、「自分がどう扱われたか」という認識のズレとして読み直します。",
+                  },
+                  {
+                    label: "Next Move",
+                    body: "次の一手は謝罪表現の工夫ではなく、どの接点で関係を戻すかを順番で考えることになります。",
+                  },
+                ].map((item) => (
+                  <div key={item.label} className="border-b border-stone-200 py-6 last:border-b-0">
+                    <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-stone-500">
+                      {item.label}
+                    </p>
+                    <p className="mt-3 text-[16px] leading-8 text-stone-700">{item.body}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-12 flex justify-center">
+              <SectionScrollCue targetId="poc-judgment" emphasis="soft" subdued />
+            </div>
+          </div>
+        </section>
+
+        <section id="poc-judgment" className={`scroll-mt-24 ${tintedSectionClass}`}>
+          <div className={contentWidthClass}>
+            <div className={editorialSectionBlockClass}>
+              <EditorialSectionHeader
+                label="JUDGMENT"
+                marker="double-circle"
+                title="このPoCで判断できること"
+                summary="ここで得たいのは、続けて試す価値があるかを判断するための最初の確信です。"
+              />
+            </div>
+
+            <div className={`${editorialFigureBlockClass} grid gap-5 md:grid-cols-3`}>
+              {JUDGMENT_POINTS.map((item, index) => (
+                <div
+                  key={item.title}
+                  className="rounded-[24px] border border-stone-200 px-5 py-5"
+                >
+                  <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-stone-400">
+                    0{index + 1}
+                  </p>
+                  <p className="mt-4 text-[21px] leading-8 text-stone-900">{item.title}</p>
+                  <p className="mt-3 text-[15px] leading-7 text-stone-700">{item.body}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-12 flex justify-center">
+              <SectionScrollCue targetId="poc-next" emphasis="soft" subdued />
+            </div>
+          </div>
+        </section>
+
+        <section id="poc-next" className={`scroll-mt-24 ${surfaceSectionClass}`}>
+          <div className={`${centeredCtaWidthClass} ${editorialSectionBlockClass}`}>
+            <EditorialSectionHeader
+              label="NEXT"
+              marker="triangle"
+              title={
+                <>
+                  読むだけでなく、
+                  <br />
+                  実際に触って確かめる
+                </>
+              }
+              summary="ここで見ているのは入口です。実際の入力から、ズレの整理と次の一手までをどう辿るかは、DEMO でそのまま確認できます。"
+            />
+
+            <div className={`${editorialBodyBlockClass} flex flex-wrap justify-center gap-3`}>
+              <button
+                type="button"
+                onClick={() => onNavigate("demo")}
+                className="inline-flex min-h-11 items-center justify-center bg-stone-900 px-8 text-[12px] font-medium uppercase tracking-[0.16em] text-white transition hover:opacity-90"
+              >
+                DEMOを体験する
+              </button>
+
+              <button
+                type="button"
+                onClick={() => onNavigate("contact")}
+                className="inline-flex min-h-11 items-center justify-center border border-stone-300 px-7 text-[12px] font-medium uppercase tracking-[0.16em] text-stone-700 transition hover:bg-[#f7f4ee]"
+              >
+                一緒に試してみる
+              </button>
+
+              <button
+                type="button"
+                onClick={onBackPrev}
+                className="inline-flex min-h-11 items-center justify-center border border-stone-300 px-7 text-[12px] font-medium uppercase tracking-[0.16em] text-stone-700 transition hover:bg-[#f7f4ee]"
+              >
+                前のページへ戻る
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <FooterSection setPage={handlePageChange} />
     </div>
   );
 }
