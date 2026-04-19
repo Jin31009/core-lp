@@ -7,156 +7,95 @@ type Props = {
   setPage: (page: string) => void;
 };
 
-const timingMoments = [
+const timingFindings = [
   {
-    source: "処置・対応中由来",
-    moment: "応答不在発生",
-    count: 75,
-    body: "声かけや反応が返らず、自分が見られていないと感じた瞬間。最頻カテゴリだが、唯一の本質とは扱わず、Triggerを説明する代表型として読む。",
-  },
-  {
-    source: "受付・待機由来",
-    moment: "待機不信発生",
+    id: "01",
+    title: "待機不信発生",
+    description: "待たされている理由が理解できない瞬間",
     count: 51,
-    body: "待たされている理由や流れが見えず、不信が立ち上がった瞬間。",
+    note: "受付・待機由来",
   },
   {
-    source: "結果・方針説明由来",
-    moment: "意思決定不一致",
-    count: 24,
-    body: "十分に納得できないまま、方針が決まったと受け取られた瞬間。",
-  },
-  {
-    source: "帰宅後・フォロー由来",
-    moment: "事後不安再燃",
-    count: 16,
-    body: "帰宅後に説明不足や見通し不足が再び不安として浮上した瞬間。",
-  },
-  {
-    source: "説明由来",
-    moment: "説明断絶発生",
+    id: "02",
+    title: "説明断絶発生",
+    description: "理解できないまま進行した瞬間",
     count: 8,
-    body: "理解できないまま進行し、説明との接続が切れたと感じた瞬間。",
+    note: "説明由来",
+  },
+  {
+    id: "03",
+    title: "応答不在発生",
+    description: "自分が見られていないと感じた瞬間",
+    count: 75,
+    note: "処置・対応中由来",
+  },
+  {
+    id: "04",
+    title: "意思決定不一致",
+    description: "納得できないまま決定された瞬間",
+    count: 24,
+    note: "結果・方針説明由来",
+  },
+  {
+    id: "05",
+    title: "事後不安再燃",
+    description: "帰宅後に不安が再燃した瞬間",
+    count: 16,
+    note: "帰宅後・フォロー由来",
   },
 ] as const;
 
-const timingUnknown = {
-  source: "unknown",
-  moment: "未特定・複合ケース",
-  count: 128,
-  body: "場面が複合的、または記述が短く、最初のズレ瞬間を特定しきれなかったケース。",
-} as const;
-
-const flowCounts = [
+const structureFindings = [
   {
-    label: "ズレ発生",
-    value: 248,
-    note: "Delta_Max が 1 以上のケース",
+    title: "A欠損",
+    body: "認識されていない状態。遷移群では A の欠損が目立ち、関係悪化の起点として観察された。",
   },
   {
-    label: "継続",
-    value: 162,
-    note: "e_Pattern_Auto に e2 を含むケース",
+    title: "e2継続",
+    body: "状態がそのまま続くこと。遷移群では e2 がほぼ必須条件に近く、継続が臨界化に寄与した。",
   },
   {
-    label: "Trigger",
-    value: 67,
-    note: "Trigger = Yes",
+    title: "P不安",
+    body: "見通しが立たないことによる不安。遷移群では Predictability の不安が優位に観察された。",
   },
   {
-    label: "臨界到達",
-    value: 59,
-    note: "Primary_e = e3",
+    title: "R / Lズレ",
+    body: "尊厳や役割のずれ。遷移群では Respect / Role の関与が大きく増加していた。",
   },
 ] as const;
 
-const deltaDistribution = [
-  { label: "Δ0", value: 54 },
-  { label: "Δ1", value: 86 },
-  { label: "Δ2", value: 86 },
-  { label: "Δ3", value: 70 },
-  { label: "Δ4", value: 6 },
-] as const;
-
-const triggerDistribution = [
-  { label: "Trigger No", value: 235 },
-  { label: "Trigger Yes", value: 67 },
-] as const;
-
-const triggerCross = [
-  { label: "Δ0", no: 54, yes: 0 },
-  { label: "Δ1", no: 86, yes: 0 },
-  { label: "Δ2", no: 86, yes: 0 },
-  { label: "Δ3", no: 9, yes: 61 },
-  { label: "Δ4", no: 0, yes: 6 },
-] as const;
-
-const responseAbsenceSummary = [
-  {
-    label: "総数",
-    value: 75,
-    note: "処置・対応中由来として仮抽出された代表群",
-  },
-  {
-    label: "Trigger Yes",
-    value: 20,
-    note: "応答不在がそのままTriggerになるわけではない",
-  },
-  {
-    label: "Trigger No",
-    value: 55,
-    note: "最頻だが、全件が転換点に至るわけではない",
-  },
-] as const;
-
-const responseAbsencePatterns = [
-  {
-    title: "A｜認識不足に寄りやすい",
-    body: "応答不在群では Primary_APCE_Miss の中心が A に寄り、自分の状態が認識されていない感覚が起点になりやすい。",
-  },
-  {
-    title: "S｜安全不安と接続しやすい",
-    body: "Primary_SRPL では S が多く、処置場面の不応答が安全不安へ接続しやすい傾向が見られる。",
-  },
-  {
-    title: "e1 に留まるものと Trigger 化するものが分かれる",
-    body: "応答不在は最頻の代表型だが、それ自体が唯一の本質ではない。継続や重なり条件が加わると Trigger に近づく。",
-  },
-] as const;
-
-const structurePoints = [
-  {
-    label: "A欠損",
-    body: "自分の状態や感情が認識されていないと感じる。",
-  },
-  {
-    label: "e2継続",
-    body: "違和感が一過性で終わらず、状態として持続する。",
-  },
-  {
-    label: "P不安",
-    body: "見通しが持てず、不安が処理されないまま残る。",
-  },
-  {
-    label: "R / Lズレ",
-    body: "尊厳や役割認識のズレが重なり、関係の摩耗が進む。",
-  },
-] as const;
-
-const findings = [
-  "認知のズレは、特定の接点で立ち上がる傾向がある。",
-  "Trigger は全体構造の中で、Δ3以上で急に可視化される転換点として観察された。",
-  "したがって、観察の入口は『結果』ではなく『ズレが生じた瞬間』に置き、その後にTriggerへの移行条件を見る必要がある。",
+const structureMetrics = [
+  { label: "A欠損", value: "22 vs 6" },
+  { label: "e2あり", value: "95.1%" },
+  { label: "P関与", value: "63.9%" },
+  { label: "R/L関与", value: "67.2%" },
 ] as const;
 
 const actionItems = [
-  { code: "A", title: "まず受け止める", body: "違和感を打ち消さず、相手がどこで引っかかったのかを先に受け止める。" },
-  { code: "E", title: "感情を受容する", body: "説明の前に、不安や怒りが生じたこと自体を処理できる状態をつくる。" },
-  { code: "C", title: "状況を接続する", body: "いま何が起きているか、なぜそうなっているかを、相手の位置から接続して示す。" },
-  { code: "e2", title: "継続を止める", body: "違和感が持続してTriggerへ進まないよう、早い段階で流れを切り替える。" },
+  {
+    code: "A",
+    title: "まず受け止める",
+    body: "何に引っかかりが残ったのかを、最初に言葉として受け止める。",
+  },
+  {
+    code: "E",
+    title: "感情を受容する",
+    body: "驚き・不安・戸惑いなどの感情を否定せず、そのまま受け止める。",
+  },
+  {
+    code: "C",
+    title: "状況を接続する",
+    body: "いま何が起きていて、この後どう進むのかを接続して伝える。",
+  },
 ] as const;
 
-const ACTION_ICONS = [Circle, FileText, ArrowRight, Circle] as const;
+const actionIcons = [Circle, FileText, ArrowRight] as const;
+
+const reportConclusions = [
+  "認知のズレは、特定の接点で立ち上がる傾向がある。",
+  "その後、A欠損 / e2継続 / P不安 / R/Lズレが重なると悪化しやすい。",
+  "したがって、観察の入口は「結果」ではなく「ズレが生じた瞬間」に置く必要がある。",
+] as const;
 
 export default function ReportsTopPage({ setPage }: Props) {
   return (
@@ -170,52 +109,84 @@ export default function ReportsTopPage({ setPage }: Props) {
               label="REPORT"
               marker="lines"
               hero
-              title={<>303件の投書から、<br />認知のズレはどこで発生するのか</>}
-              summary="本ページは、患者側ナラティブ303件（CSV実体は302件）から、認知のズレがどの接点で生じやすいかを整理した分析レポートです。因果の確定ではなく、仮説提示を目的としています。"
+              title={
+                <>
+                  303件の投書から、
+                  <br />
+                  認知のズレはどこで発生するのか
+                </>
+              }
+              summary="本ページは、名古屋市内にある高度急性期機能を有する中核病院に寄せられた303件の投書を対象に、認知のズレがどの接点で生じやすいかを整理した分析レポートである。ここで示すのは因果関係の確定ではなく、構造仮説の提示である。"
             />
 
             <div style={heroBodyStyle}>
-              <p style={bodyTextStyle}>まず『どこでズレが立ち上がるのか』を見て、そのあとにTriggerという転換点、さらに背後構造と防止の一手へつなげます。</p>
-              <p style={{ ...bodyTextStyle, borderBottom: "1px solid #e7e5e4" }}>構造を先に説明しすぎず、接点と瞬間から読み始められるレポートとして整理しています。</p>
+              <p style={bodyTextStyle}>
+                今回の目的は、関係悪化の構造そのものを先に説明することではなく、
+                まず「どの瞬間にズレが立ち上がるのか」を入口として整理することにあります。
+              </p>
+              <p style={{ ...bodyTextStyle, borderBottom: "1px solid #e7e5e4" }}>
+                その上で、後段に RA 構造（A欠損 / e2継続 / P不安 / R/Lズレ）を接続し、
+                どう防ぐかを Pre-Asset の形に落とし込みます。
+              </p>
             </div>
 
             <div style={ctaWrapStyle}>
-              <button type="button" onClick={() => setPage("demo-intro")} style={primaryButtonStyle}>DEMOで体験する</button>
-              <button type="button" onClick={() => setPage("top")} style={secondaryButtonStyle}>LPへ戻る</button>
+              <button
+                type="button"
+                onClick={() => setPage("demo-intro")}
+                style={primaryButtonStyle}
+              >
+                DEMOで体験する
+              </button>
+              <button
+                type="button"
+                onClick={() => setPage("top")}
+                style={secondaryButtonStyle}
+              >
+                LPへ戻る
+              </button>
             </div>
           </div>
         </section>
 
         <section style={sectionStyle}>
-          <div style={narrowContentWidthStyle}>
+          <div style={contentWidthStyleNarrow}>
             <EditorialSectionHeader
-              label="QUESTION"
+              label="RESEARCH QUESTION"
               marker="square"
               title="今回の問い"
-              summary="患者と医療者の認知のズレは、どの接点で発生するのか。302件の投書から、どこまでその傾向を抽出できるかを検討します。"
+              summary="患者と医療者の認知のズレは、どの接点で発生するのか。302件の患者側記述から、どこまでその傾向を抽出できるかを検討する。"
             />
           </div>
         </section>
 
         <section style={{ ...sectionStyle, background: "#f7f5f2" }}>
-          <div style={narrowContentWidthStyle}>
+          <div style={contentWidthStyle}>
             <EditorialSectionHeader
               label="DATA & SCOPE"
               marker="square"
               title="データと限界"
-              summary="この入口は残します。今回の分析は、患者側ナラティブから見える範囲に限定されます。"
+              summary="この分析は患者側ナラティブを対象とした事後的整理であり、分析可能性と同時に限界も含んでいます。"
             />
 
-            <div style={listBlockStyle}>
-              {[
-                "患者側ナラティブデータ 302件",
-                "事後記述であり、その場の全認知過程を直接記録したものではない",
-                "単一視点であり、医療者側認知は含まれない",
-                "時間軸は不完全で、複数場面が混在するケースもある",
-                "因果関係の確定ではなく、接点傾向の仮説提示である",
-              ].map((item) => (
-                <p key={item} style={listItemStyle}>{item}</p>
-              ))}
+            <div style={twoColumnGridStyle}>
+              <div style={cardStyle}>
+                <p style={smallLabelStyle}>DATA</p>
+                <ul style={listStyle}>
+                  <li>患者側ナラティブデータ 302件</li>
+                  <li>投書・意見として収集された事後記述</li>
+                  <li>本文 / 要約 / 時間軸 / e分解列を参照</li>
+                </ul>
+              </div>
+
+              <div style={cardStyle}>
+                <p style={smallLabelStyle}>LIMITATIONS</p>
+                <ul style={listStyle}>
+                  <li>医療者側認知は含まれない</li>
+                  <li>時間軸は一部不完全</li>
+                  <li>因果関係の確定ではなく仮説提示に留まる</li>
+                </ul>
+              </div>
             </div>
           </div>
         </section>
@@ -223,123 +194,79 @@ export default function ReportsTopPage({ setPage }: Props) {
         <section style={sectionStyle}>
           <div style={contentWidthStyle}>
             <EditorialSectionHeader
-              label="TIMING"
+              label="PHASE 1｜OBSERVATION"
               marker="triangle"
               title="ズレが立ち上がる瞬間"
-              summary="この入口も残します。従来の場面分類を、認知ズレが発生した瞬間ラベルへ変換して整理しました。ここでは『場面』ではなく『立ち上がり方』を見ます。"
+              summary="本フェーズでは、患者側ナラティブ302件から、認知のズレがどの接点で発生したかを観察結果として整理する。ここでは構造的解釈は行わず、まず『どこで起きたか』に限定する。"
             />
 
             <div style={timingGridStyle}>
-              {timingMoments.map((item) => (
-                <div key={item.moment} style={timingCardStyle}>
-                  <div style={timingTopRowStyle}>
-                    <p style={timingSourceStyle}>{item.source}</p>
+              {timingFindings.map((item) => (
+                <div key={item.id} style={timingCardStyle}>
+                  <p style={indexStyle}>{item.id}</p>
+                  <p style={timingTitleStyle}>{item.title}</p>
+                  <p style={timingBodyStyle}>{item.description}</p>
+
+                  <div style={timingMetaRowStyle}>
+                    <span style={countBadgeStyle}>{item.count}件</span>
+                    <span style={noteTextStyle}>{item.note}</span>
                   </div>
-                  <p style={timingCountHeroStyle}>{item.count}</p>
-                  <p style={timingCountLabelStyle}>cases</p>
-                  <p style={timingMomentStyle}>{item.moment}</p>
-                  <p style={timingBodyStyle}>{item.body}</p>
                 </div>
               ))}
-            </div>
 
-            <div style={unknownWrapStyle}>
-              <div style={unknownInnerStyle}>
-                <p style={unknownLabelStyle}>{timingUnknown.source}</p>
-                <div style={unknownRowStyle}>
-                  <p style={unknownTitleStyle}>{timingUnknown.moment}</p>
-                  <p style={unknownCountStyle}>{timingUnknown.count}</p>
+              <div style={timingCardStyle}>
+                <p style={indexStyle}>06</p>
+                <p style={timingTitleStyle}>未特定 / 複合</p>
+                <p style={timingBodyStyle}>
+                  肯定的投稿、情報不足、複数場面が混在するケース。入口の瞬間が単一に定まらない。
+                </p>
+
+                <div style={timingMetaRowStyle}>
+                  <span style={countBadgeStyle}>128件</span>
+                  <span style={noteTextStyle}>unknown</span>
                 </div>
-                <p style={unknownBodyStyle}>{timingUnknown.body}</p>
               </div>
             </div>
+
+            <p style={supportTextStyle}>
+              最も多く観察されたのは「応答不在発生」であり、次いで「待機不信発生」が続いた。
+            </p>
           </div>
         </section>
 
         <section style={{ ...sectionStyle, background: "#f7f5f2" }}>
           <div style={contentWidthStyle}>
             <EditorialSectionHeader
-              label="FLOW"
-              marker="lines"
-              title="全数から見た転換点の立ち上がり"
-              summary="ここから後段です。接点の入口を見たあとで、全数の中でTriggerを中心イベントとして置き直します。"
-            />
-
-            <div style={flowSummaryGridStyle}>
-              {flowCounts.map((item) => (
-                <div key={item.label} style={flowSummaryCardStyle}>
-                  <p style={flowSummaryValueStyle}>{item.value}</p>
-                  <p style={flowSummaryLabelStyle}>{item.label}</p>
-                  <p style={flowSummaryNoteStyle}>{item.note}</p>
-                </div>
-              ))}
-            </div>
-
-            <div style={distributionWrapStyle}>
-              <div style={distributionCardStyle}>
-                <p style={distributionTitleStyle}>Trigger Yes / No</p>
-                {triggerDistribution.map((item) => (
-                  <div key={item.label} style={distributionRowStyle}>
-                    <span style={distributionLabelStyle}>{item.label}</span>
-                    <span style={distributionValueStyle}>{item.value}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div style={distributionCardStyle}>
-                <p style={distributionTitleStyle}>Delta_Max 分布</p>
-                {deltaDistribution.map((item) => (
-                  <div key={item.label} style={distributionRowStyle}>
-                    <span style={distributionLabelStyle}>{item.label}</span>
-                    <span style={distributionValueStyle}>{item.value}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div style={crossWrapStyle}>
-              <p style={distributionTitleStyle}>Δ × Trigger</p>
-              <div style={crossTableStyle}>
-                <div style={crossHeaderStyle}>
-                  <span>Δ</span>
-                  <span>No</span>
-                  <span>Yes</span>
-                </div>
-                {triggerCross.map((item) => (
-                  <div key={item.label} style={crossRowStyle}>
-                    <span>{item.label}</span>
-                    <span>{item.no}</span>
-                    <span>{item.yes}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section style={sectionStyle}>
-          <div style={contentWidthStyle}>
-            <EditorialSectionHeader
-              label="REPRESENTATIVE TYPE"
+              label="PHASE 2｜STRUCTURE"
               marker="double-circle"
-              title="代表的なずれ発生型としての応答不在"
-              summary="応答不在は唯一の本質ではありません。ただし最頻の代表カテゴリとして、Triggerを説明するための入口になります。"
+              title="ズレの背後にある構造"
+              summary="観察されたズレ発生の傾向に対し、RA構造（Δ・e・Trigger）を用いてその発生過程の説明を試みる。ただしこれは唯一の解釈ではなく、仮説的整理である。"
             />
 
-            <div style={flowSummaryGridStyle}>
-              {responseAbsenceSummary.map((item) => (
-                <div key={item.label} style={flowSummaryCardStyle}>
-                  <p style={flowSummaryValueStyle}>{item.value}</p>
-                  <p style={flowSummaryLabelStyle}>{item.label}</p>
-                  <p style={flowSummaryNoteStyle}>{item.note}</p>
+            <div style={structureFlowWrapStyle}>
+              <div style={flowBoxStyle}>ズレ発生</div>
+              <div style={flowArrowStyle}>↓</div>
+              <div style={flowBoxStyle}>Δ上昇</div>
+              <div style={flowArrowStyle}>↓</div>
+              <div style={flowBoxStyle}>e2継続</div>
+              <div style={flowArrowStyle}>↓</div>
+              <div style={flowBoxStyle}>Trigger（e3）</div>
+              <div style={flowArrowStyle}>↓</div>
+              <div style={flowBoxStyle}>関係悪化</div>
+            </div>
+
+            <div style={metricGridStyle}>
+              {structureMetrics.map((item) => (
+                <div key={item.label} style={metricCardStyle}>
+                  <p style={metricLabelStyle}>{item.label}</p>
+                  <p style={metricValueStyle}>{item.value}</p>
                 </div>
               ))}
             </div>
 
             <div style={cardGridStyle}>
-              {responseAbsencePatterns.map((item, index) => (
+              {structureFindings.map((item) => (
                 <div key={item.title} style={cardStyle}>
-                  <p style={indexStyle}>0{index + 1}</p>
                   <p style={cardTitleStyle}>{item.title}</p>
                   <p style={cardBodyStyle}>{item.body}</p>
                 </div>
@@ -348,69 +275,38 @@ export default function ReportsTopPage({ setPage }: Props) {
           </div>
         </section>
 
+        <section style={sectionStyle}>
+          <div style={contentWidthStyle}>
+            <EditorialSectionHeader
+              label="FINDINGS"
+              marker="square"
+              title="今回の分析で言えること"
+              summary="302件の記述から読み取れたのは、結果そのものではなく、ズレが立ち上がる接点の偏りでした。"
+            />
+
+            <div style={findingsWrapStyle}>
+              {reportConclusions.map((item) => (
+                <div key={item} style={findingRowStyle}>
+                  <span style={findingBulletStyle}>•</span>
+                  <p style={findingTextStyle}>{item}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section style={{ ...sectionStyle, background: "#f7f5f2" }}>
           <div style={contentWidthStyle}>
             <EditorialSectionHeader
-              label="RA STRUCTURE"
-              marker="lines"
-              title="ずれの背後にある構造"
-              summary="構造説明は後段へ回します。関係悪化は単一要因ではなく、複数条件の重なりとして観察されました。"
+              label="PHASE 3｜IMPLICATION"
+              marker="triangle"
+              title="どう防ぐか"
+              summary="構造的整理を踏まえ、関係悪化を未然に防ぐための初期介入の方向性を示す。本フェーズは示唆レベルに留まり、実証ではない。"
             />
 
             <div style={cardGridStyle}>
-              {structurePoints.map((item) => (
-                <div key={item.label} style={cardStyle}>
-                  <p style={indexStyle}>{item.label}</p>
-                  <p style={cardBodyStyle}>{item.body}</p>
-                </div>
-              ))}
-            </div>
-
-            <div style={flowWrapStyle}>
-              {[
-                "ズレ発生",
-                "Δ上昇",
-                "e2継続",
-                "Trigger（e3）",
-                "関係悪化に接近",
-              ].map((item, index) => (
-                <div key={item} style={flowItemWrapStyle}>
-                  <div style={flowItemStyle}>{item}</div>
-                  {index < 4 ? <div style={flowArrowStyle}>↓</div> : null}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section style={sectionStyle}>
-          <div style={narrowContentWidthStyle}>
-            <EditorialSectionHeader
-              label="FINDINGS"
-              marker="double-circle"
-              title="今回の分析で言えること"
-              summary="今回の段階で確実に言えることを、3点に絞って整理します。"
-            />
-
-            <div style={listBlockStyle}>
-              {findings.map((item) => (
-                <p key={item} style={listItemStyle}>{item}</p>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section style={{ ...sectionStyle, background: "#f7f5f2" }}>
-          <div style={contentWidthStyle}>
-            <EditorialSectionHeader
-              label="PRE-ASSET"
-              marker="triangle"
-              title="どう防ぐか"
-              summary="防止の起点は、大きな改善策ではなく、最初の一手をどこに置くかにあります。"
-            />
-            <div style={actionGridStyle}>
               {actionItems.map((item, index) => {
-                const Icon = ACTION_ICONS[index] ?? Circle;
+                const Icon = actionIcons[index] ?? Circle;
 
                 return (
                   <div key={item.code} style={cardStyle}>
@@ -423,28 +319,32 @@ export default function ReportsTopPage({ setPage }: Props) {
                   </div>
                 );
               })}
+
+              <div style={cardStyle}>
+                <div style={codeRowStyle}>
+                  <p style={codeTextStyle}>e2</p>
+                </div>
+                <p style={cardTitleStyle}>継続を止める</p>
+                <p style={cardBodyStyle}>
+                  同じ構造の反復を遮断し、Δの累積を防ぐ。微修正を早い段階で入れる。
+                </p>
+              </div>
             </div>
+
+            <p style={supportTextStyle}>
+              Δ2からΔ3への遷移率は41.5%であり、初期段階での介入設計が重要であることが示唆された。
+            </p>
           </div>
         </section>
 
         <section style={sectionStyle}>
-          <div style={narrowContentWidthStyle}>
+          <div style={contentWidthStyleNarrow}>
             <EditorialSectionHeader
               label="CONCLUSION"
-              marker="square"
+              marker="lines"
               title="結論"
-              summary="今回の分析で提示できるのは、接点と構造の仮説です。"
+              summary="302件の患者側記述からは、認知のズレが発生しやすい接点を仮説として提示できる。ただしこれは患者側ナラティブに基づく観察であり、因果関係の確定ではなく、医療者側データとの接続に向けた入口である。本レポートは、観察（Phase1）、構造的説明（Phase2）、応用的示唆（Phase3）を段階的に提示する構成とする。"
             />
-
-            <div style={listBlockStyle}>
-              {[
-                "302件からは、認知のズレが発生しやすい接点を仮説として提示できる。",
-                "ただし本分析は患者側ナラティブに基づくため、因果関係の確定ではなく仮説提示に留まる。",
-                "今後は医療者側データとの接続により検証を進める必要がある。",
-              ].map((item) => (
-                <p key={item} style={listItemStyle}>{item}</p>
-              ))}
-            </div>
           </div>
         </section>
       </main>
@@ -479,8 +379,8 @@ const contentWidthStyle: React.CSSProperties = {
   margin: "0 auto",
 };
 
-const narrowContentWidthStyle: React.CSSProperties = {
-  maxWidth: 820,
+const contentWidthStyleNarrow: React.CSSProperties = {
+  maxWidth: 880,
   margin: "0 auto",
 };
 
@@ -534,262 +434,47 @@ const secondaryButtonStyle: React.CSSProperties = {
   minWidth: 168,
 };
 
-const listBlockStyle: React.CSSProperties = {
+const cardGridStyle: React.CSSProperties = {
   marginTop: 32,
-  borderTop: "1px solid #e7e5e4",
-};
-
-const listItemStyle: React.CSSProperties = {
-  margin: 0,
-  padding: "18px 0",
-  borderBottom: "1px solid #e7e5e4",
-  fontSize: 15,
-  lineHeight: 1.9,
-  color: "#44403c",
-  textAlign: "left",
-};
-
-const timingGridStyle: React.CSSProperties = {
-  marginTop: 36,
   display: "grid",
   gap: 16,
   gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
 };
 
-const timingCardStyle: React.CSSProperties = {
-  background: "#fff",
-  border: "1px solid #e7e5e4",
-  padding: 24,
+const twoColumnGridStyle: React.CSSProperties = {
+  marginTop: 32,
+  display: "grid",
+  gap: 16,
+  gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
 };
 
-const timingTopRowStyle: React.CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  gap: 12,
-};
-
-const timingSourceStyle: React.CSSProperties = {
-  margin: 0,
-  fontSize: 11,
-  letterSpacing: "0.18em",
-  color: "#a8a29e",
-  fontWeight: 500,
-};
-
-const timingCountHeroStyle: React.CSSProperties = {
-  margin: "18px 0 0",
-  fontSize: "clamp(26px, 4.6vw, 32px)",
-  lineHeight: 1,
-  color: "#171717",
-  fontWeight: 700,
-};
-
-const timingCountLabelStyle: React.CSSProperties = {
-  margin: "6px 0 0",
-  fontSize: 11,
-  letterSpacing: "0.16em",
-  textTransform: "uppercase",
-  color: "#a8a29e",
-  fontWeight: 500,
-};
-
-const timingMomentStyle: React.CSSProperties = {
-  margin: "18px 0 0",
-  fontSize: 20,
-  lineHeight: 1.55,
-  fontWeight: 600,
-  color: "#171717",
-};
-
-const timingBodyStyle: React.CSSProperties = {
-  margin: "12px 0 0",
-  fontSize: 15,
-  lineHeight: 1.85,
-  color: "#44403c",
-};
-
-const unknownWrapStyle: React.CSSProperties = {
-  marginTop: 20,
-};
-
-const unknownInnerStyle: React.CSSProperties = {
-  borderTop: "1px solid #e7e5e4",
-  paddingTop: 18,
-  maxWidth: 820,
-  margin: "0 auto",
-};
-
-const unknownLabelStyle: React.CSSProperties = {
-  margin: 0,
-  fontSize: 11,
-  letterSpacing: "0.18em",
-  color: "#a8a29e",
-  fontWeight: 500,
-};
-
-const unknownRowStyle: React.CSSProperties = {
-  marginTop: 8,
-  display: "flex",
-  alignItems: "baseline",
-  justifyContent: "space-between",
-  gap: 12,
-  flexWrap: "wrap",
-};
-
-const unknownTitleStyle: React.CSSProperties = {
-  margin: 0,
-  fontSize: 16,
-  lineHeight: 1.7,
-  color: "#292524",
-  fontWeight: 600,
-};
-
-const unknownCountStyle: React.CSSProperties = {
-  margin: 0,
-  fontSize: 18,
-  lineHeight: 1,
-  color: "#78716c",
-  fontWeight: 600,
-};
-
-const unknownBodyStyle: React.CSSProperties = {
-  margin: "10px 0 0",
-  fontSize: 14,
-  lineHeight: 1.8,
-  color: "#57534e",
-};
-
-const flowSummaryGridStyle: React.CSSProperties = {
+const timingGridStyle: React.CSSProperties = {
   marginTop: 36,
   display: "grid",
-  gap: 16,
-  gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-};
-
-const flowSummaryCardStyle: React.CSSProperties = {
-  background: "#fff",
-  border: "1px solid #e7e5e4",
-  padding: 24,
-};
-
-const flowSummaryValueStyle: React.CSSProperties = {
-  margin: 0,
-  fontSize: "clamp(28px, 5vw, 40px)",
-  lineHeight: 1,
-  color: "#171717",
-  fontWeight: 700,
-};
-
-const flowSummaryLabelStyle: React.CSSProperties = {
-  margin: "14px 0 0",
-  fontSize: 18,
-  lineHeight: 1.5,
-  color: "#171717",
-  fontWeight: 600,
-};
-
-const flowSummaryNoteStyle: React.CSSProperties = {
-  margin: "10px 0 0",
-  fontSize: 14,
-  lineHeight: 1.8,
-  color: "#57534e",
-};
-
-const distributionWrapStyle: React.CSSProperties = {
-  marginTop: 20,
-  display: "grid",
-  gap: 16,
+  gap: 18,
   gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
 };
 
-const distributionCardStyle: React.CSSProperties = {
-  background: "#fff",
-  border: "1px solid #e7e5e4",
-  padding: 24,
-};
-
-const distributionTitleStyle: React.CSSProperties = {
-  margin: 0,
-  fontSize: 16,
-  lineHeight: 1.6,
-  color: "#171717",
-  fontWeight: 600,
-};
-
-const distributionRowStyle: React.CSSProperties = {
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "baseline",
-  gap: 12,
-  paddingTop: 14,
-  marginTop: 14,
-  borderTop: "1px solid #e7e5e4",
-};
-
-const distributionLabelStyle: React.CSSProperties = {
-  fontSize: 14,
-  color: "#57534e",
-};
-
-const distributionValueStyle: React.CSSProperties = {
-  fontSize: 18,
-  color: "#171717",
-  fontWeight: 600,
-};
-
-const crossWrapStyle: React.CSSProperties = {
+const metricGridStyle: React.CSSProperties = {
   marginTop: 20,
-  background: "#fff",
-  border: "1px solid #e7e5e4",
-  padding: 24,
-};
-
-const crossTableStyle: React.CSSProperties = {
-  marginTop: 16,
   display: "grid",
-  gap: 0,
-};
-
-const crossHeaderStyle: React.CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "1fr 1fr 1fr",
-  padding: "0 0 12px",
-  borderBottom: "1px solid #e7e5e4",
-  fontSize: 12,
-  letterSpacing: "0.14em",
-  textTransform: "uppercase",
-  color: "#a8a29e",
-  fontWeight: 500,
-};
-
-const crossRowStyle: React.CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "1fr 1fr 1fr",
-  padding: "14px 0",
-  borderBottom: "1px solid #f0ece8",
-  fontSize: 15,
-  color: "#292524",
-};
-
-const cardGridStyle: React.CSSProperties = {
-  marginTop: 32,
-  display: "grid",
-  gap: 16,
-  gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-};
-
-const actionGridStyle: React.CSSProperties = {
-  marginTop: 32,
-  display: "grid",
-  gap: 16,
-  gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+  gap: 14,
+  gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
 };
 
 const cardStyle: React.CSSProperties = {
   background: "#fff",
   border: "1px solid #e7e5e4",
   padding: 24,
+};
+
+const timingCardStyle: React.CSSProperties = {
+  background: "#fff",
+  border: "1px solid #e7e5e4",
+  padding: 24,
+  display: "flex",
+  flexDirection: "column",
+  minHeight: 220,
 };
 
 const indexStyle: React.CSSProperties = {
@@ -800,35 +485,12 @@ const indexStyle: React.CSSProperties = {
   fontWeight: 500,
 };
 
-const flowWrapStyle: React.CSSProperties = {
-  marginTop: 36,
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  gap: 4,
-};
-
-const flowItemWrapStyle: React.CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  gap: 6,
-};
-
-const flowItemStyle: React.CSSProperties = {
-  minWidth: 220,
-  padding: "12px 18px",
-  border: "1px solid #d6d3d1",
-  background: "#fff",
-  textAlign: "center",
-  fontSize: 14,
-  color: "#292524",
-};
-
-const flowArrowStyle: React.CSSProperties = {
-  fontSize: 16,
-  color: "#a8a29e",
-  lineHeight: 1,
+const smallLabelStyle: React.CSSProperties = {
+  margin: 0,
+  fontSize: 11,
+  letterSpacing: "0.18em",
+  color: "#78716c",
+  fontWeight: 600,
 };
 
 const codeRowStyle: React.CSSProperties = {
@@ -854,9 +516,149 @@ const cardTitleStyle: React.CSSProperties = {
   color: "#171717",
 };
 
+const timingTitleStyle: React.CSSProperties = {
+  margin: "12px 0 0",
+  fontSize: 22,
+  lineHeight: 1.45,
+  fontWeight: 600,
+  color: "#171717",
+};
+
 const cardBodyStyle: React.CSSProperties = {
   margin: "12px 0 0",
   fontSize: 15,
   lineHeight: 1.9,
   color: "#44403c",
+};
+
+const timingBodyStyle: React.CSSProperties = {
+  margin: "12px 0 0",
+  fontSize: 15,
+  lineHeight: 1.9,
+  color: "#44403c",
+};
+
+const timingMetaRowStyle: React.CSSProperties = {
+  marginTop: "auto",
+  paddingTop: 18,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: 12,
+  flexWrap: "wrap",
+};
+
+const countBadgeStyle: React.CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  minHeight: 30,
+  padding: "0 12px",
+  borderRadius: 999,
+  border: "1px solid #d6d3d1",
+  fontSize: 13,
+  color: "#292524",
+  fontWeight: 600,
+  background: "#fafaf9",
+};
+
+const noteTextStyle: React.CSSProperties = {
+  fontSize: 12,
+  lineHeight: 1.7,
+  color: "#78716c",
+};
+
+const metricCardStyle: React.CSSProperties = {
+  background: "#fff",
+  border: "1px solid #e7e5e4",
+  padding: "16px 18px",
+};
+
+const metricLabelStyle: React.CSSProperties = {
+  margin: 0,
+  fontSize: 11,
+  letterSpacing: "0.14em",
+  color: "#78716c",
+  fontWeight: 600,
+};
+
+const metricValueStyle: React.CSSProperties = {
+  margin: "8px 0 0",
+  fontSize: 17,
+  lineHeight: 1.6,
+  color: "#292524",
+  fontWeight: 500,
+};
+
+const listStyle: React.CSSProperties = {
+  margin: "14px 0 0",
+  paddingLeft: 18,
+  color: "#44403c",
+  fontSize: 15,
+  lineHeight: 1.9,
+};
+
+const supportTextStyle: React.CSSProperties = {
+  maxWidth: 880,
+  margin: "22px auto 0",
+  fontSize: 15,
+  lineHeight: 1.9,
+  color: "#57534e",
+};
+
+const structureFlowWrapStyle: React.CSSProperties = {
+  marginTop: 32,
+  marginBottom: 32,
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  gap: 10,
+};
+
+const flowBoxStyle: React.CSSProperties = {
+  minWidth: 240,
+  padding: "12px 18px",
+  border: "1px solid #d6d3d1",
+  background: "#fff",
+  textAlign: "center",
+  fontSize: 15,
+  lineHeight: 1.8,
+  color: "#292524",
+};
+
+const flowArrowStyle: React.CSSProperties = {
+  fontSize: 20,
+  lineHeight: 1,
+  color: "#78716c",
+};
+
+const findingsWrapStyle: React.CSSProperties = {
+  marginTop: 32,
+  display: "flex",
+  flexDirection: "column",
+  gap: 18,
+  maxWidth: 920,
+  marginInline: "auto",
+};
+
+const findingRowStyle: React.CSSProperties = {
+  display: "flex",
+  alignItems: "flex-start",
+  gap: 12,
+  paddingBottom: 16,
+  borderBottom: "1px solid #ece7e1",
+};
+
+const findingBulletStyle: React.CSSProperties = {
+  fontSize: 22,
+  lineHeight: 1,
+  color: "#a8a29e",
+  flexShrink: 0,
+};
+
+const findingTextStyle: React.CSSProperties = {
+  margin: 0,
+  fontSize: 17,
+  lineHeight: 1.9,
+  color: "#292524",
 };

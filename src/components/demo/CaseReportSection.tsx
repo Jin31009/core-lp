@@ -1,3 +1,5 @@
+import { HandHeart, Search, BookOpen } from "lucide-react";
+
 type CaseReportSectionProps = {
   finalContext: string;
   delta: string;
@@ -33,6 +35,12 @@ const ACEX_OPTIONS = [
   { key: "E", label: "説明" },
   { key: "X", label: "補助" },
 ];
+
+const ACEX_ICONS = {
+  A: HandHeart,
+  C: Search,
+  E: BookOpen,
+} as const;
 
 const RESULT_OPTIONS = [
   {
@@ -237,6 +245,7 @@ export default function CaseReportSection({
           <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
             {ACEX_OPTIONS.map((item) => {
               const active = executedActions.includes(item.key);
+              const Icon = ACEX_ICONS[item.key as keyof typeof ACEX_ICONS];
 
               return (
                 <button
@@ -252,7 +261,11 @@ export default function CaseReportSection({
                   }`}
                 >
                   <div className="text-[15px] font-medium">
-                    {item.key}｜{item.label}
+                    <span className="inline-flex items-center gap-1">
+                      <span>{item.key}</span>
+                      {Icon ? <Icon size={12} strokeWidth={1.8} aria-hidden="true" /> : null}
+                    </span>
+                    ｜{item.label}
                   </div>
                 </button>
               );
