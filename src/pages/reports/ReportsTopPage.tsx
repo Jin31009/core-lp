@@ -49,7 +49,12 @@ const timingUnknown = {
 
 const flowCounts = [
   {
-    label: "ズレ発生",
+    label: "総件数",
+    value: 302,
+    note: "患者側ナラティブの総数",
+  },
+  {
+    label: "ずれ発生",
     value: 248,
     note: "Delta_Max が 1 以上のケース",
   },
@@ -98,14 +103,39 @@ const responseAbsenceSummary = [
     note: "処置・対応中由来として仮抽出された代表群",
   },
   {
+    label: "転換点なし",
+    value: 55,
+    note: "最頻だが、全件が転換点に至るわけではない",
+  },
+  {
     label: "転換点あり",
     value: 20,
     note: "応答不在がそのまま転換点になるわけではない",
   },
   {
-    label: "転換点なし",
-    value: 55,
-    note: "最頻だが、全件が転換点に至るわけではない",
+    label: "Δ0",
+    value: 4,
+    note: "応答不在群の分布",
+  },
+  {
+    label: "Δ1",
+    value: 29,
+    note: "応答不在群の分布",
+  },
+  {
+    label: "Δ2",
+    value: 20,
+    note: "応答不在群の分布",
+  },
+  {
+    label: "Δ3",
+    value: 19,
+    note: "応答不在群の分布",
+  },
+  {
+    label: "Δ4",
+    value: 3,
+    note: "応答不在群の分布",
   },
 ] as const;
 
@@ -155,6 +185,7 @@ const conclusionItems = [
   "その後、すべてが転換点に至るわけではないが、Δ3以上では転換点が急に可視化される。",
   "したがって、『どこでズレるか』の観察と『どこで転換するか』の把握を分けて読む必要がある。",
   "ただし本分析は患者側ナラティブに基づくため、因果関係の確定ではなく仮説提示に留まる。",
+  "本分析は、数値に基づき、ずれの発生が日常的であり、その一部が特定条件のもとで転換点に至ることを示したものである。",
 ] as const;
 
 const ACTION_ICONS = [Circle, FileText, ArrowRight, Circle] as const;
@@ -265,6 +296,13 @@ export default function ReportsTopPage({ setPage }: Props) {
               ))}
             </div>
 
+            <div style={bodyBlockStyle}>
+              <p style={sectionBodyStyle}>本分析では、全302件のナラティブから、ずれ発生から臨界到達に至る進行の流れを整理した。</p>
+              <p style={sectionBodyStyle}>ずれ発生は248件に認められ、ずれは例外的な現象ではなく日常的に広く発生していることが示された。そのうち162件では状態の継続が確認され、発生したずれの多くがその場で解消されず持続する傾向があった。</p>
+              <p style={sectionBodyStyle}>さらに67件で転換点が確認され、一部のずれが質的に変化し、関係の緊張が明確に表出する段階へ移行していた。そのうち59件では臨界到達が確認され、関係が回復しにくい状態に入っている可能性が示唆された。</p>
+              <p style={sectionBodyStyle}>本データでは「関係悪化」を直接示す独立列は存在しないため、本レポートでは臨界到達を悪化接近の指標として扱う。</p>
+            </div>
+
             <div style={distributionWrapStyle}>
               <div style={distributionCardStyle}>
                 <p style={distributionTitleStyle}>転換点あり / なし</p>
@@ -304,6 +342,11 @@ export default function ReportsTopPage({ setPage }: Props) {
                 ))}
               </div>
             </div>
+
+            <div style={bodyBlockStyle}>
+              <p style={sectionBodyStyle}>転換点は全体の中で一部に限られるが、その発生は特定の緊張レベルに集中していた。</p>
+              <p style={sectionBodyStyle}>転換点は主にΔ3以上において確認され、Δ0〜Δ2では転換点は認められなかった。このことから、転換点はランダムに発生するのではなく、関係の緊張が一定水準に達した段階で出現する傾向があると考えられる。</p>
+            </div>
           </div>
         </section>
 
@@ -324,6 +367,11 @@ export default function ReportsTopPage({ setPage }: Props) {
                   <p style={flowSummaryNoteStyle}>{item.note}</p>
                 </div>
               ))}
+            </div>
+
+            <div style={bodyBlockStyle}>
+              <p style={sectionBodyStyle}>最も多く観察されたずれ発生型は応答不在であり、全75件を占めた。</p>
+              <p style={sectionBodyStyle}>ただしその全てが転換点に至るわけではなく、転換点に進行したのは20件に留まった。このことから、応答不在は代表的なずれ発生型ではあるが、それ単独で転換を引き起こすのではなく、他の条件との組み合わせが重要であると考えられる。</p>
             </div>
 
             <div style={cardGridStyle}>
@@ -354,6 +402,13 @@ export default function ReportsTopPage({ setPage }: Props) {
                   <p style={cardBodyStyle}>{item.body}</p>
                 </div>
               ))}
+            </div>
+
+            <div style={bodyBlockStyle}>
+              <p style={sectionBodyStyle}>転換点に至る過程は単一要因ではなく、複数条件の重なりとして観察された。</p>
+              <p style={sectionBodyStyle}>認識不足は遷移群で22件、非遷移群で6件と差を認め、認識されない状態が転換に強く関与する可能性が示された。</p>
+              <p style={sectionBodyStyle}>また、遷移群の95.1%で状態の継続が確認され、継続が転換の前提条件となっていることが示唆された。</p>
+              <p style={sectionBodyStyle}>さらに、見通し不安は63.9%、尊厳・役割のずれは67.2%で関与しており、これらの要因が複合的に作用することで転換点が形成される構造が示唆された。</p>
             </div>
 
             <div style={flowWrapStyle}>
@@ -396,6 +451,12 @@ export default function ReportsTopPage({ setPage }: Props) {
                   </div>
                 );
               })}
+            </div>
+
+            <div style={bodyBlockStyle}>
+              <p style={sectionBodyStyle}>以上の結果は、初期段階での介入により転換点への進行を抑制できる可能性を示唆する。</p>
+              <p style={sectionBodyStyle}>Δ2からΔ3への遷移率は41.5%であり、転換は一定確率で発生する現象である。</p>
+              <p style={sectionBodyStyle}>したがって、ずれ発生直後の段階で適切な対応を行うことが、関係悪化の予防において重要であると考えられる。</p>
             </div>
           </div>
         </section>
@@ -466,6 +527,20 @@ const bodyTextStyle: React.CSSProperties = {
   lineHeight: 1.9,
   color: "#44403c",
   borderBottom: "1px solid #e7e5e4",
+  textAlign: "left",
+};
+
+const bodyBlockStyle: React.CSSProperties = {
+  maxWidth: 860,
+  margin: "28px auto 0",
+};
+
+const sectionBodyStyle: React.CSSProperties = {
+  margin: 0,
+  padding: "12px 0",
+  fontSize: 15,
+  lineHeight: 1.95,
+  color: "#44403c",
   textAlign: "left",
 };
 
