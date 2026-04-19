@@ -8,6 +8,7 @@ type Props = {
 const NAV_ITEMS = [
   { key: "theory", label: "理論の裏側", page: "structure" },
   { key: "case", label: "事例", page: "poc" },
+  { key: "reports", label: "分析レポート", page: "reports" },
   { key: "contact", label: "一緒に試す", page: "contact" },
 ] as const;
 
@@ -15,6 +16,7 @@ function isActive(currentPage: string | undefined, page: string) {
   if (!currentPage) return false;
   if (page === "structure") return currentPage === "structure" || currentPage === "evidence";
   if (page === "poc") return currentPage === "poc";
+  if (page === "reports") return currentPage === "reports";
   if (page === "contact") return currentPage === "contact" || currentPage === "participation";
   if (page === "demo") {
     return currentPage === "demo" || currentPage === "demo-intro" || currentPage === "prototype";
