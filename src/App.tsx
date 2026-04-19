@@ -14,6 +14,7 @@ import PocPage from "./pages/PocPage";
 // ===== pages（フォルダ内）=====
 import StructurePage from "./pages/structure/StructurePage";
 import ProcessPage from "./pages/process/ProcessPage";
+import ReportsTopPage from "./pages/reports/ReportsTopPage";
 import { initAnalytics } from "./lib/analytics";
 
 export default function App() {
@@ -53,12 +54,11 @@ export default function App() {
       {/* STRUCTURE */}
       {page === "structure" && <StructurePage setPage={setPage} />}
 
-      {/* CASE */}
-
-      {/* PROCESS（使う場合だけ残す） */}
+      {/* PROCESS */}
       {page === "process" && <ProcessPage setPage={setPage} />}
 
-      {/* EVIDENCE */}
+      {/* REPORTS */}
+      {page === "reports" && <ReportsTopPage setPage={setPage} />}
 
       {/* CONTACT / PoC参加ページ */}
       {page === "contact" && <ContactPage setPage={setPage} />}
@@ -68,8 +68,6 @@ export default function App() {
       {page === "participation" && (
         <ParticipationPage onNavigate={setPage} onBackPrev={() => setPage("poc")} />
       )}
-
-      {/* 旧 participation ページを残す場合 */}
 
       {/* SLIDES */}
     </div>
