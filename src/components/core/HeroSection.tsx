@@ -1,4 +1,3 @@
-
 import SectionScrollCue from "./SectionScrollCue";
 import { trackEvent } from "../../lib/analytics";
 
@@ -11,24 +10,22 @@ export default function HeroSection({ setPage }: Props) {
     <section id="hero" className="scroll-mt-24" style={sectionStyle}>
       <div style={containerStyle}>
         <h1 style={titleStyle}>
-          なぜ、伝えているのに
+          広報は、情報ではなく
           <br />
-          伝わらないのか。
+          「関係の一瞬」から再設計できる。
         </h1>
 
         <div style={summaryWrapStyle}>
-          <p style={summaryStyle}>伝えているはずなのに、伝わらない。</p>
-
-          <p style={summaryParagraphStyle}>
-            正しく対応しているつもりなのに、
+          <p style={summaryStyle}>
+            同じ言葉でも、関係の状態が変われば届き方は変わる。
             <br />
-            関係はなぜか積み上がっていかない。
+            本サイトでは、投書分析とプロトタイプを通じて、その構造を可視化します。
           </p>
 
-          <p style={summaryParagraphStyle}>
-            そのズレは、やり方ではなく、
+          <p style={supportTextStyle}>
+            多くの問題は、出来事そのものではなく、最初の関わり方のずれから生まれていました。
             <br />
-            見方そのものにあるのかもしれない。
+            303件の投書を手がかりに、その構造と、最初の一手のあり方を整理しています。
           </p>
         </div>
 
@@ -41,15 +38,18 @@ export default function HeroSection({ setPage }: Props) {
             }}
             style={primaryButtonStyle}
           >
-            まず体験する
+            体験する
           </button>
 
           <button
             type="button"
-            onClick={() => setPage("structure")}
+            onClick={() => {
+              trackEvent("lp_reports_click", { section: "hero" });
+              setPage("reports");
+            }}
             style={secondaryButtonStyle}
           >
-            理論の裏側を見る
+            分析を見る
           </button>
         </div>
 
@@ -73,7 +73,7 @@ const containerStyle: React.CSSProperties = {
 
 const titleStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: "clamp(2.15rem, 8vw, 6rem)",
+  fontSize: "clamp(2.05rem, 7.8vw, 5.8rem)",
   lineHeight: 1.12,
   letterSpacing: "-0.03em",
   fontWeight: 600,
@@ -81,26 +81,27 @@ const titleStyle: React.CSSProperties = {
 };
 
 const summaryWrapStyle: React.CSSProperties = {
-  maxWidth: 620,
-  margin: "36px auto 0",
+  maxWidth: 700,
+  margin: "34px auto 0",
 };
 
 const summaryStyle: React.CSSProperties = {
   margin: 0,
   fontSize: "clamp(14px, 3.8vw, 17px)",
-  lineHeight: 1.8,
+  lineHeight: 1.85,
   color: "#404040",
 };
 
-const summaryParagraphStyle: React.CSSProperties = {
-  margin: "20px 0 0",
-  fontSize: "clamp(14px, 3.8vw, 17px)",
-  lineHeight: 1.8,
-  color: "#404040",
+const supportTextStyle: React.CSSProperties = {
+  margin: "22px auto 0",
+  maxWidth: 640,
+  fontSize: "clamp(12px, 3.2vw, 14px)",
+  lineHeight: 1.85,
+  color: "#6b7280",
 };
 
 const ctaWrapStyle: React.CSSProperties = {
-  marginTop: 24,
+  marginTop: 28,
   display: "flex",
   justifyContent: "center",
   gap: 12,
