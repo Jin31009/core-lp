@@ -5,6 +5,7 @@ type Props = {
 const NAV_ITEMS = [
   { label: "理論の裏側", page: "structure" },
   { label: "事例", page: "poc" },
+  { label: "分析レポート", page: "reports" },
   { label: "一緒に試す", page: "contact" },
   { label: "体験する", page: "demo" },
 ] as const;
@@ -33,7 +34,7 @@ export default function FooterSection({ setPage }: Props) {
         </div>
 
         <p style={guideTextStyle}>
-          ご関心をお持ちいただけた方は「一緒に試す」へ、
+          背景となる知見を読む方は「分析レポート」へ、
           <br />
           すぐに体験したい方は「体験する」から進めます。
         </p>
