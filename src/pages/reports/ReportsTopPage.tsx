@@ -173,6 +173,33 @@ const structurePoints = [
   },
 ] as const;
 
+const acexItems = [
+  {
+    code: "A",
+    title: "認識",
+    basis: "A欠損 22 vs 6",
+    body: "認識不足が確認されたケースでは、A（認識）の介入が関係維持に寄与する可能性が示唆された。",
+  },
+  {
+    code: "E",
+    title: "受容",
+    basis: "Δ2〜Δ3（感情負荷上昇局面）",
+    body: "感情的負荷が高い局面では、E（受容）がΔの上昇を緩和する要素として機能する可能性がある。",
+  },
+  {
+    code: "C",
+    title: "接続",
+    basis: "P関与 63.9%",
+    body: "見通し不安が関与するケースでは、C（接続）が不確実性を低減する行為として有効である可能性が示唆された。",
+  },
+  {
+    code: "X",
+    title: "継続遮断",
+    basis: "e2 95.1%",
+    body: "状態の継続が確認されたケースでは、X（継続遮断）が転換点への進行を抑制する可能性がある。",
+  },
+] as const;
+
 const actionItems = [
   { code: "A", title: "まず受け止める", body: "違和感を打ち消さず、相手がどこで引っかかったのかを先に受け止める。" },
   { code: "E", title: "感情を受容する", body: "説明の前に、不安や怒りが生じたこと自体を処理できる状態をつくる。" },
@@ -425,6 +452,31 @@ export default function ReportsTopPage({ setPage }: Props) {
                 </div>
               ))}
             </div>
+
+            <div style={bodyBlockStyle}>
+              <p style={sectionBodyStyle}>本構造に対応する初期対応として、以下の関係が整理された。</p>
+            </div>
+          </div>
+        </section>
+
+        <section style={sectionStyle}>
+          <div style={contentWidthStyle}>
+            <EditorialSectionHeader
+              label="予防のための初期対応"
+              marker="triangle"
+              title="予防のための初期対応（ACE-X）"
+              summary="構造と行動を混在させず、ずれの背後にある条件に対応する初期対応として整理します。"
+            />
+
+            <div style={cardGridStyle}>
+              {acexItems.map((item) => (
+                <div key={item.code} style={cardStyle}>
+                  <p style={indexStyle}>{item.code}｜{item.title}</p>
+                  <p style={cardBodyStyle}><strong style={inlineLabelStyle}>根拠：</strong>{item.basis}</p>
+                  <p style={cardBodyStyle}><strong style={inlineLabelStyle}>説明：</strong>{item.body}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -542,6 +594,11 @@ const sectionBodyStyle: React.CSSProperties = {
   lineHeight: 1.95,
   color: "#44403c",
   textAlign: "left",
+};
+
+const inlineLabelStyle: React.CSSProperties = {
+  fontWeight: 600,
+  color: "#292524",
 };
 
 const ctaWrapStyle: React.CSSProperties = {
