@@ -1,3 +1,4 @@
+import { ArrowRight, Circle, FileText } from "lucide-react";
 import FooterSection from "../../components/core/FooterSection";
 import SiteHeader from "../../components/shared/SiteHeader";
 import EditorialSectionHeader from "../../components/shared/EditorialSectionHeader";
@@ -26,6 +27,8 @@ const actionItems = [
   { code: "C", title: "状況を説明する", body: "いま何が起きていて、なぜそうなっているのかを整理して伝える。" },
   { code: "E", title: "次の見通しを示す", body: "このあと何が起きるのか、誰が関わるのかを示す。" },
 ] as const;
+
+const ACTION_ICONS = [Circle, FileText, ArrowRight] as const;
 
 export default function ReportsTopPage({ setPage }: Props) {
   return (
@@ -84,13 +87,20 @@ export default function ReportsTopPage({ setPage }: Props) {
               summary="多くの場面で必要だったのは、大きな対策ではなく、最初の関わり方でした。"
             />
             <div style={cardGridStyle}>
-              {actionItems.map((item) => (
-                <div key={item.code} style={cardStyle}>
-                  <p style={indexStyle}>{item.code}</p>
-                  <p style={cardTitleStyle}>{item.title}</p>
-                  <p style={cardBodyStyle}>{item.body}</p>
-                </div>
-              ))}
+              {actionItems.map((item, index) => {
+                const Icon = ACTION_ICONS[index] ?? Circle;
+
+                return (
+                  <div key={item.code} style={cardStyle}>
+                    <div style={codeRowStyle}>
+                      <p style={codeTextStyle}>{item.code}</p>
+                      <Icon size={16} strokeWidth={1.7} aria-hidden="true" />
+                    </div>
+                    <p style={cardTitleStyle}>{item.title}</p>
+                    <p style={cardBodyStyle}>{item.body}</p>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -194,6 +204,21 @@ const indexStyle: React.CSSProperties = {
   fontSize: 11,
   letterSpacing: "0.22em",
   color: "#a8a29e",
+  fontWeight: 500,
+};
+
+const codeRowStyle: React.CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  gap: 8,
+  color: "#a8a29e",
+};
+
+const codeTextStyle: React.CSSProperties = {
+  margin: 0,
+  fontSize: 11,
+  letterSpacing: "0.22em",
+  color: "inherit",
   fontWeight: 500,
 };
 
