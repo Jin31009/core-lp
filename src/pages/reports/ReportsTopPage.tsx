@@ -12,7 +12,7 @@ const timingMoments = [
     source: "処置・対応中由来",
     moment: "応答不在発生",
     count: 75,
-    body: "声かけや反応が返らず、自分が見られていないと感じた瞬間。最頻カテゴリだが、唯一の本質とは扱わず、転換点を説明する代表型として読む。",
+    body: "最頻の立ち上がり型。ただし原因そのものではなく、分岐構造を検証する代表クラスターとして扱う。",
   },
   {
     source: "受付・待機由来",
@@ -30,7 +30,7 @@ const timingMoments = [
     source: "帰宅後・フォロー由来",
     moment: "事後不安再燃",
     count: 16,
-    body: "帰宅後に説明不足や見通し不足が再び不安として浮上した瞬間。",
+    body: "その場で処理されなかったズレが、帰宅後に再び不安として浮上した瞬間。",
   },
   {
     source: "説明由来",
@@ -44,29 +44,39 @@ const timingUnknown = {
   source: "unknown",
   moment: "未特定・複合ケース",
   count: 128,
-  body: "場面が複合的、または記述が短く、最初のズレ瞬間を特定しきれなかったケース。",
+  body: "場面が複合的、または記述が短く、最初のズレ瞬間を一意に特定できなかったケース。ズレがない群ではなく、起点同定不能群として扱う。",
 } as const;
 
 const flowCounts = [
   {
-    label: "ズレ発生",
+    label: "総件数",
+    value: 302,
+    note: "母集団",
+    sub: "",
+  },
+  {
+    label: "ずれ発生",
     value: 248,
-    note: "Delta_Max が 1 以上のケース",
+    note: "広く発生",
+    sub: "82.1%",
   },
   {
     label: "継続",
     value: 162,
-    note: "e_Pattern_Auto に e2 を含むケース",
+    note: "解消されない",
+    sub: "248中 65.3%",
   },
   {
     label: "転換点",
     value: 67,
-    note: "Trigger = Yes",
+    note: "状態変化",
+    sub: "162中 41.4%",
   },
   {
     label: "臨界到達",
     value: 59,
-    note: "Primary_e = e3",
+    note: "高率で深刻化",
+    sub: "67中 88.1%",
   },
 ] as const;
 
@@ -76,11 +86,6 @@ const deltaDistribution = [
   { label: "Δ2", value: 86 },
   { label: "Δ3", value: 70 },
   { label: "Δ4", value: 6 },
-] as const;
-
-const turningPointDistribution = [
-  { label: "転換点なし", value: 235 },
-  { label: "転換点あり", value: 67 },
 ] as const;
 
 const turningPointCross = [
@@ -95,66 +100,90 @@ const responseAbsenceSummary = [
   {
     label: "総数",
     value: 75,
-    note: "処置・対応中由来として仮抽出された代表群",
+    note: "代表クラスター",
+    sub: "",
   },
   {
-    label: "転換点あり",
-    value: 20,
-    note: "応答不在がそのまま転換点になるわけではない",
-  },
-  {
-    label: "転換点なし",
+    label: "非転換",
     value: 55,
-    note: "最頻だが、全件が転換点に至るわけではない",
+    note: "そのまま進まない",
+    sub: "73.3%",
+  },
+  {
+    label: "転換",
+    value: 20,
+    note: "分岐が発生",
+    sub: "26.7%",
   },
 ] as const;
 
 const responseAbsencePatterns = [
   {
-    title: "A｜認識不足に寄りやすい",
-    body: "応答不在群では Primary_APCE_Miss の中心が A に寄り、自分の状態が認識されていない感覚が起点になりやすい。",
+    title: "A｜認識不足が分岐に関与する",
+    body: "応答不在群では Primary_APCE_Miss の中心が A に寄り、自分の状態が認識されていない感覚が転換条件として関与しやすい。",
   },
   {
-    title: "S｜安全不安と接続しやすい",
-    body: "Primary_SRPL では S が多く、処置場面の不応答が安全不安へ接続しやすい傾向が見られる。",
+    title: "S｜安全不安への接続が強い",
+    body: "Primary_SRPL では S が多く、処置場面の不応答が安全不安へ接続しやすい。応答不在は単なる沈黙ではなく、不安の増幅条件として働く。",
   },
   {
-    title: "e1 に留まるものと転換点化するものが分かれる",
-    body: "応答不在は最頻の代表型だが、それ自体が唯一の本質ではない。継続や重なり条件が加わると転換点に近づく。",
+    title: "e2｜継続が加わると転換しやすい",
+    body: "応答不在は入口として頻出するが、それだけでは転換しない。継続や他条件が重なることで、転換点へ進む確率が高まる。",
   },
 ] as const;
 
 const structurePoints = [
   {
     label: "A欠損",
-    body: "自分の状態や感情が認識されていないと感じる。",
+    body: "自分の状態や感情が認識されていないと感じる。認識不足は転換に関与する主要条件の一つである。",
+    stat: "22 vs 6",
   },
   {
     label: "e2継続",
-    body: "違和感が一過性で終わらず、状態として持続する。",
+    body: "違和感が一過性で終わらず、状態として持続する。継続は転換の前提条件として最も重要である。",
+    stat: "95.1%",
   },
   {
     label: "P不安",
-    body: "見通しが持てず、不安が処理されないまま残る。",
+    body: "見通しが持てず、不安が処理されないまま残る。未処理の不安は転換点を押し上げる条件になる。",
+    stat: "63.9%",
   },
   {
     label: "R / Lズレ",
-    body: "尊厳や役割認識のズレが重なり、関係の摩耗が進む。",
+    body: "尊厳や役割認識のズレが重なり、関係の摩耗が進む。単独要因ではなく複合条件として働く。",
+    stat: "67.2%",
   },
 ] as const;
 
 const actionItems = [
-  { code: "A", title: "まず受け止める", body: "違和感を打ち消さず、相手がどこで引っかかったのかを先に受け止める。" },
-  { code: "E", title: "感情を受容する", body: "説明の前に、不安や怒りが生じたこと自体を処理できる状態をつくる。" },
-  { code: "C", title: "状況を接続する", body: "いま何が起きているか、なぜそうなっているかを、相手の位置から接続して示す。" },
-  { code: "e2", title: "継続を止める", body: "違和感が持続して転換点へ進まないよう、早い段階で流れを切り替える。" },
+  {
+    code: "A",
+    title: "まず認識する",
+    body: "違和感を打ち消さず、相手がどこで引っかかったのかを先に受け止める。Aは継続状態に入る前の一次介入として働く。",
+  },
+  {
+    code: "E",
+    title: "感情を処理可能にする",
+    body: "説明の前に、不安や怒りが生じたこと自体を処理できる状態をつくる。Eは未処理感情がそのまま残ることを防ぐ。",
+  },
+  {
+    code: "C",
+    title: "状況を接続する",
+    body: "いま何が起きているか、なぜそうなっているかを、相手の位置から接続して示す。Cは見通し不安の固定化を防ぐ。",
+  },
+  {
+    code: "X",
+    title: "継続状態を遮断する",
+    body: "フォロー、再説明、再接続などの仕組みを通じて、e2として持続したズレを断ち切る。継続の遮断は接点行為だけでなくXの領域で扱う。",
+  },
 ] as const;
 
 const conclusionItems = [
-  "302件からは、認知のズレが発生しやすい接点を仮説として提示できる。",
-  "その後、すべてが転換点に至るわけではないが、Δ3以上では転換点が急に可視化される。",
-  "したがって、『どこでズレるか』の観察と『どこで転換するか』の把握を分けて読む必要がある。",
-  "ただし本分析は患者側ナラティブに基づくため、因果関係の確定ではなく仮説提示に留まる。",
+  "ズレは例外ではなく、302件中248件で確認された日常的現象である。",
+  "ただし本分析の主眼は発生頻度そのものではなく、継続162件のうち67件が転換点に至り、さらに59件が臨界に到達した進行構造にある。",
+  "転換点は主としてΔ3以上で可視化され、ズレは連続的に悪化するのではなく、閾値を超えたときに状態が変わる。",
+  "応答不在75件は最頻の入口として抽出した代表クラスターであり、転換する場合としない場合の分岐条件を検証するために用いた。",
+  "したがって本分析は、ズレの発生を問題とするのではなく、ズレが継続し転換点に至る構造を明らかにし、その進行を制御する介入可能性を示したものである。",
 ] as const;
 
 const ACTION_ICONS = [Circle, FileText, ArrowRight, Circle] as const;
@@ -171,29 +200,67 @@ export default function ReportsTopPage({ setPage }: Props) {
               label="レポート"
               marker="lines"
               hero
-              title={<>303件の投書から、<br />認知のズレはどこで発生するのか</>}
-              summary="本ページは、患者側ナラティブ303件（CSV実体は302件）から、認知のズレがどの接点で生じやすいかを整理した分析レポートです。因果の確定ではなく、仮説提示を目的としています。"
+              title={
+                <>
+                  302件の投書から、
+                  <br />
+                  認知のズレはどこで「転換」するのか
+                </>
+              }
+              summary="本ページは、患者側ナラティブ302件から、認知のズレを「構造・状態遷移・制御可能性」の論点で整理した分析レポートです。因果の確定ではなく、進行構造と介入可能性の仮説提示を目的としています。"
             />
 
             <div style={heroBodyStyle}>
-              <p style={bodyTextStyle}>まず『どこでズレが立ち上がるのか』を見て、そのあとに転換点、さらに背後構造と防止の一手へつなげます。</p>
-              <p style={{ ...bodyTextStyle, borderBottom: "1px solid #e7e5e4" }}>構造を先に説明しすぎず、接点と瞬間から読み始められるレポートとして整理しています。</p>
+              <p style={bodyTextStyle}>
+                ズレは広く発生するが、その多くは問題化しない。重要なのは、どのズレが継続し、どこで転換点に至るかである。
+              </p>
+              <p style={{ ...bodyTextStyle, borderBottom: "1px solid #e7e5e4" }}>
+                入口で立ち上がりを見たあとに、全数から転換点を捉え、代表クラスター分析を通して、どこで進行を制御できるかを整理する。
+              </p>
+            </div>
+
+            <div style={heroMiniStatsStyle}>
+              {[
+                { label: "総件数", value: "302" },
+                { label: "ずれ発生", value: "248" },
+                { label: "転換点", value: "67" },
+                { label: "臨界", value: "59" },
+              ].map((item) => (
+                <div
+                  key={item.label}
+                  style={{
+                    ...heroMiniStatCardStyle,
+                    border:
+                      item.label === "転換点" || item.label === "臨界"
+                        ? "1.5px solid #78716c"
+                        : "1px solid #e7e5e4",
+                  }}
+                >
+                  <p style={heroMiniStatValueStyle}>{item.value}</p>
+                  <p style={heroMiniStatLabelStyle}>{item.label}</p>
+                </div>
+              ))}
             </div>
 
             <div style={ctaWrapStyle}>
-              <button type="button" onClick={() => setPage("demo-intro")} style={primaryButtonStyle}>DEMOで体験する</button>
-              <button type="button" onClick={() => setPage("top")} style={secondaryButtonStyle}>LPへ戻る</button>
+              <button type="button" onClick={() => setPage("demo-intro")} style={primaryButtonStyle}>
+                DEMOで体験する
+              </button>
+              <button type="button" onClick={() => setPage("top")} style={secondaryButtonStyle}>
+                LPへ戻る
+              </button>
             </div>
           </div>
         </section>
 
+        {/* 入口① */}
         <section style={{ ...sectionStyle, background: "#f7f5f2" }}>
           <div style={narrowContentWidthStyle}>
             <EditorialSectionHeader
-              label="データと限界"
+              label="入口"
               marker="square"
               title="データと限界"
-              summary="入口として残します。今回の分析は、患者側ナラティブから見える範囲に限定されます。"
+              summary="今回の分析は、患者側ナラティブから見える範囲に限定される。まずは観察の前提を明示する。"
             />
 
             <div style={listBlockStyle}>
@@ -202,21 +269,24 @@ export default function ReportsTopPage({ setPage }: Props) {
                 "事後記述であり、その場の全認知過程を直接記録したものではない",
                 "単一視点であり、医療者側認知は含まれない",
                 "時間軸は不完全で、複数場面が混在するケースもある",
-                "因果関係の確定ではなく、接点傾向の仮説提示である",
+                "因果関係の確定ではなく、接点傾向と進行構造の仮説提示である",
               ].map((item) => (
-                <p key={item} style={listItemStyle}>{item}</p>
+                <p key={item} style={listItemStyle}>
+                  {item}
+                </p>
               ))}
             </div>
           </div>
         </section>
 
+        {/* 入口② */}
         <section style={sectionStyle}>
           <div style={contentWidthStyle}>
             <EditorialSectionHeader
-              label="ズレが立ち上がる瞬間"
+              label="入口"
               marker="triangle"
               title="ズレが立ち上がる瞬間"
-              summary="入口として残します。従来の場面分類を、認知ズレが発生した瞬間ラベルへ変換して整理しました。ここでは『場面』ではなく『立ち上がり方』を見ます。"
+              summary="従来の場面分類を、認知ズレが発生した瞬間ラベルへ変換して整理した。ここでは「ズレの有無」ではなく「起点の置き方」を見ている。"
             />
 
             <div style={timingGridStyle}>
@@ -243,39 +313,65 @@ export default function ReportsTopPage({ setPage }: Props) {
                 <p style={unknownBodyStyle}>{timingUnknown.body}</p>
               </div>
             </div>
+
+            <div style={bodyBlockStyle}>
+              <p style={sectionBodyStyle}>
+                ここで見ているのは「起点の観察」であり、「転換の説明」ではない。起点の分布は入口を示すが、問題の本質はその後の進行にある。
+              </p>
+            </div>
           </div>
         </section>
 
+        {/* 主役 */}
         <section style={{ ...sectionStyle, background: "#f7f5f2" }}>
           <div style={contentWidthStyle}>
             <EditorialSectionHeader
-              label="全数から見た転換点の立ち上がり"
+              label="主役"
               marker="lines"
               title="全数から見た転換点の立ち上がり"
-              summary="ここからページの主役です。接点の入口を見たあとで、全数の中で転換点がどこで立ち上がるかを置き直します。"
+              summary="ここがページの中心である。ズレの発生そのものではなく、発生後にどこで継続し、どこで転換点に至るかを全体構造として捉える。"
             />
 
-            <div style={flowSummaryGridStyle}>
-              {flowCounts.map((item) => (
-                <div key={item.label} style={flowSummaryCardStyle}>
-                  <p style={flowSummaryValueStyle}>{item.value}</p>
-                  <p style={flowSummaryLabelStyle}>{item.label}</p>
-                  <p style={flowSummaryNoteStyle}>{item.note}</p>
-                </div>
-              ))}
-            </div>
-
-            <div style={distributionWrapStyle}>
-              <div style={distributionCardStyle}>
-                <p style={distributionTitleStyle}>転換点あり / なし</p>
-                {turningPointDistribution.map((item) => (
-                  <div key={item.label} style={distributionRowStyle}>
-                    <span style={distributionLabelStyle}>{item.label}</span>
-                    <span style={distributionValueStyle}>{item.value}</span>
+            <div style={flowPrimaryWrapStyle}>
+              <div style={flowPrimaryTopStyle}>
+                {flowCounts.slice(0, 3).map((item) => (
+                  <div key={item.label} style={flowSummaryCardStyle}>
+                    <p style={flowSummaryValueStyle}>{item.value}</p>
+                    <p style={flowSummaryLabelStyle}>{item.label}</p>
+                    {item.sub ? <p style={flowSummarySubStyle}>{item.sub}</p> : null}
+                    <p style={flowSummaryNoteStyle}>{item.note}</p>
                   </div>
                 ))}
               </div>
 
+              <div style={flowPrimaryBottomStyle}>
+                {flowCounts.slice(3).map((item) => (
+                  <div
+                    key={item.label}
+                    style={{
+                      ...flowPrimaryHeroCardStyle,
+                      border: "1.5px solid #78716c",
+                    }}
+                  >
+                    <p style={flowPrimaryHeroValueStyle}>{item.value}</p>
+                    <p style={flowPrimaryHeroLabelStyle}>{item.label}</p>
+                    {item.sub ? <p style={flowPrimaryHeroSubStyle}>{item.sub}</p> : null}
+                    <p style={flowPrimaryHeroNoteStyle}>{item.note}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div style={bodyBlockStyle}>
+              <p style={sectionBodyStyle}>
+                Δ1以上の248件をズレ発生群として見ると、そのうち162件で継続が確認され、発生したズレの多くがその場で解消されず残っている。
+              </p>
+              <p style={sectionBodyStyle}>
+                さらに67件で転換点が確認され、継続したズレの一部が質的変化を起こしている。そのうち59件は臨界到達に至っており、転換後は高率で深刻化する構造が示唆される。
+              </p>
+            </div>
+
+            <div style={distributionWrapStyle}>
               <div style={distributionCardStyle}>
                 <p style={distributionTitleStyle}>Delta_Max 分布</p>
                 {deltaDistribution.map((item) => (
@@ -285,45 +381,79 @@ export default function ReportsTopPage({ setPage }: Props) {
                   </div>
                 ))}
               </div>
+
+              <div style={crossWrapStyleCompact}>
+                <p style={distributionTitleStyle}>Δ × 転換点</p>
+                <div style={crossTableStyle}>
+                  <div style={crossHeaderStyle}>
+                    <span>Δ</span>
+                    <span>なし</span>
+                    <span>あり</span>
+                  </div>
+                  {turningPointCross.map((item) => (
+                    <div
+                      key={item.label}
+                      style={{
+                        ...crossRowStyle,
+                        color: item.label === "Δ3" || item.label === "Δ4" ? "#171717" : "#78716c",
+                        fontWeight: item.label === "Δ3" || item.label === "Δ4" ? 600 : 400,
+                      }}
+                    >
+                      <span>{item.label}</span>
+                      <span>{item.no}</span>
+                      <span>{item.yes}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
 
-            <div style={crossWrapStyle}>
-              <p style={distributionTitleStyle}>Δ × 転換点</p>
-              <div style={crossTableStyle}>
-                <div style={crossHeaderStyle}>
-                  <span>Δ</span>
-                  <span>なし</span>
-                  <span>あり</span>
-                </div>
-                {turningPointCross.map((item) => (
-                  <div key={item.label} style={crossRowStyle}>
-                    <span>{item.label}</span>
-                    <span>{item.no}</span>
-                    <span>{item.yes}</span>
-                  </div>
-                ))}
-              </div>
+            <div style={bodyBlockStyle}>
+              <p style={sectionBodyStyle}>
+                転換点はΔ0〜Δ2では認められず、主としてΔ3以上で可視化される。これは、ズレが連続的に悪化するのではなく、閾値を超えたときに状態が変わることを示している。
+              </p>
             </div>
           </div>
         </section>
 
+        {/* 展開① */}
         <section style={sectionStyle}>
           <div style={contentWidthStyle}>
             <EditorialSectionHeader
-              label="代表的なずれ発生型としての応答不在"
+              label="展開"
               marker="double-circle"
               title="代表的なずれ発生型としての応答不在"
-              summary="応答不在は唯一の本質ではありません。ただし最頻の代表カテゴリとして、転換点を説明するための入口になります。"
+              summary="最頻の立ち上がり型である応答不在75件を代表クラスターとして抽出し、転換に至る場合と至らない場合の分岐構造を検証する。"
             />
 
-            <div style={flowSummaryGridStyle}>
+            <div style={clusterSummaryGridStyle}>
               {responseAbsenceSummary.map((item) => (
-                <div key={item.label} style={flowSummaryCardStyle}>
-                  <p style={flowSummaryValueStyle}>{item.value}</p>
+                <div
+                  key={item.label}
+                  style={{
+                    ...flowSummaryCardStyle,
+                    border: item.label === "転換" ? "1.5px solid #78716c" : "1px solid #e7e5e4",
+                  }}
+                >
+                  <p
+                    style={{
+                      ...flowSummaryValueStyle,
+                      fontSize: item.label === "転換" ? "clamp(34px, 5.4vw, 46px)" : "clamp(28px, 5vw, 40px)",
+                    }}
+                  >
+                    {item.value}
+                  </p>
                   <p style={flowSummaryLabelStyle}>{item.label}</p>
+                  {item.sub ? <p style={flowSummarySubStyle}>{item.sub}</p> : null}
                   <p style={flowSummaryNoteStyle}>{item.note}</p>
                 </div>
               ))}
+            </div>
+
+            <div style={bodyBlockStyle}>
+              <p style={sectionBodyStyle}>
+                応答不在は75件で最頻の入口だが、そのうち転換点に至ったのは20件であり、55件は転換しなかった。したがって、応答不在それ自体が本質なのではなく、結果を分ける分岐条件の方が重要である。
+              </p>
             </div>
 
             <div style={cardGridStyle}>
@@ -338,32 +468,40 @@ export default function ReportsTopPage({ setPage }: Props) {
           </div>
         </section>
 
+        {/* 展開② */}
         <section style={{ ...sectionStyle, background: "#f7f5f2" }}>
           <div style={contentWidthStyle}>
             <EditorialSectionHeader
-              label="ずれの背後にある構造"
+              label="展開"
               marker="lines"
               title="ずれの背後にある構造"
-              summary="構造説明は後段へ回します。関係悪化は単一要因ではなく、複数条件の重なりとして観察されました。"
+              summary="以下は、転換点に至るケースで観察された条件である。関係悪化は単一要因ではなく、複数条件の重なりとして形成される。"
             />
 
             <div style={cardGridStyle}>
               {structurePoints.map((item) => (
-                <div key={item.label} style={cardStyle}>
+                <div
+                  key={item.label}
+                  style={{
+                    ...cardStyle,
+                    border: item.label === "e2継続" ? "1.5px solid #78716c" : "1px solid #e7e5e4",
+                  }}
+                >
                   <p style={indexStyle}>{item.label}</p>
+                  <p style={cardStatStyle}>{item.stat}</p>
                   <p style={cardBodyStyle}>{item.body}</p>
                 </div>
               ))}
             </div>
 
+            <div style={bodyBlockStyle}>
+              <p style={sectionBodyStyle}>
+                特に継続は95.1%で確認され、転換の前提条件としてもっとも強く関与していた。認識不足、見通し不安、尊厳・役割のズレも加わることで、転換点が形成される。
+              </p>
+            </div>
+
             <div style={flowWrapStyle}>
-              {[
-                "ズレ発生",
-                "Δ上昇",
-                "e2継続",
-                "転換点（e3）",
-                "関係悪化に接近",
-              ].map((item, index) => (
+              {["ズレ発生", "Δ上昇", "e2継続", "転換点（e3）", "臨界へ接近"].map((item, index) => (
                 <div key={item} style={flowItemWrapStyle}>
                   <div style={flowItemStyle}>{item}</div>
                   {index < 4 ? <div style={flowArrowStyle}>↓</div> : null}
@@ -373,13 +511,14 @@ export default function ReportsTopPage({ setPage }: Props) {
           </div>
         </section>
 
+        {/* 展開③ */}
         <section style={sectionStyle}>
           <div style={contentWidthStyle}>
             <EditorialSectionHeader
-              label="どう防ぐか"
+              label="展開"
               marker="triangle"
-              title="どう防ぐか"
-              summary="大きな改善策ではなく、最初の一手をどこに置くかから整理します。"
+              title="予防のための初期対応（ACE-X）"
+              summary="ACE-X はズレをなくすための一般論ではなく、転換点への進行を制御するための介入モデルとして位置づける。"
             />
             <div style={actionGridStyle}>
               {actionItems.map((item, index) => {
@@ -397,21 +536,33 @@ export default function ReportsTopPage({ setPage }: Props) {
                 );
               })}
             </div>
+
+            <div style={bodyBlockStyle}>
+              <p style={sectionBodyStyle}>
+                ACE は接点での一次介入であり、認識不足、不安、状況不明をその場で処理可能にし、継続状態（e2）への移行を防ぐ。
+              </p>
+              <p style={sectionBodyStyle}>
+                一方、e2 は行為ではなく状態である。継続状態に入ったズレを遮断するためには、フォロー、再説明、再接続などの仕組みが必要であり、これは X の領域で扱う。
+              </p>
+            </div>
           </div>
         </section>
 
+        {/* 展開④ */}
         <section style={{ ...sectionStyle, background: "#f7f5f2" }}>
           <div style={narrowContentWidthStyle}>
             <EditorialSectionHeader
-              label="結論"
+              label="展開"
               marker="square"
               title="結論"
-              summary="削除ではなく再配置として、入口から転換点へ読む構造に整理しました。"
+              summary="入口から転換点へ読み進めることで、ズレの発生ではなく、継続・転換・制御可能性が主題であることを示した。"
             />
 
             <div style={listBlockStyle}>
               {conclusionItems.map((item) => (
-                <p key={item} style={listItemStyle}>{item}</p>
+                <p key={item} style={listItemStyle}>
+                  {item}
+                </p>
               ))}
             </div>
           </div>
@@ -466,6 +617,50 @@ const bodyTextStyle: React.CSSProperties = {
   lineHeight: 1.9,
   color: "#44403c",
   borderBottom: "1px solid #e7e5e4",
+  textAlign: "left",
+};
+
+const heroMiniStatsStyle: React.CSSProperties = {
+  marginTop: 28,
+  display: "grid",
+  gap: 12,
+  gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
+};
+
+const heroMiniStatCardStyle: React.CSSProperties = {
+  background: "#fff",
+  padding: "18px 18px 16px",
+  border: "1px solid #e7e5e4",
+  borderRadius: 0,
+};
+
+const heroMiniStatValueStyle: React.CSSProperties = {
+  margin: 0,
+  fontSize: "clamp(22px, 4vw, 30px)",
+  lineHeight: 1,
+  color: "#171717",
+  fontWeight: 700,
+};
+
+const heroMiniStatLabelStyle: React.CSSProperties = {
+  margin: "10px 0 0",
+  fontSize: 13,
+  lineHeight: 1.5,
+  color: "#57534e",
+  fontWeight: 600,
+};
+
+const bodyBlockStyle: React.CSSProperties = {
+  maxWidth: 860,
+  margin: "28px auto 0",
+};
+
+const sectionBodyStyle: React.CSSProperties = {
+  margin: 0,
+  padding: "12px 0",
+  fontSize: 15,
+  lineHeight: 1.95,
+  color: "#44403c",
   textAlign: "left",
 };
 
@@ -628,17 +823,35 @@ const unknownBodyStyle: React.CSSProperties = {
   color: "#57534e",
 };
 
-const flowSummaryGridStyle: React.CSSProperties = {
+const flowSummaryCardStyle: React.CSSProperties = {
+  background: "#fff",
+  border: "1px solid #e7e5e4",
+  padding: 24,
+};
+
+const flowPrimaryWrapStyle: React.CSSProperties = {
   marginTop: 36,
+  display: "flex",
+  flexDirection: "column",
+  gap: 16,
+};
+
+const flowPrimaryTopStyle: React.CSSProperties = {
   display: "grid",
   gap: 16,
   gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
 };
 
-const flowSummaryCardStyle: React.CSSProperties = {
+const flowPrimaryBottomStyle: React.CSSProperties = {
+  display: "grid",
+  gap: 16,
+  gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+};
+
+const flowPrimaryHeroCardStyle: React.CSSProperties = {
   background: "#fff",
-  border: "1px solid #e7e5e4",
-  padding: 24,
+  padding: 28,
+  border: "1.5px solid #78716c",
 };
 
 const flowSummaryValueStyle: React.CSSProperties = {
@@ -657,6 +870,15 @@ const flowSummaryLabelStyle: React.CSSProperties = {
   fontWeight: 600,
 };
 
+const flowSummarySubStyle: React.CSSProperties = {
+  margin: "8px 0 0",
+  fontSize: 12,
+  lineHeight: 1.6,
+  color: "#a8a29e",
+  letterSpacing: "0.04em",
+  fontWeight: 600,
+};
+
 const flowSummaryNoteStyle: React.CSSProperties = {
   margin: "10px 0 0",
   fontSize: 14,
@@ -664,11 +886,43 @@ const flowSummaryNoteStyle: React.CSSProperties = {
   color: "#57534e",
 };
 
+const flowPrimaryHeroValueStyle: React.CSSProperties = {
+  margin: 0,
+  fontSize: "clamp(40px, 6.4vw, 58px)",
+  lineHeight: 1,
+  color: "#171717",
+  fontWeight: 700,
+};
+
+const flowPrimaryHeroLabelStyle: React.CSSProperties = {
+  margin: "16px 0 0",
+  fontSize: 20,
+  lineHeight: 1.5,
+  color: "#171717",
+  fontWeight: 600,
+};
+
+const flowPrimaryHeroSubStyle: React.CSSProperties = {
+  margin: "8px 0 0",
+  fontSize: 13,
+  lineHeight: 1.6,
+  color: "#78716c",
+  letterSpacing: "0.04em",
+  fontWeight: 700,
+};
+
+const flowPrimaryHeroNoteStyle: React.CSSProperties = {
+  margin: "12px 0 0",
+  fontSize: 15,
+  lineHeight: 1.8,
+  color: "#44403c",
+};
+
 const distributionWrapStyle: React.CSSProperties = {
   marginTop: 20,
   display: "grid",
   gap: 16,
-  gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+  gridTemplateColumns: "minmax(260px, 340px) 1fr",
 };
 
 const distributionCardStyle: React.CSSProperties = {
@@ -706,8 +960,7 @@ const distributionValueStyle: React.CSSProperties = {
   fontWeight: 600,
 };
 
-const crossWrapStyle: React.CSSProperties = {
-  marginTop: 20,
+const crossWrapStyleCompact: React.CSSProperties = {
   background: "#fff",
   border: "1px solid #e7e5e4",
   padding: 24,
@@ -736,7 +989,13 @@ const crossRowStyle: React.CSSProperties = {
   padding: "14px 0",
   borderBottom: "1px solid #f0ece8",
   fontSize: 15,
-  color: "#292524",
+};
+
+const clusterSummaryGridStyle: React.CSSProperties = {
+  marginTop: 36,
+  display: "grid",
+  gap: 16,
+  gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
 };
 
 const cardGridStyle: React.CSSProperties = {
@@ -765,6 +1024,14 @@ const indexStyle: React.CSSProperties = {
   letterSpacing: "0.22em",
   color: "#a8a29e",
   fontWeight: 500,
+};
+
+const cardStatStyle: React.CSSProperties = {
+  margin: "10px 0 0",
+  fontSize: 24,
+  lineHeight: 1,
+  color: "#171717",
+  fontWeight: 700,
 };
 
 const flowWrapStyle: React.CSSProperties = {
@@ -814,7 +1081,7 @@ const codeTextStyle: React.CSSProperties = {
 };
 
 const cardTitleStyle: React.CSSProperties = {
-  margin: "12px 0 0",
+  margin: "12px 0 0",code
   fontSize: 20,
   lineHeight: 1.6,
   fontWeight: 600,
