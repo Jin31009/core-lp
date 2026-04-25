@@ -1,0 +1,20 @@
+{
+  "project": "RA-SS slides archive",
+  "version": "v1.0",
+  "created_at": "2025.04",
+  "author": "RA-SS Project Team",
+  "uses": [
+    "学会",
+    "LP",
+    "note"
+  ],
+  "model": "RA-SS",
+  "base_path": "/Users/jin/core-lp/RA-SS_v1.0_2025",
+  "copied_files": [
+    "02_observation_design/02_00_observation_design_overview.jpg",
+    "02_observation_design/02_05_filter_design_05-01.jpg",
+    "02_observation_design/02_06_structure_understanding_06-01.jpg",
+    "02_observation_design/02_07_variation_understanding_07-01.jpg",
+    "02_observation_design/02_08_miss_understanding_08-01.jpg"
+  ]
+}

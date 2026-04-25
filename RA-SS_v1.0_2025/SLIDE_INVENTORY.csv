@@ -1,0 +1,15 @@
+section,file,status
+01_cover,01_cover_main,missing
+02_observation_design,02_00_observation_design_overview,available
+02_observation_design,02_05_filter_design_05-01,available
+02_observation_design,02_06_structure_understanding_06-01,available
+02_observation_design,02_07_variation_understanding_07-01,available
+02_observation_design,02_08_miss_understanding_08-01,available
+03_case_analysis,03_case01,missing
+03_case_analysis,03_case02,missing
+03_case_analysis,03_case03,missing
+04_transition,04_transition_14-17,missing
+05_acex,05_acex_15-17,missing
+06_rass,06_rass_17-17,missing
+07_data,07_data_302_analysis,missing
+08_conclusion,08_conclusion,missing

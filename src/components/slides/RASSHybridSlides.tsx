@@ -32,6 +32,48 @@ type ViewingPoint = {
   dotClass: string;
 };
 
+const dataTemplateTokens = {
+  frameClass: "h-full w-full px-10 py-10 md:px-12 md:py-12",
+  columnClass: "flex h-full min-w-[360px] max-w-[520px] flex-col justify-center",
+  headerSlotClass: "shrink-0",
+  mainMessageSlotClass: "w-full min-w-0",
+};
+
+const dataTypographyTokens = {
+  titleClass: "text-[22px] md:text-[25px] font-bold leading-[1.22] tracking-[-0.01em] text-slate-900",
+  mainClass: "mt-8 w-full whitespace-normal break-normal text-3xl font-extrabold leading-[1.25] tracking-[-0.02em] text-slate-950 md:text-4xl",
+};
+
+type MagazineCopy = {
+  title: string;
+  lead: string;
+  main: [string, string];
+};
+
+const magazineCopyBySlideId: Record<string, MagazineCopy> = {
+  "00": { title: "ナラティブは、構造になる", lead: "感じたことを、そのままにしない", main: ["ナラティブは、", "構造として扱える。"] },
+  "01": { title: "同じではない", lead: "見えているのに", main: ["同じに見えても、", "同じではない。"] },
+  "02": { title: "扱えない理由", lead: "問題は価値ではない", main: ["構造化されていないと、", "扱えない。"] },
+  "03": { title: "構造として読めるか", lead: "問いを立てる", main: ["ナラティブは、", "構造として読めるのか。"] },
+  "04": { title: "観測を設計する", lead: "同じ条件で見る", main: ["条件を固定すれば、", "比較できる。"] },
+  "05-01": { title: "条件を決める", lead: "何を見るか", main: ["条件が決まると、", "見える。"] },
+  "05-02": { title: "見える形にする", lead: "そのままでは見えない", main: ["記述は、", "観測可能になる。"] },
+  "05-03": { title: "使える状態", lead: "見えるだけでは足りない", main: ["比較・再現・分析が、", "できる。"] },
+  "05-04": { title: "観測は成立した", lead: "条件と可視化", main: ["ナラティブは、", "扱える。"] },
+  "06-01": { title: "原因ではない", lead: "見方を変える", main: ["ズレは、", "条件不足として現れる。"] },
+  "06-02": { title: "構造で読む", lead: "どこで起きるか", main: ["ズレは、", "構造の中にある。"] },
+  "06-03": { title: "重なりとして見る", lead: "ひとつではない", main: ["ズレは、", "条件の重なりである。"] },
+  "06-04": { title: "ズレは配置", lead: "見え方が変わる", main: ["ズレは、", "配置である。"] },
+  "07-01": { title: "同じではない", lead: "見ているのに", main: ["同じに見えても、", "同じではない。"] },
+  "07-02": { title: "どう変わるか", lead: "もう一つの見方", main: ["ズレは、", "強さと時間で変わる。"] },
+  "07-03": { title: "ここで変わる", lead: "連続ではない", main: ["変化は、", "ある点で起きる。"] },
+  "07-04": { title: "変化のかたち", lead: "気づいたこと", main: ["ズレは、", "ここで変わる。"] },
+  "08-01": { title: "なぜ起きるのか", lead: "原因を見る", main: ["ズレの原因は、", "接点にある。"] },
+  "08-02": { title: "欠けているもの", lead: "見えてきた", main: ["ズレは、", "欠損で起きる。"] },
+  "08-03": { title: "欠け方の型", lead: "ばらばらではない", main: ["欠損は、", "パターンになる。"] },
+  "08-04": { title: "原因はひとつ", lead: "まとめると", main: ["ズレの原因は、", "接点の欠損である。"] },
+};
+
 function makeSlide(
   id: string,
   chapter: string,
@@ -84,17 +126,49 @@ const slides: Slide[] = [
 
   makeSlide("04", "02｜Observation", "下層ページ", "観測設計", "302件を同一条件で観測する", "個別印象ではなく、同一条件で比較可能にする。", ["対象を固定する。", "条件を固定する。", "同一フィルターで読む。"]),
   makeSlide("05-01", "02｜Observation", "下層ページ", "フィルター条件の設定", "ナラティブを観測するために、フィルターを採用する", "同じ条件で見なければ、比較も再現もできない。", ["観測する前に条件を先に決める。", "同一条件で観測して比較可能性を確保する。", "記録の前提を固定する。"]),
-  makeSlide("05-02", "02｜Observation", "下層ページ", "観測フレーム", "条件を通すことで、ナラティブは記述可能になる", "フィルターを通すことで、ナラティブは構造として扱える。", ["ナラティブ", "フィルター（観測条件）", "記述可能", "構造 / 変異 / 欠損"]),
-  makeSlide("05-03", "02｜Observation", "下層ページ", "フィルターの意味", "フィルターを入れると、「扱えない」が「扱える」に変わる", "「扱えない」が「扱える」に変わる。", ["比較できる", "再現できる", "分析できる"]),
-  makeSlide("05-04", "02｜Observation", "下層ページ", "観測設計のまとめ", "フィルターを通すことで、ナラティブは構造・変異・欠損として記述できる", "ナラティブは、フィルターを通して構造・変異・欠損として記述できる。", ["05-01 条件を決める", "05-02 記述可能になる", "05-03 比較・再現・分析できる"]),
-  makeSlide("06-01", "02｜Observation", "下層ページ", "構造の把握", "ズレの見方を、原因から条件へ転換する", "原因ではなく条件かもしれない、という見方へ転換する。", ["ズレは原因ではなく", "条件の不足として", "見れないか？"]),
-  makeSlide("06-02", "02｜Observation", "下層ページ", "構造の提示（SRPL）", "人の体験は、4つの条件で整理できる", "ズレは、これらの“どこかの不足”として見れる。", ["S：安全（Safety）", "R：尊厳（Respect）", "P：見通し（Perspective）", "L：役割（Role）"]),
-  makeSlide("06-03", "02｜Observation", "下層ページ", "配置の把握", "ズレは、SRPLの不足の組み合わせとして見れる", "原因ではなく、配置として読む。", ["ズレ ＝", "複数の条件の不足の重なり", "例：P（見通し）＋ L（役割）"]),
-  makeSlide("06-04", "02｜Observation", "下層ページ", "理解の確定", "06章の結論を、理解として確定する", "理解できることが、使えることにつながる。", ["ズレは原因ではなく", "SRPLの未充足条件の", "配置として捉えられる"]),
+  makeSlide("05-02", "02｜Observation", "下層ページ", "観測フレーム", "条件を通すことで、ナラティブは見える", "フィルターを通すことで、ナラティブは見える。", ["ナラティブ", "フィルター（観測条件）", "見える", "構造 / 変異 / 欠損"]),
+  makeSlide("05-03", "02｜Observation", "下層ページ", "フィルターの意味", "見える状態は、比較・再現・分析に使える", "見える状態は、比較・再現・分析に使える。", ["比較できる", "再現できる", "分析できる"]),
+  makeSlide("05-04", "02｜Observation", "下層ページ", "観測設計のまとめ", "05章結論：条件→見える→使えるを統合する", "ナラティブは、条件→見える→使えるの統合で記述可能になる。", ["05-01 条件を決める", "05-02 見える", "05-03 使える"]),
+  makeSlide("06-01", "02｜Observation", "下層ページ", "構造の把握", "ズレの見方を、原因から条件へ切り替える", "ズレを原因から切り離し、未充足条件として読む入口をつくる。", ["ズレは原因ではなく", "未充足条件として", "読めないか。"]),
+  makeSlide("06-02", "02｜Observation", "下層ページ", "構造の提示（SRPL）", "人の体験は、4つの未充足条件で整理できる", "ズレは、SRPLの未充足条件として読める。", ["S：安全（Safety）", "R：尊厳（Respect）", "P：見通し（Perspective）", "L：役割（Role）"]),
+  makeSlide("06-03", "02｜Observation", "下層ページ", "配置の把握", "ズレは、SRPL未充足条件の配置として読める", "原因ではなく、配置として読む。", ["ズレ ＝", "複数の未充足条件の重なり", "例：P（見通し）＋ L（役割）"]),
+  makeSlide("06-04", "02｜Observation", "下層ページ", "理解の確定", "06章の結論を確定する", "ズレは原因ではなく、SRPLの未充足条件の配置である。", ["ズレは原因ではなく", "SRPLの未充足条件の", "配置である"]),
   makeSlide("06", "02｜Observation", "下層ページ", "構造の把握", "ズレを未充足条件として読む", "ズレは単一原因ではなく、SRPLの配置として観測される。", ["SRPLとして配置する。", "複数条件として読む。", "構造として観測する。"]),
-  makeSlide("07", "02｜Observation", "下層ページ", "変異の把握", "転換はジャンプとして観測される", "ズレは連続的進行ではなく、非連続的な変異として観測される。", ["Δ指標として観測する。", "非連続的な変異を見る。", "転換点を読む。"]),
-  makeSlide("08", "02｜Observation", "下層ページ", "欠損の把握", "接点の問題は重なり構造を持つ", "接点欠損は集中と分散の二層構造として現れる。", ["接点欠損として観測する。", "分散と集中を見る。", "複数欠損の重なりを見る。"]),
-  makeSlide("08-DATA", "02｜Observation", "下層ページ", "DATA｜302件ナラティブ分析結果", "構造・変異・欠損の実測分布", "302件の患者ナラティブは、構造・変異・欠損として定量的に把握可能である。", ["Δ分布：Δ2・Δ3が中核", "Trigger：転換点の有無を把握", "APCE：欠損構造から介入入口を特定"], { core: "302件が土台", navi: "観測可能性の根拠", sora: "数字ではなく構造を伝える", codex: "CSV結果をUIに接続" }),
+  makeSlide("07-01", "02｜Observation", "下層ページ", "進行の把握", "基準フレーム", "同じに見えるが、同じではない。", ["同じに見えるが", "同じではない"]),
+  makeSlide("07-02", "02｜Observation", "下層ページ", "進行の軸", "強さと時間で観測する", "進行は、強さと時間で見える。", ["進行は", "強さと時間で見える"], {
+    core: "Figureを見て、観察軸を受け取る。",
+    navi: "こう見ると、見えてきます",
+    sora: "補助としてメモを取り、意味の接続を待つ。",
+    codex: "07-01の延長として同一フレームで接続する。",
+  }),
+  makeSlide("07-03", "02｜Observation", "下層ページ", "転移の把握", "Trigger", "変化は連続ではなく転移する。", ["変化は", "連続ではなく", "転移する"], {
+    core: "…ここか",
+    navi: "指示を止め、観測を見守る。",
+    sora: "背景で意味整理を支える。",
+    codex: "同一空間で転移点のみを観測する。",
+  }),
+  makeSlide("07-04", "02｜Observation", "下層ページ", "言語化の確定", "気づきを言葉にする", "気づいたズレを、自分の言葉で確定する。", ["気づいたズレを", "自分の言葉で", "確定する"], {
+    core: "ズレは、ある点で変わる。",
+    navi: "観測軸を再確認する。",
+    sora: "意味を言葉にして共有する。",
+    codex: "章の理解を次章へ接続する。",
+  }),
+  makeSlide("08-01", "02｜Observation", "下層ページ", "欠損の把握①", "APCE_Missとして原因を特定する", "ズレの原因は、接点欠損（APCE_Miss）として特定できる。", ["ズレの原因を", "接点欠損として", "特定する"]),
+  makeSlide("08-02", "02｜Observation", "下層ページ", "欠損の把握②", "A（認識）欠損の具体例", "1つのAPCE_Missを具体例で捉え、原因特定の感覚をつかむ。", ["A（認識）が欠けると", "行動がズレ", "結果にズレが生じる"]),
+  makeSlide("08-03", "02｜Observation", "下層ページ", "欠損の把握③", "APCE_Missの4パターン整理", "欠ける接点によってズレ方は変わる。", ["A_Miss", "P_Miss", "C_Miss", "E_Miss"]),
+  makeSlide("08-04", "02｜Observation", "下層ページ", "欠損の把握④", "結論：ズレの原因は接点欠損", "すべてのズレは、どこかの接点欠損として説明できる。", ["ズレの原因は", "接点の欠損", "（APCE_Miss）"]),
+  makeSlide("DATA-01", "DATA｜302 Analysis", "DATA", "DATA｜構造", "Structure", "302件の分析でも、構造は組み合わせとして現れた", ["302件の分析でも、", "構造は組み合わせとして現れた"]),
+  makeSlide("DATA-02", "DATA｜302 Analysis", "DATA", "DATA｜変異", "Variation", "ズレは進行し、ある点で変わる", ["ズレは進行し、", "ある点で変わる"]),
+  makeSlide("DATA-03", "DATA｜302 Analysis", "DATA", "DATA｜欠損", "Missing", "欠損は、組み合わせで起きる", ["欠損は、", "組み合わせで起きる"]),
+  makeSlide("CASE-01", "CASE STUDY", "CASE", "CASE 01 ｜ 初期状態", "まだ臨界ではないケース", "この状態なら、介入で進行を止められる。", ["ズレは、", "条件不足として現れる。"]),
+  makeSlide("CASE-02", "CASE STUDY", "CASE", "CASE 02 ｜ 継続ズレ", "継続ズレ", "この段階では、介入しないと臨界へ進む。", ["ズレは継続し、", "関係の中に残り続ける。"]),
+  makeSlide("CASE-03", "CASE STUDY", "CASE", "CASE 03｜臨界転移", "臨界転移", "この段階では、即時介入が必要。", ["ズレは臨界に達し、", "関係は転移した。"]),
+  makeSlide("CASE-COMPARE", "CASE STUDY", "CASE", "CASE比較", "構造差分", "比較すると、介入の優先順位が見える。", ["ズレは進行し、", "ある点で転移する。"]),
+  makeSlide("INSIGHT-01", "INSIGHT & DESIGN", "INSIGHT", "INSIGHT", "まだ、答えは決まっていない。", "関係は、変えていけるのかもしれない。", ["でも、", "ここから広がる。"]),
+  makeSlide("DESIGN-01", "INSIGHT & DESIGN", "DESIGN", "DESIGN", "集まった声は、まだ形になっていない。", "把握することで、次が見える。", ["でも、", "すでに、何かが見える。"]),
+  makeSlide("DESIGN-03", "INSIGHT & DESIGN", "DESIGN", "DESIGN", "見えてきた構造を、現場で試す。", "DEMO版を通じて、次の一手が見えてくる。", ["この構造は、", "現場で磨かれていく。"]),
+  makeSlide("FUTURE-01", "INSIGHT & DESIGN", "FUTURE", "FUTURE", "一つひとつの関係が、", "", ["未来を変える。"]),
+  makeSlide("08-DATA", "DATA｜302 Analysis", "DATA", "DATA｜302件ナラティブ分析結果", "構造・変異・欠損の実測分布", "302件の患者ナラティブは、構造・変異・欠損として定量的に把握可能である。", ["Δ分布：Δ2・Δ3が中核", "Trigger：転換点の有無を把握", "APCE：欠損構造から介入入口を特定"], { core: "302件が土台", navi: "観測可能性の根拠", sora: "数字ではなく構造を伝える", codex: "CSV結果をUIに接続" }),
   makeSlide("09", "03｜Cases", "下層ページ", "ナラティブは構造・変異・欠損として記述可能", "次に個別事例で確認する", "ナラティブは、比較可能な観測枠組みとして扱える。", ["構造として把握。", "変異として観測。", "欠損として特定。"]),
   makeSlide("09b", "03｜Cases", "下層ページ", "CASE①：不満化ケース", "CONTEXTとフィルターで読む", "フィルターにより、不満化したナラティブを分解できる。", ["文脈を整理する。", "変異として観測する。", "欠損として特定する。"]),
   makeSlide("09c", "03｜Cases", "下層ページ", "CASE②：継続ズレケース", "CONTEXTとフィルターで読む", "転換前の継続的な不安も、同じ観測フレームで把握できる。", ["文脈を整理する。", "配置として読む。", "欠損として特定する。"]),
@@ -106,18 +180,33 @@ const slides: Slide[] = [
 ];
 
 const indexGroups: IndexGroup[] = [
-  { label: "00｜Cover", note: "統合表紙（未設定）", ids: ["00"] },
-  { label: "01｜Opening / Problem / Question", note: "導入・問題提起・研究問い", ids: ["01", "02", "03"] },
-  { label: "02｜Observation", note: "観測設計・構造把握", ids: ["04", "05-01", "05-02", "05-03", "05-04", "06-01", "06-02", "06-03", "06-04", "07", "08", "08-DATA"] },
-  { label: "03｜Cases", note: "ナラティブ事例", ids: ["09", "09b", "09c", "09d"] },
-  { label: "04｜Implementation", note: "応用・実装", ids: ["10", "11", "12"] },
-  { label: "05｜Conclusion", note: "結論・再定義", ids: ["13"] },
+  { label: "00 Cover", note: "導入", ids: ["00"] },
+  { label: "01 Opening", note: "導入", ids: ["01", "02"] },
+  { label: "02 Observation", note: "問い", ids: ["03"] },
+  { label: "03 Structure", note: "観測設計", ids: ["04", "05-01", "05-02", "05-03", "05-04"] },
+  { label: "04 Variation", note: "構造把握", ids: ["06-01", "06-02", "06-03", "06-04"] },
+  { label: "05 Missing", note: "進行の把握", ids: ["07-01", "07-02", "07-03", "07-04"] },
+  { label: "06 DATA", note: "証明", ids: ["DATA-01", "DATA-02", "DATA-03"] },
+  { label: "07 CASE STUDY", note: "統合ケース", ids: ["CASE-01", "CASE-02", "CASE-03", "CASE-COMPARE"] },
+  { label: "08 INSIGHT & DESIGN", note: "統合", ids: ["INSIGHT-01", "DESIGN-01", "DESIGN-03", "FUTURE-01"] },
 ];
+
+const navDisplayBySlideId: Record<string, string> = {
+  "INSIGHT-01": "INSIGHT",
+  "DESIGN-01": "DESIGN（見える）",
+  "DESIGN-03": "DESIGN（現場で磨く）",
+  "FUTURE-01": "FUTURE",
+  "09": "INSIGHT",
+  "11": "DESIGN-ACE-X",
+  "12": "DESIGN-RA-SS",
+  "13": "FUTURE",
+  "CASE-COMPARE": "CASE比較",
+};
 
 export default function RASSHybridSlides() {
   const [activeSlide, setActiveSlide] = useState(slides[0].id);
   const [mode, setMode] = useState<ViewMode>("hybrid");
-  const [openGroup, setOpenGroup] = useState("00｜Cover");
+  const [openGroup, setOpenGroup] = useState("00 Cover");
   const [imageLoadError, setImageLoadError] = useState<Record<string, boolean>>({});
 
   const slide = useMemo(() => slides.find((s) => s.id === activeSlide) ?? slides[0], [activeSlide]);
@@ -138,10 +227,102 @@ export default function RASSHybridSlides() {
   const isSrplIntroSlide = slide.id === "06-02";
   const isPlacementGraspSlide = slide.id === "06-03";
   const isPlacementConclusionSlide = slide.id === "06-04";
+  const isProgressionShiftSlide = slide.id === "07-01";
+  const isProgressionAxisSlide = slide.id === "07-02";
+  const isProgressionTriggerSlide = slide.id === "07-03";
+  const isProgressionLanguageSlide = slide.id === "07-04";
+  const isDataStructureSlide = slide.id === "DATA-01";
+  const isDataVariationSlide = slide.id === "DATA-02";
+  const isDataMissingSlide = slide.id === "DATA-03";
+  const isCaseStudy01Slide = slide.id === "CASE-01";
+  const isCaseStudy02Slide = slide.id === "CASE-02";
+  const isCaseStudy03Slide = slide.id === "CASE-03";
+  const isCaseStudyCompareSlide = slide.id === "CASE-COMPARE";
+  const isInsightDesign01Slide = slide.id === "INSIGHT-01";
+  const isDesign01Slide = slide.id === "DESIGN-01";
+  const isDesign03Slide = slide.id === "DESIGN-03";
+  const isFuture01Slide = slide.id === "FUTURE-01";
+  const isInsightDesignPairSlide = isInsightDesign01Slide || isDesign01Slide || isDesign03Slide || isFuture01Slide;
+  const isOpeningPhaseShiftSlide = slide.id === "01";
+  const isObservationPhaseShiftSlide = slide.id === "04";
+  const structuredTitleLabelBySlideId: Record<string, string> = {
+    "05-01": "05｜FILTER",
+    "05-02": "05｜FILTER",
+    "05-03": "05｜FILTER",
+    "05-04": "05｜FILTER",
+    "06-01": "06｜STRUCTURE",
+    "06-02": "06｜STRUCTURE",
+    "06-03": "06｜STRUCTURE",
+    "06-04": "06｜STRUCTURE",
+    "07-01": "07｜VARIATION",
+    "07-02": "07｜VARIATION",
+    "07-03": "07｜VARIATION",
+    "07-04": "07｜VARIATION",
+    "08-01": "08｜MISSING",
+    "08-02": "08｜MISSING",
+    "08-03": "08｜MISSING",
+    "08-04": "08｜MISSING",
+  };
+  const structuredTitleLabel = structuredTitleLabelBySlideId[slide.id];
+  const phaseLabelBySlideId: Record<string, string> = {
+    "01": "OPENING",
+    "02": "PROBLEM",
+    "03": "QUESTION",
+  };
+  const phaseLabel = phaseLabelBySlideId[slide.id];
+  const isFilterStructuredLabelSlide = ["05-01", "05-02", "05-03", "05-04"].includes(slide.id);
+  const isMagazineTemplateSlide = [
+    "00",
+    "01",
+    "02",
+    "03",
+    "04",
+    "05-01",
+    "05-02",
+    "05-03",
+    "05-04",
+    "06-01",
+    "06-02",
+    "06-03",
+    "06-04",
+    "07-01",
+    "07-02",
+    "07-03",
+    "07-04",
+    "08-01",
+    "08-02",
+    "08-03",
+    "08-04",
+  ].includes(slide.id);
+  const magazineCopy = magazineCopyBySlideId[slide.id];
   const characterImageSrc = isCoverSlide
     ? "/assets/slides/characters/00.png"
+    : isDataStructureSlide
+      ? "/assets/slides/data/data-structure.png"
+    : isDataVariationSlide
+      ? "/assets/slides/data/data-variation.png"
+    : isDataMissingSlide
+      ? "/assets/slides/data/data-missing.png"
+    : isCaseStudy01Slide
+      ? "/assets/slides/case/case-01.png"
+    : isCaseStudy02Slide
+      ? "/assets/slides/case/case-02.png"
+    : isCaseStudy03Slide
+      ? "/assets/slides/case/case-03.png"
+    : isCaseStudyCompareSlide
+      ? "/assets/slides/case/case-comparison.png"
+    : isInsightDesign01Slide
+      ? "/assets/slides/insight-design/insight-01.png"
+    : isDesign01Slide
+      ? "/assets/slides/insight-design/design-01.png"
+    : isDesign03Slide
+      ? "/assets/slides/insight-design/design-03.png"
+    : isFuture01Slide
+      ? "/assets/slides/insight-design/future-01.png"
     : isObservationFrameSlide
       ? "/assets/slides/characters/05-02.png"
+    : isProgressionShiftSlide
+        ? "/assets/slides/characters/07-01.png"
       : `/assets/slides/characters/${slide.id}.png`;
   const hasImageError = !!imageLoadError[slide.id];
   const viewingPointsDefault: ViewingPoint[] = [
@@ -298,12 +479,81 @@ export default function RASSHybridSlides() {
       dotClass: "bg-emerald-300/90",
     },
   ];
+  const viewingPointsForProgressionShift: ViewingPoint[] = [
+    {
+      title: "CORE｜静かな観察",
+      description: "…同じ状態ではない？",
+      dotClass: "bg-rose-300/90",
+    },
+  ];
+  const viewingPointsForProgressionAxis: ViewingPoint[] = [
+    {
+      title: "Figure｜Δ×e",
+      description: "ノート／画面上の軸で進行を捉える",
+      dotClass: "bg-cyan-300/90",
+    },
+    {
+      title: "NAVI｜構造ナビ",
+      description: "こう見ると、見えてきます",
+      dotClass: "bg-blue-300/90",
+    },
+    {
+      title: "CORE｜観察者",
+      description: "Figureを見て受け取る",
+      dotClass: "bg-rose-300/90",
+    },
+  ];
+  const viewingPointsForProgressionTrigger: ViewingPoint[] = [
+    {
+      title: "Figure｜Trigger点",
+      description: "ノート上で、連続の中に転移点が現れる",
+      dotClass: "bg-cyan-300/90",
+    },
+    {
+      title: "CORE｜焦点",
+      description: "…ここか",
+      dotClass: "bg-rose-300/90",
+    },
+  ];
+  const viewingPointsForProgressionLanguage: ViewingPoint[] = [
+    {
+      title: "CORE｜言語化",
+      description: "ズレは、ある点で変わる",
+      dotClass: "bg-rose-300/90",
+    },
+  ];
+  const viewingPointsForCoreObservation: ViewingPoint[] = [
+    {
+      title: "CORE｜64歳の観測",
+      description: "重心を低く保ち、原因ではなく未充足条件の配置として読む",
+      dotClass: "bg-rose-300/90",
+    },
+  ];
+  const isFilterSrplSlide =
+    isFilterSetupSlide ||
+    isObservationFrameSlide ||
+    isFilterMeaningSlide ||
+    isFilterIntegrationSlide ||
+    isStructureGraspIntroSlide ||
+    isSrplIntroSlide ||
+    isPlacementGraspSlide ||
+    isPlacementConclusionSlide;
   const viewingPoints = isIntroSlide
     ? viewingPointsForIntro
     : isProblemSlide
       ? viewingPointsForProblem
       : isHypothesisSlide
         ? viewingPointsForHypothesis
+        : isProgressionShiftSlide
+          ? viewingPointsForProgressionShift
+        : isProgressionAxisSlide
+          ? viewingPointsForProgressionAxis
+        : isProgressionTriggerSlide
+          ? viewingPointsForProgressionTrigger
+        : isProgressionLanguageSlide
+          ? viewingPointsForProgressionLanguage
+        : isFilterSrplSlide
+          ? viewingPointsForCoreObservation
         : isObservationIntroSlide
           ? viewingPointsForObservationIntro
           : isObservationFrameSlide
@@ -341,7 +591,7 @@ export default function RASSHybridSlides() {
                       className="w-full border-b border-white/10 pb-1 text-left"
                     >
                       <div className="flex items-center justify-between gap-2">
-                        <p className={`text-xs font-bold ${activeGroup ? "text-white" : "text-cyan-200"}`}>{group.label}</p>
+                        <p className={`text-xs font-semibold ${activeGroup ? "text-white" : "text-cyan-200"}`}>{group.label}</p>
                         <span className="text-[10px] text-slate-500">{isOpen ? "▲" : "▼"}</span>
                       </div>
                       <p className="mt-1 line-clamp-1 text-[10px] text-slate-500">{group.note}</p>
@@ -356,15 +606,15 @@ export default function RASSHybridSlides() {
                             <button
                               key={id}
                               onClick={() => setActiveSlide(id)}
-                              className={`w-full rounded-lg px-2 py-2 text-left transition ${
+                              className={`w-full rounded-lg border-l border-white/10 pl-4 pr-2 py-2 text-left transition ${
                                 activeSlide === id ? "bg-white/20 text-white" : "text-slate-400 hover:bg-white/10 hover:text-slate-200"
                               }`}
                             >
                               <div className="flex items-center justify-between gap-2">
-                                <span className="text-xs font-black">{target.id}</span>
+                                <span className="text-xs font-medium">{navDisplayBySlideId[target.id] ?? target.id}</span>
                                 <span className="text-[10px] text-slate-500">{target.status}</span>
                               </div>
-                              <p className="mt-1 line-clamp-2 text-[11px] leading-snug">{target.title}</p>
+                              <p className="mt-1 line-clamp-2 text-[11px] font-normal leading-snug">{target.title}</p>
                             </button>
                           );
                         })}
@@ -427,7 +677,7 @@ export default function RASSHybridSlides() {
 
           </header>
 
-          <section className={`grid min-h-0 flex-1 gap-3 ${mode === "hybrid" ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-1"}`}>
+          <section className={`grid min-h-0 flex-1 gap-3 ${mode === "hybrid" ? (isInsightDesignPairSlide ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-1 lg:grid-cols-2") : "grid-cols-1"}`}>
             {showReact && (
             <div className="flex min-h-0 flex-col rounded-xl border border-cyan-300/20 bg-slate-900 p-3">
               <div className="mb-2 shrink-0">
@@ -435,7 +685,7 @@ export default function RASSHybridSlides() {
                 <h3 className="text-sm font-bold">構造版・正本</h3>
               </div>
 
-              {isIntroSlide ? (
+              {isIntroSlide && !isMagazineTemplateSlide ? (
                 <div className="flex min-h-0 flex-1 items-center justify-center">
                   <div className="mx-auto aspect-video w-full max-h-full rounded-xl bg-white px-6 py-10 md:px-10 md:py-12">
                     <div className="flex h-full items-center justify-center text-center text-slate-900">
@@ -457,7 +707,7 @@ export default function RASSHybridSlides() {
                     </div>
                   </div>
                 </div>
-              ) : isObservationIntroSlide ? (
+              ) : isObservationIntroSlide && !isMagazineTemplateSlide ? (
                 <div className="flex min-h-0 flex-1 items-center justify-center">
                   <div className="mx-auto aspect-video w-full max-h-full rounded-xl bg-white px-6 py-7 md:px-10 md:py-9">
                     <div className="flex h-full flex-col items-center justify-center text-center text-slate-900">
@@ -472,7 +722,7 @@ export default function RASSHybridSlides() {
                         <div className="grid grid-cols-2 gap-3 text-left md:grid-cols-4 md:gap-4">
                           <p className="text-xs font-semibold leading-relaxed text-slate-700 md:text-sm">05 フィルターの採用</p>
                           <p className="text-xs font-semibold leading-relaxed text-slate-700 md:text-sm">06 構造の把握（SRPL）</p>
-                          <p className="text-xs font-semibold leading-relaxed text-slate-700 md:text-sm">07 変異の把握（Δ × e × Trigger）</p>
+                          <p className="text-xs font-semibold leading-relaxed text-slate-700 md:text-sm">07 進行の把握</p>
                           <p className="text-xs font-semibold leading-relaxed text-slate-700 md:text-sm">08 欠損の把握（APCE_Miss）</p>
                         </div>
                       </div>
@@ -481,27 +731,56 @@ export default function RASSHybridSlides() {
                 </div>
               ) : (
               <div className="min-h-0 flex flex-1 items-center justify-center">
-              <div className={`${isNormalMode ? "h-full w-full" : "mx-auto aspect-video w-full max-w-full min-h-0"} rounded-xl bg-white p-4 text-slate-950 ${isCoverSlide || isProblemSlide || isHypothesisSlide || isFilterSetupSlide || isObservationFrameSlide || isFilterMeaningSlide || isFilterIntegrationSlide || isStructureGraspIntroSlide || isSrplIntroSlide || isPlacementGraspSlide || isPlacementConclusionSlide ? "overflow-hidden" : "overflow-auto"}`}>
+              <div className={`${isNormalMode ? "h-full w-full" : "mx-auto aspect-video w-full max-w-full min-h-0"} rounded-xl bg-white p-4 text-slate-950 ${isCoverSlide || isProblemSlide || isHypothesisSlide || isFilterSetupSlide || isObservationFrameSlide || isFilterMeaningSlide || isFilterIntegrationSlide || isStructureGraspIntroSlide || isSrplIntroSlide || isPlacementGraspSlide || isPlacementConclusionSlide || isProgressionShiftSlide || isProgressionAxisSlide || isProgressionTriggerSlide || isProgressionLanguageSlide || isDataStructureSlide || isDataVariationSlide || isDataMissingSlide || isCaseStudy01Slide || isCaseStudy02Slide || isCaseStudy03Slide || isCaseStudyCompareSlide || isInsightDesign01Slide || isDesign01Slide || isDesign03Slide || isFuture01Slide ? "overflow-hidden" : "overflow-auto"}`}>
                 {isCoverSlide ? (
-                  <div className="flex h-full flex-col justify-start p-2 md:p-3">
-                    <div className="md:-mt-2">
-                      <h4 className="mt-2 text-3xl font-black leading-[1.15] text-slate-900 md:text-[2.55rem]">
-                        302件のナラティブ分析が
-                        <br />
-                        もたらしたもの
-                      </h4>
-                      <p className="mt-6 text-center text-base font-semibold leading-relaxed text-slate-800 md:text-xl">
-                        人の声を、構造として理解する。<br />
-                        それが、関係を変え、未来をつくる。
+                  <div className="flex h-full items-center justify-center px-8 py-12 md:px-14 md:py-16">
+                    <div className="w-full max-w-4xl text-center text-slate-900">
+                      <p className="text-[18px] md:text-[20px] font-semibold leading-[1.35] tracking-[-0.01em]">
+                        ナラティブは、構造になる
                       </p>
+                      <p className="mt-6 text-[15px] md:text-[17px] font-medium leading-[1.5] text-slate-600">
+                        感じたことを、そのままにしない
+                      </p>
+                      <h4 className="mt-16 text-[36px] md:text-[46px] font-black leading-[1.2] tracking-[-0.02em]">
+                        <span className="block">ナラティブは</span>
+                        <span className="mt-1 block whitespace-nowrap">構造として扱える。</span>
+                      </h4>
                     </div>
-
-                    <div className="mt-6 flex flex-wrap items-center gap-2 text-[11px] text-slate-600 md:gap-3">
-                      <span>DATA　302件</span>
-                      <span className="text-slate-400">｜</span>
-                      <span>MODEL　構造・変異・欠損</span>
-                      <span className="text-slate-400">｜</span>
-                      <span>OUTPUT　RA-SS / ACE-X / 病院広報の再定義</span>
+                  </div>
+                ) : isMagazineTemplateSlide ? (
+                  <div className={`${dataTemplateTokens.frameClass} text-slate-900`}>
+                    <div className={`${dataTemplateTokens.columnClass} ${isObservationPhaseShiftSlide || isOpeningPhaseShiftSlide ? "pt-5" : ""}`}>
+                      <div className={dataTemplateTokens.headerSlotClass}>
+                        {phaseLabel ? (
+                          <p className="text-xs md:text-sm font-semibold tracking-wide text-slate-400">
+                            {phaseLabel}
+                          </p>
+                        ) : null}
+                        {isObservationPhaseShiftSlide ? (
+                          <p className="text-[11px] md:text-xs font-semibold tracking-[0.12em] text-slate-500">
+                            OBSERVATION
+                          </p>
+                        ) : null}
+                        {structuredTitleLabel ? (
+                          <p className={isFilterStructuredLabelSlide ? "text-[10px] md:text-[11px] font-semibold tracking-[0.1em] text-slate-400" : "text-[11px] md:text-xs font-semibold tracking-[0.12em] text-slate-500"}>
+                            {structuredTitleLabel}
+                          </p>
+                        ) : null}
+                        <h4 className={structuredTitleLabel ? "mt-2 text-[20px] md:text-[22px] font-semibold leading-[1.22] tracking-[-0.01em] text-slate-900" : dataTypographyTokens.titleClass}>
+                          {magazineCopy?.title}
+                        </h4>
+                        <div className={`w-full h-px my-4 ${isObservationPhaseShiftSlide || isOpeningPhaseShiftSlide ? "bg-slate-300" : "bg-slate-200"}`} />
+                        <p className="mt-5 text-[14px] md:text-[16px] font-semibold leading-[1.3] text-slate-600">
+                          {magazineCopy?.lead}
+                        </p>
+                      </div>
+                      <div className={dataTemplateTokens.mainMessageSlotClass}>
+                        <p className={dataTypographyTokens.mainClass}>
+                          {magazineCopy?.main[0]}
+                          <br />
+                          {magazineCopy?.main[1]}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 ) : isProblemSlide ? (
@@ -602,7 +881,7 @@ export default function RASSHybridSlides() {
                         観測フレーム
                       </h4>
                       <p className="mt-3 text-sm font-semibold text-slate-700 md:text-base">
-                        条件を通すことで、ナラティブは記述可能になる
+                        条件を通すことで、ナラティブは見える
                       </p>
                     </div>
 
@@ -613,14 +892,14 @@ export default function RASSHybridSlides() {
                           <span className="shrink-0 text-lg font-black text-slate-400 md:text-xl">→</span>
                           <p className="flex-1 rounded-lg border border-slate-200 bg-slate-50 px-3 py-4 text-sm font-black text-slate-900 md:text-base">フィルター（観測条件）</p>
                           <span className="shrink-0 text-lg font-black text-slate-400 md:text-xl">→</span>
-                          <p className="flex-1 rounded-lg border border-slate-200 bg-slate-50 px-3 py-4 text-sm font-black text-slate-900 md:text-base">記述可能</p>
+                          <p className="flex-1 rounded-lg border border-slate-200 bg-slate-50 px-3 py-4 text-sm font-black text-slate-900 md:text-base">見える</p>
                         </div>
                         <p className="text-xs font-semibold tracking-wide text-slate-500 md:text-sm">構造 / 変異 / 欠損</p>
                       </div>
                     </div>
 
                     <p className="text-center text-xs font-medium leading-relaxed text-slate-600 md:text-sm">
-                      フィルターを通すことで、ナラティブは構造として扱える
+                      フィルターを通すことで、ナラティブは見える
                     </p>
                   </div>
                 ) : isFilterMeaningSlide ? (
@@ -666,7 +945,7 @@ export default function RASSHybridSlides() {
                         <span className="shrink-0 text-lg font-black text-slate-400 md:text-xl">→</span>
                         <div className="flex min-h-[96px] flex-1 flex-col items-center justify-center rounded-lg border border-slate-200 bg-slate-50 px-2 py-3 text-center">
                           <p className="text-xs font-bold text-slate-500 md:text-sm">05-02</p>
-                          <p className="mt-1 text-sm font-black leading-snug text-slate-900 md:text-base">記述可能になる</p>
+                          <p className="mt-1 text-sm font-black leading-snug text-slate-900 md:text-base">見える</p>
                         </div>
                         <span className="shrink-0 text-lg font-black text-slate-400 md:text-xl">→</span>
                         <div className="flex min-h-[96px] flex-1 flex-col items-center justify-center rounded-lg border border-slate-200 bg-slate-50 px-2 py-3 text-center">
@@ -694,7 +973,7 @@ export default function RASSHybridSlides() {
                         <br />
                         <span className="text-slate-800">条件の不足として</span>
                         <br />
-                        見れないか？
+                        読めないか。
                       </p>
                     </div>
                   </div>
@@ -731,7 +1010,7 @@ export default function RASSHybridSlides() {
                     </div>
 
                     <p className="text-center text-xs font-medium leading-relaxed text-slate-600 md:text-sm">
-                      ズレは、これらの“どこかの不足”として見れる
+                      ズレは、SRPLの未充足条件として読める
                     </p>
                   </div>
                 ) : isPlacementGraspSlide ? (
@@ -741,7 +1020,7 @@ export default function RASSHybridSlides() {
                         配置の把握
                       </h4>
                       <p className="mt-3 text-sm font-semibold text-slate-700 md:text-base">
-                        ズレは、SRPLの不足の組み合わせとして見れる
+                        ズレは、SRPL未充足条件の配置として読める
                       </p>
                     </div>
 
@@ -782,11 +1061,243 @@ export default function RASSHybridSlides() {
                       <br />
                       <span className="text-slate-800">SRPLの未充足条件の</span>
                       <br />
-                      配置として捉えられる
+                      配置である
                     </p>
                     <p className="mt-6 text-center text-[11px] font-semibold tracking-wide text-slate-500 md:text-xs">
                       観測 → 構造 → 配置 → 理解
                     </p>
+                  </div>
+                ) : isProgressionShiftSlide ? (
+                  <div className="flex h-full flex-col items-center justify-center px-6 py-6 text-slate-900 md:px-9 md:py-8">
+                    <p className="text-center text-3xl font-bold leading-relaxed text-slate-900 md:text-[3.6rem]">
+                      同じに見えるが
+                      <br />
+                      同じではない
+                    </p>
+                  </div>
+                ) : isProgressionAxisSlide ? (
+                  <div className="flex h-full flex-col items-center justify-center px-6 py-6 text-slate-900 md:px-9 md:py-8">
+                    <p className="text-center text-2xl font-bold leading-relaxed text-slate-900 md:text-4xl">
+                      進行は
+                      <br />
+                      強さと時間で見える
+                    </p>
+                    <p className="mt-2 text-center text-xs font-semibold text-slate-500 md:text-sm">
+                      Δ：強度　e：時間
+                    </p>
+                    <div className="mt-7 w-full max-w-[360px] md:mt-8 md:max-w-[420px]">
+                      <div className="relative mx-auto h-32 w-full border-b-2 border-l-2 border-slate-300 md:h-36">
+                        <span className="absolute -left-6 top-1 text-sm font-semibold text-slate-600">Δ</span>
+                        <span className="absolute -bottom-6 right-1 text-sm font-semibold text-slate-600">e</span>
+                        <svg
+                          className="absolute inset-0 h-full w-full"
+                          viewBox="0 0 100 100"
+                          preserveAspectRatio="none"
+                          aria-hidden="true"
+                        >
+                          <polyline
+                            points="8,88 24,82 40,74 56,65 72,53 90,40"
+                            fill="none"
+                            stroke="rgb(15 23 42 / 0.7)"
+                            strokeWidth="2.2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                ) : isProgressionTriggerSlide ? (
+                  <div className="flex h-full flex-col items-center justify-center px-6 py-6 text-slate-900 md:px-9 md:py-8">
+                    <p className="text-center text-2xl font-bold leading-relaxed text-slate-900 md:text-4xl">
+                      変化は
+                      <br />
+                      連続ではなく
+                      <br />
+                      転移する
+                    </p>
+                    <p className="mt-3 text-center text-xs font-semibold tracking-wide text-slate-500 md:text-sm">
+                      Trigger
+                    </p>
+                  </div>
+                ) : isProgressionLanguageSlide ? (
+                  <div className="flex h-full flex-col items-center justify-center px-6 py-6 text-slate-900 md:px-9 md:py-8">
+                    <p className="text-center text-2xl font-bold leading-relaxed text-slate-900 md:text-4xl">
+                      気づいたズレを
+                      <br />
+                      自分の言葉で
+                      <br />
+                      確定する
+                    </p>
+                  </div>
+                ) : isDataStructureSlide ? (
+                  <div className={`${dataTemplateTokens.frameClass} text-slate-900`}>
+                    <div className={dataTemplateTokens.columnClass}>
+                      <div className={dataTemplateTokens.headerSlotClass}>
+                        <h4 className={dataTypographyTokens.titleClass}>DATA｜構造</h4>
+                        <div className="w-full h-px bg-slate-200 my-4" />
+                        <p className="mt-5 text-[14px] md:text-[16px] font-semibold leading-[1.3] text-slate-600">
+                          SRPLは単独ではなく、重なりとして現れる
+                        </p>
+                      </div>
+                      <div className={dataTemplateTokens.mainMessageSlotClass}>
+                        <p className={dataTypographyTokens.mainClass}>
+                          構造は、
+                          <br />
+                          組み合わせとして現れた。
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ) : isDataVariationSlide ? (
+                  <div className={`${dataTemplateTokens.frameClass} text-slate-900`}>
+                    <div className={dataTemplateTokens.columnClass}>
+                      <div className={dataTemplateTokens.headerSlotClass}>
+                        <h4 className={dataTypographyTokens.titleClass}>DATA｜変異</h4>
+                        <div className="w-full h-px bg-slate-200 my-4" />
+                        <p className="mt-5 text-[14px] md:text-[16px] font-semibold leading-[1.3] text-slate-600">
+                          Δ・e・Triggerで変化を確認
+                        </p>
+                      </div>
+                      <div className={dataTemplateTokens.mainMessageSlotClass}>
+                        <p className={dataTypographyTokens.mainClass}>
+                          ズレは進行し、
+                          <br />
+                          ある点で変わる。
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ) : isDataMissingSlide ? (
+                  <div className={`${dataTemplateTokens.frameClass} text-slate-900`}>
+                    <div className={dataTemplateTokens.columnClass}>
+                      <div className={dataTemplateTokens.headerSlotClass}>
+                        <h4 className={dataTypographyTokens.titleClass}>DATA｜欠損</h4>
+                        <div className="w-full h-px bg-slate-200 my-4" />
+                        <p className="mt-5 text-[14px] md:text-[16px] font-semibold leading-[1.3] text-slate-600">
+                          APCE_Missの偏りを確認
+                        </p>
+                      </div>
+                      <div className={dataTemplateTokens.mainMessageSlotClass}>
+                        <p className={dataTypographyTokens.mainClass}>
+                          欠損は、
+                          <br />
+                          組み合わせで起きる。
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ) : isCaseStudy01Slide || isCaseStudy02Slide || isCaseStudy03Slide || isCaseStudyCompareSlide || isInsightDesign01Slide || isDesign01Slide || isDesign03Slide || isFuture01Slide ? (
+                  <div className={`${isInsightDesignPairSlide ? "h-full w-full p-8 md:p-10" : dataTemplateTokens.frameClass} text-slate-900`}>
+                    <div className={dataTemplateTokens.columnClass}>
+                      <div className={dataTemplateTokens.headerSlotClass}>
+                        <h4 className={dataTypographyTokens.titleClass}>
+                          {isFuture01Slide ? "FUTURE" : isDesign01Slide || isDesign03Slide ? "DESIGN" : isInsightDesign01Slide ? "INSIGHT" : isCaseStudyCompareSlide ? "CASE比較 ｜ 構造差分" : isCaseStudy03Slide ? "CASE 03 ｜ 臨界転移" : isCaseStudy02Slide ? "CASE 02 ｜ 継続ズレ" : "CASE 01 ｜ 初期状態"}
+                        </h4>
+                        <div className="w-full h-px bg-slate-200 my-4" />
+                        {isInsightDesignPairSlide ? (
+                          <p className="mt-5 text-[14px] md:text-[16px] font-semibold leading-[1.3] text-slate-600">
+                            {isDesign01Slide ? (
+                              <>
+                                集まった声は、
+                                <br />
+                                まだ形になっていない。
+                              </>
+                            ) : isDesign03Slide ? (
+                              <>
+                                見えてきた構造を、
+                                <br />
+                                現場で試す。
+                              </>
+                            ) : isFuture01Slide ? (
+                              <>一つひとつの関係が、</>
+                            ) : (
+                              <>まだ、答えは決まっていない。</>
+                            )}
+                          </p>
+                        ) : null}
+                      </div>
+                      <div className={dataTemplateTokens.mainMessageSlotClass}>
+                        <p className={`${isInsightDesignPairSlide ? "mt-8 w-full whitespace-normal break-normal text-[40px] md:text-[46px] font-extrabold leading-[1.18] tracking-[-0.02em] text-slate-950" : "mt-8 w-full whitespace-normal break-normal text-[36px] md:text-[42px] font-extrabold leading-[1.22] tracking-[-0.02em] text-slate-950"}`}>
+                          {isInsightDesignPairSlide ? (
+                            <>
+                              {isFuture01Slide ? (
+                                <span className="block whitespace-nowrap">未来を変える。</span>
+                              ) : isDesign03Slide ? (
+                                <>
+                                  <span className="block">この構造は、</span>
+                                  <span className="block whitespace-nowrap">現場で磨かれていく。</span>
+                                </>
+                              ) : (
+                                <>
+                                  <span className="block">でも、</span>
+                                  <span className="block whitespace-nowrap">{isDesign01Slide ? "すでに、何かが見える。" : "ここから広がる。"}</span>
+                                </>
+                              )}
+                            </>
+                          ) : isCaseStudyCompareSlide ? (
+                            <>
+                              <span className="block">ズレは進行し、</span>
+                              <span className="block whitespace-nowrap">
+                                ある点で<span className="font-black text-rose-700">転移する。</span>
+                              </span>
+                            </>
+                          ) : isCaseStudy03Slide ? (
+                            <>
+                              <span className="block">ズレは臨界に達し、</span>
+                              <span className="block whitespace-nowrap">関係は転移した。</span>
+                            </>
+                          ) : isCaseStudy02Slide ? (
+                            <>
+                              <span className="block">ズレは継続し、</span>
+                              <span className="block whitespace-nowrap">関係の中に残り続ける。</span>
+                            </>
+                          ) : (
+                            <>
+                              <span className="block">ズレは、</span>
+                              <span className="block whitespace-nowrap">条件不足として現れる。</span>
+                            </>
+                          )}
+                        </p>
+                        {!isInsightDesignPairSlide ? (
+                          <p className="mt-5 text-[13px] md:text-[14px] font-semibold leading-[1.35] text-slate-600">
+                            {isCaseStudyCompareSlide ? (
+                              <>比較すると、介入の優先順位が見える。</>
+                            ) : isCaseStudy03Slide ? (
+                              <>
+                                この段階では、
+                                <br />
+                                即時介入が必要。
+                              </>
+                            ) : isCaseStudy02Slide ? (
+                              <>
+                                このままでは、
+                                <br />
+                                臨界へ進む。
+                              </>
+                            ) : (
+                              <>この状態なら、介入で進行を止められる。</>
+                            )}
+                          </p>
+                        ) : isDesign01Slide ? (
+                          <p className="mt-5 text-[13px] md:text-[14px] font-semibold leading-[1.35] text-slate-600">
+                            <>
+                              把握することで、
+                              <br />
+                              次が見える。
+                            </>
+                          </p>
+                        ) : isDesign03Slide ? (
+                          <p className="mt-5 text-[13px] md:text-[14px] font-semibold leading-[1.35] text-slate-600">
+                            <>
+                              DEMO版を通じて、
+                              <br />
+                              次の一手が見えてくる。
+                            </>
+                          </p>
+                        ) : isFuture01Slide ? null : null}
+                      </div>
+                    </div>
                   </div>
                 ) : (
                   <>
@@ -826,25 +1337,59 @@ export default function RASSHybridSlides() {
               </div>
 
               <div className="flex min-h-0 flex-1 items-center justify-center rounded-xl border border-dashed border-white/15 bg-slate-800 p-2 text-center">
-                <div className="aspect-[16/9] w-full flex items-center justify-center rounded-lg overflow-hidden bg-slate-900 p-4">
+                <div className={`aspect-[16/9] w-full flex items-center justify-center rounded-lg overflow-hidden bg-slate-900 ${isDataStructureSlide || isDataVariationSlide || isDataMissingSlide || isCaseStudy01Slide || isCaseStudy02Slide || isCaseStudy03Slide || isCaseStudyCompareSlide || isInsightDesign01Slide || isDesign01Slide || isDesign03Slide || isFuture01Slide ? "p-2" : "p-4"}`}>
                   {!hasImageError ? (
-                    <img
-                      key={slide.id}
-                      src={characterImageSrc}
-                      alt="character slide"
-                      className="h-full w-full max-h-full max-w-full object-contain"
-                      onLoad={() =>
-                        setImageLoadError((prev) => ({ ...prev, [slide.id]: false }))
-                      }
-                      onError={(e) => {
-                        if (isObservationFrameSlide && e.currentTarget.dataset.fallbackApplied !== "true") {
-                          e.currentTarget.dataset.fallbackApplied = "true";
-                          e.currentTarget.src = "/assets/slides/characters/05.png";
-                          return;
+                    <div className="relative h-full w-full">
+                      <img
+                        key={slide.id}
+                        src={characterImageSrc}
+                        alt="character slide"
+                        className={`h-full w-full max-h-full max-w-full ${
+                          isProgressionShiftSlide
+                            ? "object-contain"
+                            : isProgressionAxisSlide
+                              ? "object-contain"
+                              : isProgressionTriggerSlide
+                                ? "object-contain"
+                              : isProgressionLanguageSlide
+                                ? "object-contain"
+                                : isDataStructureSlide
+                                  ? "object-contain scale-[1.06] object-center"
+                                  : isDataVariationSlide
+                                    ? "object-contain scale-[1.08] object-center"
+                                    : isDataMissingSlide
+                                      ? "object-contain scale-[1.08] object-center"
+                                      : isCaseStudy01Slide
+                                        ? "object-contain scale-[1.08] object-center"
+                                        : isCaseStudy02Slide
+                                          ? "object-contain scale-[1.08] object-center"
+                                          : isCaseStudy03Slide
+                                            ? "object-contain scale-[1.08] object-center"
+                                            : isCaseStudyCompareSlide
+                                              ? "object-contain scale-[1.08] object-center"
+                                              : isInsightDesign01Slide
+                                                ? "object-contain scale-[1.1] object-center"
+                                                : isDesign01Slide
+                                                  ? "object-contain scale-[1.1] object-center"
+                                                : isDesign03Slide
+                                                  ? "object-contain scale-[1.1] object-center"
+                                                : isFuture01Slide
+                                                  ? "object-contain scale-[1.1] object-center"
+                                : "object-contain"
+                        }`}
+                        onLoad={() =>
+                          setImageLoadError((prev) => ({ ...prev, [slide.id]: false }))
                         }
-                        setImageLoadError((prev) => ({ ...prev, [slide.id]: true }));
-                      }}
-                    />
+                        onError={(e) => {
+                          if (isObservationFrameSlide && e.currentTarget.dataset.fallbackApplied !== "true") {
+                            e.currentTarget.dataset.fallbackApplied = "true";
+                            e.currentTarget.src = "/assets/slides/characters/05.png";
+                            return;
+                          }
+                          setImageLoadError((prev) => ({ ...prev, [slide.id]: true }));
+                        }}
+                      />
+                    </div>
                   ) : (
                     <>
                       <div className="mx-auto mt-3 flex h-16 w-16 items-center justify-center rounded-full bg-white/10 text-3xl">🎭</div>
@@ -864,7 +1409,7 @@ export default function RASSHybridSlides() {
                 見てほしいポイント
               </p>
 
-              <div className="mt-2 grid grid-cols-1 gap-2 md:grid-cols-4">
+              <div className={`mt-2 grid grid-cols-1 gap-2 ${viewingPoints.length === 1 ? "md:grid-cols-1" : "md:grid-cols-4"}`}>
                 {viewingPoints.map((point) => (
                   <div key={point.title} className="relative min-h-[74px] rounded-lg border border-white/10 bg-white/5 p-2.5">
                     <span className={`absolute left-2 top-2 h-2 w-2 rounded-full ${point.dotClass}`} />
