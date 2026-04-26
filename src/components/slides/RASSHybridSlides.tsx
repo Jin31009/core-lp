@@ -717,6 +717,18 @@ export default function RASSHybridSlides() {
                 </div>
               </div>
             ) : null}
+
+            <div className="mt-2 hidden items-center justify-end gap-3 md:flex">
+              <p className="text-[10px] leading-snug text-slate-400">
+                全体像・DEMO・分析レポートはCORE-LPから確認できます
+              </p>
+              <a
+                href="/"
+                className="inline-flex min-h-8 items-center justify-center rounded-lg border border-white/25 bg-white/5 px-3 py-1.5 text-[11px] font-semibold text-slate-200 transition hover:bg-white/10"
+              >
+                CORE-LPへ戻る
+              </a>
+            </div>
           </header>
 
           <div className="shrink-0 rounded-xl border border-white/10 bg-white/5 p-3">
@@ -1481,7 +1493,7 @@ export default function RASSHybridSlides() {
             </div>
           </footer>
 
-          <div className="shrink-0 rounded-xl border border-white/10 bg-white/5 p-3">
+          <div className="shrink-0 rounded-xl border border-white/10 bg-white/5 p-3 md:hidden">
             <div className="mt-2 flex flex-col items-center gap-2">
               <a
                 href="/"
