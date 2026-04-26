@@ -640,9 +640,15 @@ export default function RASSHybridSlides() {
               >
                 ☰
               </button>
-              <p className="flex-1 text-center text-sm font-semibold text-cyan-300">
-                {currentSlideLabel} / {totalSlidesLabel}
-              </p>
+              <div className="mx-1 flex min-w-0 flex-1 items-center justify-center gap-1 overflow-hidden text-center text-[10px] font-semibold text-slate-200 sm:gap-2 sm:text-xs md:text-sm">
+                <span className="shrink-0 text-cyan-300">
+                  {currentSlideLabel} / {totalSlidesLabel}
+                </span>
+                <span className="text-slate-500">|</span>
+                <span className="max-w-[38%] truncate text-slate-200">{slide.chapter}</span>
+                <span className="text-slate-500">|</span>
+                <span className="max-w-[38%] truncate text-slate-400">{slide.group}</span>
+              </div>
               <div className="flex items-center gap-2">
                 <button
                   type="button"
@@ -709,19 +715,6 @@ export default function RASSHybridSlides() {
                 </div>
               </div>
             ) : null}
-
-            <div className="mt-2 min-w-0">
-              <div className="flex min-w-0 items-center gap-2 text-xs text-slate-300">
-                <span className="shrink-0 font-semibold text-cyan-300">{slide.id}</span>
-                <span className="text-slate-500">|</span>
-                <span className="truncate">{slide.chapter}</span>
-                <span className="text-slate-500">|</span>
-                <span className="shrink-0 text-slate-400">{slide.group}</span>
-              </div>
-              <p className="mt-1 truncate text-base font-bold tracking-tight text-white md:text-lg">
-                {slide.title}
-              </p>
-            </div>
           </header>
 
           <div className="shrink-0 rounded-xl border border-white/10 bg-white/5 p-3">
