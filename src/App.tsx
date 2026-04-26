@@ -6,8 +6,7 @@ import StructurePage from "./pages/structure/StructurePage";
 import PocPage from "./pages/PocPage";
 import ContactPage from "./pages/ContactPage";
 import ReportsPage from "./pages/reports/ReportsPage";
-import { useEffect } from "react";
-import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 
 function resolvePageToPath(page: string) {
   switch (page) {
@@ -22,7 +21,7 @@ function resolvePageToPath(page: string) {
     case "demo-intro":
       return "/demo-intro";
     case "prototype":
-      return "/#prototype";
+      return "/demo-intro";
     case "case":
       return "/case";
     case "evidence":
@@ -44,21 +43,7 @@ function resolvePageToPath(page: string) {
 
 export default function App() {
   const navigate = useNavigate();
-  const location = useLocation();
   const setPage = (page: string) => navigate(resolvePageToPath(page));
-
-  useEffect(() => {
-    if (location.hash) {
-      const id = location.hash.replace("#", "");
-
-      setTimeout(() => {
-        const el = document.getElementById(id);
-        if (el) {
-          el.scrollIntoView({ behavior: "smooth" });
-        }
-      }, 200);
-    }
-  }, [location.pathname, location.hash]);
 
   return (
     <Routes>
