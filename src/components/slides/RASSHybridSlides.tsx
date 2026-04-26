@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type RoleKey = "core" | "navi" | "sora" | "codex";
 type ViewMode = "normal" | "character" | "hybrid";
@@ -7,6 +7,7 @@ type RoleContent = Partial<Record<RoleKey, string>>;
 
 type Slide = {
   id: string;
+  group: string;
   chapter: string;
   section: string;
   title: string;
@@ -31,6 +32,17 @@ type ViewingPoint = {
   description: string;
   dotClass: string;
 };
+
+const groups = [
+  "Cover",
+  "Opening",
+  "Core Concept",
+  "Structure",
+  "Filters",
+  "Case",
+  "DATA",
+  "Conclusion",
+] as const;
 
 const dataTemplateTokens = {
   frameClass: "h-full w-full px-10 py-10 md:px-12 md:py-12",
@@ -84,8 +96,10 @@ function makeSlide(
   body: string[],
   roles: RoleContent = {}
 ): Slide {
+  const group = resolveSlideGroup(id);
   return {
     id,
+    group,
     chapter,
     section,
     title,
@@ -98,6 +112,17 @@ function makeSlide(
     sora: roles.sora ?? "専門的な内容を伝わる言葉へ翻訳する。",
     codex: roles.codex ?? "画像・コード・公開導線を同一IDで接続する。",
   };
+}
+
+function resolveSlideGroup(id: string): (typeof groups)[number] {
+  if (id === "00") return "Cover";
+  if (id === "01" || id === "02") return "Opening";
+  if (id === "03" || id === "04") return "Core Concept";
+  if (id.startsWith("06") || id.startsWith("07")) return "Structure";
+  if (id.startsWith("05") || id.startsWith("08-")) return "Filters";
+  if (id.startsWith("CASE") || id.startsWith("09")) return "Case";
+  if (id.startsWith("DATA") || id === "08-DATA") return "DATA";
+  return "Conclusion";
 }
 
 const slides: Slide[] = [
@@ -208,8 +233,32 @@ export default function RASSHybridSlides() {
   const [mode, setMode] = useState<ViewMode>("hybrid");
   const [openGroup, setOpenGroup] = useState("00 Cover");
   const [imageLoadError, setImageLoadError] = useState<Record<string, boolean>>({});
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [openMobileGroups, setOpenMobileGroups] = useState<Record<string, boolean>>(() =>
+    Object.fromEntries(groups.map((group) => [group, group === "Cover"])) as Record<string, boolean>
+  );
 
   const slide = useMemo(() => slides.find((s) => s.id === activeSlide) ?? slides[0], [activeSlide]);
+  const currentSlideGroup = slide.group;
+  const activeSlideIndex = useMemo(
+    () => Math.max(0, slides.findIndex((s) => s.id === activeSlide)),
+    [activeSlide]
+  );
+  const totalSlides = slides.length;
+  const slidesByGroup = useMemo(
+    () =>
+      groups.map((group) => ({
+        group,
+        items: slides.filter((item) => item.group === group),
+      })),
+    []
+  );
+
+  useEffect(() => {
+    setOpenMobileGroups((prev) =>
+      prev[currentSlideGroup] ? prev : { ...prev, [currentSlideGroup]: true }
+    );
+  }, [currentSlideGroup]);
 
   const showReact = mode === "normal" || mode === "hybrid";
   const showCharacter = mode === "character" || mode === "hybrid";
@@ -566,10 +615,24 @@ export default function RASSHybridSlides() {
     setOpenGroup((current) => (current === label ? "" : label));
   };
 
+  const goPrevSlide = () => {
+    if (activeSlideIndex <= 0) return;
+    setActiveSlide(slides[activeSlideIndex - 1].id);
+  };
+
+  const goNextSlide = () => {
+    if (activeSlideIndex >= slides.length - 1) return;
+    setActiveSlide(slides[activeSlideIndex + 1].id);
+  };
+
+  const toggleMobileGroup = (group: string) => {
+    setOpenMobileGroups((prev) => ({ ...prev, [group]: !prev[group] }));
+  };
+
   return (
     <div className="min-h-screen bg-slate-950 p-3 text-slate-100 md:p-4">
       <div className="mx-auto flex w-full max-w-[1500px] flex-col gap-3 overflow-hidden rounded-2xl border border-white/10 bg-slate-950 p-3 shadow-2xl md:aspect-video md:flex-row">
-        <aside className="flex max-h-[42vh] w-full shrink-0 flex-col overflow-hidden rounded-xl border border-white/10 bg-white/5 p-3 md:h-full md:max-h-none md:w-[250px]">
+        <aside className="hidden max-h-[42vh] w-full shrink-0 flex-col overflow-hidden rounded-xl border border-white/10 bg-white/5 p-3 md:flex md:h-full md:max-h-none md:w-[250px]">
           <div className="mb-4 shrink-0">
             <p className="text-xs uppercase tracking-[0.28em] text-cyan-300">RA-SS</p>
             <h1 className="mt-2 text-lg font-black leading-tight">病院広報工房</h1>
@@ -651,14 +714,116 @@ export default function RASSHybridSlides() {
 
         <main className="flex min-h-0 min-w-0 flex-1 flex-col gap-3">
           <header className="shrink-0 rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+            <div className="mb-3 flex items-center justify-between gap-2 md:hidden">
+              <button
+                type="button"
+                onClick={() => setIsMenuOpen((open) => !open)}
+                className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg border border-white/20 bg-white/10 px-3 text-sm font-semibold text-white"
+                aria-label={isMenuOpen ? "スライド一覧を閉じる" : "スライド一覧を開く"}
+              >
+                ☰
+              </button>
+              <p className="text-sm font-semibold text-cyan-300">
+                {String(activeSlideIndex + 1).padStart(2, "0")} / {String(totalSlides).padStart(2, "0")}
+              </p>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={goPrevSlide}
+                  disabled={activeSlideIndex === 0}
+                  className="min-h-11 rounded-lg border border-white/20 bg-white/10 px-3 text-sm font-semibold text-white disabled:opacity-40"
+                >
+                  前へ
+                </button>
+                <button
+                  type="button"
+                  onClick={goNextSlide}
+                  disabled={activeSlideIndex >= slides.length - 1}
+                  className="min-h-11 rounded-lg border border-white/20 bg-white/10 px-3 text-sm font-semibold text-white disabled:opacity-40"
+                >
+                  次へ
+                </button>
+              </div>
+            </div>
+
+            {isMenuOpen ? (
+              <div className="mb-3 max-h-[38vh] overflow-y-auto rounded-lg border border-white/10 bg-slate-900/80 p-2 md:hidden">
+                <div className="space-y-2">
+                  {slidesByGroup.map(({ group, items }) => {
+                    if (items.length === 0) return null;
+                    const isOpen = !!openMobileGroups[group];
+                    const isCurrentGroup = currentSlideGroup === group;
+                    return (
+                      <div key={group} className="rounded-md border border-white/10 bg-black/20">
+                        <button
+                          type="button"
+                          onClick={() => toggleMobileGroup(group)}
+                          className={`flex w-full items-center justify-between px-3 py-2 text-left text-xs font-semibold ${
+                            isCurrentGroup ? "text-cyan-200" : "text-slate-200"
+                          }`}
+                        >
+                          <span>{group}</span>
+                          <span className="text-[10px] text-slate-400">{isOpen ? "▲" : "▼"}</span>
+                        </button>
+                        {isOpen ? (
+                          <div className="grid grid-cols-4 gap-2 border-t border-white/10 p-2">
+                            {items.map((item) => (
+                              <button
+                                key={item.id}
+                                type="button"
+                                onClick={() => {
+                                  setActiveSlide(item.id);
+                                  setIsMenuOpen(false);
+                                }}
+                                className={`min-h-10 rounded-md border px-2 py-1 text-xs font-semibold ${
+                                  activeSlide === item.id
+                                    ? "border-cyan-300 bg-cyan-300 text-slate-950"
+                                    : "border-white/20 bg-white/5 text-slate-200"
+                                }`}
+                              >
+                                {item.id}
+                              </button>
+                            ))}
+                          </div>
+                        ) : null}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : null}
+
             <div className="flex flex-col items-start justify-between gap-3 md:flex-row md:items-center">
               <div className="min-w-0">
-                <p className="text-xs font-semibold text-cyan-300">{slide.id} / {slide.chapter}</p>
+                <p className="text-xs font-semibold text-cyan-300">
+                  {slide.id} / {slide.chapter} / {slide.group}
+                </p>
                 <h2 className="mt-1 truncate text-xl font-black tracking-tight">{slide.title}</h2>
                 <p className="mt-1 truncate text-xs text-slate-400">{slide.subtitle}</p>
               </div>
 
               <div className="flex w-full shrink-0 items-center justify-between gap-3 rounded-xl border border-cyan-300/20 bg-cyan-900/30 px-3 py-2 md:w-auto md:justify-start">
+                <div className="hidden items-center gap-2 md:flex">
+                  <p className="whitespace-nowrap text-xs font-semibold text-cyan-300">
+                    {String(activeSlideIndex + 1).padStart(2, "0")} / {String(totalSlides).padStart(2, "0")}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={goPrevSlide}
+                    disabled={activeSlideIndex === 0}
+                    className="min-h-10 rounded-md border border-white/20 bg-white/10 px-3 text-xs font-bold text-white disabled:opacity-40"
+                  >
+                    前へ
+                  </button>
+                  <button
+                    type="button"
+                    onClick={goNextSlide}
+                    disabled={activeSlideIndex >= slides.length - 1}
+                    className="min-h-10 rounded-md border border-white/20 bg-white/10 px-3 text-xs font-bold text-white disabled:opacity-40"
+                  >
+                    次へ
+                  </button>
+                </div>
                 <div className="hidden h-11 w-11 items-center justify-center rounded-lg bg-white/10 text-[10px] text-slate-400 md:flex">QR</div>
                 <div className="hidden md:block">
                   <p className="text-[10px] uppercase tracking-[0.2em] text-cyan-300">Next Action</p>
