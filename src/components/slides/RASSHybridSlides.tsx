@@ -56,6 +56,7 @@ const dataTypographyTokens = {
   mainClass: "mt-8 w-full whitespace-normal break-normal text-[1.7rem] font-extrabold leading-[1.2] tracking-[-0.02em] text-slate-950 md:text-[2.1rem]",
 };
 const reactSlideScaleClass = "origin-top scale-[0.9] md:scale-100";
+const tightMobileFrameClass = "h-full w-full px-5 py-5 md:px-12 md:py-12";
 
 type MagazineCopy = {
   title: string;
@@ -1406,7 +1407,7 @@ export default function RASSHybridSlides() {
                     </p>
                   </div>
                 ) : isDataStructureSlide ? (
-                  <div className={`${dataTemplateTokens.frameClass} text-slate-900`}>
+                  <div className={`${tightMobileFrameClass} text-slate-900`}>
                     <div className={`${dataTemplateTokens.columnClass} max-w-[480px]`}>
                       <div className={dataTemplateTokens.headerSlotClass}>
                         <h4 className="text-xl md:text-2xl font-bold leading-snug tracking-[-0.01em] text-slate-900">DATA｜構造</h4>
@@ -1416,7 +1417,7 @@ export default function RASSHybridSlides() {
                         </p>
                       </div>
                       <div className={dataTemplateTokens.mainMessageSlotClass}>
-                        <p className="mt-4 max-w-full whitespace-normal break-words text-[1.3rem] md:text-[1.45rem] font-extrabold leading-[1.35] tracking-[-0.02em] text-slate-950">
+                        <p className="mt-4 max-w-full whitespace-normal break-words text-[1.15rem] md:text-[1.45rem] font-extrabold leading-[1.28] tracking-[-0.02em] text-slate-950">
                           構造は、
                           <br />
                           組み合わせとして現れた。
@@ -1425,7 +1426,7 @@ export default function RASSHybridSlides() {
                     </div>
                   </div>
                 ) : isDataVariationSlide ? (
-                  <div className={`${dataTemplateTokens.frameClass} text-slate-900`}>
+                  <div className={`${tightMobileFrameClass} text-slate-900`}>
                     <div className={`${dataTemplateTokens.columnClass} max-w-[480px]`}>
                       <div className={dataTemplateTokens.headerSlotClass}>
                         <h4 className="text-xl md:text-2xl font-bold leading-snug tracking-[-0.01em] text-slate-900">DATA｜変異</h4>
@@ -1435,7 +1436,7 @@ export default function RASSHybridSlides() {
                         </p>
                       </div>
                       <div className={dataTemplateTokens.mainMessageSlotClass}>
-                        <p className="mt-4 max-w-full whitespace-normal break-words text-[1.3rem] md:text-[1.45rem] font-extrabold leading-[1.35] tracking-[-0.02em] text-slate-950">
+                        <p className="mt-4 max-w-full whitespace-normal break-words text-[1.15rem] md:text-[1.45rem] font-extrabold leading-[1.28] tracking-[-0.02em] text-slate-950">
                           ズレは進行し、
                           <br />
                           ある点で変わる。
@@ -1444,7 +1445,7 @@ export default function RASSHybridSlides() {
                     </div>
                   </div>
                 ) : isDataMissingSlide ? (
-                  <div className={`${dataTemplateTokens.frameClass} text-slate-900`}>
+                  <div className={`${tightMobileFrameClass} text-slate-900`}>
                     <div className={`${dataTemplateTokens.columnClass} max-w-[480px]`}>
                       <div className={dataTemplateTokens.headerSlotClass}>
                         <h4 className="text-xl md:text-2xl font-bold leading-snug tracking-[-0.01em] text-slate-900">DATA｜欠損</h4>
@@ -1454,7 +1455,7 @@ export default function RASSHybridSlides() {
                         </p>
                       </div>
                       <div className={dataTemplateTokens.mainMessageSlotClass}>
-                        <p className="mt-4 max-w-full whitespace-normal break-words text-[1.3rem] md:text-[1.45rem] font-extrabold leading-[1.35] tracking-[-0.02em] text-slate-950">
+                        <p className="mt-4 max-w-full whitespace-normal break-words text-[1.15rem] md:text-[1.45rem] font-extrabold leading-[1.28] tracking-[-0.02em] text-slate-950">
                           欠損は、
                           <br />
                           組み合わせで起きる。
@@ -1463,7 +1464,7 @@ export default function RASSHybridSlides() {
                     </div>
                   </div>
                 ) : isCaseStudy01Slide || isCaseStudy02Slide || isCaseStudy03Slide || isCaseStudyCompareSlide || isInsightDesign01Slide || isDesign01Slide || isDesign03Slide || isFuture01Slide ? (
-                  <div className={`${isInsightDesignPairSlide ? "h-full w-full p-9 md:p-11" : dataTemplateTokens.frameClass} text-slate-900`}>
+                  <div className={`${isInsightDesignPairSlide ? "h-full w-full p-5 md:p-11" : tightMobileFrameClass} text-slate-900`}>
                     <div className={`${dataTemplateTokens.columnClass} max-w-[500px]`}>
                       <div className={dataTemplateTokens.headerSlotClass}>
                         <h4 className="text-[20px] md:text-[22px] font-semibold leading-[1.22] tracking-[-0.01em] text-slate-900">
@@ -1493,7 +1494,7 @@ export default function RASSHybridSlides() {
                         ) : null}
                       </div>
                       <div className={dataTemplateTokens.mainMessageSlotClass}>
-                        <p className={`${isInsightDesignPairSlide ? "mt-4 max-w-full whitespace-normal break-words text-[1.35rem] md:text-[1.5rem] font-extrabold leading-[1.35] tracking-[-0.02em] text-slate-950" : "mt-4 max-w-full whitespace-normal break-words text-[1.3rem] md:text-[1.45rem] font-extrabold leading-[1.35] tracking-[-0.02em] text-slate-950"}`}>
+                        <p className={`${isInsightDesignPairSlide ? "mt-4 max-w-full whitespace-normal break-words text-[1.18rem] md:text-[1.5rem] font-extrabold leading-[1.28] tracking-[-0.02em] text-slate-950" : "mt-4 max-w-full whitespace-normal break-words text-[1.15rem] md:text-[1.45rem] font-extrabold leading-[1.28] tracking-[-0.02em] text-slate-950"}`}>
                           {isInsightDesignPairSlide ? (
                             <>
                               {isFuture01Slide ? (
