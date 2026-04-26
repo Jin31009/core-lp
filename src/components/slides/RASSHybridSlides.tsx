@@ -1416,12 +1416,12 @@ export default function RASSHybridSlides() {
                       <div className={dataTemplateTokens.headerSlotClass}>
                         <h4 className="text-xl md:text-2xl font-bold leading-snug tracking-[-0.01em] text-slate-900">DATA｜構造</h4>
                         <div className="w-full h-px bg-slate-200 my-4" />
-                        <p className="mt-5 max-w-full text-xs md:text-sm font-semibold leading-snug text-slate-600">
+                        <p className="mt-3 max-w-full text-xs md:text-sm font-semibold leading-snug text-slate-600">
                           SRPLは単独ではなく、重なりとして現れる
                         </p>
                       </div>
                       <div className={dataTemplateTokens.mainMessageSlotClass}>
-                        <p className="mt-8 max-w-full whitespace-normal break-words text-[1.45rem] md:text-[1.75rem] font-extrabold leading-snug tracking-[-0.02em] text-slate-950">
+                        <p className="mt-4 max-w-full whitespace-normal break-words text-[1.3rem] md:text-[1.45rem] font-extrabold leading-[1.35] tracking-[-0.02em] text-slate-950">
                           構造は、
                           <br />
                           組み合わせとして現れた。
@@ -1435,12 +1435,12 @@ export default function RASSHybridSlides() {
                       <div className={dataTemplateTokens.headerSlotClass}>
                         <h4 className="text-xl md:text-2xl font-bold leading-snug tracking-[-0.01em] text-slate-900">DATA｜変異</h4>
                         <div className="w-full h-px bg-slate-200 my-4" />
-                        <p className="mt-5 max-w-full text-xs md:text-sm font-semibold leading-snug text-slate-600">
+                        <p className="mt-3 max-w-full text-xs md:text-sm font-semibold leading-snug text-slate-600">
                           Δ・e・Triggerで変化を確認
                         </p>
                       </div>
                       <div className={dataTemplateTokens.mainMessageSlotClass}>
-                        <p className="mt-8 max-w-full whitespace-normal break-words text-[1.45rem] md:text-[1.75rem] font-extrabold leading-snug tracking-[-0.02em] text-slate-950">
+                        <p className="mt-4 max-w-full whitespace-normal break-words text-[1.3rem] md:text-[1.45rem] font-extrabold leading-[1.35] tracking-[-0.02em] text-slate-950">
                           ズレは進行し、
                           <br />
                           ある点で変わる。
@@ -1454,12 +1454,12 @@ export default function RASSHybridSlides() {
                       <div className={dataTemplateTokens.headerSlotClass}>
                         <h4 className="text-xl md:text-2xl font-bold leading-snug tracking-[-0.01em] text-slate-900">DATA｜欠損</h4>
                         <div className="w-full h-px bg-slate-200 my-4" />
-                        <p className="mt-5 max-w-full text-xs md:text-sm font-semibold leading-snug text-slate-600">
+                        <p className="mt-3 max-w-full text-xs md:text-sm font-semibold leading-snug text-slate-600">
                           APCE_Missの偏りを確認
                         </p>
                       </div>
                       <div className={dataTemplateTokens.mainMessageSlotClass}>
-                        <p className="mt-8 max-w-full whitespace-normal break-words text-[1.45rem] md:text-[1.75rem] font-extrabold leading-snug tracking-[-0.02em] text-slate-950">
+                        <p className="mt-4 max-w-full whitespace-normal break-words text-[1.3rem] md:text-[1.45rem] font-extrabold leading-[1.35] tracking-[-0.02em] text-slate-950">
                           欠損は、
                           <br />
                           組み合わせで起きる。
@@ -1476,7 +1476,7 @@ export default function RASSHybridSlides() {
                         </h4>
                         <div className="w-full h-px bg-slate-200 my-4" />
                         {isInsightDesignPairSlide ? (
-                          <p className="mt-5 max-w-full text-xs md:text-sm font-semibold leading-snug text-slate-600">
+                          <p className="mt-3 max-w-full text-xs md:text-sm font-semibold leading-snug text-slate-600">
                             {isDesign01Slide ? (
                               <>
                                 集まった声は、
@@ -1498,7 +1498,7 @@ export default function RASSHybridSlides() {
                         ) : null}
                       </div>
                       <div className={dataTemplateTokens.mainMessageSlotClass}>
-                        <p className={`${isInsightDesignPairSlide ? "mt-8 max-w-full whitespace-normal break-words text-[1.55rem] md:text-[1.9rem] font-extrabold leading-[1.2] tracking-[-0.02em] text-slate-950" : "mt-8 max-w-full whitespace-normal break-words text-[1.45rem] md:text-[1.75rem] font-extrabold leading-[1.2] tracking-[-0.02em] text-slate-950"}`}>
+                        <p className={`${isInsightDesignPairSlide ? "mt-4 max-w-full whitespace-normal break-words text-[1.35rem] md:text-[1.5rem] font-extrabold leading-[1.35] tracking-[-0.02em] text-slate-950" : "mt-4 max-w-full whitespace-normal break-words text-[1.3rem] md:text-[1.45rem] font-extrabold leading-[1.35] tracking-[-0.02em] text-slate-950"}`}>
                           {isInsightDesignPairSlide ? (
                             <>
                               {isFuture01Slide ? (
@@ -1540,7 +1540,7 @@ export default function RASSHybridSlides() {
                           )}
                         </p>
                         {!isInsightDesignPairSlide ? (
-                          <p className="mt-6 max-w-full text-xs md:text-sm font-semibold leading-snug text-slate-600">
+                          <p className="mt-3 max-w-full text-xs md:text-sm font-semibold leading-snug text-slate-600">
                             {isCaseStudyCompareSlide ? (
                               <>比較すると、介入の優先順位が見える。</>
                             ) : isCaseStudy03Slide ? (
@@ -1560,7 +1560,7 @@ export default function RASSHybridSlides() {
                             )}
                           </p>
                         ) : isDesign01Slide ? (
-                          <p className="mt-6 max-w-full text-xs md:text-sm font-semibold leading-snug text-slate-600">
+                          <p className="mt-3 max-w-full text-xs md:text-sm font-semibold leading-snug text-slate-600">
                             <>
                               把握することで、
                               <br />
@@ -1568,7 +1568,7 @@ export default function RASSHybridSlides() {
                             </>
                           </p>
                         ) : isDesign03Slide ? (
-                          <p className="mt-6 max-w-full text-xs md:text-sm font-semibold leading-snug text-slate-600">
+                          <p className="mt-3 max-w-full text-xs md:text-sm font-semibold leading-snug text-slate-600">
                             <>
                               DEMO版を通じて、
                               <br />
