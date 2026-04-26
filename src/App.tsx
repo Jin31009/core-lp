@@ -5,6 +5,7 @@ import DemoIntroPage from "./pages/DemoIntroPage";
 import StructurePage from "./pages/structure/StructurePage";
 import PocPage from "./pages/PocPage";
 import ContactPage from "./pages/ContactPage";
+import ReportsPage from "./pages/reports/ReportsPage";
 import { useEffect } from "react";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
@@ -35,7 +36,7 @@ function resolvePageToPath(page: string) {
     case "lp":
       return "/";
     case "reports":
-      return "/slides";
+      return "/reports";
     default:
       return "/";
   }
@@ -69,6 +70,7 @@ export default function App() {
         element={<PocPage onNavigate={(page) => setPage(page)} onBackPrev={() => setPage("structure")} />}
       />
       <Route path="/contact" element={<ContactPage setPage={setPage} />} />
+      <Route path="/reports" element={<ReportsPage setPage={setPage} />} />
       <Route path="/demo-intro" element={<DemoIntroPage setPage={setPage} />} />
       <Route path="/case" element={<CoreLPPage setPage={setPage} />} />
       <Route path="/evidence" element={<CoreLPPage setPage={setPage} />} />
