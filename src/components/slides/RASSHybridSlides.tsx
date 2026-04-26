@@ -411,242 +411,75 @@ export default function RASSHybridSlides() {
         ? "/assets/slides/characters/07-01.png"
       : `/assets/slides/characters/${slide.id}.png`;
   const hasImageError = !!imageLoadError[slide.id];
-  const viewingPointsDefault: ViewingPoint[] = [
-    {
-      title: "CORE｜問いを立てる",
-      description: "病院広報は、“関係”を軸に再定義できるのか",
-      dotClass: "bg-rose-300/90",
-    },
-    {
-      title: "NAVI｜構造で読む",
-      description: "関係はどのような構造として現れているのか",
-      dotClass: "bg-cyan-300/90",
-    },
-    {
-      title: "SORA｜意味を翻訳する",
-      description: "言葉は関係の解像度をどこまで高められるのか",
-      dotClass: "bg-violet-300/90",
-    },
-    {
-      title: "CODEX｜再現へつなぐ",
-      description: "関係の状態はどこまで再現可能なのか",
-      dotClass: "bg-emerald-300/90",
-    },
+  const chapterComments: Record<string, ViewingPoint[]> = {
+    "表紙｜Cover": [
+      { title: "CORE｜問い・方向", description: "今回の問いは「語りは構造として扱えるか」。", dotClass: "bg-rose-300/90" },
+      { title: "NAVI｜構造・分析", description: "観測の流れを先に示し、読み方をそろえる。", dotClass: "bg-cyan-300/90" },
+      { title: "SORA｜体験・共感", description: "感想の奥にある関係の温度を受け取る入口。", dotClass: "bg-violet-300/90" },
+      { title: "CODEX｜実装・再現", description: "構造と体験を同じIDで接続し、再現可能にする。", dotClass: "bg-emerald-300/90" },
+    ],
+    "導入｜Opening": [
+      { title: "CORE｜問い・方向", description: "主観のままではなく、扱える知に変える。", dotClass: "bg-rose-300/90" },
+      { title: "NAVI｜構造・分析", description: "問題設定を固定し、比較可能な枠をつくる。", dotClass: "bg-cyan-300/90" },
+      { title: "SORA｜体験・共感", description: "「わかるけど扱えない」違和感を言語化する。", dotClass: "bg-violet-300/90" },
+      { title: "CODEX｜実装・再現", description: "以後の章で検証できる仮説として保持する。", dotClass: "bg-emerald-300/90" },
+    ],
+    "観測設計｜Method": [
+      { title: "CORE｜問い・方向", description: "何を観るかを先に決める。", dotClass: "bg-rose-300/90" },
+      { title: "NAVI｜構造・分析", description: "同一条件・同一手順で観測をそろえる。", dotClass: "bg-cyan-300/90" },
+      { title: "SORA｜体験・共感", description: "声を消さずに、見える形へ整える。", dotClass: "bg-violet-300/90" },
+      { title: "CODEX｜実装・再現", description: "手順を固定し、誰が見ても再現できる形にする。", dotClass: "bg-emerald-300/90" },
+    ],
+    "構造｜Structure": [
+      { title: "CORE｜問い・方向", description: "ズレを原因ではなく条件配置として捉える。", dotClass: "bg-rose-300/90" },
+      { title: "NAVI｜構造・分析", description: "SRPLの未充足を重なりとして読む。", dotClass: "bg-cyan-300/90" },
+      { title: "SORA｜体験・共感", description: "体験の痛点を「配置」として受け止める。", dotClass: "bg-violet-300/90" },
+      { title: "CODEX｜実装・再現", description: "配置情報を記述可能な単位へ変換する。", dotClass: "bg-emerald-300/90" },
+    ],
+    "変異｜Variation": [
+      { title: "CORE｜問い・方向", description: "変化は連続ではなく転移点を持つ。", dotClass: "bg-rose-300/90" },
+      { title: "NAVI｜構造・分析", description: "Δ・時間・Triggerで進行を観測する。", dotClass: "bg-cyan-300/90" },
+      { title: "SORA｜体験・共感", description: "「急に悪化した」感覚を変化点として扱う。", dotClass: "bg-violet-300/90" },
+      { title: "CODEX｜実装・再現", description: "変異の指標を時系列で再現可能にする。", dotClass: "bg-emerald-300/90" },
+    ],
+    "欠損｜Missing": [
+      { title: "CORE｜問い・方向", description: "ズレの核は接点の欠損にある。", dotClass: "bg-rose-300/90" },
+      { title: "NAVI｜構造・分析", description: "APCE Missのどこが欠けたかを特定する。", dotClass: "bg-cyan-300/90" },
+      { title: "SORA｜体験・共感", description: "満たされなさを責任論ではなく条件不足で受け取る。", dotClass: "bg-violet-300/90" },
+      { title: "CODEX｜実装・再現", description: "欠損パターンを介入候補に接続できる形で保持する。", dotClass: "bg-emerald-300/90" },
+    ],
+    "データ｜Data": [
+      { title: "CORE｜問い・方向", description: "仮説がデータで支えられるかを確認する。", dotClass: "bg-rose-300/90" },
+      { title: "NAVI｜構造・分析", description: "構造・変異・欠損の分布で妥当性を検証する。", dotClass: "bg-cyan-300/90" },
+      { title: "SORA｜体験・共感", description: "数字の背後にある現場の実感を失わない。", dotClass: "bg-violet-300/90" },
+      { title: "CODEX｜実装・再現", description: "集計を同条件で再計算できる状態に保つ。", dotClass: "bg-emerald-300/90" },
+    ],
+    "事例｜Case Study": [
+      { title: "CORE｜問い・方向", description: "個別事例で理論の効き方を確かめる。", dotClass: "bg-rose-300/90" },
+      { title: "NAVI｜構造・分析", description: "状態遷移を同じフレームで比較する。", dotClass: "bg-cyan-300/90" },
+      { title: "SORA｜体験・共感", description: "当事者の文脈を保ったまま差分を読む。", dotClass: "bg-violet-300/90" },
+      { title: "CODEX｜実装・再現", description: "ケース差分を再利用可能な知見として蓄積する。", dotClass: "bg-emerald-300/90" },
+    ],
+    "示唆・設計｜Insight & Design": [
+      { title: "CORE｜問い・方向", description: "次に変えるべき接点を定める。", dotClass: "bg-rose-300/90" },
+      { title: "NAVI｜構造・分析", description: "示唆を設計原則へ落とし込む。", dotClass: "bg-cyan-300/90" },
+      { title: "SORA｜体験・共感", description: "使う人が動ける言葉に翻訳する。", dotClass: "bg-violet-300/90" },
+      { title: "CODEX｜実装・再現", description: "施策を試せる最小実装へ接続する。", dotClass: "bg-emerald-300/90" },
+    ],
+    "実装・結論｜Implementation / Conclusion": [
+      { title: "CORE｜問い・方向", description: "関係を扱う実践へ結論を接続する。", dotClass: "bg-rose-300/90" },
+      { title: "NAVI｜構造・分析", description: "観測→判断→介入の循環を運用化する。", dotClass: "bg-cyan-300/90" },
+      { title: "SORA｜体験・共感", description: "現場で続けられる体験設計に整える。", dotClass: "bg-violet-300/90" },
+      { title: "CODEX｜実装・再現", description: "再現可能な運用として定着させる。", dotClass: "bg-emerald-300/90" },
+    ],
+  };
+  const viewingPointsFallback: ViewingPoint[] = [
+    { title: "CORE｜問い・方向", description: "この章で何を判断するかを明確にする。", dotClass: "bg-rose-300/90" },
+    { title: "NAVI｜構造・分析", description: "観測フレームで読み方を統一する。", dotClass: "bg-cyan-300/90" },
+    { title: "SORA｜体験・共感", description: "体験文脈を損なわず意味を受け止める。", dotClass: "bg-violet-300/90" },
+    { title: "CODEX｜実装・再現", description: "再利用可能な形で次工程へ接続する。", dotClass: "bg-emerald-300/90" },
   ];
-  const viewingPointsForIntro: ViewingPoint[] = [
-    {
-      title: "CORE｜問いを立てる",
-      description: "ナラティブは、本当に“感想”のままでいいのか",
-      dotClass: "bg-rose-300/90",
-    },
-    {
-      title: "NAVI｜構造で読む",
-      description: "302件の語りを、同じ条件で読み直せるのか",
-      dotClass: "bg-cyan-300/90",
-    },
-    {
-      title: "SORA｜意味を翻訳する",
-      description: "患者の声の奥にある関係のズレを受け取れるか",
-      dotClass: "bg-violet-300/90",
-    },
-    {
-      title: "CODEX｜再現へつなぐ",
-      description: "主観的な語りを、再現可能な理解対象へ変換できるか",
-      dotClass: "bg-emerald-300/90",
-    },
-  ];
-  const viewingPointsForProblem: ViewingPoint[] = [
-    {
-      title: "CORE｜問いを立てる",
-      description: "価値ある声が、なぜ活かされないのか",
-      dotClass: "bg-rose-300/90",
-    },
-    {
-      title: "NAVI｜構造で読む",
-      description: "扱いにくさは、構造欠損として見えるか",
-      dotClass: "bg-cyan-300/90",
-    },
-    {
-      title: "SORA｜意味を翻訳する",
-      description: "比較できないことが、現場の迷いを生んでいないか",
-      dotClass: "bg-violet-300/90",
-    },
-    {
-      title: "CODEX｜再現へつなぐ",
-      description: "再現・設計できない状態を、どう記録するか",
-      dotClass: "bg-emerald-300/90",
-    },
-  ];
-  const viewingPointsForHypothesis: ViewingPoint[] = [
-    {
-      title: "CORE｜問いを立てる",
-      description: "ナラティブは、構造として見れるのではないか",
-      dotClass: "bg-rose-300/90",
-    },
-    {
-      title: "NAVI｜構造で読む",
-      description: "同じ流れで見れば、比較できるのではないか",
-      dotClass: "bg-cyan-300/90",
-    },
-    {
-      title: "SORA｜意味を翻訳する",
-      description: "出来事を、行為として捉え直せるのではないか",
-      dotClass: "bg-violet-300/90",
-    },
-    {
-      title: "CODEX｜再現へつなぐ",
-      description: "構造として記録すれば、再現できるのではないか",
-      dotClass: "bg-emerald-300/90",
-    },
-  ];
-  const viewingPointsForObservationIntro: ViewingPoint[] = [
-    {
-      title: "CORE｜問いを立てる",
-      description: "302件を、どう同じ条件で観測するか",
-      dotClass: "bg-rose-300/90",
-    },
-    {
-      title: "NAVI｜構造で読む",
-      description: "同一フィルターで、差分を比較できるか",
-      dotClass: "bg-cyan-300/90",
-    },
-    {
-      title: "SORA｜意味を翻訳する",
-      description: "一つひとつの声を、観測可能な対象にできるか",
-      dotClass: "bg-violet-300/90",
-    },
-    {
-      title: "CODEX｜再現へつなぐ",
-      description: "観測手順を固定し、再現可能にできるか",
-      dotClass: "bg-emerald-300/90",
-    },
-  ];
-  const viewingPointsForObservationFrame: ViewingPoint[] = [
-    {
-      title: "CORE｜問いを立てる",
-      description: "何を見れば、同じ条件で観測できるのか",
-      dotClass: "bg-rose-300/90",
-    },
-    {
-      title: "NAVI｜構造で読む",
-      description: "フィルターを通すと、記述可能になるか",
-      dotClass: "bg-cyan-300/90",
-    },
-    {
-      title: "SORA｜意味を翻訳する",
-      description: "バラバラな声を、同じ見方で捉え直せるか",
-      dotClass: "bg-violet-300/90",
-    },
-    {
-      title: "CODEX｜再現へつなぐ",
-      description: "観測条件を固定すれば、再現できるか",
-      dotClass: "bg-emerald-300/90",
-    },
-  ];
-  const viewingPointsForFilterIntegration: ViewingPoint[] = [
-    {
-      title: "CORE｜問いを立てる",
-      description: "フィルターによって、何が記述可能になったのか",
-      dotClass: "bg-rose-300/90",
-    },
-    {
-      title: "NAVI｜構造で読む",
-      description: "条件・記述・比較の流れがつながっているか",
-      dotClass: "bg-cyan-300/90",
-    },
-    {
-      title: "SORA｜意味を翻訳する",
-      description: "バラバラな声が、観測可能な対象になったか",
-      dotClass: "bg-violet-300/90",
-    },
-    {
-      title: "CODEX｜再現へつなぐ",
-      description: "同じ手順で、再現可能な分析に進めるか",
-      dotClass: "bg-emerald-300/90",
-    },
-  ];
-  const viewingPointsForProgressionShift: ViewingPoint[] = [
-    {
-      title: "CORE｜静かな観察",
-      description: "…同じ状態ではない？",
-      dotClass: "bg-rose-300/90",
-    },
-  ];
-  const viewingPointsForProgressionAxis: ViewingPoint[] = [
-    {
-      title: "Figure｜Δ×e",
-      description: "ノート／画面上の軸で進行を捉える",
-      dotClass: "bg-cyan-300/90",
-    },
-    {
-      title: "NAVI｜構造ナビ",
-      description: "こう見ると、見えてきます",
-      dotClass: "bg-blue-300/90",
-    },
-    {
-      title: "CORE｜観察者",
-      description: "Figureを見て受け取る",
-      dotClass: "bg-rose-300/90",
-    },
-  ];
-  const viewingPointsForProgressionTrigger: ViewingPoint[] = [
-    {
-      title: "Figure｜Trigger点",
-      description: "ノート上で、連続の中に転移点が現れる",
-      dotClass: "bg-cyan-300/90",
-    },
-    {
-      title: "CORE｜焦点",
-      description: "…ここか",
-      dotClass: "bg-rose-300/90",
-    },
-  ];
-  const viewingPointsForProgressionLanguage: ViewingPoint[] = [
-    {
-      title: "CORE｜言語化",
-      description: "ズレは、ある点で変わる",
-      dotClass: "bg-rose-300/90",
-    },
-  ];
-  const viewingPointsForCoreObservation: ViewingPoint[] = [
-    {
-      title: "CORE｜64歳の観測",
-      description: "重心を低く保ち、原因ではなく未充足条件の配置として読む",
-      dotClass: "bg-rose-300/90",
-    },
-  ];
-  const isFilterSrplSlide =
-    isFilterSetupSlide ||
-    isObservationFrameSlide ||
-    isFilterMeaningSlide ||
-    isFilterIntegrationSlide ||
-    isStructureGraspIntroSlide ||
-    isSrplIntroSlide ||
-    isPlacementGraspSlide ||
-    isPlacementConclusionSlide;
-  const viewingPoints = isIntroSlide
-    ? viewingPointsForIntro
-    : isProblemSlide
-      ? viewingPointsForProblem
-      : isHypothesisSlide
-        ? viewingPointsForHypothesis
-        : isProgressionShiftSlide
-          ? viewingPointsForProgressionShift
-        : isProgressionAxisSlide
-          ? viewingPointsForProgressionAxis
-        : isProgressionTriggerSlide
-          ? viewingPointsForProgressionTrigger
-        : isProgressionLanguageSlide
-          ? viewingPointsForProgressionLanguage
-        : isFilterSrplSlide
-          ? viewingPointsForCoreObservation
-        : isObservationIntroSlide
-          ? viewingPointsForObservationIntro
-          : isObservationFrameSlide
-            ? viewingPointsForObservationFrame
-            : isFilterIntegrationSlide
-              ? viewingPointsForFilterIntegration
-        : viewingPointsDefault;
+  const viewingPoints = chapterComments[slide.group] ?? viewingPointsFallback;
 
   const handleToggleGroup = (label: string) => {
     setOpenGroup((current) => (current === label ? "" : label));
