@@ -61,7 +61,8 @@ const dataTypographyTokens = {
   titleClass: "text-[22px] md:text-[25px] font-bold leading-[1.22] tracking-[-0.01em] text-slate-900",
   mainClass: "mt-2 w-full whitespace-normal break-normal text-[1.7rem] font-extrabold leading-[1.2] tracking-[-0.02em] text-slate-950 md:text-[2.1rem]",
 };
-const reactSlideScaleClass = "origin-top scale-[0.9] md:scale-100";
+const reactSlideScaleClassDefault = "origin-top scale-[0.9] md:scale-100";
+const reactSlideScaleClassHybrid = "origin-top scale-[0.88] md:scale-[0.9]";
 const tightMobileFrameClass = "h-full w-full px-5 py-5 md:px-12 md:py-12";
 
 type MagazineCopy = {
@@ -480,6 +481,7 @@ export default function RASSHybridSlides() {
     { title: "CODEX｜実装・再現", description: "再利用可能な形で次工程へ接続する。", dotClass: "bg-emerald-300/90" },
   ];
   const viewingPoints = chapterComments[slide.group] ?? viewingPointsFallback;
+  const reactSlideScaleClass = mode === "hybrid" ? reactSlideScaleClassHybrid : reactSlideScaleClassDefault;
 
   const handleToggleGroup = (label: string) => {
     setOpenGroup((current) => (current === label ? "" : label));
@@ -799,15 +801,15 @@ export default function RASSHybridSlides() {
                   </div>
                 </div>
               ) : (
-              <div className="min-h-0 flex flex-1 items-center justify-center">
-              <div className={`card mx-auto aspect-video w-full max-w-[960px] max-w-full max-h-[65vh] min-h-0 ${reactSlideScaleClass} rounded-xl bg-white p-4 md:p-4 text-slate-950 ${isCoverSlide || isProblemSlide || isHypothesisSlide || isFilterSetupSlide || isObservationFrameSlide || isFilterMeaningSlide || isFilterIntegrationSlide || isStructureSummarySlide || isStructureGraspIntroSlide || isSrplIntroSlide || isPlacementGraspSlide || isPlacementConclusionSlide || isProgressionShiftSlide || isProgressionAxisSlide || isProgressionTriggerSlide || isProgressionLanguageSlide || isDataStructureSlide || isDataVariationSlide || isDataMissingSlide || isCaseStudy01Slide || isCaseStudy02Slide || isCaseStudy03Slide || isCaseStudyCompareSlide || isInsightDesign01Slide || isDesign01Slide || isDesign03Slide || isFuture01Slide ? "overflow-hidden" : "overflow-auto"}`}>
+              <div className="mx-auto flex min-h-0 w-full max-w-full flex-1 items-center justify-center overflow-x-hidden">
+              <div className={`card mx-auto aspect-[16/9] w-full max-w-full ${mode === "hybrid" ? "md:max-w-[820px]" : "md:max-w-[960px]"} max-h-[65vh] min-h-0 overflow-x-hidden ${reactSlideScaleClass} rounded-xl bg-white p-4 md:p-4 text-slate-950 ${isCoverSlide || isProblemSlide || isHypothesisSlide || isFilterSetupSlide || isObservationFrameSlide || isFilterMeaningSlide || isFilterIntegrationSlide || isStructureSummarySlide || isStructureGraspIntroSlide || isSrplIntroSlide || isPlacementGraspSlide || isPlacementConclusionSlide || isProgressionShiftSlide || isProgressionAxisSlide || isProgressionTriggerSlide || isProgressionLanguageSlide || isDataStructureSlide || isDataVariationSlide || isDataMissingSlide || isCaseStudy01Slide || isCaseStudy02Slide || isCaseStudy03Slide || isCaseStudyCompareSlide || isInsightDesign01Slide || isDesign01Slide || isDesign03Slide || isFuture01Slide ? "overflow-hidden" : "overflow-auto"}`}>
                 {isCoverSlide ? (
                   <div className="flex h-full items-center justify-center">
-                    <div className="aspect-[16/9] w-full max-w-[820px] overflow-hidden rounded-xl border border-slate-200 bg-white">
+                    <div className="mx-auto aspect-[16/9] w-full max-w-full overflow-hidden rounded-xl border border-slate-200 bg-white">
                       <img
                         src="/assets/slides/cover/cover-01.png"
                         alt="RASS cover slide"
-                        className="h-full w-full object-cover object-center"
+                        className="h-full w-full object-contain object-center"
                       />
                     </div>
                   </div>
