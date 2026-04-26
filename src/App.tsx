@@ -2,16 +2,20 @@ import RASSConferenceSlides from "./pages/slides/RASSConferenceSlides";
 import RASSHybridSlides from "./components/slides/RASSHybridSlides";
 import CoreLPPage from "./pages/CoreLPPage";
 import DemoIntroPage from "./pages/DemoIntroPage";
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import StructurePage from "./pages/structure/StructurePage";
+import PocPage from "./pages/PocPage";
+import ContactPage from "./pages/ContactPage";
+import { useEffect } from "react";
+import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
 function resolvePageToPath(page: string) {
   switch (page) {
     case "structure":
-      return "/#method";
+      return "/structure";
     case "poc":
-      return "/#poc-bridge";
+      return "/poc";
     case "contact":
-      return "/#cta";
+      return "/contact";
     case "demo":
       return "/demo-intro";
     case "demo-intro":
@@ -31,7 +35,7 @@ function resolvePageToPath(page: string) {
     case "lp":
       return "/";
     case "reports":
-      return "/conference-slides";
+      return "/slides";
     default:
       return "/";
   }
@@ -39,12 +43,32 @@ function resolvePageToPath(page: string) {
 
 export default function App() {
   const navigate = useNavigate();
+  const location = useLocation();
   const setPage = (page: string) => navigate(resolvePageToPath(page));
+
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.replace("#", "");
+
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 200);
+    }
+  }, [location.pathname, location.hash]);
 
   return (
     <Routes>
       <Route path="/" element={<CoreLPPage setPage={setPage} />} />
       <Route path="/lp" element={<CoreLPPage setPage={setPage} />} />
+      <Route path="/structure" element={<StructurePage setPage={setPage} />} />
+      <Route
+        path="/poc"
+        element={<PocPage onNavigate={(page) => setPage(page)} onBackPrev={() => setPage("structure")} />}
+      />
+      <Route path="/contact" element={<ContactPage setPage={setPage} />} />
       <Route path="/demo-intro" element={<DemoIntroPage setPage={setPage} />} />
       <Route path="/case" element={<CoreLPPage setPage={setPage} />} />
       <Route path="/evidence" element={<CoreLPPage setPage={setPage} />} />
