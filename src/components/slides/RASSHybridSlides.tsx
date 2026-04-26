@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 type RoleKey = "core" | "navi" | "sora" | "codex";
 type ViewMode = "normal" | "character" | "hybrid";
@@ -237,6 +237,9 @@ export default function RASSHybridSlides() {
   const [openMobileGroups, setOpenMobileGroups] = useState<Record<string, boolean>>(() =>
     Object.fromEntries(groups.map((group) => [group, group === "Cover"])) as Record<string, boolean>
   );
+  const swipeAreaRef = useRef<HTMLElement | null>(null);
+  const touchStartPointRef = useRef<{ x: number; y: number } | null>(null);
+  const hasSlideChangedRef = useRef(false);
 
   const slide = useMemo(() => slides.find((s) => s.id === activeSlide) ?? slides[0], [activeSlide]);
   const currentSlideGroup = slide.group;
@@ -259,6 +262,14 @@ export default function RASSHybridSlides() {
       prev[currentSlideGroup] ? prev : { ...prev, [currentSlideGroup]: true }
     );
   }, [currentSlideGroup]);
+
+  useEffect(() => {
+    if (!hasSlideChangedRef.current) {
+      hasSlideChangedRef.current = true;
+      return;
+    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [activeSlide]);
 
   const showReact = mode === "normal" || mode === "hybrid";
   const showCharacter = mode === "character" || mode === "hybrid";
@@ -615,19 +626,87 @@ export default function RASSHybridSlides() {
     setOpenGroup((current) => (current === label ? "" : label));
   };
 
+  const moveToSlide = (index: number) => {
+    if (index < 0 || index >= slides.length) return;
+    setActiveSlide(slides[index].id);
+  };
+
   const goPrevSlide = () => {
-    if (activeSlideIndex <= 0) return;
-    setActiveSlide(slides[activeSlideIndex - 1].id);
+    moveToSlide(activeSlideIndex - 1);
   };
 
   const goNextSlide = () => {
-    if (activeSlideIndex >= slides.length - 1) return;
-    setActiveSlide(slides[activeSlideIndex + 1].id);
+    moveToSlide(activeSlideIndex + 1);
   };
 
   const toggleMobileGroup = (group: string) => {
     setOpenMobileGroups((prev) => ({ ...prev, [group]: !prev[group] }));
   };
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      const tagName = target?.tagName?.toLowerCase();
+      const isEditable =
+        tagName === "input" ||
+        tagName === "textarea" ||
+        tagName === "select" ||
+        !!target?.isContentEditable;
+      if (isEditable) return;
+
+      if (event.key === "Escape") {
+        setIsMenuOpen(false);
+        return;
+      }
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        moveToSlide(activeSlideIndex + 1);
+      }
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        moveToSlide(activeSlideIndex - 1);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [activeSlideIndex]);
+
+  useEffect(() => {
+    const swipeArea = swipeAreaRef.current;
+    if (!swipeArea) return;
+
+    const handleTouchStart = (event: TouchEvent) => {
+      if (event.touches.length !== 1) return;
+      const touch = event.touches[0];
+      touchStartPointRef.current = { x: touch.clientX, y: touch.clientY };
+    };
+
+    const handleTouchEnd = (event: TouchEvent) => {
+      if (isMenuOpen) return;
+      const start = touchStartPointRef.current;
+      touchStartPointRef.current = null;
+      if (!start || event.changedTouches.length === 0) return;
+
+      const touch = event.changedTouches[0];
+      const deltaX = touch.clientX - start.x;
+      const deltaY = touch.clientY - start.y;
+      if (Math.abs(deltaX) < 50 || Math.abs(deltaX) <= Math.abs(deltaY)) return;
+
+      if (deltaX < 0) {
+        moveToSlide(activeSlideIndex + 1);
+      } else {
+        moveToSlide(activeSlideIndex - 1);
+      }
+    };
+
+    swipeArea.addEventListener("touchstart", handleTouchStart, { passive: true });
+    swipeArea.addEventListener("touchend", handleTouchEnd, { passive: true });
+    return () => {
+      swipeArea.removeEventListener("touchstart", handleTouchStart);
+      swipeArea.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, [activeSlideIndex, isMenuOpen]);
 
   return (
     <div className="min-h-screen bg-slate-950 p-3 text-slate-100 md:p-4">
@@ -842,7 +921,12 @@ export default function RASSHybridSlides() {
 
           </header>
 
-          <section className={`grid min-h-0 flex-1 gap-3 ${mode === "hybrid" ? (isInsightDesignPairSlide ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-1 lg:grid-cols-2") : "grid-cols-1"}`}>
+          <section
+            ref={(element) => {
+              swipeAreaRef.current = element;
+            }}
+            className={`grid min-h-0 flex-1 gap-3 ${mode === "hybrid" ? (isInsightDesignPairSlide ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-1 lg:grid-cols-2") : "grid-cols-1"}`}
+          >
             {showReact && (
             <div className="flex min-h-0 flex-col rounded-xl border border-cyan-300/20 bg-slate-900 p-3">
               <div className="mb-2 shrink-0">
