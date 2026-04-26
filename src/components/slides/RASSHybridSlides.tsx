@@ -888,16 +888,43 @@ export default function RASSHybridSlides() {
               </div>
             ) : null}
 
-            <div className="mt-2 flex min-w-0 items-center gap-2 text-xs text-slate-300">
-              <span className="shrink-0 font-semibold text-cyan-300">{slide.id}</span>
-              <span className="text-slate-500">|</span>
-              <span className="truncate">{slide.chapter}</span>
-              <span className="text-slate-500">|</span>
-              <span className="shrink-0 text-slate-400">{slide.group}</span>
-              <span className="text-slate-500">|</span>
-              <span className="truncate font-semibold text-white">{slide.title}</span>
+            <div className="mt-2 min-w-0">
+              <div className="flex min-w-0 items-center gap-2 text-xs text-slate-300">
+                <span className="shrink-0 font-semibold text-cyan-300">{slide.id}</span>
+                <span className="text-slate-500">|</span>
+                <span className="truncate">{slide.chapter}</span>
+                <span className="text-slate-500">|</span>
+                <span className="shrink-0 text-slate-400">{slide.group}</span>
+              </div>
+              <p className="mt-1 truncate text-base font-bold tracking-tight text-white md:text-lg">
+                {slide.title}
+              </p>
             </div>
           </header>
+
+          <div className="shrink-0 rounded-xl border border-white/10 bg-white/5 p-3">
+            <div className="rounded-xl border border-white/10 bg-slate-900/80 p-3">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">View Mode</p>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { key: "normal", label: "構造版" },
+                  { key: "character", label: "キャラ版" },
+                  { key: "hybrid", label: "両方" },
+                ].map((item) => (
+                  <button
+                    key={item.key}
+                    type="button"
+                    onClick={() => setMode(item.key as ViewMode)}
+                    className={`rounded-lg px-3 py-2 text-center text-xs font-bold transition ${
+                      mode === item.key ? "bg-white text-slate-950" : "bg-white/10 text-slate-300 hover:bg-white/15"
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
 
           <section
             ref={(element) => {
@@ -1642,28 +1669,6 @@ export default function RASSHybridSlides() {
           </footer>
 
           <div className="shrink-0 rounded-xl border border-white/10 bg-white/5 p-3">
-            <div className="rounded-xl border border-white/10 bg-slate-900/80 p-3">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">View Mode</p>
-              <div className="grid grid-cols-3 gap-2">
-                {[
-                  { key: "normal", label: "構造版" },
-                  { key: "character", label: "キャラ版" },
-                  { key: "hybrid", label: "両方" },
-                ].map((item) => (
-                  <button
-                    key={item.key}
-                    type="button"
-                    onClick={() => setMode(item.key as ViewMode)}
-                    className={`rounded-lg px-3 py-2 text-center text-xs font-bold transition ${
-                      mode === item.key ? "bg-white text-slate-950" : "bg-white/10 text-slate-300 hover:bg-white/15"
-                    }`}
-                  >
-                    {item.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
             <div className="mt-3 flex justify-center">
               <a
                 href="https://core-lp.vercel.app/"
