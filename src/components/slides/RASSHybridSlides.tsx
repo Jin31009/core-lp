@@ -55,7 +55,7 @@ const dataTypographyTokens = {
   titleClass: "text-[22px] md:text-[25px] font-bold leading-[1.22] tracking-[-0.01em] text-slate-900",
   mainClass: "mt-8 w-full whitespace-normal break-normal text-[1.7rem] font-extrabold leading-[1.2] tracking-[-0.02em] text-slate-950 md:text-[2.1rem]",
 };
-const reactSlideScaleClass = "scale-[0.9]";
+const reactSlideScaleClass = "origin-top scale-[0.9] md:scale-100";
 
 type MagazineCopy = {
   title: string;
@@ -942,7 +942,7 @@ export default function RASSHybridSlides() {
               {/* Legacy branch note: these intro branches are currently unreachable because 01/04 are included in isMagazineTemplateSlide. */}
               {isIntroSlide && !isMagazineTemplateSlide ? (
                 <div className="flex min-h-0 flex-1 items-center justify-center">
-                  <div className={`mx-auto aspect-video w-full max-w-[960px] max-h-[65vh] origin-center ${reactSlideScaleClass} rounded-xl bg-white px-6 py-10 md:px-10 md:py-12`}>
+                  <div className={`mx-auto aspect-video w-full max-w-[960px] max-w-full max-h-[65vh] overflow-hidden ${reactSlideScaleClass} rounded-xl bg-white px-6 py-10 md:px-10 md:py-12`}>
                     <div className="flex h-full items-center justify-center text-center text-slate-900">
                       <div>
                         <h4 className="text-3xl font-black leading-tight md:text-4xl">
@@ -964,7 +964,7 @@ export default function RASSHybridSlides() {
                 </div>
               ) : isObservationIntroSlide && !isMagazineTemplateSlide ? (
                 <div className="flex min-h-0 flex-1 items-center justify-center">
-                  <div className={`mx-auto aspect-video w-full max-w-[960px] max-h-[65vh] origin-center ${reactSlideScaleClass} rounded-xl bg-white px-6 py-7 md:px-10 md:py-9`}>
+                  <div className={`mx-auto aspect-video w-full max-w-[960px] max-w-full max-h-[65vh] overflow-hidden ${reactSlideScaleClass} rounded-xl bg-white px-6 py-7 md:px-10 md:py-9`}>
                     <div className="flex h-full flex-col items-center justify-center text-center text-slate-900">
                       <h4 className="text-3xl font-black leading-tight md:text-4xl">
                         観測設計
@@ -986,7 +986,7 @@ export default function RASSHybridSlides() {
                 </div>
               ) : (
               <div className="min-h-0 flex flex-1 items-center justify-center">
-              <div className={`mx-auto aspect-video w-full max-w-[960px] max-h-[65vh] min-h-0 origin-center ${reactSlideScaleClass} rounded-xl bg-white p-5 md:p-6 text-slate-950 ${isCoverSlide || isProblemSlide || isHypothesisSlide || isFilterSetupSlide || isObservationFrameSlide || isFilterMeaningSlide || isFilterIntegrationSlide || isStructureSummarySlide || isStructureGraspIntroSlide || isSrplIntroSlide || isPlacementGraspSlide || isPlacementConclusionSlide || isProgressionShiftSlide || isProgressionAxisSlide || isProgressionTriggerSlide || isProgressionLanguageSlide || isDataStructureSlide || isDataVariationSlide || isDataMissingSlide || isCaseStudy01Slide || isCaseStudy02Slide || isCaseStudy03Slide || isCaseStudyCompareSlide || isInsightDesign01Slide || isDesign01Slide || isDesign03Slide || isFuture01Slide ? "overflow-hidden" : "overflow-auto"}`}>
+              <div className={`mx-auto aspect-video w-full max-w-[960px] max-w-full max-h-[65vh] min-h-0 ${reactSlideScaleClass} rounded-xl bg-white p-5 md:p-6 text-slate-950 ${isCoverSlide || isProblemSlide || isHypothesisSlide || isFilterSetupSlide || isObservationFrameSlide || isFilterMeaningSlide || isFilterIntegrationSlide || isStructureSummarySlide || isStructureGraspIntroSlide || isSrplIntroSlide || isPlacementGraspSlide || isPlacementConclusionSlide || isProgressionShiftSlide || isProgressionAxisSlide || isProgressionTriggerSlide || isProgressionLanguageSlide || isDataStructureSlide || isDataVariationSlide || isDataMissingSlide || isCaseStudy01Slide || isCaseStudy02Slide || isCaseStudy03Slide || isCaseStudyCompareSlide || isInsightDesign01Slide || isDesign01Slide || isDesign03Slide || isFuture01Slide ? "overflow-hidden" : "overflow-auto"}`}>
                 {isCoverSlide ? (
                   <div className="flex h-full items-center justify-center">
                     <div className="aspect-[16/9] w-full max-w-[820px] overflow-hidden rounded-xl border border-slate-200 bg-white">
