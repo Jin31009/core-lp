@@ -34,15 +34,16 @@ type ViewingPoint = {
 };
 
 const indexGroups: IndexGroup[] = [
-  { label: "Cover", note: "導入", ids: ["00"] },
-  { label: "Opening", note: "導入", ids: ["01", "02", "03"] },
-  { label: "Method", note: "観測設計", ids: ["04", "05-01", "05-02", "05-03", "05-04"] },
-  { label: "Structure", note: "構造把握", ids: ["06-01", "06-02", "06-03", "06-04"] },
-  { label: "Variation", note: "変異把握", ids: ["07-01", "07-02", "07-03", "07-04"] },
-  { label: "Missing", note: "欠損把握", ids: ["08-01", "08-02", "08-03", "08-04"] },
-  { label: "Data", note: "証明", ids: ["DATA-01", "DATA-02", "DATA-03", "08-DATA"] },
-  { label: "Case Study", note: "統合ケース", ids: ["CASE-01", "CASE-02", "CASE-03", "CASE-COMPARE"] },
-  { label: "Insight & Design", note: "統合", ids: ["INSIGHT-01", "DESIGN-01", "DESIGN-03", "FUTURE-01"] },
+  { label: "表紙｜Cover", note: "導入", ids: ["00"] },
+  { label: "導入｜Opening", note: "導入", ids: ["01", "02", "03"] },
+  { label: "観測設計｜Method", note: "観測設計", ids: ["04", "05-01", "05-02", "05-03", "05-04"] },
+  { label: "構造｜Structure", note: "構造把握", ids: ["06-01", "06-02", "06-03", "06-04"] },
+  { label: "変異｜Variation", note: "変異把握", ids: ["07-01", "07-02", "07-03", "07-04"] },
+  { label: "欠損｜Missing", note: "欠損把握", ids: ["08-01", "08-02", "08-03", "08-04"] },
+  { label: "データ｜Data", note: "証明", ids: ["DATA-01", "DATA-02", "DATA-03", "08-DATA"] },
+  { label: "事例｜Case Study", note: "統合ケース", ids: ["CASE-01", "CASE-02", "CASE-03", "CASE-COMPARE"] },
+  { label: "示唆・設計｜Insight & Design", note: "統合", ids: ["INSIGHT-01", "DESIGN-01", "DESIGN-03", "FUTURE-01"] },
+  { label: "実装・結論｜Implementation / Conclusion", note: "将来拡張", ids: [] },
 ];
 const groups = indexGroups.map((group) => group.label);
 const chapterLabelBySlideId = new Map(
@@ -225,11 +226,11 @@ const navDisplayBySlideId: Record<string, string> = {
 export default function RASSHybridSlides() {
   const [activeSlide, setActiveSlide] = useState(slides[0].id);
   const [mode, setMode] = useState<ViewMode>("hybrid");
-  const [openGroup, setOpenGroup] = useState("Cover");
+  const [openGroup, setOpenGroup] = useState("表紙｜Cover");
   const [imageLoadError, setImageLoadError] = useState<Record<string, boolean>>({});
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openMobileGroups, setOpenMobileGroups] = useState<Record<string, boolean>>(() =>
-    Object.fromEntries(groups.map((group) => [group, group === "Cover"])) as Record<string, boolean>
+    Object.fromEntries(groups.map((group) => [group, group === "表紙｜Cover"])) as Record<string, boolean>
   );
   const swipeAreaRef = useRef<HTMLElement | null>(null);
   const touchStartPointRef = useRef<{ x: number; y: number } | null>(null);
