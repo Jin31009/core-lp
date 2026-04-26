@@ -2,6 +2,7 @@ import RASSConferenceSlides from "./pages/slides/RASSConferenceSlides";
 import RASSHybridSlides from "./components/slides/RASSHybridSlides";
 import CoreLPPage from "./pages/CoreLPPage";
 import DemoIntroPage from "./pages/DemoIntroPage";
+import DemoPage from "./pages/DemoPage";
 import StructurePage from "./pages/structure/StructurePage";
 import PocPage from "./pages/PocPage";
 import ContactPage from "./pages/ContactPage";
@@ -17,7 +18,7 @@ function resolvePageToPath(page: string) {
     case "contact":
       return "/contact";
     case "demo":
-      return "/demo-intro";
+      return "/demo";
     case "demo-intro":
       return "/demo-intro";
     case "prototype":
@@ -57,6 +58,7 @@ export default function App() {
       <Route path="/contact" element={<ContactPage setPage={setPage} />} />
       <Route path="/reports" element={<ReportsPage setPage={setPage} />} />
       <Route path="/demo-intro" element={<DemoIntroPage setPage={setPage} />} />
+      <Route path="/demo" element={<DemoPage setPage={setPage} />} />
       <Route path="/case" element={<CoreLPPage setPage={setPage} />} />
       <Route path="/evidence" element={<CoreLPPage setPage={setPage} />} />
       <Route path="/slides" element={<RASSHybridSlides />} />
