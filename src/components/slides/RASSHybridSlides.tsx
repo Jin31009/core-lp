@@ -879,6 +879,25 @@ export default function RASSHybridSlides() {
                 <h2 className="mt-1 truncate text-xl font-black tracking-tight">{slide.title}</h2>
                 <p className="mt-1 truncate text-xs text-slate-400">{slide.subtitle}</p>
               </div>
+
+              <div className="flex w-full shrink-0 items-center justify-end gap-2 md:w-auto">
+                <button
+                  type="button"
+                  onClick={goPrevSlide}
+                  disabled={activeSlideIndex === 0}
+                  className="min-h-10 rounded-lg border border-white/20 bg-white/10 px-3 text-xs font-semibold text-white disabled:opacity-40"
+                >
+                  前へ
+                </button>
+                <button
+                  type="button"
+                  onClick={goNextSlide}
+                  disabled={activeSlideIndex >= totalSlides - 1}
+                  className="min-h-10 rounded-lg border border-white/20 bg-white/10 px-3 text-xs font-semibold text-white disabled:opacity-40"
+                >
+                  次へ
+                </button>
+              </div>
             </div>
 
           </header>
