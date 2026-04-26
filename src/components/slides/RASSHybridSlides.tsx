@@ -1607,6 +1607,26 @@ export default function RASSHybridSlides() {
             )}
           </section>
 
+          <footer className="shrink-0 rounded-xl border border-white/10 bg-white/5 p-3">
+            <div className="mt-2 rounded-xl border border-white/10 bg-slate-900/70 p-3">
+              <p className="text-xs font-bold tracking-[0.2em] text-white">
+                見てほしいポイント
+              </p>
+
+              <div className={`mt-2 grid grid-cols-1 gap-2 ${viewingPoints.length === 1 ? "md:grid-cols-1" : "md:grid-cols-4"}`}>
+                {viewingPoints.map((point) => (
+                  <div key={point.title} className="relative min-h-[74px] rounded-lg border border-white/10 bg-white/5 p-2.5">
+                    <span className={`absolute left-2 top-2 h-2 w-2 rounded-full ${point.dotClass}`} />
+                    <p className="pl-3 text-xs font-semibold text-white">{point.title}</p>
+                    <p className="mt-1 pl-3 line-clamp-2 text-[10px] leading-snug text-slate-300">
+                      {point.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </footer>
+
           <div className="shrink-0 rounded-xl border border-white/10 bg-white/5 p-3">
             <div className="rounded-xl border border-white/10 bg-slate-900/80 p-3">
               <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">View Mode</p>
@@ -1663,26 +1683,6 @@ export default function RASSHybridSlides() {
               </button>
             </div>
           </div>
-
-          <footer className="shrink-0 rounded-xl border border-white/10 bg-white/5 p-3">
-            <div className="mt-2 rounded-xl border border-white/10 bg-slate-900/70 p-3">
-              <p className="text-xs font-bold tracking-[0.2em] text-white">
-                見てほしいポイント
-              </p>
-
-              <div className={`mt-2 grid grid-cols-1 gap-2 ${viewingPoints.length === 1 ? "md:grid-cols-1" : "md:grid-cols-4"}`}>
-                {viewingPoints.map((point) => (
-                  <div key={point.title} className="relative min-h-[74px] rounded-lg border border-white/10 bg-white/5 p-2.5">
-                    <span className={`absolute left-2 top-2 h-2 w-2 rounded-full ${point.dotClass}`} />
-                    <p className="pl-3 text-xs font-semibold text-white">{point.title}</p>
-                    <p className="mt-1 pl-3 line-clamp-2 text-[10px] leading-snug text-slate-300">
-                      {point.description}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </footer>
         </main>
       </div>
     </div>
