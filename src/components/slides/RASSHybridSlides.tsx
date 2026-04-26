@@ -897,9 +897,8 @@ export default function RASSHybridSlides() {
           >
             {showReact && (
             <div className="flex min-h-0 flex-col rounded-xl border border-cyan-300/20 bg-slate-900 p-3 overflow-x-hidden [&_p]:max-w-full [&_p]:break-words [&_p]:whitespace-normal [&_p]:leading-[1.25] md:[&_p]:leading-[1.22]">
-              <div className="mb-2 shrink-0">
+              <div className="mb-1 shrink-0">
                 <p className="text-[10px] uppercase tracking-[0.25em] text-cyan-300">React Slide</p>
-                <h3 className="text-sm font-bold">構造版・正本</h3>
               </div>
 
               {isIntroSlide && !isMagazineTemplateSlide ? (
@@ -1573,9 +1572,8 @@ export default function RASSHybridSlides() {
 
             {showCharacter && (
             <div className="flex min-h-0 flex-col rounded-xl border border-amber-300/20 bg-slate-900 p-3 transition">
-              <div className="mb-1 shrink-0">
+              <div className="mb-0.5 shrink-0">
                 <p className="text-[10px] uppercase tracking-[0.25em] text-amber-300">Character Slide</p>
-                <h3 className="text-sm font-bold">キャラ版・体験層</h3>
               </div>
 
               <div className="flex min-h-0 flex-1 items-center justify-center rounded-xl border border-dashed border-white/15 bg-slate-800 p-2 text-center">
