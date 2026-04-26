@@ -29,6 +29,7 @@ type TabButtonProps = {
   isActive: boolean;
   isReached: boolean;
   onClick: () => void;
+  stacked?: boolean;
 };
 
 type ContextDraftResponse = {
@@ -69,13 +70,18 @@ function TabButton({
   isActive,
   isReached,
   onClick,
+  stacked = false,
 }: TabButtonProps) {
   return (
     <button
       type="button"
       onClick={onClick}
       disabled={!isReached}
-      className={`flex min-w-[150px] flex-1 items-center gap-3 border-r border-stone-200 px-4 py-4 text-left transition last:border-r-0 ${
+      className={`flex items-center gap-3 text-left transition ${
+        stacked
+          ? "w-full border-b border-stone-200 px-4 py-3 last:border-b-0"
+          : "min-w-[150px] flex-1 border-r border-stone-200 px-4 py-4 last:border-r-0"
+      } ${
         isActive
           ? "bg-white"
           : isReached
@@ -141,6 +147,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
 
   const [selectedStep, setSelectedStep] = useState<1 | 2 | 3 | 4 | 5>(1);
   const [maxUnlockedStep, setMaxUnlockedStep] = useState<1 | 2 | 3 | 4 | 5>(1);
+  const [isStepNavOpen, setIsStepNavOpen] = useState(false);
 
   const [executedActions, setExecutedActions] = useState<string[]>([]);
   const [resultType, setResultType] = useState("");
@@ -236,6 +243,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                 title: "Step5 / Structured Record",
                 body: "構造化された記録として、今回の学びがどう残るかを確認する段階です。",
               };
+  const selectedStepLabel = String(selectedStep).padStart(2, "0");
 
   useEffect(() => {
     setRecordTimestamp(new Date().toISOString());
@@ -362,6 +370,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
   const openStep = (step: 1 | 2 | 3 | 4 | 5) => {
     if (step > maxUnlockedStep) return;
     setSelectedStep(step);
+    setIsStepNavOpen(false);
   };
 
   const goToStep2 = () => {
@@ -501,60 +510,79 @@ export default function DemoPage({ setPage }: DemoPageProps) {
         {hasEnteredFlow && (
           <>
             <div className="sticky top-20 z-20 mt-6 border-y border-stone-200 bg-[#f7f4ee]/95 backdrop-blur">
-              <div className="flex flex-wrap items-stretch">
-                <TabButton
-                  stepNo="01"
-                  en="Observation"
-                  ja="観察入力"
-                  isActive={selectedStep === 1}
-                  isReached={true}
-                  onClick={() => openStep(1)}
-                />
-                <TabButton
-                  stepNo="02"
-                  en="Analysis"
-                  ja="確認結果"
-                  isActive={selectedStep === 2}
-                  isReached={maxUnlockedStep >= 2}
-                  onClick={() => openStep(2)}
-                />
-                <TabButton
-                  stepNo="03"
-                  en="Response"
-                  ja="次の対応"
-                  isActive={selectedStep === 3}
-                  isReached={maxUnlockedStep >= 3}
-                  onClick={() => openStep(3)}
-                />
-                <TabButton
-                  stepNo="04"
-                  en="Case Learning"
-                  ja="学びの記録"
-                  isActive={selectedStep === 4}
-                  isReached={maxUnlockedStep >= 4}
-                  onClick={() => openStep(4)}
-                />
-                <TabButton
-                  stepNo="05"
-                  en="Structured Record"
-                  ja="構造化記録"
-                  isActive={selectedStep === 5}
-                  isReached={maxUnlockedStep >= 5}
-                  onClick={() => openStep(5)}
-                />
+              <div className="flex items-center justify-between gap-4 px-4 py-3">
+                <div>
+                  <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
+                    Current Step
+                  </p>
+                  <p className="mt-1 text-[15px] font-semibold text-slate-900 md:text-[16px]">
+                    {selectedStepLabel} / 05 ・ {stepMeta.title}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsStepNavOpen((prev) => !prev)}
+                  className="inline-flex min-h-10 items-center justify-center border border-stone-300 bg-white px-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-800 transition hover:bg-stone-100"
+                  aria-expanded={isStepNavOpen}
+                >
+                  STEP {isStepNavOpen ? "▲" : "▼"}
+                </button>
               </div>
 
-              <div className="border-t border-stone-200 bg-white px-5 py-4">
-                <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
-                  Current Step
-                </p>
-                <p className="mt-1 text-[18px] font-semibold text-slate-900">
-                  {stepMeta.title}
-                </p>
-                <p className="mt-1 text-[14px] leading-7 text-stone-600">
-                  {stepMeta.body}
-                </p>
-              </div>
+              {isStepNavOpen && (
+                <div className="border-t border-stone-200 bg-white">
+                  <TabButton
+                    stepNo="01"
+                    en="Observation"
+                    ja="観察入力"
+                    isActive={selectedStep === 1}
+                    isReached={true}
+                    onClick={() => openStep(1)}
+                    stacked
+                  />
+                  <TabButton
+                    stepNo="02"
+                    en="Analysis"
+                    ja="確認結果"
+                    isActive={selectedStep === 2}
+                    isReached={maxUnlockedStep >= 2}
+                    onClick={() => openStep(2)}
+                    stacked
+                  />
+                  <TabButton
+                    stepNo="03"
+                    en="Response"
+                    ja="次の対応"
+                    isActive={selectedStep === 3}
+                    isReached={maxUnlockedStep >= 3}
+                    onClick={() => openStep(3)}
+                    stacked
+                  />
+                  <TabButton
+                    stepNo="04"
+                    en="Case Learning"
+                    ja="学びの記録"
+                    isActive={selectedStep === 4}
+                    isReached={maxUnlockedStep >= 4}
+                    onClick={() => openStep(4)}
+                    stacked
+                  />
+                  <TabButton
+                    stepNo="05"
+                    en="Structured Record"
+                    ja="構造化記録"
+                    isActive={selectedStep === 5}
+                    isReached={maxUnlockedStep >= 5}
+                    onClick={() => openStep(5)}
+                    stacked
+                  />
+                  <div className="border-t border-stone-200 px-4 py-3">
+                    <p className="text-[13px] leading-6 text-stone-600">
+                      {stepMeta.body}
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="mt-10">
