@@ -988,53 +988,37 @@ export default function RASSHybridSlides() {
               <div className="min-h-0 flex flex-1 items-center justify-center">
               <div className={`mx-auto aspect-video w-full max-w-[960px] max-h-[65vh] min-h-0 origin-center ${reactSlideScaleClass} rounded-xl bg-white p-5 md:p-6 text-slate-950 ${isCoverSlide || isProblemSlide || isHypothesisSlide || isFilterSetupSlide || isObservationFrameSlide || isFilterMeaningSlide || isFilterIntegrationSlide || isStructureSummarySlide || isStructureGraspIntroSlide || isSrplIntroSlide || isPlacementGraspSlide || isPlacementConclusionSlide || isProgressionShiftSlide || isProgressionAxisSlide || isProgressionTriggerSlide || isProgressionLanguageSlide || isDataStructureSlide || isDataVariationSlide || isDataMissingSlide || isCaseStudy01Slide || isCaseStudy02Slide || isCaseStudy03Slide || isCaseStudyCompareSlide || isInsightDesign01Slide || isDesign01Slide || isDesign03Slide || isFuture01Slide ? "overflow-hidden" : "overflow-auto"}`}>
                 {isCoverSlide ? (
-                  <div className="flex h-full items-center justify-center px-8 py-12 md:px-14 md:py-16">
-                    <div className="w-full max-w-4xl text-center text-slate-900">
-                      <p className="text-[18px] md:text-[20px] font-semibold leading-[1.35] tracking-[-0.01em]">
-                        ナラティブは、構造になる
-                      </p>
-                      <p className="mt-6 text-[15px] md:text-[17px] font-medium leading-[1.5] text-slate-600">
-                        感じたことを、そのままにしない
-                      </p>
-                      <h4 className="mt-16 text-[36px] md:text-[46px] font-black leading-[1.2] tracking-[-0.02em]">
-                        <span className="block">ナラティブは</span>
-                        <span className="mt-1 block whitespace-nowrap">構造として扱える。</span>
+                  <div className="flex h-full items-center justify-center px-8 py-10 text-slate-900 md:px-12 md:py-14">
+                    <div className="w-full max-w-4xl text-center">
+                      <h4 className="text-[22px] md:text-[28px] font-bold leading-[1.3] tracking-[-0.01em]">
+                        ナラティブ（投書）302件の分析から見えたこと
                       </h4>
-                    </div>
-                  </div>
-                ) : isMagazineTemplateSlide ? (
-                  isIntroSlide ? (
-                    <div className="flex h-full items-center justify-center px-8 py-10 text-slate-900 md:px-12 md:py-14">
-                      <div className="w-full max-w-4xl text-center">
-                        <h4 className="text-[22px] md:text-[28px] font-bold leading-[1.3] tracking-[-0.01em]">
-                          ナラティブ（投書）302件の分析から見えたこと
-                        </h4>
 
-                        <div className="mt-8 text-[35px] md:text-[46px] font-black leading-[1.18] tracking-[-0.02em]">
-                          ナラティブは構造として扱える。
-                        </div>
+                      <div className="mt-8 text-[35px] md:text-[46px] font-black leading-[1.18] tracking-[-0.02em]">
+                        ナラティブは構造として扱える。
+                      </div>
 
-                        <div className="mt-4 text-[14px] md:text-[18px] font-semibold leading-[1.5] text-slate-700">
-                          個々の感想ではなく、
-                          <br />
-                          関係性の中で生まれる「条件の配置」として捉える。
-                        </div>
+                      <div className="mt-4 text-[14px] md:text-[18px] font-semibold leading-[1.5] text-slate-700">
+                        個々の感想ではなく、
+                        <br />
+                        関係性の中で生まれる「条件の配置」として捉える。
+                      </div>
 
-                        <div className="mt-5 inline-flex rounded-full border border-slate-300 bg-slate-100 px-4 py-1 text-[12px] md:text-[13px] font-semibold text-slate-700">
-                          RA-SS / 関係性設計モデル
-                        </div>
+                      <div className="mt-5 inline-flex rounded-full border border-slate-300 bg-slate-100 px-4 py-1 text-[12px] md:text-[13px] font-semibold text-slate-700">
+                        RA-SS / 関係性設計モデル
+                      </div>
 
-                        <div className="mx-auto mt-8 w-full max-w-3xl border-t border-slate-200 pt-4">
-                          <div className="grid grid-cols-1 gap-2 text-[12px] md:grid-cols-3 md:gap-4 md:text-[13px] font-semibold text-slate-600">
-                            <div>構造（SRPL）</div>
-                            <div>変異（Δ / Trigger）</div>
-                            <div>欠損（APCE Miss）</div>
-                          </div>
+                      <div className="mx-auto mt-8 w-full max-w-3xl border-t border-slate-200 pt-4">
+                        <div className="grid grid-cols-1 gap-2 text-[12px] md:grid-cols-3 md:gap-4 md:text-[13px] font-semibold text-slate-600">
+                          <div>構造（SRPL）</div>
+                          <div>変異（Δ / Trigger）</div>
+                          <div>欠損（APCE Miss）</div>
                         </div>
                       </div>
                     </div>
-                  ) : (
-                    <div className={`${dataTemplateTokens.frameClass} text-slate-900`}>
+                  </div>
+                ) : isMagazineTemplateSlide ? (
+                  <div className={`${dataTemplateTokens.frameClass} text-slate-900`}>
                       <div className={`${dataTemplateTokens.columnClass} ${isObservationPhaseShiftSlide || isOpeningPhaseShiftSlide ? "pt-5" : ""}`}>
                         <div className={dataTemplateTokens.headerSlotClass}>
                           {phaseLabel ? (
@@ -1069,7 +1053,6 @@ export default function RASSHybridSlides() {
                         </div>
                       </div>
                     </div>
-                  )
                 ) : isProblemSlide ? (
                   <div className="flex h-full flex-col justify-between px-6 py-5 text-slate-900 md:px-8 md:py-7">
                     <div className="text-center">
