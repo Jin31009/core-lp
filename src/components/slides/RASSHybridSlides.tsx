@@ -205,6 +205,7 @@ const slides: Slide[] = [
 ];
 
 const PUBLIC_VISIBLE_SLIDE_LIMIT = 33;
+const PUBLIC_HIDDEN_SLIDE_IDS = new Set(["06"]);
 
 const indexGroups: IndexGroup[] = [
   { label: "00 Cover", note: "導入", ids: ["00"] },
@@ -244,7 +245,11 @@ export default function RASSHybridSlides() {
   const hasSlideChangedRef = useRef(false);
 
   const visibleSlides = useMemo(
-    () => slides.filter((_, index) => index < PUBLIC_VISIBLE_SLIDE_LIMIT),
+    () =>
+      slides.filter(
+        (slideItem, index) =>
+          index < PUBLIC_VISIBLE_SLIDE_LIMIT && !PUBLIC_HIDDEN_SLIDE_IDS.has(slideItem.id)
+      ),
     []
   );
   const visibleSlideIds = useMemo(() => new Set(visibleSlides.map((item) => item.id)), [visibleSlides]);
