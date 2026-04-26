@@ -311,6 +311,7 @@ export default function RASSHybridSlides() {
   const isFilterMeaningSlide = slide.id === "05-03";
   const isFilterIntegrationSlide = slide.id === "05-04";
   const isStructureGraspIntroSlide = slide.id === "06-01";
+  const isStructureSummarySlide = slide.id === "06";
   const isSrplIntroSlide = slide.id === "06-02";
   const isPlacementGraspSlide = slide.id === "06-03";
   const isPlacementConclusionSlide = slide.id === "06-04";
@@ -795,27 +796,6 @@ export default function RASSHybridSlides() {
             </div>
           </div>
 
-          <div className="mt-3 shrink-0 rounded-xl border border-white/10 bg-slate-900/80 p-3">
-            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">View Mode</p>
-            <div className="grid gap-2">
-              {[
-                { key: "normal", label: "通常版" },
-                { key: "character", label: "キャラ版" },
-                { key: "hybrid", label: "ハイブリッド" },
-              ].map((item) => (
-                <button
-                  key={item.key}
-                  type="button"
-                  onClick={() => setMode(item.key as ViewMode)}
-                  className={`rounded-lg px-3 py-2 text-left text-xs font-bold transition ${
-                    mode === item.key ? "bg-white text-slate-950" : "bg-white/10 text-slate-300 hover:bg-white/15"
-                  }`}
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
-          </div>
         </aside>
 
         <main className="flex min-h-0 min-w-0 flex-1 flex-col gap-3">
@@ -948,6 +928,30 @@ export default function RASSHybridSlides() {
 
           </header>
 
+          <div className="shrink-0 flex w-full justify-end">
+            <div className="w-full rounded-xl border border-white/10 bg-slate-900/80 p-3 md:w-auto">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">View Mode</p>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { key: "normal", label: "構造版" },
+                  { key: "character", label: "キャラ版" },
+                  { key: "hybrid", label: "両方" },
+                ].map((item) => (
+                  <button
+                    key={item.key}
+                    type="button"
+                    onClick={() => setMode(item.key as ViewMode)}
+                    className={`rounded-lg px-3 py-2 text-center text-xs font-bold transition ${
+                      mode === item.key ? "bg-white text-slate-950" : "bg-white/10 text-slate-300 hover:bg-white/15"
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
           <section
             ref={(element) => {
               swipeAreaRef.current = element;
@@ -955,7 +959,7 @@ export default function RASSHybridSlides() {
             className={`grid min-h-0 flex-1 gap-3 ${mode === "hybrid" ? (isInsightDesignPairSlide ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-1 lg:grid-cols-2") : "grid-cols-1"}`}
           >
             {showReact && (
-            <div className="flex min-h-0 flex-col rounded-xl border border-cyan-300/20 bg-slate-900 p-3 overflow-x-hidden [&_p]:max-w-full [&_p]:break-words [&_p]:whitespace-normal [&_p]:leading-[1.35] md:[&_p]:leading-[1.3]">
+            <div className="flex min-h-0 flex-col rounded-xl border border-cyan-300/20 bg-slate-900 p-3 overflow-x-hidden [&_p]:max-w-full [&_p]:break-words [&_p]:whitespace-normal [&_p]:leading-[1.3] md:[&_p]:leading-[1.25]">
               <div className="mb-2 shrink-0">
                 <p className="text-[10px] uppercase tracking-[0.25em] text-cyan-300">React Slide</p>
                 <h3 className="text-sm font-bold">構造版・正本</h3>
@@ -1007,7 +1011,7 @@ export default function RASSHybridSlides() {
                 </div>
               ) : (
               <div className="min-h-0 flex flex-1 items-center justify-center">
-              <div className={`${isNormalMode ? "h-full w-full" : "mx-auto aspect-video w-full max-w-full min-h-0"} rounded-xl bg-white p-4 text-slate-950 ${isCoverSlide || isProblemSlide || isHypothesisSlide || isFilterSetupSlide || isObservationFrameSlide || isFilterMeaningSlide || isFilterIntegrationSlide || isStructureGraspIntroSlide || isSrplIntroSlide || isPlacementGraspSlide || isPlacementConclusionSlide || isProgressionShiftSlide || isProgressionAxisSlide || isProgressionTriggerSlide || isProgressionLanguageSlide || isDataStructureSlide || isDataVariationSlide || isDataMissingSlide || isCaseStudy01Slide || isCaseStudy02Slide || isCaseStudy03Slide || isCaseStudyCompareSlide || isInsightDesign01Slide || isDesign01Slide || isDesign03Slide || isFuture01Slide ? "overflow-hidden" : "overflow-auto"}`}>
+              <div className={`${isNormalMode ? "h-full w-full" : "mx-auto aspect-video w-full max-w-[680px] min-h-0"} rounded-xl bg-white p-5 md:p-6 text-slate-950 ${isCoverSlide || isProblemSlide || isHypothesisSlide || isFilterSetupSlide || isObservationFrameSlide || isFilterMeaningSlide || isFilterIntegrationSlide || isStructureSummarySlide || isStructureGraspIntroSlide || isSrplIntroSlide || isPlacementGraspSlide || isPlacementConclusionSlide || isProgressionShiftSlide || isProgressionAxisSlide || isProgressionTriggerSlide || isProgressionLanguageSlide || isDataStructureSlide || isDataVariationSlide || isDataMissingSlide || isCaseStudy01Slide || isCaseStudy02Slide || isCaseStudy03Slide || isCaseStudyCompareSlide || isInsightDesign01Slide || isDesign01Slide || isDesign03Slide || isFuture01Slide ? "overflow-hidden" : "overflow-auto"}`}>
                 {isCoverSlide ? (
                   <div className="flex h-full items-center justify-center px-8 py-12 md:px-14 md:py-16">
                     <div className="w-full max-w-4xl text-center text-slate-900">
@@ -1343,6 +1347,31 @@ export default function RASSHybridSlides() {
                       観測 → 構造 → 配置 → 理解
                     </p>
                   </div>
+                ) : isStructureSummarySlide ? (
+                  <div className="flex h-full flex-col justify-between px-6 py-6 text-slate-900 md:px-8 md:py-8">
+                    <div className="text-center">
+                      <h4 className="text-[1.4rem] md:text-[1.75rem] font-black leading-snug tracking-[-0.01em]">
+                        構造の把握
+                      </h4>
+                      <p className="mt-3 text-xs md:text-sm font-semibold text-slate-700 leading-snug">
+                        ズレを未充足条件として読む
+                      </p>
+                    </div>
+
+                    <div className="flex flex-1 items-center justify-center">
+                      <div className="w-full max-w-xl space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-4 md:p-5">
+                        {slide.reactBody.map((text, index) => (
+                          <p key={`${slide.id}-summary-${index}`} className="text-sm md:text-base font-semibold leading-snug text-slate-800">
+                            {text}
+                          </p>
+                        ))}
+                      </div>
+                    </div>
+
+                    <p className="text-center text-xs md:text-sm font-medium leading-snug text-slate-600">
+                      {slide.point}
+                    </p>
+                  </div>
                 ) : isProgressionShiftSlide ? (
                   <div className="flex h-full flex-col items-center justify-center px-6 py-6 text-slate-900 md:px-9 md:py-8">
                     <p className="text-center text-3xl font-bold leading-relaxed text-slate-900 md:text-[3.6rem]">
@@ -1613,46 +1642,14 @@ export default function RASSHybridSlides() {
               </div>
 
               <div className="flex min-h-0 flex-1 items-center justify-center rounded-xl border border-dashed border-white/15 bg-slate-800 p-2 text-center">
-                <div className={`aspect-[16/9] w-full flex items-center justify-center rounded-lg overflow-hidden bg-slate-900 ${isDataStructureSlide || isDataVariationSlide || isDataMissingSlide || isCaseStudy01Slide || isCaseStudy02Slide || isCaseStudy03Slide || isCaseStudyCompareSlide || isInsightDesign01Slide || isDesign01Slide || isDesign03Slide || isFuture01Slide ? "p-2" : "p-4"}`}>
+                <div className={`aspect-[16/9] w-full max-w-[680px] mx-auto flex items-center justify-center rounded-lg overflow-hidden bg-slate-900 ${isDataStructureSlide || isDataVariationSlide || isDataMissingSlide || isCaseStudy01Slide || isCaseStudy02Slide || isCaseStudy03Slide || isCaseStudyCompareSlide || isInsightDesign01Slide || isDesign01Slide || isDesign03Slide || isFuture01Slide ? "p-3" : "p-4"}`}>
                   {!hasImageError ? (
                     <div className="relative h-full w-full">
                       <img
                         key={slide.id}
                         src={characterImageSrc}
                         alt="character slide"
-                        className={`h-full w-full max-h-full max-w-full ${
-                          isProgressionShiftSlide
-                            ? "object-contain"
-                            : isProgressionAxisSlide
-                              ? "object-contain"
-                              : isProgressionTriggerSlide
-                                ? "object-contain"
-                              : isProgressionLanguageSlide
-                                ? "object-contain"
-                                : isDataStructureSlide
-                                  ? "object-contain scale-[1.06] object-center"
-                                  : isDataVariationSlide
-                                    ? "object-contain scale-[1.08] object-center"
-                                    : isDataMissingSlide
-                                      ? "object-contain scale-[1.08] object-center"
-                                      : isCaseStudy01Slide
-                                        ? "object-contain scale-[1.08] object-center"
-                                        : isCaseStudy02Slide
-                                          ? "object-contain scale-[1.08] object-center"
-                                          : isCaseStudy03Slide
-                                            ? "object-contain scale-[1.08] object-center"
-                                            : isCaseStudyCompareSlide
-                                              ? "object-contain scale-[1.08] object-center"
-                                              : isInsightDesign01Slide
-                                                ? "object-contain scale-[1.1] object-center"
-                                                : isDesign01Slide
-                                                  ? "object-contain scale-[1.1] object-center"
-                                                : isDesign03Slide
-                                                  ? "object-contain scale-[1.1] object-center"
-                                                : isFuture01Slide
-                                                  ? "object-contain scale-[1.1] object-center"
-                                : "object-contain"
-                        }`}
+                        className="h-full w-full max-h-full max-w-full object-contain object-center"
                         onLoad={() =>
                           setImageLoadError((prev) => ({ ...prev, [slide.id]: false }))
                         }
