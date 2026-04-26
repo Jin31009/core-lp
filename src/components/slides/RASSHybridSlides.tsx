@@ -934,7 +934,7 @@ export default function RASSHybridSlides() {
             className={`grid min-h-0 flex-1 gap-3 ${mode === "hybrid" ? (isInsightDesignPairSlide ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-1 lg:grid-cols-2") : "grid-cols-1"}`}
           >
             {showReact && (
-            <div className={`flex min-h-0 flex-col rounded-xl border border-cyan-300/20 bg-slate-900 p-3 overflow-x-hidden [&_p]:max-w-full [&_p]:break-words [&_p]:whitespace-normal ${mode === "hybrid" ? "order-2 opacity-95" : "order-1"}`}>
+            <div className={`react-structure-slide flex min-h-0 flex-col rounded-xl border border-cyan-300/20 bg-slate-900 p-3 overflow-x-hidden [&_p]:max-w-full [&_p]:break-words [&_p]:whitespace-normal [&_p]:!text-[0.9rem] md:[&_p]:!text-[0.98rem] [&_p]:!leading-[1.35] [&_p+p]:!mt-2 [&_.subtitle]:!mt-2 [&_.body]:!mt-3 ${mode === "hybrid" ? "order-2 opacity-95" : "order-1"}`}>
               <div className="mb-1 shrink-0">
                 <p className="text-[10px] uppercase tracking-[0.25em] text-cyan-300">React Slide</p>
               </div>
