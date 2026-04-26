@@ -940,7 +940,7 @@ export default function RASSHybridSlides() {
 
               {isIntroSlide && !isMagazineTemplateSlide ? (
                 <div className="flex min-h-0 flex-1 items-center justify-center">
-                  <div className="mx-auto aspect-video w-full max-w-[1120px] max-h-[68vh] rounded-xl bg-white px-6 py-10 md:px-10 md:py-12">
+                  <div className="mx-auto aspect-video w-full max-w-[960px] max-h-[65vh] rounded-xl bg-white px-6 py-10 md:px-10 md:py-12">
                     <div className="flex h-full items-center justify-center text-center text-slate-900">
                       <div>
                         <h4 className="text-3xl font-black leading-tight md:text-4xl">
@@ -962,7 +962,7 @@ export default function RASSHybridSlides() {
                 </div>
               ) : isObservationIntroSlide && !isMagazineTemplateSlide ? (
                 <div className="flex min-h-0 flex-1 items-center justify-center">
-                  <div className="mx-auto aspect-video w-full max-w-[1120px] max-h-[68vh] rounded-xl bg-white px-6 py-7 md:px-10 md:py-9">
+                  <div className="mx-auto aspect-video w-full max-w-[960px] max-h-[65vh] rounded-xl bg-white px-6 py-7 md:px-10 md:py-9">
                     <div className="flex h-full flex-col items-center justify-center text-center text-slate-900">
                       <h4 className="text-3xl font-black leading-tight md:text-4xl">
                         観測設計
@@ -984,7 +984,7 @@ export default function RASSHybridSlides() {
                 </div>
               ) : (
               <div className="min-h-0 flex flex-1 items-center justify-center">
-              <div className={`mx-auto aspect-video w-full max-w-[1120px] max-h-[68vh] min-h-0 rounded-xl bg-white p-5 md:p-6 text-slate-950 ${isCoverSlide || isProblemSlide || isHypothesisSlide || isFilterSetupSlide || isObservationFrameSlide || isFilterMeaningSlide || isFilterIntegrationSlide || isStructureSummarySlide || isStructureGraspIntroSlide || isSrplIntroSlide || isPlacementGraspSlide || isPlacementConclusionSlide || isProgressionShiftSlide || isProgressionAxisSlide || isProgressionTriggerSlide || isProgressionLanguageSlide || isDataStructureSlide || isDataVariationSlide || isDataMissingSlide || isCaseStudy01Slide || isCaseStudy02Slide || isCaseStudy03Slide || isCaseStudyCompareSlide || isInsightDesign01Slide || isDesign01Slide || isDesign03Slide || isFuture01Slide ? "overflow-hidden" : "overflow-auto"}`}>
+              <div className={`mx-auto aspect-video w-full max-w-[960px] max-h-[65vh] min-h-0 rounded-xl bg-white p-5 md:p-6 text-slate-950 ${isCoverSlide || isProblemSlide || isHypothesisSlide || isFilterSetupSlide || isObservationFrameSlide || isFilterMeaningSlide || isFilterIntegrationSlide || isStructureSummarySlide || isStructureGraspIntroSlide || isSrplIntroSlide || isPlacementGraspSlide || isPlacementConclusionSlide || isProgressionShiftSlide || isProgressionAxisSlide || isProgressionTriggerSlide || isProgressionLanguageSlide || isDataStructureSlide || isDataVariationSlide || isDataMissingSlide || isCaseStudy01Slide || isCaseStudy02Slide || isCaseStudy03Slide || isCaseStudyCompareSlide || isInsightDesign01Slide || isDesign01Slide || isDesign03Slide || isFuture01Slide ? "overflow-hidden" : "overflow-auto"}`}>
                 {isCoverSlide ? (
                   <div className="flex h-full items-center justify-center px-8 py-12 md:px-14 md:py-16">
                     <div className="w-full max-w-4xl text-center text-slate-900">
