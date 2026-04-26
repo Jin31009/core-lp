@@ -44,12 +44,12 @@ export default function HeroSection({ setPage }: Props) {
           <button
             type="button"
             onClick={() => {
-              trackEvent("lp_reports_click", { section: "hero" });
-              setPage("reports");
+              trackEvent("lp_slides_click", { section: "hero" });
+              setPage("slides");
             }}
             style={secondaryButtonStyle}
           >
-            分析を見る
+            WEBスライドを見る（事前資料）
           </button>
         </div>
 
