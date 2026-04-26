@@ -55,6 +55,7 @@ const dataTypographyTokens = {
   titleClass: "text-[22px] md:text-[25px] font-bold leading-[1.22] tracking-[-0.01em] text-slate-900",
   mainClass: "mt-8 w-full whitespace-normal break-normal text-[1.7rem] font-extrabold leading-[1.2] tracking-[-0.02em] text-slate-950 md:text-[2.1rem]",
 };
+const reactSlideScaleClass = "scale-[0.9]";
 
 type MagazineCopy = {
   title: string;
@@ -933,14 +934,15 @@ export default function RASSHybridSlides() {
             className={`grid min-h-0 flex-1 gap-3 ${mode === "hybrid" ? (isInsightDesignPairSlide ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-1 lg:grid-cols-2") : "grid-cols-1"}`}
           >
             {showReact && (
-            <div className={`flex min-h-0 flex-col rounded-xl border border-cyan-300/20 bg-slate-900 p-3 overflow-x-hidden [&_p]:max-w-full [&_p]:break-words [&_p]:whitespace-normal [&_p]:leading-[1.25] md:[&_p]:leading-[1.22] ${mode === "hybrid" ? "order-2 opacity-95" : "order-1"}`}>
+            <div className={`flex min-h-0 flex-col rounded-xl border border-cyan-300/20 bg-slate-900 p-3 overflow-x-hidden [&_p]:max-w-full [&_p]:break-words [&_p]:whitespace-normal ${mode === "hybrid" ? "order-2 opacity-95" : "order-1"}`}>
               <div className="mb-1 shrink-0">
                 <p className="text-[10px] uppercase tracking-[0.25em] text-cyan-300">React Slide</p>
               </div>
 
+              {/* Legacy branch note: these intro branches are currently unreachable because 01/04 are included in isMagazineTemplateSlide. */}
               {isIntroSlide && !isMagazineTemplateSlide ? (
                 <div className="flex min-h-0 flex-1 items-center justify-center">
-                  <div className="mx-auto aspect-video w-full max-w-[960px] max-h-[65vh] origin-center scale-[0.88] md:scale-[0.9] rounded-xl bg-white px-6 py-10 md:px-10 md:py-12">
+                  <div className={`mx-auto aspect-video w-full max-w-[960px] max-h-[65vh] origin-center ${reactSlideScaleClass} rounded-xl bg-white px-6 py-10 md:px-10 md:py-12`}>
                     <div className="flex h-full items-center justify-center text-center text-slate-900">
                       <div>
                         <h4 className="text-3xl font-black leading-tight md:text-4xl">
@@ -962,7 +964,7 @@ export default function RASSHybridSlides() {
                 </div>
               ) : isObservationIntroSlide && !isMagazineTemplateSlide ? (
                 <div className="flex min-h-0 flex-1 items-center justify-center">
-                  <div className="mx-auto aspect-video w-full max-w-[960px] max-h-[65vh] origin-center scale-[0.88] md:scale-[0.9] rounded-xl bg-white px-6 py-7 md:px-10 md:py-9">
+                  <div className={`mx-auto aspect-video w-full max-w-[960px] max-h-[65vh] origin-center ${reactSlideScaleClass} rounded-xl bg-white px-6 py-7 md:px-10 md:py-9`}>
                     <div className="flex h-full flex-col items-center justify-center text-center text-slate-900">
                       <h4 className="text-3xl font-black leading-tight md:text-4xl">
                         観測設計
@@ -984,7 +986,7 @@ export default function RASSHybridSlides() {
                 </div>
               ) : (
               <div className="min-h-0 flex flex-1 items-center justify-center">
-              <div className={`mx-auto aspect-video w-full max-w-[960px] max-h-[65vh] min-h-0 origin-center scale-[0.88] md:scale-[0.9] rounded-xl bg-white p-5 md:p-6 text-slate-950 ${isCoverSlide || isProblemSlide || isHypothesisSlide || isFilterSetupSlide || isObservationFrameSlide || isFilterMeaningSlide || isFilterIntegrationSlide || isStructureSummarySlide || isStructureGraspIntroSlide || isSrplIntroSlide || isPlacementGraspSlide || isPlacementConclusionSlide || isProgressionShiftSlide || isProgressionAxisSlide || isProgressionTriggerSlide || isProgressionLanguageSlide || isDataStructureSlide || isDataVariationSlide || isDataMissingSlide || isCaseStudy01Slide || isCaseStudy02Slide || isCaseStudy03Slide || isCaseStudyCompareSlide || isInsightDesign01Slide || isDesign01Slide || isDesign03Slide || isFuture01Slide ? "overflow-hidden" : "overflow-auto"}`}>
+              <div className={`mx-auto aspect-video w-full max-w-[960px] max-h-[65vh] min-h-0 origin-center ${reactSlideScaleClass} rounded-xl bg-white p-5 md:p-6 text-slate-950 ${isCoverSlide || isProblemSlide || isHypothesisSlide || isFilterSetupSlide || isObservationFrameSlide || isFilterMeaningSlide || isFilterIntegrationSlide || isStructureSummarySlide || isStructureGraspIntroSlide || isSrplIntroSlide || isPlacementGraspSlide || isPlacementConclusionSlide || isProgressionShiftSlide || isProgressionAxisSlide || isProgressionTriggerSlide || isProgressionLanguageSlide || isDataStructureSlide || isDataVariationSlide || isDataMissingSlide || isCaseStudy01Slide || isCaseStudy02Slide || isCaseStudy03Slide || isCaseStudyCompareSlide || isInsightDesign01Slide || isDesign01Slide || isDesign03Slide || isFuture01Slide ? "overflow-hidden" : "overflow-auto"}`}>
                 {isCoverSlide ? (
                   <div className="flex h-full items-center justify-center px-8 py-12 md:px-14 md:py-16">
                     <div className="w-full max-w-4xl text-center text-slate-900">
@@ -1469,7 +1471,7 @@ export default function RASSHybridSlides() {
                   <div className={`${isInsightDesignPairSlide ? "h-full w-full p-9 md:p-11" : dataTemplateTokens.frameClass} text-slate-900`}>
                     <div className={`${dataTemplateTokens.columnClass} max-w-[500px]`}>
                       <div className={dataTemplateTokens.headerSlotClass}>
-                        <h4 className="text-xl md:text-2xl font-bold leading-snug tracking-[-0.01em] text-slate-900">
+                        <h4 className="text-[20px] md:text-[22px] font-semibold leading-[1.22] tracking-[-0.01em] text-slate-900">
                           {isFuture01Slide ? "FUTURE" : isDesign01Slide || isDesign03Slide ? "DESIGN" : isInsightDesign01Slide ? "INSIGHT" : isCaseStudyCompareSlide ? "CASE比較 ｜ 構造差分" : isCaseStudy03Slide ? "CASE 03 ｜ 臨界転移" : isCaseStudy02Slide ? "CASE 02 ｜ 継続ズレ" : "CASE 01 ｜ 初期状態"}
                         </h4>
                         <div className="w-full h-px bg-slate-200 my-4" />
@@ -1496,7 +1498,7 @@ export default function RASSHybridSlides() {
                         ) : null}
                       </div>
                       <div className={dataTemplateTokens.mainMessageSlotClass}>
-                        <p className={`${isInsightDesignPairSlide ? "mt-8 max-w-full whitespace-normal break-words text-[26px] md:text-[31px] font-extrabold leading-snug tracking-[-0.02em] text-slate-950" : "mt-8 max-w-full whitespace-normal break-words text-[24px] md:text-[29px] font-extrabold leading-snug tracking-[-0.02em] text-slate-950"}`}>
+                        <p className={`${isInsightDesignPairSlide ? "mt-8 max-w-full whitespace-normal break-words text-[1.55rem] md:text-[1.9rem] font-extrabold leading-[1.2] tracking-[-0.02em] text-slate-950" : "mt-8 max-w-full whitespace-normal break-words text-[1.45rem] md:text-[1.75rem] font-extrabold leading-[1.2] tracking-[-0.02em] text-slate-950"}`}>
                           {isInsightDesignPairSlide ? (
                             <>
                               {isFuture01Slide ? (
