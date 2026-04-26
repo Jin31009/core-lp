@@ -33,16 +33,21 @@ type ViewingPoint = {
   dotClass: string;
 };
 
-const groups = [
-  "Cover",
-  "Opening",
-  "Core Concept",
-  "Structure",
-  "Filters",
-  "Case",
-  "DATA",
-  "Conclusion",
-] as const;
+const indexGroups: IndexGroup[] = [
+  { label: "Cover", note: "導入", ids: ["00"] },
+  { label: "Opening", note: "導入", ids: ["01", "02", "03"] },
+  { label: "Method", note: "観測設計", ids: ["04", "05-01", "05-02", "05-03", "05-04"] },
+  { label: "Structure", note: "構造把握", ids: ["06-01", "06-02", "06-03", "06-04"] },
+  { label: "Variation", note: "変異把握", ids: ["07-01", "07-02", "07-03", "07-04"] },
+  { label: "Missing", note: "欠損把握", ids: ["08-01", "08-02", "08-03", "08-04"] },
+  { label: "Data", note: "証明", ids: ["DATA-01", "DATA-02", "DATA-03", "08-DATA"] },
+  { label: "Case Study", note: "統合ケース", ids: ["CASE-01", "CASE-02", "CASE-03", "CASE-COMPARE"] },
+  { label: "Insight & Design", note: "統合", ids: ["INSIGHT-01", "DESIGN-01", "DESIGN-03", "FUTURE-01"] },
+];
+const groups = indexGroups.map((group) => group.label);
+const chapterLabelBySlideId = new Map(
+  indexGroups.flatMap((group) => group.ids.map((id) => [id, group.label] as const))
+);
 
 const dataTemplateTokens = {
   frameClass: "h-full w-full px-10 py-10 md:px-12 md:py-12",
@@ -116,15 +121,8 @@ function makeSlide(
   };
 }
 
-function resolveSlideGroup(id: string): (typeof groups)[number] {
-  if (id === "00") return "Cover";
-  if (id === "01" || id === "02") return "Opening";
-  if (id === "03" || id === "04") return "Core Concept";
-  if (id.startsWith("06") || id.startsWith("07")) return "Structure";
-  if (id.startsWith("05") || id.startsWith("08-")) return "Filters";
-  if (id.startsWith("CASE") || id.startsWith("09")) return "Case";
-  if (id.startsWith("DATA") || id === "08-DATA") return "DATA";
-  return "Conclusion";
+function resolveSlideGroup(id: string): string {
+  return chapterLabelBySlideId.get(id) ?? "Unassigned";
 }
 
 const slides: Slide[] = [
@@ -206,23 +204,11 @@ const slides: Slide[] = [
   makeSlide("13", "05｜Conclusion", "結論", "結論", "広報は、情報伝達ではなく関係の状態に働きかける営みである", "病院広報は、関係を扱う領域として再定義される。", ["ナラティブは構造として記述しうる。", "広報は関係状態に働きかけている。", "ACE-XとRA-SSにより接点設計へ接続される。"]),
 ];
 
-const PUBLIC_VISIBLE_SLIDE_LIMIT = 33;
 const PUBLIC_HIDDEN_SLIDE_IDS = new Set([
   "06",
   "07-02",
+  "08-DATA",
 ]);
-
-const indexGroups: IndexGroup[] = [
-  { label: "00 Cover", note: "導入", ids: ["00"] },
-  { label: "01 Opening", note: "導入", ids: ["01", "02"] },
-  { label: "02 Observation", note: "問い", ids: ["03"] },
-  { label: "03 Structure", note: "観測設計", ids: ["04", "05-01", "05-02", "05-03", "05-04"] },
-  { label: "04 Variation", note: "構造把握", ids: ["06-01", "06-02", "06-03", "06-04"] },
-  { label: "05 Missing", note: "進行の把握", ids: ["07-01", "07-02", "07-03", "07-04"] },
-  { label: "06 DATA", note: "証明", ids: ["DATA-01", "DATA-02", "DATA-03"] },
-  { label: "07 CASE STUDY", note: "統合ケース", ids: ["CASE-01", "CASE-02", "CASE-03", "CASE-COMPARE"] },
-  { label: "08 INSIGHT & DESIGN", note: "統合", ids: ["INSIGHT-01", "DESIGN-01", "DESIGN-03", "FUTURE-01"] },
-];
 
 const navDisplayBySlideId: Record<string, string> = {
   "INSIGHT-01": "INSIGHT",
@@ -239,7 +225,7 @@ const navDisplayBySlideId: Record<string, string> = {
 export default function RASSHybridSlides() {
   const [activeSlide, setActiveSlide] = useState(slides[0].id);
   const [mode, setMode] = useState<ViewMode>("hybrid");
-  const [openGroup, setOpenGroup] = useState("00 Cover");
+  const [openGroup, setOpenGroup] = useState("Cover");
   const [imageLoadError, setImageLoadError] = useState<Record<string, boolean>>({});
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openMobileGroups, setOpenMobileGroups] = useState<Record<string, boolean>>(() =>
@@ -249,14 +235,14 @@ export default function RASSHybridSlides() {
   const touchStartPointRef = useRef<{ x: number; y: number } | null>(null);
   const hasSlideChangedRef = useRef(false);
 
-  const visibleSlides = useMemo(
-    () =>
-      slides.filter(
-        (slideItem, index) =>
-          index < PUBLIC_VISIBLE_SLIDE_LIMIT && !PUBLIC_HIDDEN_SLIDE_IDS.has(slideItem.id)
-      ),
-    []
-  );
+  const visibleSlides = useMemo(() => {
+    const slideById = new Map(slides.map((slideItem) => [slideItem.id, slideItem] as const));
+    const orderedIds = indexGroups.flatMap((group) => group.ids);
+    return orderedIds
+      .filter((id) => !PUBLIC_HIDDEN_SLIDE_IDS.has(id))
+      .map((id) => slideById.get(id))
+      .filter((item): item is Slide => Boolean(item));
+  }, []);
   const visibleSlideIds = useMemo(() => new Set(visibleSlides.map((item) => item.id)), [visibleSlides]);
   const visibleIndexGroups = useMemo(
     () =>
