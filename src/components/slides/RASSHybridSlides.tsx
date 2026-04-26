@@ -988,31 +988,36 @@ export default function RASSHybridSlides() {
               <div className="min-h-0 flex flex-1 items-center justify-center">
               <div className={`mx-auto aspect-video w-full max-w-[960px] max-h-[65vh] min-h-0 origin-center ${reactSlideScaleClass} rounded-xl bg-white p-5 md:p-6 text-slate-950 ${isCoverSlide || isProblemSlide || isHypothesisSlide || isFilterSetupSlide || isObservationFrameSlide || isFilterMeaningSlide || isFilterIntegrationSlide || isStructureSummarySlide || isStructureGraspIntroSlide || isSrplIntroSlide || isPlacementGraspSlide || isPlacementConclusionSlide || isProgressionShiftSlide || isProgressionAxisSlide || isProgressionTriggerSlide || isProgressionLanguageSlide || isDataStructureSlide || isDataVariationSlide || isDataMissingSlide || isCaseStudy01Slide || isCaseStudy02Slide || isCaseStudy03Slide || isCaseStudyCompareSlide || isInsightDesign01Slide || isDesign01Slide || isDesign03Slide || isFuture01Slide ? "overflow-hidden" : "overflow-auto"}`}>
                 {isCoverSlide ? (
-                  <div className="flex h-full items-center justify-center px-8 py-10 text-slate-900 md:px-12 md:py-14">
-                    <div className="w-full max-w-4xl text-center">
-                      <h4 className="text-[22px] md:text-[28px] font-bold leading-[1.3] tracking-[-0.01em]">
-                        ナラティブ（投書）302件の分析から見えたこと
-                      </h4>
+                  <div className="flex h-full items-center justify-center">
+                    <div className="aspect-[16/9] w-full max-w-[780px] overflow-hidden rounded-xl border border-slate-200 bg-white px-8 py-6 text-slate-900">
+                      <div className="grid h-full grid-rows-[auto_auto_1fr_auto]">
+                        <div className="text-center">
+                          <h4 className="text-[13px] md:text-[15px] font-semibold leading-[1.35] tracking-[0.02em] text-slate-600">
+                            ナラティブ（投書）302件の分析から見えたこと
+                          </h4>
+                        </div>
 
-                      <div className="mt-8 text-[35px] md:text-[46px] font-black leading-[1.18] tracking-[-0.02em]">
-                        ナラティブは構造として扱える。
-                      </div>
+                        <div className="mt-2 text-center">
+                          <div className="text-[31px] md:text-[42px] font-black leading-[1.15] tracking-[-0.02em]">
+                            ナラティブは構造として扱える。
+                          </div>
+                        </div>
 
-                      <div className="mt-4 text-[14px] md:text-[18px] font-semibold leading-[1.5] text-slate-700">
-                        個々の感想ではなく、
-                        <br />
-                        関係性の中で生まれる「条件の配置」として捉える。
-                      </div>
+                        <div className="mt-3 flex flex-col items-center justify-center text-center">
+                          <div className="max-w-[620px] text-[13px] md:text-[16px] font-medium leading-[1.5] text-slate-700">
+                            個々の感想ではなく、
+                            <br />
+                            関係性の中で生まれる「条件の配置」として捉える。
+                          </div>
+                          <div className="mt-3 inline-flex rounded-full border border-slate-300 bg-slate-100 px-4 py-1 text-[11px] md:text-[12px] font-semibold text-slate-700">
+                            RA-SS / 関係性設計モデル
+                          </div>
+                        </div>
 
-                      <div className="mt-5 inline-flex rounded-full border border-slate-300 bg-slate-100 px-4 py-1 text-[12px] md:text-[13px] font-semibold text-slate-700">
-                        RA-SS / 関係性設計モデル
-                      </div>
-
-                      <div className="mx-auto mt-8 w-full max-w-3xl border-t border-slate-200 pt-4">
-                        <div className="grid grid-cols-1 gap-2 text-[12px] md:grid-cols-3 md:gap-4 md:text-[13px] font-semibold text-slate-600">
-                          <div>構造（SRPL）</div>
-                          <div>変異（Δ / Trigger）</div>
-                          <div>欠損（APCE Miss）</div>
+                        <div className="mt-3 grid grid-cols-1 gap-2 text-[11px] md:grid-cols-3 md:gap-3 md:text-[12px] font-semibold text-slate-600">
+                          <div className="rounded-md border border-slate-200 bg-slate-50 px-2 py-1">構造（SRPL）</div>
+                          <div className="rounded-md border border-slate-200 bg-slate-50 px-2 py-1">変異（Δ / Trigger）</div>
+                          <div className="rounded-md border border-slate-200 bg-slate-50 px-2 py-1">欠損（APCE Miss）</div>
                         </div>
                       </div>
                     </div>
