@@ -233,6 +233,7 @@ export default function RASSHybridSlides() {
   const [openMobileGroups, setOpenMobileGroups] = useState<Record<string, boolean>>(() =>
     Object.fromEntries(groups.map((group) => [group, group === "表紙｜Cover"])) as Record<string, boolean>
   );
+  const desktopIndexButtonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const swipeAreaRef = useRef<HTMLElement | null>(null);
   const touchStartPointRef = useRef<{ x: number; y: number } | null>(null);
   const hasSlideChangedRef = useRef(false);
@@ -296,6 +297,14 @@ export default function RASSHybridSlides() {
       return;
     }
     window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [activeSlide]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!window.matchMedia("(min-width: 768px)").matches) return;
+    const target = desktopIndexButtonRefs.current[activeSlide];
+    if (!target) return;
+    target.scrollIntoView({ block: "nearest", behavior: "smooth" });
   }, [activeSlide]);
 
   const showReact = mode === "normal" || mode === "hybrid";
@@ -609,6 +618,9 @@ export default function RASSHybridSlides() {
                             <button
                               key={id}
                               onClick={() => setActiveSlide(id)}
+                              ref={(element) => {
+                                desktopIndexButtonRefs.current[id] = element;
+                              }}
                               className={`w-full rounded-lg border-l border-white/10 pl-4 pr-2 py-2 text-left transition ${
                                 activeSlide === id ? "bg-white/20 text-white" : "text-slate-400 hover:bg-white/10 hover:text-slate-200"
                               }`}
