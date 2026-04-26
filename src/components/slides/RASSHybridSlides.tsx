@@ -809,7 +809,7 @@ export default function RASSHybridSlides() {
 
         <main className="flex min-h-0 min-w-0 flex-1 flex-col gap-3">
           <header className="shrink-0 rounded-xl border border-white/10 bg-white/5 px-4 py-3">
-            <div className="mb-3 flex items-center justify-between gap-2 md:hidden">
+            <div className="flex items-center justify-between gap-2">
               <button
                 type="button"
                 onClick={() => setIsMenuOpen((open) => !open)}
@@ -818,14 +818,31 @@ export default function RASSHybridSlides() {
               >
                 ☰
               </button>
-              <p className="text-sm font-semibold text-cyan-300">
+              <p className="flex-1 text-center text-sm font-semibold text-cyan-300">
                 {currentSlideLabel} / {totalSlidesLabel}
               </p>
-              <div className="min-h-11 min-w-11" />
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={goPrevSlide}
+                  disabled={activeSlideIndex === 0}
+                  className="min-h-11 rounded-lg border border-white/20 bg-white/10 px-3 text-sm font-semibold text-white disabled:opacity-40"
+                >
+                  前へ
+                </button>
+                <button
+                  type="button"
+                  onClick={goNextSlide}
+                  disabled={activeSlideIndex >= totalSlides - 1}
+                  className="min-h-11 rounded-lg border border-white/20 bg-white/10 px-3 text-sm font-semibold text-white disabled:opacity-40"
+                >
+                  次へ
+                </button>
+              </div>
             </div>
 
             {isMenuOpen ? (
-              <div className="mb-3 max-h-[38vh] overflow-y-auto rounded-lg border border-white/10 bg-slate-900/80 p-2 md:hidden">
+              <div className="mt-3 max-h-[38vh] overflow-y-auto rounded-lg border border-white/10 bg-slate-900/80 p-2">
                 <div className="space-y-2">
                   {slidesByGroup.map(({ group, items }) => {
                     if (items.length === 0) return null;
@@ -870,36 +887,6 @@ export default function RASSHybridSlides() {
                 </div>
               </div>
             ) : null}
-
-            <div className="flex flex-col items-start justify-between gap-3 md:flex-row md:items-center">
-              <div className="min-w-0">
-                <p className="text-xs font-semibold text-cyan-300">
-                  {currentSlideLabel} / {totalSlidesLabel} | {slide.id} | {slide.chapter} | {slide.group}
-                </p>
-                <h2 className="mt-1 truncate text-xl font-black tracking-tight">{slide.title}</h2>
-                <p className="mt-1 truncate text-xs text-slate-400">{slide.subtitle}</p>
-              </div>
-
-              <div className="flex w-full shrink-0 items-center justify-end gap-2 md:w-auto">
-                <button
-                  type="button"
-                  onClick={goPrevSlide}
-                  disabled={activeSlideIndex === 0}
-                  className="min-h-10 rounded-lg border border-white/20 bg-white/10 px-3 text-xs font-semibold text-white disabled:opacity-40"
-                >
-                  前へ
-                </button>
-                <button
-                  type="button"
-                  onClick={goNextSlide}
-                  disabled={activeSlideIndex >= totalSlides - 1}
-                  className="min-h-10 rounded-lg border border-white/20 bg-white/10 px-3 text-xs font-semibold text-white disabled:opacity-40"
-                >
-                  次へ
-                </button>
-              </div>
-            </div>
-
           </header>
 
           <section
@@ -1678,28 +1665,6 @@ export default function RASSHybridSlides() {
               >
                 サイトへ
               </a>
-            </div>
-
-            <div className="mt-3 flex items-center justify-center gap-2">
-              <button
-                type="button"
-                onClick={goPrevSlide}
-                disabled={activeSlideIndex === 0}
-                className="min-h-11 rounded-lg border border-white/20 bg-white/10 px-4 text-sm font-semibold text-white disabled:opacity-40"
-              >
-                前へ
-              </button>
-              <p className="whitespace-nowrap text-sm font-semibold text-cyan-300">
-                {currentSlideLabel} / {totalSlidesLabel}
-              </p>
-              <button
-                type="button"
-                onClick={goNextSlide}
-                disabled={activeSlideIndex >= totalSlides - 1}
-                className="min-h-11 rounded-lg border border-white/20 bg-white/10 px-4 text-sm font-semibold text-white disabled:opacity-40"
-              >
-                次へ
-              </button>
             </div>
           </div>
         </main>
