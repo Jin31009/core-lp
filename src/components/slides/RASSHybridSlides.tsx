@@ -821,24 +821,7 @@ export default function RASSHybridSlides() {
               <p className="text-sm font-semibold text-cyan-300">
                 {currentSlideLabel} / {totalSlidesLabel}
               </p>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={goPrevSlide}
-                  disabled={activeSlideIndex === 0}
-                  className="min-h-11 rounded-lg border border-white/20 bg-white/10 px-3 text-sm font-semibold text-white disabled:opacity-40"
-                >
-                  前へ
-                </button>
-                <button
-                  type="button"
-                  onClick={goNextSlide}
-                  disabled={activeSlideIndex >= totalSlides - 1}
-                  className="min-h-11 rounded-lg border border-white/20 bg-white/10 px-3 text-sm font-semibold text-white disabled:opacity-40"
-                >
-                  次へ
-                </button>
-              </div>
+              <div className="min-h-11 min-w-11" />
             </div>
 
             {isMenuOpen ? (
@@ -896,94 +879,9 @@ export default function RASSHybridSlides() {
                 <h2 className="mt-1 truncate text-xl font-black tracking-tight">{slide.title}</h2>
                 <p className="mt-1 truncate text-xs text-slate-400">{slide.subtitle}</p>
               </div>
-
-              <div className="flex w-full shrink-0 items-center justify-between gap-3 rounded-xl border border-cyan-300/20 bg-cyan-900/30 px-3 py-2 md:w-auto md:justify-start">
-                <div className="hidden items-center gap-2 md:flex">
-                  <p className="whitespace-nowrap text-xs font-semibold text-cyan-300">
-                    {currentSlideLabel} / {totalSlidesLabel}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={goPrevSlide}
-                    disabled={activeSlideIndex === 0}
-                    className="min-h-10 rounded-md border border-white/20 bg-white/10 px-3 text-xs font-bold text-white disabled:opacity-40"
-                  >
-                    前へ
-                  </button>
-                  <button
-                    type="button"
-                    onClick={goNextSlide}
-                    disabled={activeSlideIndex >= totalSlides - 1}
-                    className="min-h-10 rounded-md border border-white/20 bg-white/10 px-3 text-xs font-bold text-white disabled:opacity-40"
-                  >
-                    次へ
-                  </button>
-                </div>
-                <div className="hidden h-11 w-11 items-center justify-center rounded-lg bg-white/10 text-[10px] text-slate-400 md:flex">QR</div>
-                <div className="hidden md:block">
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-cyan-300">Next Action</p>
-                  <p className="text-[10px] text-slate-300">この構造を実際に体験できます</p>
-                </div>
-                <a
-                  href="https://core-lp.vercel.app/"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rounded-lg bg-cyan-300 px-3 py-2 text-xs font-bold text-slate-950 transition hover:bg-cyan-200"
-                >
-                  サイトへ
-                </a>
-              </div>
             </div>
 
           </header>
-
-          <div className="shrink-0 flex w-full justify-end">
-              <div className="w-full rounded-xl border border-white/10 bg-slate-900/80 p-3 md:w-auto">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">View Mode</p>
-              <div className="grid grid-cols-3 gap-2">
-                {[
-                  { key: "normal", label: "構造版" },
-                  { key: "character", label: "キャラ版" },
-                  { key: "hybrid", label: "両方" },
-                ].map((item) => (
-                  <button
-                    key={item.key}
-                    type="button"
-                    onClick={() => setMode(item.key as ViewMode)}
-                    className={`rounded-lg px-3 py-2 text-center text-xs font-bold transition ${
-                      mode === item.key ? "bg-white text-slate-950" : "bg-white/10 text-slate-300 hover:bg-white/15"
-                    }`}
-                  >
-                    {item.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="pointer-events-none fixed inset-x-3 bottom-3 z-40 md:hidden">
-            <div className="pointer-events-auto mx-auto flex max-w-[540px] items-center justify-between gap-2 rounded-xl border border-white/20 bg-slate-900/90 px-3 py-2 shadow-xl backdrop-blur-sm">
-              <button
-                type="button"
-                onClick={goPrevSlide}
-                disabled={activeSlideIndex === 0}
-                className="min-h-11 rounded-lg border border-white/20 bg-white/10 px-4 text-sm font-semibold text-white disabled:opacity-40"
-              >
-                前へ
-              </button>
-              <p className="whitespace-nowrap text-sm font-semibold text-cyan-300">
-                {currentSlideLabel} / {totalSlidesLabel}
-              </p>
-              <button
-                type="button"
-                onClick={goNextSlide}
-                disabled={activeSlideIndex >= totalSlides - 1}
-                className="min-h-11 rounded-lg border border-white/20 bg-white/10 px-4 text-sm font-semibold text-white disabled:opacity-40"
-              >
-                次へ
-              </button>
-            </div>
-          </div>
 
           <section
             ref={(element) => {
@@ -1708,6 +1606,63 @@ export default function RASSHybridSlides() {
             </div>
             )}
           </section>
+
+          <div className="shrink-0 rounded-xl border border-white/10 bg-white/5 p-3">
+            <div className="rounded-xl border border-white/10 bg-slate-900/80 p-3">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">View Mode</p>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { key: "normal", label: "構造版" },
+                  { key: "character", label: "キャラ版" },
+                  { key: "hybrid", label: "両方" },
+                ].map((item) => (
+                  <button
+                    key={item.key}
+                    type="button"
+                    onClick={() => setMode(item.key as ViewMode)}
+                    className={`rounded-lg px-3 py-2 text-center text-xs font-bold transition ${
+                      mode === item.key ? "bg-white text-slate-950" : "bg-white/10 text-slate-300 hover:bg-white/15"
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-3 flex justify-center">
+              <a
+                href="https://core-lp.vercel.app/"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex min-h-11 items-center justify-center rounded-lg bg-cyan-300 px-5 py-2 text-sm font-bold text-slate-950 transition hover:bg-cyan-200"
+              >
+                サイトへ
+              </a>
+            </div>
+
+            <div className="mt-3 flex items-center justify-center gap-2">
+              <button
+                type="button"
+                onClick={goPrevSlide}
+                disabled={activeSlideIndex === 0}
+                className="min-h-11 rounded-lg border border-white/20 bg-white/10 px-4 text-sm font-semibold text-white disabled:opacity-40"
+              >
+                前へ
+              </button>
+              <p className="whitespace-nowrap text-sm font-semibold text-cyan-300">
+                {currentSlideLabel} / {totalSlidesLabel}
+              </p>
+              <button
+                type="button"
+                onClick={goNextSlide}
+                disabled={activeSlideIndex >= totalSlides - 1}
+                className="min-h-11 rounded-lg border border-white/20 bg-white/10 px-4 text-sm font-semibold text-white disabled:opacity-40"
+              >
+                次へ
+              </button>
+            </div>
+          </div>
 
           <footer className="shrink-0 rounded-xl border border-white/10 bg-white/5 p-3">
             <div className="mt-2 rounded-xl border border-white/10 bg-slate-900/70 p-3">
