@@ -204,6 +204,8 @@ const slides: Slide[] = [
   makeSlide("13", "05｜Conclusion", "結論", "結論", "広報は、情報伝達ではなく関係の状態に働きかける営みである", "病院広報は、関係を扱う領域として再定義される。", ["ナラティブは構造として記述しうる。", "広報は関係状態に働きかけている。", "ACE-XとRA-SSにより接点設計へ接続される。"]),
 ];
 
+const PUBLIC_VISIBLE_SLIDE_LIMIT = 33;
+
 const indexGroups: IndexGroup[] = [
   { label: "00 Cover", note: "導入", ids: ["00"] },
   { label: "01 Opening", note: "導入", ids: ["01", "02"] },
@@ -241,21 +243,46 @@ export default function RASSHybridSlides() {
   const touchStartPointRef = useRef<{ x: number; y: number } | null>(null);
   const hasSlideChangedRef = useRef(false);
 
-  const slide = useMemo(() => slides.find((s) => s.id === activeSlide) ?? slides[0], [activeSlide]);
+  const visibleSlides = useMemo(
+    () => slides.filter((_, index) => index < PUBLIC_VISIBLE_SLIDE_LIMIT),
+    []
+  );
+  const visibleSlideIds = useMemo(() => new Set(visibleSlides.map((item) => item.id)), [visibleSlides]);
+  const visibleIndexGroups = useMemo(
+    () =>
+      indexGroups
+        .map((group) => ({
+          ...group,
+          ids: group.ids.filter((id) => visibleSlideIds.has(id)),
+        }))
+        .filter((group) => group.ids.length > 0),
+    [visibleSlideIds]
+  );
+
+  const slide = useMemo(
+    () => visibleSlides.find((s) => s.id === activeSlide) ?? visibleSlides[0],
+    [activeSlide, visibleSlides]
+  );
   const currentSlideGroup = slide.group;
   const activeSlideIndex = useMemo(
-    () => Math.max(0, slides.findIndex((s) => s.id === activeSlide)),
-    [activeSlide]
+    () => Math.max(0, visibleSlides.findIndex((s) => s.id === activeSlide)),
+    [activeSlide, visibleSlides]
   );
-  const totalSlides = slides.length;
+  const totalSlides = visibleSlides.length;
   const slidesByGroup = useMemo(
     () =>
       groups.map((group) => ({
         group,
-        items: slides.filter((item) => item.group === group),
+        items: visibleSlides.filter((item) => item.group === group),
       })),
-    []
+    [visibleSlides]
   );
+
+  useEffect(() => {
+    if (!visibleSlideIds.has(activeSlide)) {
+      setActiveSlide(visibleSlides[0].id);
+    }
+  }, [activeSlide, visibleSlideIds, visibleSlides]);
 
   useEffect(() => {
     setOpenMobileGroups((prev) =>
@@ -627,8 +654,8 @@ export default function RASSHybridSlides() {
   };
 
   const moveToSlide = (index: number) => {
-    if (index < 0 || index >= slides.length) return;
-    setActiveSlide(slides[index].id);
+    if (index < 0 || index >= visibleSlides.length) return;
+    setActiveSlide(visibleSlides[index].id);
   };
 
   const goPrevSlide = () => {
@@ -722,7 +749,7 @@ export default function RASSHybridSlides() {
 
           <div className="min-h-0 flex-1 overflow-y-auto pr-1">
             <div className="space-y-2">
-              {indexGroups.map((group) => {
+              {visibleIndexGroups.map((group) => {
                 const activeGroup = group.ids.includes(activeSlide);
                 const isOpen = openGroup === group.label || activeGroup;
                 return (
@@ -742,7 +769,7 @@ export default function RASSHybridSlides() {
                     {isOpen && (
                       <div className="mt-2 max-h-[34vh] space-y-1 overflow-y-auto pr-1">
                         {group.ids.map((id) => {
-                          const target = slides.find((s) => s.id === id);
+                          const target = visibleSlides.find((s) => s.id === id);
                           if (!target) return null;
                           return (
                             <button
@@ -817,7 +844,7 @@ export default function RASSHybridSlides() {
                 <button
                   type="button"
                   onClick={goNextSlide}
-                  disabled={activeSlideIndex >= slides.length - 1}
+                  disabled={activeSlideIndex >= totalSlides - 1}
                   className="min-h-11 rounded-lg border border-white/20 bg-white/10 px-3 text-sm font-semibold text-white disabled:opacity-40"
                 >
                   次へ
@@ -897,7 +924,7 @@ export default function RASSHybridSlides() {
                   <button
                     type="button"
                     onClick={goNextSlide}
-                    disabled={activeSlideIndex >= slides.length - 1}
+                    disabled={activeSlideIndex >= totalSlides - 1}
                     className="min-h-10 rounded-md border border-white/20 bg-white/10 px-3 text-xs font-bold text-white disabled:opacity-40"
                   >
                     次へ
