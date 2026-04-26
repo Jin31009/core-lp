@@ -53,7 +53,7 @@ const dataTemplateTokens = {
 
 const dataTypographyTokens = {
   titleClass: "text-[22px] md:text-[25px] font-bold leading-[1.22] tracking-[-0.01em] text-slate-900",
-  mainClass: "mt-8 w-full whitespace-normal break-normal text-3xl font-extrabold leading-[1.25] tracking-[-0.02em] text-slate-950 md:text-4xl",
+  mainClass: "mt-8 w-full whitespace-normal break-normal text-[1.7rem] font-extrabold leading-[1.2] tracking-[-0.02em] text-slate-950 md:text-[2.1rem]",
 };
 
 type MagazineCopy = {
@@ -928,7 +928,7 @@ export default function RASSHybridSlides() {
             className={`grid min-h-0 flex-1 gap-3 ${mode === "hybrid" ? (isInsightDesignPairSlide ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-1 lg:grid-cols-2") : "grid-cols-1"}`}
           >
             {showReact && (
-            <div className="flex min-h-0 flex-col rounded-xl border border-cyan-300/20 bg-slate-900 p-3">
+            <div className="flex min-h-0 flex-col rounded-xl border border-cyan-300/20 bg-slate-900 p-3 overflow-x-hidden [&_p]:max-w-full [&_p]:break-words [&_p]:whitespace-normal [&_p]:leading-[1.35] md:[&_p]:leading-[1.3]">
               <div className="mb-2 shrink-0">
                 <p className="text-[10px] uppercase tracking-[0.25em] text-cyan-300">React Slide</p>
                 <h3 className="text-sm font-bold">構造版・正本</h3>
@@ -1561,14 +1561,14 @@ export default function RASSHybridSlides() {
                       {slide.reactBody.map((text, index) => (
                         <div key={`${slide.id}-${index}`} className="rounded-lg border border-slate-200 bg-white p-3">
                           <p className="text-[10px] font-bold text-slate-400">NOTE {index + 1}</p>
-                          <p className="mt-1 text-xs font-semibold leading-relaxed">{text}</p>
+                          <p className="mt-1 text-[11px] font-semibold md:text-xs">{text}</p>
                         </div>
                       ))}
                     </div>
 
                     <div className="mt-4 rounded-lg bg-slate-100 p-3 text-slate-900 border border-slate-200">
                       <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500">Key Message</p>
-                      <p className="mt-1 text-sm font-bold leading-relaxed">{slide.point}</p>
+                      <p className="mt-1 text-xs font-bold md:text-sm">{slide.point}</p>
                     </div>
                   </>
                 )}
