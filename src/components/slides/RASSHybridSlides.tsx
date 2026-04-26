@@ -53,7 +53,7 @@ const dataTemplateTokens = {
 
 const dataTypographyTokens = {
   titleClass: "text-[22px] md:text-[25px] font-bold leading-[1.22] tracking-[-0.01em] text-slate-900",
-  mainClass: "mt-8 w-full whitespace-normal break-normal text-[1.7rem] font-extrabold leading-[1.2] tracking-[-0.02em] text-slate-950 md:text-[2.1rem]",
+  mainClass: "mt-2 w-full whitespace-normal break-normal text-[1.7rem] font-extrabold leading-[1.2] tracking-[-0.02em] text-slate-950 md:text-[2.1rem]",
 };
 const reactSlideScaleClass = "origin-top scale-[0.9] md:scale-100";
 const tightMobileFrameClass = "h-full w-full px-5 py-5 md:px-12 md:py-12";
@@ -935,7 +935,7 @@ export default function RASSHybridSlides() {
             className={`grid min-h-0 flex-1 gap-3 ${mode === "hybrid" ? (isInsightDesignPairSlide ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-1 lg:grid-cols-2") : "grid-cols-1"}`}
           >
             {showReact && (
-            <div className={`react-structure-slide flex min-h-0 flex-col rounded-xl border border-cyan-300/20 bg-slate-900 p-3 overflow-x-hidden [&_p]:max-w-full [&_p]:break-words [&_p]:whitespace-normal [&_p]:!text-[0.9rem] md:[&_p]:!text-[0.98rem] [&_p]:!leading-[1.35] [&_p+p]:!mt-2 [&_.subtitle]:!mt-2 [&_.body]:!mt-3 ${mode === "hybrid" ? "order-2 opacity-95" : "order-1"}`}>
+            <div className={`react-structure-slide !space-y-2 !gap-2 flex min-h-0 flex-col rounded-xl border border-cyan-300/20 bg-slate-900 p-3 overflow-x-hidden [&_p]:max-w-full [&_p]:break-words [&_p]:whitespace-normal [&_p]:!text-[0.9rem] md:[&_p]:!text-[0.98rem] [&_p]:!leading-[1.2] [&_p]:!mt-1 [&_h1]:!mb-2 [&_h2]:!mb-1.5 [&_h4]:!mb-1.5 [&_p+p]:!mt-2 [&_.subtitle]:!mt-2 [&_.body]:!mt-3 [&_.card]:!p-4 [&_.card]:!space-y-2 ${mode === "hybrid" ? "order-2 opacity-95" : "order-1"}`}>
               <div className="mb-1 shrink-0">
                 <p className="text-[10px] uppercase tracking-[0.25em] text-cyan-300">React Slide</p>
               </div>
@@ -954,7 +954,7 @@ export default function RASSHybridSlides() {
                         <p className="mt-5 text-lg font-semibold text-slate-700 md:text-xl">
                           構造として扱える対象である
                         </p>
-                        <p className="mt-8 text-base font-medium leading-snug text-slate-700 md:text-lg">
+                        <p className="mt-2 text-base font-medium leading-snug text-slate-700 md:text-lg">
                           302件の患者ナラティブを、
                           <br />
                           同一条件で読み直す。
@@ -974,7 +974,7 @@ export default function RASSHybridSlides() {
                         302件を、同一条件・同一フィルターで観測する
                       </p>
 
-                      <div className="mt-8 w-full max-w-4xl rounded-xl border border-slate-200 bg-slate-50/80 px-4 py-4 md:px-6 md:py-5">
+                      <div className="card mt-2 w-full max-w-4xl rounded-xl border border-slate-200 bg-slate-50/80 px-4 py-4 md:px-4 md:py-4">
                         <div className="grid grid-cols-2 gap-3 text-left md:grid-cols-4 md:gap-4">
                           <p className="text-xs font-semibold leading-snug text-slate-700 md:text-sm">05 フィルターの採用</p>
                           <p className="text-xs font-semibold leading-snug text-slate-700 md:text-sm">06 構造の把握（SRPL）</p>
@@ -987,7 +987,7 @@ export default function RASSHybridSlides() {
                 </div>
               ) : (
               <div className="min-h-0 flex flex-1 items-center justify-center">
-              <div className={`mx-auto aspect-video w-full max-w-[960px] max-w-full max-h-[65vh] min-h-0 ${reactSlideScaleClass} rounded-xl bg-white p-5 md:p-6 text-slate-950 ${isCoverSlide || isProblemSlide || isHypothesisSlide || isFilterSetupSlide || isObservationFrameSlide || isFilterMeaningSlide || isFilterIntegrationSlide || isStructureSummarySlide || isStructureGraspIntroSlide || isSrplIntroSlide || isPlacementGraspSlide || isPlacementConclusionSlide || isProgressionShiftSlide || isProgressionAxisSlide || isProgressionTriggerSlide || isProgressionLanguageSlide || isDataStructureSlide || isDataVariationSlide || isDataMissingSlide || isCaseStudy01Slide || isCaseStudy02Slide || isCaseStudy03Slide || isCaseStudyCompareSlide || isInsightDesign01Slide || isDesign01Slide || isDesign03Slide || isFuture01Slide ? "overflow-hidden" : "overflow-auto"}`}>
+              <div className={`card mx-auto aspect-video w-full max-w-[960px] max-w-full max-h-[65vh] min-h-0 ${reactSlideScaleClass} rounded-xl bg-white p-4 md:p-4 text-slate-950 ${isCoverSlide || isProblemSlide || isHypothesisSlide || isFilterSetupSlide || isObservationFrameSlide || isFilterMeaningSlide || isFilterIntegrationSlide || isStructureSummarySlide || isStructureGraspIntroSlide || isSrplIntroSlide || isPlacementGraspSlide || isPlacementConclusionSlide || isProgressionShiftSlide || isProgressionAxisSlide || isProgressionTriggerSlide || isProgressionLanguageSlide || isDataStructureSlide || isDataVariationSlide || isDataMissingSlide || isCaseStudy01Slide || isCaseStudy02Slide || isCaseStudy03Slide || isCaseStudyCompareSlide || isInsightDesign01Slide || isDesign01Slide || isDesign03Slide || isFuture01Slide ? "overflow-hidden" : "overflow-auto"}`}>
                 {isCoverSlide ? (
                   <div className="flex h-full items-center justify-center">
                     <div className="aspect-[16/9] w-full max-w-[820px] overflow-hidden rounded-xl border border-slate-200 bg-white">
@@ -1218,7 +1218,7 @@ export default function RASSHybridSlides() {
                       </h4>
                     </div>
 
-                    <div className="mt-8 flex items-center justify-center">
+                    <div className="mt-2 flex items-center justify-center">
                       <p className="text-center text-2xl font-bold leading-snug text-slate-900 md:text-4xl">
                         ズレは原因ではなく
                         <br />
@@ -1276,7 +1276,7 @@ export default function RASSHybridSlides() {
                     </div>
 
                     <div className="flex flex-1 items-center justify-center">
-                      <div className="flex w-full max-w-4xl items-center justify-between gap-6">
+                      <div className="flex w-full max-w-4xl items-center justify-between gap-2">
                         <div className="flex-1 text-center">
                           <p className="text-lg font-black text-slate-900 md:text-2xl">ズレ ＝</p>
                           <p className="mt-2 text-sm font-bold leading-snug text-slate-800 md:text-lg">
@@ -1361,7 +1361,7 @@ export default function RASSHybridSlides() {
                     <p className="mt-2 text-center text-xs font-semibold text-slate-500 md:text-sm">
                       Δ：強度　e：時間
                     </p>
-                    <div className="mt-7 w-full max-w-[360px] md:mt-8 md:max-w-[420px]">
+                    <div className="mt-2 w-full max-w-[360px] md:mt-2 md:max-w-[420px]">
                       <div className="relative mx-auto h-32 w-full border-b-2 border-l-2 border-slate-300 md:h-36">
                         <span className="absolute -left-6 top-1 text-sm font-semibold text-slate-600">Δ</span>
                         <span className="absolute -bottom-6 right-1 text-sm font-semibold text-slate-600">e</span>
