@@ -1003,41 +1003,73 @@ export default function RASSHybridSlides() {
                     </div>
                   </div>
                 ) : isMagazineTemplateSlide ? (
-                  <div className={`${dataTemplateTokens.frameClass} text-slate-900`}>
-                    <div className={`${dataTemplateTokens.columnClass} ${isObservationPhaseShiftSlide || isOpeningPhaseShiftSlide ? "pt-5" : ""}`}>
-                      <div className={dataTemplateTokens.headerSlotClass}>
-                        {phaseLabel ? (
-                          <p className="text-xs md:text-sm font-semibold tracking-wide text-slate-400">
-                            {phaseLabel}
-                          </p>
-                        ) : null}
-                        {isObservationPhaseShiftSlide ? (
-                          <p className="text-[11px] md:text-xs font-semibold tracking-[0.12em] text-slate-500">
-                            OBSERVATION
-                          </p>
-                        ) : null}
-                        {structuredTitleLabel ? (
-                          <p className={isFilterStructuredLabelSlide ? "text-[10px] md:text-[11px] font-semibold tracking-[0.1em] text-slate-400" : "text-[11px] md:text-xs font-semibold tracking-[0.12em] text-slate-500"}>
-                            {structuredTitleLabel}
-                          </p>
-                        ) : null}
-                        <h4 className={structuredTitleLabel ? "mt-2 text-[20px] md:text-[22px] font-semibold leading-[1.22] tracking-[-0.01em] text-slate-900" : dataTypographyTokens.titleClass}>
-                          {magazineCopy?.title}
+                  isIntroSlide ? (
+                    <div className="flex h-full items-center justify-center px-8 py-10 text-slate-900 md:px-12 md:py-14">
+                      <div className="w-full max-w-4xl text-center">
+                        <h4 className="text-[22px] md:text-[28px] font-bold leading-[1.3] tracking-[-0.01em]">
+                          ナラティブ（投書）302件の分析から見えたこと
                         </h4>
-                        <div className={`w-full h-px my-4 ${isObservationPhaseShiftSlide || isOpeningPhaseShiftSlide ? "bg-slate-300" : "bg-slate-200"}`} />
-                        <p className="mt-5 text-[14px] md:text-[16px] font-semibold leading-[1.3] text-slate-600">
-                          {magazineCopy?.lead}
-                        </p>
-                      </div>
-                      <div className={dataTemplateTokens.mainMessageSlotClass}>
-                        <p className={dataTypographyTokens.mainClass}>
-                          {magazineCopy?.main[0]}
+
+                        <div className="mt-8 text-[35px] md:text-[46px] font-black leading-[1.18] tracking-[-0.02em]">
+                          ナラティブは構造として扱える。
+                        </div>
+
+                        <div className="mt-4 text-[14px] md:text-[18px] font-semibold leading-[1.5] text-slate-700">
+                          個々の感想ではなく、
                           <br />
-                          {magazineCopy?.main[1]}
-                        </p>
+                          関係性の中で生まれる「条件の配置」として捉える。
+                        </div>
+
+                        <div className="mt-5 inline-flex rounded-full border border-slate-300 bg-slate-100 px-4 py-1 text-[12px] md:text-[13px] font-semibold text-slate-700">
+                          RA-SS / 関係性設計モデル
+                        </div>
+
+                        <div className="mx-auto mt-8 w-full max-w-3xl border-t border-slate-200 pt-4">
+                          <div className="grid grid-cols-1 gap-2 text-[12px] md:grid-cols-3 md:gap-4 md:text-[13px] font-semibold text-slate-600">
+                            <div>構造（SRPL）</div>
+                            <div>変異（Δ / Trigger）</div>
+                            <div>欠損（APCE Miss）</div>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div className={`${dataTemplateTokens.frameClass} text-slate-900`}>
+                      <div className={`${dataTemplateTokens.columnClass} ${isObservationPhaseShiftSlide || isOpeningPhaseShiftSlide ? "pt-5" : ""}`}>
+                        <div className={dataTemplateTokens.headerSlotClass}>
+                          {phaseLabel ? (
+                            <p className="text-xs md:text-sm font-semibold tracking-wide text-slate-400">
+                              {phaseLabel}
+                            </p>
+                          ) : null}
+                          {isObservationPhaseShiftSlide ? (
+                            <p className="text-[11px] md:text-xs font-semibold tracking-[0.12em] text-slate-500">
+                              OBSERVATION
+                            </p>
+                          ) : null}
+                          {structuredTitleLabel ? (
+                            <p className={isFilterStructuredLabelSlide ? "text-[10px] md:text-[11px] font-semibold tracking-[0.1em] text-slate-400" : "text-[11px] md:text-xs font-semibold tracking-[0.12em] text-slate-500"}>
+                              {structuredTitleLabel}
+                            </p>
+                          ) : null}
+                          <h4 className={structuredTitleLabel ? "mt-2 text-[20px] md:text-[22px] font-semibold leading-[1.22] tracking-[-0.01em] text-slate-900" : dataTypographyTokens.titleClass}>
+                            {magazineCopy?.title}
+                          </h4>
+                          <div className={`w-full h-px my-4 ${isObservationPhaseShiftSlide || isOpeningPhaseShiftSlide ? "bg-slate-300" : "bg-slate-200"}`} />
+                          <p className="mt-5 text-[14px] md:text-[16px] font-semibold leading-[1.3] text-slate-600">
+                            {magazineCopy?.lead}
+                          </p>
+                        </div>
+                        <div className={dataTemplateTokens.mainMessageSlotClass}>
+                          <p className={dataTypographyTokens.mainClass}>
+                            {magazineCopy?.main[0]}
+                            <br />
+                            {magazineCopy?.main[1]}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )
                 ) : isProblemSlide ? (
                   <div className="flex h-full flex-col justify-between px-6 py-5 text-slate-900 md:px-8 md:py-7">
                     <div className="text-center">
