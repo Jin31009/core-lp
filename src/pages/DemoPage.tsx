@@ -446,7 +446,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
   return (
     <div className="min-h-screen bg-[#f7f4ee] text-slate-900">
       {setPage && <SiteHeader setPage={setPage} currentPage="demo" />}
-      <div className="mx-auto max-w-6xl px-6 py-8">
+      <div className="mx-auto max-w-6xl px-6 py-4 md:py-6">
         {!hasEnteredFlow && (
           <section className="px-6 pt-28 pb-20 md:px-10 md:pt-36 md:pb-24">
             <div className="mx-auto max-w-[960px] text-center">
@@ -509,13 +509,13 @@ export default function DemoPage({ setPage }: DemoPageProps) {
 
         {hasEnteredFlow && (
           <>
-            <div className="sticky top-20 z-20 mt-6 border-y border-stone-200 bg-[#f7f4ee]/95 backdrop-blur">
-              <div className="flex items-center justify-between gap-4 px-4 py-3">
+            <div className="sticky top-20 z-20 mt-4 border-y border-stone-200 bg-[#f7f4ee]/95 backdrop-blur">
+              <div className="flex items-center justify-between gap-3 px-4 py-2.5">
                 <div>
                   <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
                     Current Step
                   </p>
-                  <p className="mt-1 text-[15px] font-semibold text-slate-900 md:text-[16px]">
+                  <p className="mt-0.5 text-[15px] font-semibold text-slate-900 md:text-[16px]">
                     {selectedStepLabel} / 05 ・ {stepMeta.title}
                   </p>
                 </div>
