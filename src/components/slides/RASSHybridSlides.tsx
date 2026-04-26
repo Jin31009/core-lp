@@ -1487,15 +1487,16 @@ export default function RASSHybridSlides() {
           </footer>
 
           <div className="shrink-0 rounded-xl border border-white/10 bg-white/5 p-3">
-            <div className="mt-3 flex justify-center">
+            <div className="mt-2 flex flex-col items-center gap-2">
               <a
-                href="https://core-lp.vercel.app/"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex min-h-11 items-center justify-center rounded-lg bg-cyan-300 px-5 py-2 text-sm font-bold text-slate-950 transition hover:bg-cyan-200"
+                href="/"
+                className="inline-flex min-h-10 items-center justify-center rounded-lg border border-white/25 bg-white/5 px-4 py-2 text-xs font-semibold text-slate-200 transition hover:bg-white/10"
               >
-                サイトへ
+                CORE-LPへ戻る
               </a>
+              <p className="text-center text-[10px] leading-snug text-slate-400">
+                全体像・DEMO・分析レポートはCORE-LPから確認できます
+              </p>
             </div>
           </div>
         </main>
