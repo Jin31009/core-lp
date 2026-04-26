@@ -1426,15 +1426,15 @@ export default function RASSHybridSlides() {
                 <p className="text-[10px] uppercase tracking-[0.25em] text-amber-300">Character Slide</p>
               </div>
 
-              <div className="flex min-h-0 flex-1 items-center justify-center rounded-xl border border-dashed border-white/15 bg-slate-800 p-2 text-center">
-                <div className={`aspect-[16/9] w-full max-w-[1120px] max-h-[68vh] mx-auto flex items-center justify-center rounded-lg overflow-hidden bg-slate-900 ${isDataStructureSlide || isDataVariationSlide || isDataMissingSlide || isCaseStudy01Slide || isCaseStudy02Slide || isCaseStudy03Slide || isCaseStudyCompareSlide || isInsightDesign01Slide || isDesign01Slide || isDesign03Slide || isFuture01Slide ? "p-3" : "p-4"}`}>
+              <div className="mx-auto flex min-h-0 w-full max-w-full flex-1 items-center justify-center overflow-hidden rounded-xl border border-dashed border-white/15 bg-slate-800 p-2 text-center">
+                <div className={`mx-auto aspect-[16/9] w-full max-w-full ${mode === "hybrid" ? "md:max-w-[820px]" : "md:max-w-[960px]"} max-h-[48vh] md:max-h-[52vh] flex items-center justify-center rounded-lg overflow-hidden bg-slate-900 ${isDataStructureSlide || isDataVariationSlide || isDataMissingSlide || isCaseStudy01Slide || isCaseStudy02Slide || isCaseStudy03Slide || isCaseStudyCompareSlide || isInsightDesign01Slide || isDesign01Slide || isDesign03Slide || isFuture01Slide ? "p-3" : "p-4"}`}>
                   {!hasImageError ? (
                     <div className="relative h-full w-full">
                       <img
                         key={slide.id}
                         src={characterImageSrc}
                         alt="character slide"
-                        className="h-full w-full max-h-[68vh] max-w-full object-contain object-center mx-auto"
+                        className="mx-auto h-auto w-full max-w-full object-contain object-center max-h-[48vh] md:max-h-[52vh]"
                         onLoad={() =>
                           setImageLoadError((prev) => ({ ...prev, [slide.id]: false }))
                         }
