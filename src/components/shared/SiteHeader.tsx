@@ -88,40 +88,46 @@ export default function SiteHeader({ setPage, currentPage }: Props) {
           </button>
 
           {isMobileNav ? (
-            <button
-              type="button"
-              aria-label={isMenuOpen ? "メニューを閉じる" : "メニューを開く"}
-              aria-expanded={isMenuOpen}
-              onClick={() => setIsMenuOpen((open) => !open)}
-              style={{
-                ...menuButtonStyle,
-                ...(isMenuOpen ? menuButtonActiveStyle : null),
-              }}
-            >
-              <span style={menuIconStyle} aria-hidden="true">
-                <span
-                  style={{
-                    ...menuLineStyle,
-                    ...menuLineTopStyle,
-                    ...(isMenuOpen ? menuLineTopOpenStyle : null),
-                  }}
-                />
-                <span
-                  style={{
-                    ...menuLineStyle,
-                    ...menuLineMiddleStyle,
-                    ...(isMenuOpen ? menuLineMiddleOpenStyle : null),
-                  }}
-                />
-                <span
-                  style={{
-                    ...menuLineStyle,
-                    ...menuLineBottomStyle,
-                    ...(isMenuOpen ? menuLineBottomOpenStyle : null),
-                  }}
-                />
-              </span>
-            </button>
+            <div style={mobileHeaderActionsStyle}>
+              <a href="/slides" style={mobileSlidesCtaLinkStyle}>
+                WEBスライド（事前資料）
+              </a>
+
+              <button
+                type="button"
+                aria-label={isMenuOpen ? "メニューを閉じる" : "メニューを開く"}
+                aria-expanded={isMenuOpen}
+                onClick={() => setIsMenuOpen((open) => !open)}
+                style={{
+                  ...menuButtonStyle,
+                  ...(isMenuOpen ? menuButtonActiveStyle : null),
+                }}
+              >
+                <span style={menuIconStyle} aria-hidden="true">
+                  <span
+                    style={{
+                      ...menuLineStyle,
+                      ...menuLineTopStyle,
+                      ...(isMenuOpen ? menuLineTopOpenStyle : null),
+                    }}
+                  />
+                  <span
+                    style={{
+                      ...menuLineStyle,
+                      ...menuLineMiddleStyle,
+                      ...(isMenuOpen ? menuLineMiddleOpenStyle : null),
+                    }}
+                  />
+                  <span
+                    style={{
+                      ...menuLineStyle,
+                      ...menuLineBottomStyle,
+                      ...(isMenuOpen ? menuLineBottomOpenStyle : null),
+                    }}
+                  />
+                </span>
+              </button>
+            </div>
           ) : (
             <nav style={navStyle}>
               {NAV_ITEMS.map((item) => {
@@ -150,6 +156,10 @@ export default function SiteHeader({ setPage, currentPage }: Props) {
               >
                 体験する
               </button>
+
+              <a href="/slides" style={slidesCtaLinkStyle}>
+                WEBスライド（事前資料）
+              </a>
             </nav>
           )}
         </div>
@@ -189,6 +199,10 @@ export default function SiteHeader({ setPage, currentPage }: Props) {
                   <span style={mobileNavCurrentStyle}>現在地</span>
                 ) : null}
               </button>
+
+              <a href="/slides" style={mobileSlidesMenuCtaLinkStyle}>
+                WEBスライド（事前資料）
+              </a>
             </nav>
           </div>
         ) : null}
@@ -264,6 +278,14 @@ const navStyle: React.CSSProperties = {
   flex: "1 1 320px",
 };
 
+const mobileHeaderActionsStyle: React.CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "flex-end",
+  gap: 8,
+  flexShrink: 0,
+};
+
 const menuButtonStyle: React.CSSProperties = {
   minHeight: 40,
   minWidth: 44,
@@ -334,6 +356,23 @@ const mobileNavStyle: React.CSSProperties = {
   margin: "0 auto",
   display: "flex",
   flexDirection: "column",
+};
+
+const mobileSlidesMenuCtaLinkStyle: React.CSSProperties = {
+  marginTop: 10,
+  border: "1px solid #171717",
+  background: "#171717",
+  color: "#fff",
+  borderRadius: 999,
+  minHeight: 44,
+  padding: "10px 14px",
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  textDecoration: "none",
+  fontSize: 13,
+  fontWeight: 500,
+  letterSpacing: "0.01em",
 };
 
 const mobileNavItemStyle: React.CSSProperties = {
@@ -413,4 +452,40 @@ const demoItemStyle: React.CSSProperties = {
 const demoItemActiveStyle: React.CSSProperties = {
   background: "rgba(0,0,0,0.08)",
   borderColor: "rgba(0,0,0,0.24)",
+};
+
+const slidesCtaLinkStyle: React.CSSProperties = {
+  border: "1px solid #171717",
+  background: "#171717",
+  color: "#fff",
+  padding: "10px 14px",
+  margin: 0,
+  borderRadius: 999,
+  fontSize: 12,
+  fontWeight: 600,
+  minHeight: 44,
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  textDecoration: "none",
+  letterSpacing: "0.01em",
+  whiteSpace: "nowrap",
+};
+
+const mobileSlidesCtaLinkStyle: React.CSSProperties = {
+  border: "1px solid #171717",
+  background: "#171717",
+  color: "#fff",
+  borderRadius: 999,
+  minHeight: 40,
+  padding: "8px 12px",
+  fontSize: 11,
+  fontWeight: 600,
+  lineHeight: 1.2,
+  letterSpacing: "0.01em",
+  textDecoration: "none",
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  whiteSpace: "nowrap",
 };
