@@ -139,6 +139,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
 
   const [contextEdited, setContextEdited] = useState("");
   const [contextRequested, setContextRequested] = useState(false);
+  const [hasContextError, setHasContextError] = useState(false);
   const [primaryContextDraft, setPrimaryContextDraft] = useState("");
   const [contextFollowups, setContextFollowups] = useState<string[]>([]);
 
@@ -257,6 +258,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
     if (!observationRaw.trim()) return;
 
     setContextRequested(true);
+    setHasContextError(false);
     setIsGeneratingFinalContext(true);
     setPrimaryContextDraft("AIが整理しています...");
     setContextFollowups([]);
@@ -272,22 +274,28 @@ export default function DemoPage({ setPage }: DemoPageProps) {
           observationRaw,
           emotion,
           urgency,
+          note: contextEdited,
         }),
       });
 
-      if (!response.ok) {
-        throw new Error(
-          await readErrorMessage(
-            response,
-            "AIによる整理に失敗しました。もう一度お試しください。"
-          )
-        );
-      }
-
-      const data: ContextDraftResponse = await response.json();
+      const data = (await response.json().catch(() => ({}))) as ContextDraftResponse;
       const normalizedFollowups = Array.isArray(data.followups)
         ? data.followups.filter((item): item is string => typeof item === "string")
         : [];
+      const hasFallbackDraft =
+        typeof data.contextDraft === "string" && data.contextDraft.trim().length > 0;
+      const hasFallbackFollowups = normalizedFollowups.length > 0;
+
+      if (!response.ok && !hasFallbackDraft && !hasFallbackFollowups) {
+        throw new Error(
+          data.error ||
+            "AIによる整理に失敗しました。もう一度お試しください。"
+        );
+      }
+
+      if (!response.ok) {
+        setHasContextError(true);
+      }
 
       setPrimaryContextDraft(
         data.contextDraft || "整理結果を取得できませんでした。"
@@ -295,11 +303,8 @@ export default function DemoPage({ setPage }: DemoPageProps) {
       setContextFollowups(normalizedFollowups);
     } catch (error) {
       console.error(error);
-      setPrimaryContextDraft(
-        error instanceof Error
-          ? error.message
-          : "AIによる整理に失敗しました。もう一度お試しください。"
-      );
+      setHasContextError(true);
+      setPrimaryContextDraft("");
       setContextFollowups([]);
     } finally {
       setIsGeneratingFinalContext(false);
@@ -602,9 +607,6 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                   emotion={emotion}
                   onEmotionChange={(value) => {
                     setEmotion(value);
-                    setContextRequested(false);
-                    setPrimaryContextDraft("");
-                    setContextFollowups([]);
                     setFinalContextDraft("");
                     resetLearningState();
                     setMaxUnlockedStep(1);
@@ -613,9 +615,6 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                   urgency={urgency}
                   onUrgencyChange={(value) => {
                     setUrgency(value);
-                    setContextRequested(false);
-                    setPrimaryContextDraft("");
-                    setContextFollowups([]);
                     setFinalContextDraft("");
                     resetLearningState();
                     setMaxUnlockedStep(1);
@@ -628,6 +627,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                     setFinalContextDraft("");
                   }}
                   contextRequested={contextRequested}
+                  hasContextError={hasContextError}
                   onRequestContext={handleRequestContext}
                   onCheckState={goToStep2}
                   onClear={() => {
@@ -636,6 +636,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                     setUrgency("");
                     setContextEdited("");
                     setContextRequested(false);
+                    setHasContextError(false);
                     setPrimaryContextDraft("");
                     setContextFollowups([]);
                     setFinalContextDraft("");

@@ -11,6 +11,7 @@ type InputSectionProps = {
   contextEdited: string;
   onContextEditedChange: (value: string) => void;
   contextRequested: boolean;
+  hasContextError: boolean;
   onRequestContext: () => void;
   onCheckState: () => void;
   onClear: () => void;
@@ -178,6 +179,7 @@ export default function InputSection({
   contextEdited,
   onContextEditedChange,
   contextRequested,
+  hasContextError,
   onRequestContext,
   onCheckState,
   onClear,
@@ -228,8 +230,7 @@ export default function InputSection({
   const hasContextResult =
     contextRequested &&
     !isGenerating &&
-    !!contextDraft.trim() &&
-    !contextDraft.includes("失敗しました");
+    !!contextDraft.trim();
 
   const hasFollowups = hasContextResult && followups.length > 0;
 
@@ -238,7 +239,7 @@ export default function InputSection({
     (contextEdited.trim().length > 0 || contextDraft.trim().length > 0);
 
   const analysisDisabled =
-    !contextRequested || isGenerating || contextDraft.includes("失敗しました");
+    !contextRequested || isGenerating || !contextDraft.trim();
 
   const requestButtonClass = canRequestContext
     ? "border-slate-700 bg-slate-700 text-white hover:bg-slate-800"
@@ -468,6 +469,12 @@ export default function InputSection({
                 {contextDraft || "整理結果がここに表示されます。"}
               </p>
             </div>
+
+            {hasContextError && (
+              <div className="mt-4 rounded-[14px] border border-amber-300 bg-amber-50 px-4 py-3 text-[14px] leading-7 text-amber-900">
+                AI生成に失敗したため暫定整理を表示しています
+              </div>
+            )}
 
             <div className="mt-6 border-t border-dashed border-stone-300 pt-6">
               <div>
