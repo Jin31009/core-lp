@@ -352,35 +352,32 @@ export default function AnalysisSection({
     "border-y border-stone-200 bg-white";
 
   const sectionHeader =
-    "border-b border-stone-200 px-6 py-8 sm:px-8";
+    "border-b border-stone-300 px-6 py-9 sm:px-8";
 
   const sectionTitleClass =
     "mt-3 text-[34px] font-semibold tracking-[-0.02em] text-slate-900";
 
   const leadClass =
-    "mt-4 max-w-4xl text-[18px] leading-9 text-stone-700";
+    "mt-4 max-w-4xl text-[19px] leading-10 text-stone-800";
 
   const groupWrap =
-    "border-t border-stone-200 bg-white py-6";
+    "border-t border-stone-300 bg-white py-7";
 
   const subCard =
-    "border-t border-stone-200 bg-[#fcfbf8] p-5";
-
-  const contextCard =
-    "border-t-2 border-stone-300 bg-white p-6";
+    "border-t border-stone-300 bg-[#fcfbf8] p-6";
 
   const summaryCard =
-    "border-t bg-white p-5";
+    "border-t border-stone-300 bg-white p-6";
 
   const primaryButton =
-    "w-full rounded-[14px] bg-blue-600 py-4 text-[16px] font-medium text-white transition hover:bg-blue-700";
+    "w-full rounded-[14px] bg-blue-600 py-4.5 text-[17px] font-medium text-white transition hover:bg-blue-700";
 
   const nextStepNote =
-    "mt-5 rounded-[14px] border border-dashed border-stone-300 bg-white/80 px-4 py-3 text-[14px] leading-7 text-stone-600";
+    "mt-6 rounded-[14px] border border-dashed border-stone-400 bg-white/90 px-5 py-4 text-[15px] leading-8 text-stone-700";
 
   const groupTitle = "mt-2 text-[24px] font-semibold text-slate-900";
-  const groupLead = "mt-3 text-[17px] leading-8 text-stone-700";
-  const bodyText = "mt-3 text-[15px] leading-8 text-stone-700";
+  const groupLead = "mt-3 text-[18px] leading-9 text-stone-800";
+  const bodyText = "mt-3 text-[16px] leading-9 text-stone-800";
 
   return (
     <section className={sectionShell}>
@@ -394,7 +391,27 @@ export default function AnalysisSection({
         </p>
       </div>
 
-      <div className="space-y-8 p-6 sm:p-8">
+      <div className="space-y-9 p-7 sm:p-9">
+        <div className="rounded-[18px] border-2 border-slate-400 bg-white p-7">
+          <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
+            Main Window
+          </p>
+          <p className="mt-2 text-[24px] font-semibold text-slate-900">
+            分析確認
+          </p>
+          <div className="mt-4 min-h-[260px] max-h-[420px] overflow-y-auto rounded-[14px] border border-stone-300 bg-[#faf8f3] p-5">
+            <p className="text-[20px] leading-10 text-stone-900">
+              {finalContextBase}
+            </p>
+          </div>
+          <div className="mt-4 rounded-[12px] border border-stone-300 bg-white p-4">
+            <p className="text-[13px] uppercase tracking-[0.14em] text-stone-500">
+              結論メモ
+            </p>
+            <p className="mt-2 text-[16px] leading-9 text-stone-800">{insightBody}</p>
+          </div>
+        </div>
+
         <div className="grid gap-4 lg:grid-cols-3">
           <div className={`${summaryCard} ${deltaTone.card}`}>
             <div className="flex items-start justify-between gap-3">
@@ -402,17 +419,17 @@ export default function AnalysisSection({
                 <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
                   MAX_DELTA
                 </p>
-                <p className="mt-2 text-[28px] font-semibold tracking-[-0.02em] text-slate-900">
+                <p className="mt-2 text-[30px] font-semibold tracking-[-0.02em] text-slate-900">
                   {`${deltaMeta.label}（${deltaMeta.meaning}）`}
                 </p>
               </div>
               <span
-                className={`rounded-full border px-3 py-1 text-[12px] font-medium ${deltaTone.chip}`}
+                className={`rounded-full border px-3 py-1.5 text-[13px] font-medium ${deltaTone.chip}`}
               >
                 {deltaMeta.title}
               </span>
             </div>
-            <p className="mt-4 text-[14px] leading-7 text-stone-700">{deltaBody}</p>
+            <p className="mt-4 text-[15px] leading-8 text-stone-800">{deltaBody}</p>
           </div>
 
           <div className={`${summaryCard} ${triggerTone.card}`}>
@@ -421,17 +438,17 @@ export default function AnalysisSection({
                 <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
                   Trigger
                 </p>
-                <p className="mt-2 text-[28px] font-semibold tracking-[-0.02em] text-slate-900">
+                <p className="mt-2 text-[30px] font-semibold tracking-[-0.02em] text-slate-900">
                   {effectiveTrigger === "Yes" ? "Yes（局所イベントあり）" : "No（局所イベントなし）"}
                 </p>
               </div>
               <span
-                className={`rounded-full border px-3 py-1 text-[12px] font-medium ${triggerTone.chip}`}
+                className={`rounded-full border px-3 py-1.5 text-[13px] font-medium ${triggerTone.chip}`}
               >
                 {getTriggerLabel(effectiveTrigger)}
               </span>
             </div>
-            <p className="mt-4 text-[14px] leading-7 text-stone-700">{triggerBody}</p>
+            <p className="mt-4 text-[15px] leading-8 text-stone-800">{triggerBody}</p>
           </div>
 
           <div className={summaryCard}>
@@ -440,34 +457,23 @@ export default function AnalysisSection({
                 <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
                   AK_Primary
                 </p>
-                <p className="mt-2 text-[28px] font-semibold tracking-[-0.02em] text-slate-900">
+                <p className="mt-2 text-[30px] font-semibold tracking-[-0.02em] text-slate-900">
                   {`${effectiveAK}（主因）`}
                 </p>
               </div>
-              <span className="rounded-full border border-stone-300 bg-[#faf8f3] px-3 py-1 text-[12px] font-medium text-stone-700">
+              <span className="rounded-full border border-stone-400 bg-[#faf8f3] px-3 py-1.5 text-[13px] font-medium text-stone-800">
                 {getAkLabel(effectiveAK)}
               </span>
             </div>
-            <p className="mt-4 text-[14px] leading-7 text-stone-700">{akBody}</p>
+            <p className="mt-4 text-[15px] leading-8 text-stone-800">{akBody}</p>
           </div>
         </div>
 
-        <div className={contextCard}>
-          <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
-            01 / 今回の分析対象
-          </p>
-          <p className="mt-2 text-[24px] font-semibold tracking-[-0.01em] text-slate-900">
-            整理された状況
-          </p>
-          <p className="mt-5 text-[21px] leading-10 text-stone-800">
-            {finalContextBase}
-          </p>
-          <div className={nextStepNote}>
-            次の一手：上の3つで全体をつかんだら、下で状態の内訳を確認します。
-          </div>
-        </div>
-
-        <div className={groupWrap}>
+        <details className={`${groupWrap} rounded-[14px] border border-stone-300 px-5`}>
+          <summary className="cursor-pointer list-none text-[14px] font-semibold text-stone-700">
+            詳細読解を開く
+          </summary>
+          <div className="mt-5">
           <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
             02 / State Reading
           </p>
@@ -492,7 +498,7 @@ export default function AnalysisSection({
                 <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
                   Δ（関係緊張）
                 </p>
-                <span className="rounded-full border border-stone-300 bg-white px-3 py-1 text-[12px] font-medium text-stone-700">
+                <span className="rounded-full border border-stone-400 bg-white px-3 py-1.5 text-[13px] font-medium text-stone-800">
                   {deltaMeta.label}
                 </span>
               </div>
@@ -515,9 +521,9 @@ export default function AnalysisSection({
           <div className={nextStepNote}>
             次の一手：次に、何が不足しているかを確認します。
           </div>
-        </div>
+          </div>
 
-        <div className={groupWrap}>
+          <div className="mt-7">
           <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
             03 / Missing Need
           </p>
@@ -561,9 +567,9 @@ export default function AnalysisSection({
           <div className={nextStepNote}>
             次の一手：最後に、Trigger と Phase をまとめて確認します。
           </div>
-        </div>
+          </div>
 
-        <div className={groupWrap}>
+          <div className="mt-7">
           <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
             04 / Overall Reading
           </p>
@@ -573,14 +579,12 @@ export default function AnalysisSection({
           </p>
 
           <div className="mt-6 grid gap-5 lg:grid-cols-[1.05fr_0.95fr]">
-            <div className={`rounded-[16px] border p-5 ${triggerTone.card}`}>
+            <div className={`rounded-[16px] border p-6 ${triggerTone.card}`}>
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
                   Trigger
                 </p>
-                <span
-                  className={`rounded-full border px-3 py-1 text-[12px] font-medium ${triggerTone.chip}`}
-                >
+                <span className={`rounded-full border px-3 py-1.5 text-[13px] font-medium ${triggerTone.chip}`}>
                   {getTriggerLabel(effectiveTrigger)}
                 </span>
               </div>
@@ -602,21 +606,11 @@ export default function AnalysisSection({
             </div>
           </div>
 
-          <div className="mt-5">
-            <div className={subCard}>
-              <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
-                Insight
-              </p>
-              <p className="mt-3 text-[16px] leading-8 text-stone-700">
-                {insightBody}
-              </p>
-            </div>
-          </div>
-
           <div className={nextStepNote}>
             次の一手：内容が確認できたら、「次の対応へ」で Step3 に進みます。
           </div>
-        </div>
+          </div>
+        </details>
 
         <div className="rounded-[16px] border-t border-stone-200 pt-4">
           <div className="mt-4">

@@ -37,7 +37,7 @@ function ChoiceButton({
     <button
       type="button"
       onClick={onClick}
-      className={`rounded-[12px] border px-4 py-3 text-[14px] font-medium transition ${
+      className={`rounded-[12px] border px-4 py-3.5 text-[15px] font-medium transition ${
         active
           ? "border-slate-700 bg-slate-700 text-white"
           : "border-stone-300 bg-white text-stone-700 hover:bg-stone-50"
@@ -67,7 +67,7 @@ function LoadingDots() {
 function LoadingCard() {
   return (
     <div
-      className="mt-5 overflow-hidden rounded-[18px] border border-stone-300 bg-[#f6f1e8] shadow-[0_8px_24px_rgba(15,23,42,0.06)]"
+      className="mt-6 overflow-hidden rounded-[18px] border border-stone-400 bg-[#f6f1e8] shadow-[0_8px_24px_rgba(15,23,42,0.06)]"
       role="status"
       aria-live="polite"
     >
@@ -75,7 +75,7 @@ function LoadingCard() {
         <p className="text-[11px] uppercase tracking-[0.22em] text-stone-500">
           RA-AI / Loading
         </p>
-        <p className="mt-2 text-[18px] font-semibold text-slate-900">
+        <p className="mt-2 text-[20px] font-semibold text-slate-900">
           一次整理を生成しています
         </p>
       </div>
@@ -87,7 +87,7 @@ function LoadingCard() {
           </div>
 
           <div className="min-w-0 flex-1">
-            <p className="text-[16px] leading-8 text-stone-700">
+            <p className="text-[17px] leading-9 text-stone-800">
               入力内容をもとに、場面と関係の文脈を整理しています。
             </p>
 
@@ -95,7 +95,7 @@ function LoadingCard() {
               <div className="h-full w-1/2 animate-pulse rounded-full bg-slate-500" />
             </div>
 
-            <div className="mt-4 grid gap-2 text-[14px] leading-7 text-stone-600">
+            <div className="mt-4 grid gap-2 text-[15px] leading-8 text-stone-700">
               <div className="flex items-center gap-2">
                 <LoadingDots />
                 <span>観察内容を読み取っています</span>
@@ -119,7 +119,7 @@ function LoadingCard() {
 function FinalLoadingCard() {
   return (
     <div
-      className="mt-5 overflow-hidden rounded-[18px] border border-slate-300 bg-[#f7f8fb] shadow-[0_8px_24px_rgba(15,23,42,0.06)]"
+      className="mt-6 overflow-hidden rounded-[18px] border border-slate-400 bg-[#f7f8fb] shadow-[0_8px_24px_rgba(15,23,42,0.06)]"
       role="status"
       aria-live="polite"
     >
@@ -127,7 +127,7 @@ function FinalLoadingCard() {
         <p className="text-[11px] uppercase tracking-[0.22em] text-stone-500">
           RA-AI / Final Context
         </p>
-        <p className="mt-2 text-[18px] font-semibold text-slate-900">
+        <p className="mt-2 text-[20px] font-semibold text-slate-900">
           最終Contextを生成しています
         </p>
       </div>
@@ -139,7 +139,7 @@ function FinalLoadingCard() {
           </div>
 
           <div className="min-w-0 flex-1">
-            <p className="text-[16px] leading-8 text-stone-700">
+            <p className="text-[17px] leading-9 text-stone-800">
               一次整理と補足をつないで、読みやすい形に整えています。
             </p>
 
@@ -147,7 +147,7 @@ function FinalLoadingCard() {
               <div className="h-full w-1/2 animate-pulse rounded-full bg-slate-500" />
             </div>
 
-            <div className="mt-4 grid gap-2 text-[14px] leading-7 text-stone-600">
+            <div className="mt-4 grid gap-2 text-[15px] leading-8 text-stone-700">
               <div className="flex items-center gap-2">
                 <LoadingDots />
                 <span>一次整理を確認しています</span>
@@ -194,31 +194,31 @@ export default function InputSection({
     "border-y border-stone-200 bg-white";
 
   const sectionHeader =
-    "border-b border-stone-200 px-6 py-8 sm:px-8";
+    "border-b border-stone-300 px-6 py-9 sm:px-8";
 
   const sectionTitleClass =
     "mt-3 text-[34px] font-semibold tracking-[-0.02em] text-slate-900";
 
   const leadClass =
-    "mt-4 max-w-4xl text-[18px] leading-9 text-stone-700";
+    "mt-4 max-w-4xl text-[19px] leading-10 text-stone-800";
 
   const softCard =
-    "border-t border-stone-200 bg-[#f7f4ee] p-6";
+    "border-t border-stone-300 bg-[#f7f4ee] p-7";
 
   const panelCard =
-    "border-t border-stone-200 bg-white py-6";
+    "border-t border-stone-300 bg-white py-7";
 
   const contextWrap =
-    "border-t border-stone-300 bg-[#f3efe7] p-6";
+    "border-t border-stone-400 bg-[#f3efe7] p-7";
 
   const primaryButton =
-    "w-full rounded-[14px] bg-slate-900 py-4 text-[16px] font-medium text-white transition hover:bg-slate-800";
+    "w-full rounded-[14px] bg-slate-900 py-4.5 text-[17px] font-medium text-white transition hover:bg-slate-800";
 
   const secondaryButton =
-    "rounded-[12px] border border-stone-300 bg-white px-6 py-3.5 text-[15px] font-medium text-stone-700 transition hover:bg-stone-50";
+    "rounded-[12px] border border-stone-400 bg-white px-6 py-4 text-[16px] font-medium text-stone-800 transition hover:bg-stone-50";
 
   const nextStepNote =
-    "mt-5 rounded-[14px] border border-dashed border-stone-300 bg-white/80 px-4 py-3 text-[14px] leading-7 text-stone-600";
+    "mt-6 rounded-[14px] border border-dashed border-stone-400 bg-white/90 px-5 py-4 text-[15px] leading-8 text-stone-700";
 
   const canRequestContext = text.trim().length > 0;
 
@@ -238,8 +238,7 @@ export default function InputSection({
     hasContextResult &&
     (contextEdited.trim().length > 0 || contextDraft.trim().length > 0);
 
-  const analysisDisabled =
-    !contextRequested || isGenerating || !contextDraft.trim();
+  const analysisDisabled = text.trim().length === 0 || isGenerating;
 
   const requestButtonClass = canRequestContext
     ? "border-slate-700 bg-slate-700 text-white hover:bg-slate-800"
@@ -288,25 +287,13 @@ export default function InputSection({
         </p>
       </div>
 
-      <div className="space-y-8 p-6 sm:p-8">
-        <div className={softCard}>
-          <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
-            Observation
-          </p>
-          <p className="mt-3 text-[17px] leading-9 text-stone-700">
-            発言、表情、場面のズレなど、気になったことを書いてください。
-          </p>
-          <div className={nextStepNote}>
-            次の一手：まず場面を書いたら、そのまま整理に進めます。必要なら補足入力を開きます。
-          </div>
-        </div>
-
+      <div className="space-y-9 p-7 sm:p-9">
         <div className={panelCard}>
           <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
-            Case Note
+            Main Window
           </p>
-          <p className="mt-2 text-[18px] font-semibold text-slate-900">
-            まずそのまま書いてみる
+          <p className="mt-2 text-[24px] font-semibold text-slate-900">
+            ここに、いま見えていることを書く
           </p>
 
           <textarea
@@ -314,46 +301,40 @@ export default function InputSection({
             onChange={(e) => onTextChange(e.target.value)}
             placeholder="例：患者が説明のあとも不安そうで、何度も確認していた。"
             rows={5}
-            className="mt-4 min-h-[170px] w-full rounded-[16px] border border-stone-300 bg-white p-5 text-[18px] leading-9 text-slate-800 shadow-[inset_0_1px_2px_rgba(15,23,42,0.03)] placeholder:text-stone-400 focus:border-slate-500 focus:outline-none"
+            className="mt-4 min-h-[260px] max-h-[480px] w-full overflow-y-auto rounded-[16px] border border-stone-400 bg-white p-6 text-[19px] leading-10 text-slate-900 shadow-[inset_0_1px_2px_rgba(15,23,42,0.03)] placeholder:text-stone-500 focus:border-slate-600 focus:outline-none"
           />
+          <div className="mt-4 text-[14px] leading-7 text-stone-600">
+            断片のままで問題ありません。まず書き出しを優先します。
+          </div>
+        </div>
+
+        <div className={softCard}>
+          <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
+            Observation
+          </p>
+          <p className="mt-2 text-[15px] leading-8 text-stone-700">
+            入力後に、必要な補足とAI整理を下で追加します。
+          </p>
         </div>
 
         <div className={panelCard}>
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div>
-              <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
-                Optional Detail
-              </p>
-              <p className="mt-2 text-[18px] font-semibold text-slate-900">
-                補足入力（任意）
-              </p>
-              <p className="mt-3 text-[15px] leading-8 text-stone-600">
-                感情や優先度を添えると整理の精度が上がります。未入力でも先に進めます。
-              </p>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => setShowSecondaryInputs((prev) => !prev)}
-              className="rounded-[12px] border border-stone-300 bg-white px-4 py-2.5 text-[14px] font-medium text-stone-700 transition hover:bg-stone-50"
+          <details open={showSecondaryInputs} className="rounded-[14px] border border-stone-300 bg-[#faf8f3] p-4">
+            <summary
+              className="cursor-pointer list-none text-[14px] font-semibold text-stone-700"
+              onClick={(e) => {
+                e.preventDefault();
+                setShowSecondaryInputs((prev) => !prev);
+              }}
             >
-              {showSecondaryInputs ? "補足入力を閉じる" : "補足入力を開く"}
-            </button>
-          </div>
-
-          {!showSecondaryInputs && (
-            <div className="mt-5 rounded-[14px] border border-dashed border-stone-300 bg-[#faf8f3] px-4 py-3 text-[14px] leading-7 text-stone-600">
-              まずは場面だけ書けば大丈夫です。必要になったら補足入力を開きます。
-            </div>
-          )}
-
-          {showSecondaryInputs && (
-            <div className="mt-6 grid gap-6 lg:grid-cols-2">
+              補足入力（任意）
+            </summary>
+            {showSecondaryInputs && (
+              <div className="mt-5 grid gap-6 lg:grid-cols-2">
               <div>
                 <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
                   Sensor 01
                 </p>
-                <p className="mt-2 text-[18px] font-semibold text-slate-900">
+                <p className="mt-2 text-[20px] font-semibold text-slate-900">
                   いちばん近い反応
                 </p>
 
@@ -373,7 +354,7 @@ export default function InputSection({
                 <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
                   Sensor 02
                 </p>
-                <p className="mt-2 text-[18px] font-semibold text-slate-900">
+                <p className="mt-2 text-[20px] font-semibold text-slate-900">
                   いまの対応優先度
                 </p>
 
@@ -388,25 +369,26 @@ export default function InputSection({
                   ))}
                 </div>
               </div>
-            </div>
-          )}
+              </div>
+            )}
+          </details>
         </div>
 
         <div className={panelCard}>
           <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
             Context
           </p>
-          <p className="mt-2 text-[20px] font-semibold text-slate-900">
+          <p className="mt-2 text-[22px] font-semibold text-slate-900">
             いまの内容を整理する
           </p>
-          <p className="mt-3 text-[15px] leading-8 text-stone-600">
+          <p className="mt-3 text-[16px] leading-9 text-stone-700">
             書いた内容から、RA-AIが一次的にContextを整えます。
           </p>
 
           <div className="mt-5 flex flex-wrap items-center gap-3">
             <button
               onClick={onRequestContext}
-              className={`rounded-[12px] border px-6 py-3.5 text-[15px] font-medium transition ${requestButtonClass} ${
+              className={`rounded-[12px] border px-6 py-4 text-[16px] font-medium transition ${requestButtonClass} ${
                 isGenerating ? "cursor-wait opacity-90" : ""
               }`}
               type="button"
@@ -416,19 +398,19 @@ export default function InputSection({
             </button>
 
             {!canRequestContext && (
-              <p className="text-[15px] leading-7 text-stone-500">
+              <p className="text-[16px] leading-8 text-stone-600">
                 場面を書くと整理できます。
               </p>
             )}
 
             {canRequestContext && !isGenerating && !contextRequested && (
-              <p className="text-[15px] leading-7 text-stone-500">
+              <p className="text-[16px] leading-8 text-stone-600">
                 そのまま整理に進めます。
               </p>
             )}
 
             {isGenerating && (
-              <p className="inline-flex items-center gap-2 text-[15px] leading-7 text-stone-600">
+              <p className="inline-flex items-center gap-2 text-[16px] leading-8 text-stone-700">
                 <LoadingDots />
                 RA-AIが整理しています...
               </p>
@@ -451,21 +433,21 @@ export default function InputSection({
                 <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
                   Primary Context
                 </p>
-                <p className="mt-2 text-[20px] font-semibold text-slate-900">
+                <p className="mt-2 text-[22px] font-semibold text-slate-900">
                   一次整理
                 </p>
               </div>
 
-              <div className="rounded-full border border-stone-200 bg-white px-4 py-1.5 text-[12px] text-stone-500">
+              <div className="rounded-full border border-stone-300 bg-white px-4 py-2 text-[13px] text-stone-600">
                 RA-AI
               </div>
             </div>
 
-            <div className="mt-5 rounded-[18px] border border-stone-200 bg-[linear-gradient(180deg,#fffdfa_0%,#f6efe4_100%)] p-6 shadow-[0_12px_28px_rgba(15,23,42,0.08)]">
+            <div className="mt-5 rounded-[18px] border border-stone-300 bg-[linear-gradient(180deg,#fffdfa_0%,#f6efe4_100%)] p-7 shadow-[0_12px_28px_rgba(15,23,42,0.08)]">
               <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
                 RA-AI Summary
               </p>
-              <p className="mt-3 text-[24px] font-semibold leading-[1.9] text-slate-900 md:text-[28px]">
+              <p className="mt-3 text-[25px] font-semibold leading-[2] text-slate-950 md:text-[30px]">
                 {contextDraft || "整理結果がここに表示されます。"}
               </p>
             </div>
@@ -487,8 +469,8 @@ export default function InputSection({
               </div>
 
               {hasFollowups && (
-                <div className="mt-5 space-y-3">
-                  <p className="text-[14px] leading-7 text-stone-600">
+              <div className="mt-6 space-y-3">
+                  <p className="text-[15px] leading-8 text-stone-700">
                     気になる項目を押すと、下の補足欄に追加されます。
                   </p>
                   {followups.map((item, index) => (
@@ -510,7 +492,7 @@ export default function InputSection({
                         }`}>
                           {index + 1}
                         </div>
-                        <p className="text-[16px] leading-8 text-stone-700">
+                        <p className="text-[17px] leading-9 text-stone-800">
                           {item}
                         </p>
                       </div>
@@ -523,8 +505,8 @@ export default function InputSection({
                 value={contextEdited}
                 onChange={(e) => onContextEditedChange(e.target.value)}
                 placeholder="必要なら短く補足してください。"
-                rows={7}
-                className="mt-5 min-h-[220px] w-full rounded-[16px] border border-stone-300 bg-white p-5 text-[17px] leading-9 text-slate-800 shadow-[inset_0_1px_2px_rgba(15,23,42,0.03)] placeholder:text-stone-400 focus:border-slate-500 focus:outline-none"
+                rows={9}
+                className="mt-5 min-h-[280px] max-h-[520px] w-full overflow-y-auto rounded-[16px] border border-stone-400 bg-white p-6 text-[18px] leading-10 text-slate-900 shadow-[inset_0_1px_2px_rgba(15,23,42,0.03)] placeholder:text-stone-500 focus:border-slate-600 focus:outline-none"
               />
 
               <div className={nextStepNote}>
@@ -551,18 +533,18 @@ export default function InputSection({
               {isGeneratingFinalContext && <FinalLoadingCard />}
 
               {hasFinalContext && (
-                <div ref={finalContextRef} className="mt-5 rounded-[16px] border-2 border-slate-300 bg-white p-6 shadow-[0_6px_18px_rgba(15,23,42,0.04)]">
+                <div ref={finalContextRef} className="mt-5 rounded-[16px] border-2 border-slate-400 bg-white p-7 shadow-[0_6px_18px_rgba(15,23,42,0.04)]">
                   <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
                     Final Context
                   </p>
-                  <p className="mt-2 text-[19px] font-semibold text-slate-900">
+                  <p className="mt-2 text-[21px] font-semibold text-slate-900">
                     分析に使う最終Context
                   </p>
-                  <p className="mt-4 text-[20px] leading-10 text-stone-800">
+                  <p className="mt-4 max-h-[420px] overflow-y-auto text-[21px] leading-10 text-stone-900">
                     {finalContextDraft}
                   </p>
 
-                  <div className="mt-5 rounded-[14px] border border-dashed border-slate-300 bg-slate-50 px-4 py-3 text-[14px] leading-7 text-stone-600">
+                  <div className="mt-5 rounded-[14px] border border-dashed border-slate-400 bg-slate-50 px-5 py-4 text-[15px] leading-8 text-stone-700">
                     次の一手：この内容でよければ、下から Step2 に進みます。
                   </div>
                 </div>
@@ -571,14 +553,14 @@ export default function InputSection({
               {!!finalContextDraft.trim() &&
                 !isGeneratingFinalContext &&
                 !hasFinalContext && (
-                  <div className="mt-5 rounded-[16px] border-2 border-slate-300 bg-white p-6 shadow-[0_6px_18px_rgba(15,23,42,0.04)]">
+                  <div className="mt-5 rounded-[16px] border-2 border-slate-400 bg-white p-7 shadow-[0_6px_18px_rgba(15,23,42,0.04)]">
                     <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
                       Final Context
                     </p>
-                    <p className="mt-2 text-[19px] font-semibold text-slate-900">
+                    <p className="mt-2 text-[21px] font-semibold text-slate-900">
                       最終整理
                     </p>
-                    <p className="mt-4 text-[20px] leading-10 text-stone-800">
+                    <p className="mt-4 max-h-[420px] overflow-y-auto text-[21px] leading-10 text-stone-900">
                       {finalContextDraft}
                     </p>
                   </div>
@@ -588,7 +570,7 @@ export default function InputSection({
         )}
 
         <div className="rounded-[16px] border-t border-stone-200 pt-6">
-          <p className="text-[15px] leading-8 text-stone-600">
+          <p className="text-[16px] leading-9 text-stone-700">
             一次整理が出れば、次に進めます。
           </p>
 

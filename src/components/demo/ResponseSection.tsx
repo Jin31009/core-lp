@@ -102,11 +102,11 @@ function StepItem({
   index: number;
 }) {
   return (
-    <div className="flex gap-4 rounded-[14px] border border-stone-200 bg-white px-4 py-4">
+    <div className="flex gap-4 rounded-[14px] border border-stone-300 bg-white px-5 py-4.5">
       <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-slate-700 text-[12px] font-semibold text-white">
         {index + 1}
       </div>
-      <p className="text-[15px] leading-8 text-stone-700">{text}</p>
+      <p className="text-[16px] leading-9 text-stone-800">{text}</p>
     </div>
   );
 }
@@ -124,15 +124,15 @@ function OrderedActionCard({
   const frameClass =
     tone === "primary"
       ? "border-slate-600 bg-[linear-gradient(180deg,#f5f8fd_0%,#e7eff9_100%)] shadow-[0_14px_30px_rgba(15,23,42,0.11)]"
-      : "border-stone-200 bg-[#fdfcf9]";
+      : "border-stone-300 bg-[#fdfcf9]";
   const badgeClass =
     tone === "primary"
       ? "bg-slate-900 text-white shadow-sm"
-      : "border border-stone-200 bg-white text-stone-500";
+      : "border border-stone-300 bg-white text-stone-600";
   const bodyCardClass =
     tone === "primary"
       ? "border-slate-300 bg-white/90"
-      : "border-stone-200 bg-[#fffdfa]";
+      : "border-stone-300 bg-[#fffdfa]";
   const cardPaddingClass = tone === "primary" ? "p-7" : "p-5";
   const titleClass =
     tone === "primary"
@@ -140,8 +140,8 @@ function OrderedActionCard({
       : "mt-2 text-[18px] font-semibold text-slate-900";
   const noteClass =
     tone === "primary"
-      ? "mt-2 text-[14px] leading-6 text-stone-700"
-      : "mt-2 text-[12px] leading-6 text-stone-500";
+      ? "mt-2 text-[15px] leading-7 text-stone-800"
+      : "mt-2 text-[13px] leading-7 text-stone-600";
   const stepLabelClass =
     tone === "primary"
       ? "text-[12px] uppercase tracking-[0.16em] text-slate-600"
@@ -178,8 +178,8 @@ function OrderedActionCard({
         </div>
       </div>
 
-      <div className={`mt-4 rounded-[12px] border p-4 ${bodyCardClass}`}>
-        <p className="text-[14px] leading-7 text-stone-800">{item.body}</p>
+      <div className={`mt-4 rounded-[12px] border p-5 ${bodyCardClass}`}>
+        <p className="text-[15px] leading-8 text-stone-900">{item.body}</p>
       </div>
     </div>
   );
@@ -193,12 +193,12 @@ function CompactNgCard({
   const meta = getNgMeta(text);
 
   return (
-    <div className="rounded-[16px] border border-rose-200 bg-white p-4 shadow-[0_2px_10px_rgba(15,23,42,0.03)]">
+    <div className="rounded-[16px] border border-rose-300 bg-white p-5 shadow-[0_2px_10px_rgba(15,23,42,0.03)]">
       <div className="rounded-[10px] border border-rose-200 bg-rose-50 px-3 py-2">
         <p className="text-[12px] uppercase tracking-[0.14em] text-rose-500">
           NG
         </p>
-        <p className="mt-1 text-[15px] font-semibold text-slate-900">
+        <p className="mt-1 text-[16px] font-semibold text-slate-900">
           {meta.title}
         </p>
       </div>
@@ -207,7 +207,7 @@ function CompactNgCard({
         <p className="text-[12px] uppercase tracking-[0.14em] text-emerald-600">
           代わりに
         </p>
-        <p className="mt-1 text-[14px] leading-7 text-stone-700">
+        <p className="mt-1 text-[15px] leading-8 text-stone-800">
           {meta.instead}
         </p>
       </div>
@@ -230,29 +230,29 @@ export default function ResponseSection({
     "border-y border-stone-200 bg-white";
 
   const sectionHeader =
-    "border-b border-stone-200 px-6 py-8 sm:px-8";
+    "border-b border-stone-300 px-6 py-9 sm:px-8";
 
   const sectionTitleClass =
     "mt-3 text-[34px] font-semibold tracking-[-0.02em] text-slate-900";
 
   const leadClass =
-    "mt-4 max-w-4xl text-[18px] leading-9 text-stone-700";
+    "mt-4 max-w-4xl text-[19px] leading-10 text-stone-800";
 
   const mainCard =
-    "border-t border-stone-200 bg-white py-6";
+    "border-t border-stone-300 bg-white py-7";
   const quietCard =
-    "border-t border-stone-200 bg-[#f8f6f1] p-5";
+    "border-t border-stone-300 bg-[#f8f6f1] p-6";
 
   const sectionLabel =
-    "text-[12px] uppercase tracking-[0.18em] text-stone-500";
+    "text-[13px] uppercase tracking-[0.18em] text-stone-600";
 
-  const bodyText = "mt-3 text-[15px] leading-8 text-stone-700";
+  const bodyText = "mt-3 text-[16px] leading-9 text-stone-800";
 
   const nextStepNote =
-    "mt-5 rounded-[14px] border border-dashed border-stone-300 bg-white/80 px-4 py-3 text-[14px] leading-7 text-stone-600";
+    "mt-6 rounded-[14px] border border-dashed border-stone-400 bg-white/90 px-5 py-4 text-[15px] leading-8 text-stone-700";
 
   const primaryButton =
-    "w-full rounded-[14px] bg-orange-500 py-4 text-[16px] font-medium text-white transition hover:bg-orange-600";
+    "w-full rounded-[14px] bg-orange-500 py-4.5 text-[17px] font-medium text-white transition hover:bg-orange-600";
 
   return (
     <section className={sectionShell}>
@@ -266,13 +266,33 @@ export default function ResponseSection({
         </p>
       </div>
 
-      <div className="space-y-6 p-6 sm:p-8">
-        <div className="rounded-[20px] border-2 border-slate-300 bg-white p-6 shadow-[0_8px_22px_rgba(15,23,42,0.05)]">
+      <div className="space-y-7 p-7 sm:p-9">
+        <div className="rounded-[20px] border-2 border-slate-400 bg-white p-7 shadow-[0_8px_22px_rgba(15,23,42,0.05)]">
+          <p className={sectionLabel}>Main Window</p>
+          <p className="mt-2 text-[26px] font-semibold text-slate-900">
+            結論＋対応
+          </p>
+          <div className="mt-4 min-h-[240px] max-h-[420px] overflow-y-auto rounded-[14px] border border-stone-300 bg-[#faf8f3] p-5">
+            <p className="text-[19px] leading-10 text-stone-900">{actionSummary}</p>
+            <div className="mt-4 space-y-3">
+              {flowItems.slice(0, 3).map((item, index) => (
+                <StepItem key={`${item}-${index}`} text={item} index={index} />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <details className="rounded-[20px] border border-stone-300 bg-white p-5">
+          <summary className="cursor-pointer list-none text-[14px] font-semibold text-stone-700">
+            詳細対応を開く
+          </summary>
+          <div className="mt-5">
+        <div className="rounded-[20px] border-2 border-slate-400 bg-white p-7 shadow-[0_8px_22px_rgba(15,23,42,0.05)]">
           <p className={sectionLabel}>① ACEX Sequence</p>
           <p className="mt-2 text-[26px] font-semibold text-slate-900">
             この順で対応案を確認する
           </p>
-          <p className="mt-3 text-[15px] leading-8 text-stone-600">
+          <p className="mt-3 text-[16px] leading-9 text-stone-700">
             まず最初の一手を置き、次の行動を順に重ねます。
           </p>
 
@@ -288,8 +308,8 @@ export default function ResponseSection({
           </div>
 
           {acexItems.length === 0 && (
-            <div className="mt-6 rounded-[16px] border border-stone-200 bg-[#faf8f3] p-5">
-              <p className="text-[14px] leading-7 text-stone-700">
+            <div className="mt-6 rounded-[16px] border border-stone-300 bg-[#faf8f3] p-6">
+              <p className="text-[15px] leading-8 text-stone-800">
                 該当するACEX提案はありません。
               </p>
             </div>
@@ -304,15 +324,15 @@ export default function ResponseSection({
           <div className="space-y-6">
             <div className={quietCard}>
               <p className={sectionLabel}>② Action Summary</p>
-              <p className="mt-2 text-[20px] font-semibold text-slate-900">
+              <p className="mt-2 text-[22px] font-semibold text-slate-900">
                 行動の要約
               </p>
 
-              <div className="mt-5 rounded-[16px] border border-sky-200 bg-sky-50 p-5">
+              <div className="mt-5 rounded-[16px] border border-sky-300 bg-sky-50 p-6">
                 <p className="text-[13px] uppercase tracking-[0.14em] text-sky-700">
                   Summary
                 </p>
-                <p className="mt-2 text-[17px] leading-8 text-slate-900">
+                <p className="mt-2 text-[18px] leading-9 text-slate-900">
                   {actionSummary}
                 </p>
               </div>
@@ -320,7 +340,7 @@ export default function ResponseSection({
 
             <div className={quietCard}>
               <p className={sectionLabel}>③ Sequence Notes</p>
-              <p className="mt-2 text-[20px] font-semibold text-slate-900">
+              <p className="mt-2 text-[22px] font-semibold text-slate-900">
                 順番の補足
               </p>
               <p className={bodyText}>
@@ -340,19 +360,19 @@ export default function ResponseSection({
               <p className={sectionLabel}>Status</p>
               <div className="mt-3 flex flex-wrap items-start justify-between gap-4">
                 <div>
-                  <p className="text-[18px] font-semibold text-slate-900">
+                  <p className="text-[20px] font-semibold text-slate-900">
                     {statusLabel}
                   </p>
-                  <p className="mt-2 text-[13px] leading-7 text-stone-600">
+                  <p className="mt-2 text-[14px] leading-8 text-stone-700">
                     {statusSub}
                   </p>
                 </div>
 
-                <div className="flex items-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-2">
+                <div className="flex items-center gap-2 rounded-full border border-stone-300 bg-white px-4 py-2.5">
                   <span className={`text-[20px] leading-none ${statusColorClass}`}>
                     {statusIcon}
                   </span>
-                  <span className="text-[12px] text-stone-500">{statusLabel}</span>
+                  <span className="text-[13px] text-stone-600">{statusLabel}</span>
                 </div>
               </div>
             </div>
@@ -374,6 +394,8 @@ export default function ResponseSection({
 
           </div>
         </div>
+          </div>
+        </details>
 
         <div className="rounded-[16px] border-t border-stone-200 pt-4">
           <div className="mt-4">

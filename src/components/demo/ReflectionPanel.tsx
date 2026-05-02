@@ -23,30 +23,15 @@ export default function ReflectionPanel({
   currentStep,
 }: ReflectionPanelProps) {
   return (
-    <section className="mt-10 space-y-6">
-
-      {/* 編集メモ */}
-      <div className="rounded-[18px] border border-stone-200 bg-white px-6 py-5 shadow-[0_6px_18px_rgba(15,23,42,0.04)]">
-        <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
-          Editorial Note
-        </p>
-
-        <p className="mt-3 text-[18px] leading-9 text-stone-700">
+    <section className="mt-8">
+      <details className="rounded-[16px] border border-stone-300 bg-[#f8f5ef] px-5 py-4">
+        <summary className="cursor-pointer list-none text-[13px] font-semibold tracking-[0.08em] text-stone-700">
+          補助ガイド（振り返りメモ）
+        </summary>
+        <p className="mt-3 text-[15px] leading-8 text-stone-700">
           {getReflection(currentStep)}
         </p>
-      </div>
-
-      {/* 構造ガイド */}
-      <div className="rounded-[18px] border border-stone-200 bg-[#f8f5ef] px-6 py-6 shadow-[0_6px_18px_rgba(15,23,42,0.04)]">
-        <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
-          Structure
-        </p>
-
-        <p className="mt-3 text-[16px] leading-8 text-stone-600">
-          このデモは、次の流れで進みます。
-        </p>
-
-        <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {[
             "Step1｜観察入力",
             "Step2｜状態の読み取り",
@@ -56,18 +41,17 @@ export default function ReflectionPanel({
           ].map((item, i) => (
             <div
               key={i}
-              className={`rounded-[12px] border px-4 py-3 text-[14px] transition ${
+              className={`rounded-[10px] border px-3 py-2 text-[13px] ${
                 currentStep === i + 1
-                  ? "bg-slate-700 text-white"
-                  : "bg-white text-stone-700 border-stone-200"
+                  ? "border-slate-700 bg-slate-700 text-white"
+                  : "border-stone-300 bg-white text-stone-700"
               }`}
             >
               {item}
             </div>
           ))}
         </div>
-      </div>
-
+      </details>
     </section>
   );
 }
