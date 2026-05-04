@@ -78,11 +78,11 @@ const magazineCopyBySlideId: Record<string, MagazineCopy> = {
   "03": { title: "構造として読めるか", lead: "問いを立てる", main: ["ナラティブは、", "構造として読めるのか。"] },
   "04": { title: "観測を設計する", lead: "同じ条件で見る", main: ["条件を固定すれば、", "比較できる。"] },
   "05-01": { title: "条件を決める", lead: "何を見るか", main: ["条件が決まると、", "見える。"] },
-  "05-02": { title: "見える形にする", lead: "そのままでは見えない", main: ["記述は、", "観測可能になる。"] },
+  "05-02": { title: "05 フィルター", lead: "自由記述を読む4つの視点", main: ["このままでは、", "意味を取りこぼします。"] },
   "05-03": { title: "使える状態", lead: "見えるだけでは足りない", main: ["比較・再現・分析が、", "できる。"] },
   "05-04": { title: "観測は成立した", lead: "条件と可視化", main: ["ナラティブは、", "扱える。"] },
   "06-01": { title: "原因ではない", lead: "見方を変える", main: ["ズレは、", "条件不足として現れる。"] },
-  "06-02": { title: "構造で読む", lead: "どこで起きるか", main: ["ズレは、", "構造の中にある。"] },
+  "06-02": { title: "06 結果", lead: "自由記述は「重なり」を持つ構造だった", main: ["ひとつの声を、", "ひとつのラベルでは捉えきれません。"] },
   "06-03": { title: "重なりとして見る", lead: "ひとつではない", main: ["ズレは、", "条件の重なりである。"] },
   "06-04": { title: "ズレは配置", lead: "見え方が変わる", main: ["ズレは、", "配置である。"] },
   "07-01": { title: "同じではない", lead: "見ているのに", main: ["同じに見えても、", "同じではない。"] },
@@ -153,11 +153,11 @@ const slides: Slide[] = [
 
   makeSlide("04", "02｜Observation", "下層ページ", "観測設計", "302件を同一条件で観測する", "個別印象ではなく、同一条件で比較可能にする。", ["対象を固定する。", "条件を固定する。", "同一フィルターで読む。"]),
   makeSlide("05-01", "02｜Observation", "下層ページ", "フィルター条件の設定", "ナラティブを観測するために、フィルターを採用する", "同じ条件で見なければ、比較も再現もできない。", ["観測する前に条件を先に決める。", "同一条件で観測して比較可能性を確保する。", "記録の前提を固定する。"]),
-  makeSlide("05-02", "02｜Observation", "下層ページ", "観測フレーム", "条件を通すことで、ナラティブは見える", "フィルターを通すことで、ナラティブは見える。", ["ナラティブ", "フィルター（観測条件）", "見える", "構造 / 変異 / 欠損"]),
+  makeSlide("05-02", "02｜Observation", "下層ページ", "05 フィルター", "自由記述を読む4つの視点", "このままでは、意味を取りこぼします。", ["中心：自由記述", "背景 / 出来事 / 意味の変化 / 不足", "4視点で読む", "読むだけでは足りない。"]),
   makeSlide("05-03", "02｜Observation", "下層ページ", "フィルターの意味", "見える状態は、比較・再現・分析に使える", "見える状態は、比較・再現・分析に使える。", ["比較できる", "再現できる", "分析できる"]),
   makeSlide("05-04", "02｜Observation", "下層ページ", "観測設計のまとめ", "05章結論：条件→見える→使えるを統合する", "ナラティブは、条件→見える→使えるの統合で記述可能になる。", ["05-01 条件を決める", "05-02 見える", "05-03 使える"]),
   makeSlide("06-01", "02｜Observation", "下層ページ", "構造の把握", "ズレの見方を、原因から条件へ切り替える", "ズレを原因から切り離し、未充足条件として読む入口をつくる。", ["ズレは原因ではなく", "未充足条件として", "読めないか。"]),
-  makeSlide("06-02", "02｜Observation", "下層ページ", "構造の提示（SRPL）", "人の体験は、4つの未充足条件で整理できる", "ズレは、SRPLの未充足条件として読める。", ["S：安全（Safety）", "R：尊厳（Respect）", "P：見通し（Perspective）", "L：役割（Role）"]),
+  makeSlide("06-02", "02｜Observation", "下層ページ", "06 結果", "自由記述は「重なり」を持つ構造だった", "ひとつの声を、ひとつのラベルでは捉えきれません。", ["背景：退院後の不安", "出来事：退院説明", "変化：理解 → 不安残存", "不足：見通し"]),
   makeSlide("06-03", "02｜Observation", "下層ページ", "配置の把握", "ズレは、SRPL未充足条件の配置として読める", "原因ではなく、配置として読む。", ["ズレ ＝", "複数の未充足条件の重なり", "例：P（見通し）＋ L（役割）"]),
   makeSlide("06-04", "02｜Observation", "下層ページ", "理解の確定", "06章の結論を確定する", "ズレは原因ではなく、SRPLの未充足条件の配置である。", ["ズレは原因ではなく", "SRPLの未充足条件の", "配置である"]),
   makeSlide("06", "02｜Observation", "下層ページ", "構造の把握", "ズレを未充足条件として読む", "ズレは単一原因ではなく、SRPLの配置として観測される。", ["SRPLとして配置する。", "複数条件として読む。", "構造として観測する。"]),
@@ -1002,28 +1002,54 @@ export default function RASSHybridSlides() {
                   <div className="flex h-full flex-col justify-between px-6 py-5 text-slate-900 md:px-9 md:py-7">
                     <div className="text-center">
                       <h4 className="text-[1.45rem] font-black leading-tight md:text-[1.9rem]">
-                        観測フレーム
+                        05 フィルター
                       </h4>
                       <p className="mt-3 text-sm font-semibold text-slate-700 md:text-base">
-                        条件を通すことで、ナラティブは見える
+                        自由記述を読む4つの視点
                       </p>
                     </div>
 
                     <div className="flex flex-1 items-center justify-center">
-                      <div className="flex w-full max-w-4xl flex-col items-center gap-5 text-center">
-                        <div className="flex w-full items-center justify-between gap-2 md:gap-4">
-                          <p className="flex-1 rounded-lg border border-slate-200 bg-slate-50 px-3 py-4 text-sm font-black text-slate-900 md:text-base">ナラティブ</p>
-                          <span className="shrink-0 text-lg font-black text-slate-400 md:text-xl">→</span>
-                          <p className="flex-1 rounded-lg border border-slate-200 bg-slate-50 px-3 py-4 text-sm font-black text-slate-900 md:text-base">フィルター（観測条件）</p>
-                          <span className="shrink-0 text-lg font-black text-slate-400 md:text-xl">→</span>
-                          <p className="flex-1 rounded-lg border border-slate-200 bg-slate-50 px-3 py-4 text-sm font-black text-slate-900 md:text-base">見える</p>
+                      <div className="relative h-[290px] w-full max-w-3xl scale-[1.06] text-center">
+                        <div className="absolute left-1/2 top-1/2 z-10 w-[180px] -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-cyan-300/60 bg-cyan-400/10 px-4 py-3 shadow-[0_0_22px_rgba(34,211,238,0.2)]">
+                          <p className="text-lg font-black text-slate-900">自由記述</p>
                         </div>
-                        <p className="text-xs font-semibold tracking-wide text-slate-500 md:text-sm">構造 / 変異 / 欠損</p>
+                        <div className="absolute left-1/2 top-2 w-[220px] -translate-x-1/2 rounded-full border border-slate-300 bg-slate-50/70 px-3 py-2">
+                          <p className="text-sm font-black text-slate-900">背景</p>
+                          <p className="text-[11px] leading-snug text-slate-600">どのような状況で、不安や期待があったか</p>
+                        </div>
+                        <div className="absolute right-0 top-1/2 w-[220px] -translate-y-1/2 rounded-full border border-slate-300 bg-slate-50/70 px-3 py-2">
+                          <p className="text-sm font-black text-slate-900">出来事</p>
+                          <p className="text-[11px] leading-snug text-slate-600">実際にどのような出来事や対応があったか</p>
+                        </div>
+                        <div className="absolute bottom-2 left-1/2 w-[220px] -translate-x-1/2 rounded-full border border-slate-300 bg-slate-50/70 px-3 py-2">
+                          <p className="text-sm font-black text-slate-900">不足</p>
+                          <p className="text-[11px] leading-snug text-slate-600">説明・見通し・声かけなど、何が足りなかったか</p>
+                        </div>
+                        <div className="absolute left-0 top-1/2 w-[220px] -translate-y-1/2 rounded-full border border-slate-300 bg-slate-50/70 px-3 py-2">
+                          <p className="text-sm font-black text-slate-900">意味の変化</p>
+                          <p className="text-[11px] leading-snug text-slate-600">どこで意味が変わり、捉え方が変化したか</p>
+                        </div>
+                        <svg
+                          viewBox="0 0 100 100"
+                          className="pointer-events-none absolute inset-0 h-full w-full"
+                          aria-hidden="true"
+                        >
+                          <defs>
+                            <marker id="filterArrow" markerWidth="4.5" markerHeight="4.5" refX="4" refY="2.25" orient="auto">
+                              <path d="M0,0 L4.5,2.25 L0,4.5 z" fill="rgba(100,116,139,0.6)" />
+                            </marker>
+                          </defs>
+                          <path d="M50 50 L50 23" stroke="rgba(100,116,139,0.55)" strokeWidth="1.2" markerEnd="url(#filterArrow)" />
+                          <path d="M50 50 L77 50" stroke="rgba(100,116,139,0.55)" strokeWidth="1.2" markerEnd="url(#filterArrow)" />
+                          <path d="M50 50 L50 77" stroke="rgba(100,116,139,0.55)" strokeWidth="1.2" markerEnd="url(#filterArrow)" />
+                          <path d="M50 50 L23 50" stroke="rgba(100,116,139,0.55)" strokeWidth="1.2" markerEnd="url(#filterArrow)" />
+                        </svg>
                       </div>
                     </div>
 
                     <p className="text-center text-xs font-medium leading-snug text-slate-600 md:text-sm">
-                      フィルターを通すことで、ナラティブは見える
+                      自由記述は、読むだけでは足りない。
                     </p>
                   </div>
                 ) : isFilterMeaningSlide ? (
@@ -1105,36 +1131,49 @@ export default function RASSHybridSlides() {
                   <div className="flex h-full flex-col justify-between px-6 py-5 text-slate-900 md:px-9 md:py-7">
                     <div className="text-center">
                       <h4 className="text-[1.45rem] font-black leading-tight md:text-[1.9rem]">
-                        構造の提示（SRPL）
+                        06 結果
                       </h4>
                       <p className="mt-3 text-sm font-semibold text-slate-700 md:text-base">
-                        人の体験は、4つの条件で整理できる
+                        自由記述は「重なり」を持つ構造だった
                       </p>
                     </div>
 
                     <div className="flex flex-1 items-center justify-center">
-                      <div className="grid w-full max-w-3xl grid-cols-2 gap-3 md:gap-4">
-                        <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-4 text-center">
-                          <p className="text-lg font-black text-slate-900 md:text-xl">S：安全</p>
-                          <p className="mt-1 text-xs font-semibold text-slate-600 md:text-sm">Safety</p>
-                        </div>
-                        <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-4 text-center">
-                          <p className="text-lg font-black text-slate-900 md:text-xl">R：尊厳</p>
-                          <p className="mt-1 text-xs font-semibold text-slate-600 md:text-sm">Respect</p>
-                        </div>
-                        <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-4 text-center">
-                          <p className="text-lg font-black text-slate-900 md:text-xl">P：見通し</p>
-                          <p className="mt-1 text-xs font-semibold text-slate-600 md:text-sm">Perspective</p>
-                        </div>
-                        <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-4 text-center">
-                          <p className="text-lg font-black text-slate-900 md:text-xl">L：役割</p>
-                          <p className="mt-1 text-xs font-semibold text-slate-600 md:text-sm">Role</p>
+                      <div className="w-full max-w-3xl rounded-xl border border-slate-200 bg-slate-50/95 p-4 md:p-5">
+                        <div className="space-y-2.5">
+                          <div className="rounded-lg border border-slate-200 bg-white/90 px-3 py-3">
+                            <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">記述の概要</p>
+                            <p className="mt-1 text-sm font-bold leading-snug text-slate-900 md:text-[15px]">
+                              「退院説明は受けたが、退院後の生活が想像できず不安が残った」
+                            </p>
+                          </div>
+
+                          <div className="flex items-center justify-between gap-3 rounded-lg border border-slate-200 bg-white/85 px-3 py-2.5">
+                            <p className="text-xs font-bold tracking-wide text-slate-500">単純分類</p>
+                            <p className="rounded-full border border-rose-200 bg-rose-50 px-3 py-1 text-sm font-black text-rose-700">不満</p>
+                          </div>
+
+                          <div className="flex items-center justify-center">
+                            <span className="rounded-full border border-rose-200 bg-rose-50 px-3 py-1 text-xs font-black text-rose-600">
+                              ↓ 取りこぼす
+                            </span>
+                          </div>
+
+                          <div className="rounded-lg border border-cyan-200 bg-cyan-50/55 px-3 py-3">
+                            <p className="text-center text-xs font-black tracking-wide text-slate-700">フィルターで読む</p>
+                            <div className="mt-2 space-y-1.5">
+                              <p className="rounded-md bg-white/80 px-2.5 py-1.5 text-xs font-semibold text-slate-800">背景：退院後の不安</p>
+                              <p className="rounded-md bg-white/80 px-2.5 py-1.5 text-xs font-semibold text-slate-800">出来事：退院説明</p>
+                              <p className="rounded-md bg-white/80 px-2.5 py-1.5 text-xs font-semibold text-slate-800">変化：理解 → 不安残存</p>
+                              <p className="rounded-md bg-white/80 px-2.5 py-1.5 text-xs font-semibold text-slate-800">不足：見通し</p>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
 
                     <p className="text-center text-xs font-medium leading-snug text-slate-600 md:text-sm">
-                      ズレは、SRPLの未充足条件として読める
+                      4つの視点が、1件の記述の中に同時に存在していました。
                     </p>
                   </div>
                 ) : isPlacementGraspSlide ? (
