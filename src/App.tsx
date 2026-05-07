@@ -1,4 +1,5 @@
 import RASSConferenceSlides from "./pages/slides/RASSConferenceSlides";
+import RASSFigureSlides2026 from "./pages/slides/RASSFigureSlides2026";
 import RASSWebSlides2026 from "./pages/slides/RASSWebSlides2026";
 import RASSHybridSlides from "./components/slides/RASSHybridSlides";
 import CoreLPPage from "./pages/CoreLPPage";
@@ -34,6 +35,8 @@ function resolvePageToPath(page: string) {
       return "/conference-slides";
     case "rass-web-slides-2026":
       return "/rass-web-slides-2026";
+    case "rass-figure-slides-2026":
+      return "/rass-figure-slides-2026";
     case "top":
     case "corelp":
     case "lp":
@@ -66,6 +69,7 @@ export default function App() {
       <Route path="/evidence" element={<CoreLPPage setPage={setPage} />} />
       <Route path="/slides" element={<RASSHybridSlides />} />
       <Route path="/conference-slides" element={<RASSConferenceSlides />} />
+      <Route path="/rass-figure-slides-2026" element={<RASSFigureSlides2026 />} />
       <Route path="/rass-web-slides-2026" element={<RASSWebSlides2026 />} />
       <Route path="/rass-web-slides-2026/*" element={<RASSWebSlides2026 />} />
       <Route path="*" element={<Navigate to="/" replace />} />
