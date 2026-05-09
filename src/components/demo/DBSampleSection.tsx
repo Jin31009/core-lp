@@ -3,12 +3,14 @@ import type { RASSCaseRecord } from "../../lib/rassCaseCsv";
 type DBSampleSectionProps = {
   record: RASSCaseRecord | null;
   onDownloadCsv: () => void;
+  onDownloadMarkdown: () => void;
   innerRef?: React.RefObject<HTMLDivElement | null>;
 };
 
 export default function DBSampleSection({
   record,
   onDownloadCsv,
+  onDownloadMarkdown,
   innerRef,
 }: DBSampleSectionProps) {
   const sectionShell =
@@ -67,6 +69,10 @@ export default function DBSampleSection({
         <p className={leadClass}>
           ここに表示されている内容が、そのままCSVとして保存されます。
         </p>
+        <div className="mt-4 rounded-[12px] border border-amber-300 bg-amber-50 px-4 py-3 text-[16px] leading-8 text-amber-900">
+          <p>出力前に、個人が特定される情報が含まれていないか確認してください。</p>
+          <p>この出力は、匿名PoC・非診断・説明改善用の記録として扱います。</p>
+        </div>
       </div>
 
       <div className="space-y-8 p-6 sm:p-8">
@@ -134,6 +140,12 @@ export default function DBSampleSection({
               {resolvedNotes}
             </div>
           </div>
+          <div className={row}>
+            <div className={label}>Safety Labels</div>
+            <div className="text-[15px] leading-8 text-stone-800">
+              {record?.safety_labels?.join(" / ") || "匿名PoC / 非診断 / 説明改善用"}
+            </div>
+          </div>
         </div>
 
         <div className={blockCard}>
@@ -154,6 +166,13 @@ export default function DBSampleSection({
               className={secondaryButton}
             >
               このケースを記録する（CSVダウンロード）
+            </button>
+            <button
+              type="button"
+              onClick={onDownloadMarkdown}
+              className={secondaryButton}
+            >
+              このケースを記録する（Markdownダウンロード）
             </button>
           </div>
         </div>

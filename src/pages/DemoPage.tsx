@@ -9,7 +9,12 @@ import EditorialSectionHeader from "../components/shared/EditorialSectionHeader"
 import SiteHeader from "../components/shared/SiteHeader";
 import FooterSection from "../components/core/FooterSection";
 import { analyzeCase } from "../lib/rassEngine";
-import { exportRASSCaseToCSV, type RASSCaseRecord } from "../lib/rassCaseCsv";
+import {
+  exportRASSCaseToCSV,
+  exportRASSCaseToMarkdown,
+  maskSensitiveText,
+  type RASSCaseRecord,
+} from "../lib/rassCaseCsv";
 
 type DemoPageProps = {
   setPage?: (page: string) => void;
@@ -156,6 +161,8 @@ export default function DemoPage({ setPage }: DemoPageProps) {
   const [whyTags, setWhyTags] = useState<string[]>([]);
   const [whyMemo, setWhyMemo] = useState("");
   const [nextAssets, setNextAssets] = useState<string[]>([]);
+  const [consentNoPII, setConsentNoPII] = useState(false);
+  const [consentNonDiagnosis, setConsentNonDiagnosis] = useState(false);
 
   const caseContext =
     finalContextDraft.trim() || contextEdited.trim() || primaryContextDraft;
@@ -414,6 +421,22 @@ export default function DemoPage({ setPage }: DemoPageProps) {
     URL.revokeObjectURL(url);
   };
 
+  const handleDownloadMarkdown = () => {
+    if (!csvRecord) return;
+
+    const markdown = exportRASSCaseToMarkdown(csvRecord);
+    const blob = new Blob([markdown], { type: "text/markdown;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = `${csvRecord.case_id}.md`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   const csvRecord: RASSCaseRecord | null = stepResult && recordTimestamp
     ? (() => {
         const timestamp = recordTimestamp;
@@ -423,8 +446,8 @@ export default function DemoPage({ setPage }: DemoPageProps) {
           case_id: `rass-case-${compactTimestamp}`,
           created_at: timestamp,
           updated_at: timestamp,
-          context_raw: observationRaw.trim(),
-          context_final: analysisContext,
+          context_raw: maskSensitiveText(observationRaw.trim()),
+          context_final: maskSensitiveText(analysisContext),
           context_source: contextSource,
           max_delta: stepResult.analysis.MAX_DELTA,
           trigger: stepResult.analysis.Trigger,
@@ -443,7 +466,10 @@ export default function DemoPage({ setPage }: DemoPageProps) {
           analysis_version: "rass_cases_csv@1",
           why_tags: whyTags,
           next_assets: nextAssets,
-          notes: [afterNote.trim(), whyMemo.trim()].filter(Boolean).join(" | "),
+          notes: maskSensitiveText(
+            [afterNote.trim(), whyMemo.trim()].filter(Boolean).join(" | ")
+          ),
+          safety_labels: ["匿名PoC", "非診断", "説明改善用"],
         };
       })()
     : null;
@@ -600,6 +626,8 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                     setPrimaryContextDraft("");
                     setContextFollowups([]);
                     setFinalContextDraft("");
+                    setConsentNoPII(false);
+                    setConsentNonDiagnosis(false);
                     resetLearningState();
                     setMaxUnlockedStep(1);
                     setSelectedStep(1);
@@ -608,6 +636,8 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                   onEmotionChange={(value) => {
                     setEmotion(value);
                     setFinalContextDraft("");
+                    setConsentNoPII(false);
+                    setConsentNonDiagnosis(false);
                     resetLearningState();
                     setMaxUnlockedStep(1);
                     setSelectedStep(1);
@@ -616,6 +646,8 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                   onUrgencyChange={(value) => {
                     setUrgency(value);
                     setFinalContextDraft("");
+                    setConsentNoPII(false);
+                    setConsentNonDiagnosis(false);
                     resetLearningState();
                     setMaxUnlockedStep(1);
                     setSelectedStep(1);
@@ -640,6 +672,8 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                     setPrimaryContextDraft("");
                     setContextFollowups([]);
                     setFinalContextDraft("");
+                    setConsentNoPII(false);
+                    setConsentNonDiagnosis(false);
                     resetLearningState();
                     setSelectedStep(1);
                     setMaxUnlockedStep(1);
@@ -648,6 +682,10 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                   finalContextDraft={finalContextDraft}
                   isGeneratingFinalContext={isGeneratingFinalContext}
                   onGenerateFinalContext={handleGenerateFinalContext}
+                  consentNoPII={consentNoPII}
+                  onConsentNoPIIChange={setConsentNoPII}
+                  consentNonDiagnosis={consentNonDiagnosis}
+                  onConsentNonDiagnosisChange={setConsentNonDiagnosis}
                 />
               )}
 
@@ -706,6 +744,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                 <DBSampleSection
                   record={csvRecord}
                   onDownloadCsv={handleDownloadCsv}
+                  onDownloadMarkdown={handleDownloadMarkdown}
                   innerRef={undefined}
                 />
               )}

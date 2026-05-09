@@ -176,6 +176,8 @@ export default function CaseReportSection({
         <p className="text-[11px] uppercase tracking-[0.24em] text-stone-500">
           Step 04 / Case Learning
         </p>
+        <p className="mt-2 text-[15px] leading-8 text-stone-700">匿名PoC（非診断）</p>
+        <p className="text-[15px] leading-8 text-stone-600">説明改善のための試作です</p>
         <h2 className={sectionTitleClass}>今回の対応を、次に使える形で残す</h2>
         <p className={leadClass}>
           ここでは正しい報告書ではなく、この場面の構造を学びとして残し、次に使える形へ整えます。

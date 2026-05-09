@@ -19,6 +19,10 @@ type InputSectionProps = {
   finalContextDraft: string;
   isGeneratingFinalContext: boolean;
   onGenerateFinalContext: () => void;
+  consentNoPII: boolean;
+  onConsentNoPIIChange: (checked: boolean) => void;
+  consentNonDiagnosis: boolean;
+  onConsentNonDiagnosisChange: (checked: boolean) => void;
 };
 
 const emotionOptions = ["不安", "怒り", "戸惑い", "悲しみ", "無反応"];
@@ -187,6 +191,10 @@ export default function InputSection({
   finalContextDraft,
   isGeneratingFinalContext,
   onGenerateFinalContext,
+  consentNoPII,
+  onConsentNoPIIChange,
+  consentNonDiagnosis,
+  onConsentNonDiagnosisChange,
 }: InputSectionProps) {
   const [showSecondaryInputs, setShowSecondaryInputs] = useState(false);
   const finalContextRef = useRef<HTMLDivElement | null>(null);
@@ -238,7 +246,11 @@ export default function InputSection({
     hasContextResult &&
     (contextEdited.trim().length > 0 || contextDraft.trim().length > 0);
 
-  const analysisDisabled = text.trim().length === 0 || isGenerating;
+  const analysisDisabled =
+    text.trim().length === 0 ||
+    isGenerating ||
+    !consentNoPII ||
+    !consentNonDiagnosis;
 
   const requestButtonClass = canRequestContext
     ? "border-slate-700 bg-slate-700 text-white hover:bg-slate-800"
@@ -289,6 +301,45 @@ export default function InputSection({
 
       <div className="space-y-9 p-7 sm:p-9">
         <div className={panelCard}>
+          <div className="rounded-[14px] border border-amber-300 bg-amber-50 p-4">
+            <p className="text-[16px] font-semibold leading-7 text-amber-900">安心して試すためのお願い</p>
+            <p className="mt-2 text-[16px] leading-8 text-amber-900">
+              このデモは、説明の伝わり方を整理するための試作です。診断・治療判断は行いません。
+            </p>
+            <p className="mt-2 text-[16px] leading-8 text-amber-900">
+              氏名、病院名、患者ID、電話番号、住所など、個人が特定される情報は入力しないでください。
+            </p>
+            <p className="mt-2 text-[16px] leading-8 text-amber-900">
+              場面の要点だけを、短く入力してください。
+            </p>
+          </div>
+        </div>
+
+        <div className={panelCard}>
+          <p className="text-[13px] uppercase tracking-[0.18em] text-stone-500">Consent</p>
+          <div className="mt-3 space-y-3">
+            <label className="flex items-start gap-3 text-[16px] leading-8 text-stone-700">
+              <input
+                type="checkbox"
+                checked={consentNoPII}
+                onChange={(e) => onConsentNoPIIChange(e.target.checked)}
+                className="mt-1 h-4 w-4"
+              />
+              <span>個人が特定される情報を入力しないことに同意します</span>
+            </label>
+            <label className="flex items-start gap-3 text-[16px] leading-8 text-stone-700">
+              <input
+                type="checkbox"
+                checked={consentNonDiagnosis}
+                onChange={(e) => onConsentNonDiagnosisChange(e.target.checked)}
+                className="mt-1 h-4 w-4"
+              />
+              <span>このデモは診療判断ではなく、説明改善のための試作であることを理解しました</span>
+            </label>
+          </div>
+        </div>
+
+        <div className={panelCard}>
           <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
             Main Window
           </p>
@@ -303,7 +354,7 @@ export default function InputSection({
             rows={5}
             className="mt-4 min-h-[260px] max-h-[480px] w-full overflow-y-auto rounded-[16px] border border-stone-400 bg-white p-6 text-[19px] leading-10 text-slate-900 shadow-[inset_0_1px_2px_rgba(15,23,42,0.03)] placeholder:text-stone-500 focus:border-slate-600 focus:outline-none"
           />
-          <div className="mt-4 text-[14px] leading-7 text-stone-600">
+          <div className="mt-4 text-[15px] leading-8 text-stone-600">
             断片のままで問題ありません。まず書き出しを優先します。
           </div>
         </div>
@@ -320,7 +371,7 @@ export default function InputSection({
         <div className={panelCard}>
           <details open={showSecondaryInputs} className="rounded-[14px] border border-stone-300 bg-[#faf8f3] p-4">
             <summary
-              className="cursor-pointer list-none text-[14px] font-semibold text-stone-700"
+              className="cursor-pointer list-none text-[15px] font-semibold leading-8 text-stone-700"
               onClick={(e) => {
                 e.preventDefault();
                 setShowSecondaryInputs((prev) => !prev);
@@ -573,6 +624,11 @@ export default function InputSection({
           <p className="text-[16px] leading-9 text-stone-700">
             一次整理が出れば、次に進めます。
           </p>
+          {!consentNoPII || !consentNonDiagnosis ? (
+            <p className="mt-2 text-[15px] leading-8 text-rose-700">
+              Step2へ進むには、上の同意チェック2項目が必要です。
+            </p>
+          ) : null}
 
           <div className="mt-4 flex flex-wrap items-center gap-3">
             <button

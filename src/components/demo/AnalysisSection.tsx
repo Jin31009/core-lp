@@ -385,6 +385,8 @@ export default function AnalysisSection({
         <p className="text-[11px] uppercase tracking-[0.24em] text-stone-500">
           Step 02 / Analysis
         </p>
+        <p className="mt-2 text-[15px] leading-8 text-stone-700">匿名PoC（非診断）</p>
+        <p className="text-[15px] leading-8 text-stone-600">説明改善のための試作です</p>
         <h2 className={sectionTitleClass}>関係の読み取り</h2>
         <p className={leadClass}>
           整理したContextをもとに、いま表に出ている状態を短く確認します。

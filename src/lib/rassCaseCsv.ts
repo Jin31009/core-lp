@@ -35,6 +35,7 @@ export type RASSCaseRecord = {
   why_tags: string[];
   next_assets: string[];
   notes: string;
+  safety_labels: string[];
 };
 
 export const RASS_CASE_COLUMNS = [
@@ -62,7 +63,21 @@ export const RASS_CASE_COLUMNS = [
   "why_tags",
   "next_assets",
   "notes",
+  "safety_labels",
 ] as const;
+
+const EMAIL_PATTERN = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi;
+const PHONE_PATTERN =
+  /\b(?:\+?\d{1,3}[-.\s]?)?(?:\(?\d{2,4}\)?[-.\s]?)\d{2,4}[-.\s]?\d{3,4}\b/g;
+const LONG_NUMBER_PATTERN = /\b\d{7,}\b/g;
+
+export function maskSensitiveText(text: string): string {
+  if (!text) return "";
+  return text
+    .replace(EMAIL_PATTERN, "[MASKED]")
+    .replace(PHONE_PATTERN, "[MASKED]")
+    .replace(LONG_NUMBER_PATTERN, "[MASKED]");
+}
 
 function normalizeScalar(value: string | number | null | undefined): string {
   if (value == null) return "";
@@ -99,6 +114,7 @@ export function toRASSCaseCells(record: RASSCaseRecord): string[] {
     joinPipeDelimited(record.why_tags),
     joinPipeDelimited(record.next_assets),
     normalizeScalar(record.notes),
+    joinPipeDelimited(record.safety_labels),
   ];
 }
 
@@ -125,4 +141,35 @@ export function exportRASSCasesToCSV(records: readonly RASSCaseRecord[]): string
   ];
 
   return rows.join("\n");
+}
+
+export function exportRASSCaseToMarkdown(record: RASSCaseRecord): string {
+  const maskedContextRaw = maskSensitiveText(record.context_raw);
+  const maskedContextFinal = maskSensitiveText(record.context_final);
+  const maskedNotes = maskSensitiveText(record.notes);
+
+  return [
+    `# ${record.case_id}`,
+    "",
+    "## Safety",
+    `- Labels: ${record.safety_labels.join(", ") || "anonymous_poc"}`,
+    "- Notice: この記録は匿名PoC・非診断・説明改善用です。",
+    "",
+    "## Context",
+    `- Raw: ${maskedContextRaw}`,
+    `- Final: ${maskedContextFinal}`,
+    "",
+    "## Analysis",
+    `- Delta: ${record.max_delta}`,
+    `- Trigger: ${record.trigger}`,
+    `- AK Primary: ${record.ak_primary ?? ""}`,
+    `- APCE Miss: ${record.apce_miss.join(" | ")}`,
+    `- Case Phase: ${record.case_phase}`,
+    "",
+    "## Response",
+    `- ACEX: ${record.acex_codes.map((code, index) => `${code}:${record.acex_labels[index] ?? ""}`).join(" | ")}`,
+    `- Why Tags: ${record.why_tags.join(" | ")}`,
+    `- Next Assets: ${record.next_assets.join(" | ")}`,
+    `- Notes: ${maskedNotes}`,
+  ].join("\n");
 }

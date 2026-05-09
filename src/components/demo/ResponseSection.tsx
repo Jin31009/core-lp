@@ -260,6 +260,8 @@ export default function ResponseSection({
         <p className="text-[11px] uppercase tracking-[0.24em] text-stone-500">
           Step 03 / Response
         </p>
+        <p className="mt-2 text-[15px] leading-8 text-stone-700">匿名PoC（非診断）</p>
+        <p className="text-[15px] leading-8 text-stone-600">説明改善のための試作です</p>
         <h2 className={sectionTitleClass}>次の対応</h2>
         <p className={leadClass}>
           Step2 の読み取りをもとに、ここでは ACEX を対応案として順に確認します。
