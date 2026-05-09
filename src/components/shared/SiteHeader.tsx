@@ -46,10 +46,6 @@ export default function SiteHeader({ setPage, currentPage }: Props) {
   }, []);
 
   useEffect(() => {
-    setIsMenuOpen(false);
-  }, [currentPage]);
-
-  useEffect(() => {
     if (!isMenuOpen) return;
 
     const handlePointerDown = (event: MouseEvent) => {
@@ -89,8 +85,8 @@ export default function SiteHeader({ setPage, currentPage }: Props) {
 
           {isMobileNav ? (
             <div style={mobileHeaderActionsStyle}>
-              <a href="/slides" style={mobileSlidesCtaLinkStyle}>
-                WEBスライド（事前資料）
+              <a href="/rass-figure-slides-2026" style={mobileSlidesCtaLinkStyle}>
+                WEBスライド（漫画＋Figure版）
               </a>
 
               <button
@@ -157,8 +153,8 @@ export default function SiteHeader({ setPage, currentPage }: Props) {
                 体験する
               </button>
 
-              <a href="/slides" style={slidesCtaLinkStyle}>
-                WEBスライド（事前資料）
+              <a href="/rass-figure-slides-2026" style={slidesCtaLinkStyle}>
+                WEBスライド（漫画＋Figure版）
               </a>
             </nav>
           )}
@@ -200,8 +196,8 @@ export default function SiteHeader({ setPage, currentPage }: Props) {
                 ) : null}
               </button>
 
-              <a href="/slides" style={mobileSlidesMenuCtaLinkStyle}>
-                WEBスライド（事前資料）
+              <a href="/rass-figure-slides-2026" style={mobileSlidesMenuCtaLinkStyle}>
+                WEBスライド（漫画＋Figure版）
               </a>
             </nav>
           </div>

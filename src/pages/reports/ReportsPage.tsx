@@ -52,8 +52,8 @@ export default function ReportsPage({ setPage }: Props) {
           </section>
 
           <div style={linksStyle}>
-            <a href="/slides" style={primaryLinkStyle}>
-              WEBスライド（事前資料）を見る
+            <a href="/rass-figure-slides-2026" style={primaryLinkStyle}>
+              WEBスライド（漫画＋Figure版）を見る
             </a>
             <a href="/conference-slides" style={linkStyle}>
               学会発表スライド

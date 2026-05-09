@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 type ViewMode = "both" | "figure" | "manga";
 
@@ -21,6 +21,7 @@ const slides: RassSlide[] = [
     subtitle: "研究テーマの入口",
     figureSrc: "/assets/slides/figures-2026/00-cover-figure.png",
     mangaSrc: "/assets/slides/manga-2026/00-cover-manga.png",
+    audioSrc: "/audio/rass-2026/00-cover.mp3",
     points: ["発表テーマの入口", "QRからWEBスライドへ", "自由記述を構造として読む"],
   },
   {
@@ -30,6 +31,7 @@ const slides: RassSlide[] = [
     subtitle: "なぜ必要か",
     figureSrc: "/assets/slides/figures-2026/01-problem-figure.png",
     mangaSrc: "/assets/slides/manga-2026/01-problem-manga.png",
+    audioSrc: "/audio/rass-2026/01-problem.mp3",
     points: ["声は届いている", "でも個人の読み取りで止まりやすい", "組織知になりにくい"],
   },
   {
@@ -39,6 +41,7 @@ const slides: RassSlide[] = [
     subtitle: "何を問うか",
     figureSrc: "/assets/slides/figures-2026/02-question-figure.png",
     mangaSrc: "/assets/slides/manga-2026/02-question-manga.png",
+    audioSrc: "/audio/rass-2026/02-purpose.mp3",
     points: ["感想ではなく構造として見る", "扱えるデータに変えられるかを問う", "05フィルターへの前段"],
   },
   {
@@ -48,6 +51,7 @@ const slides: RassSlide[] = [
     subtitle: "何を対象にしたか",
     figureSrc: "/assets/slides/figures-2026/03-target-figure.png",
     mangaSrc: "/assets/slides/manga-2026/03-target-manga.png",
+    audioSrc: "/audio/rass-2026/03-structure.mp3",
     points: ["302件の声", "単純分類では整理しきれない", "一つの声に複数の意味が重なる"],
   },
   {
@@ -57,6 +61,7 @@ const slides: RassSlide[] = [
     subtitle: "どう読み解いたか",
     figureSrc: "/assets/slides/figures-2026/04-method-figure.png",
     mangaSrc: "/assets/slides/manga-2026/04-method-manga.png",
+    audioSrc: "/audio/rass-2026/04-rass.mp3",
     points: ["AIで一次整理", "人が確認・修正", "フィルターの必要性へつながる"],
   },
   {
@@ -66,6 +71,7 @@ const slides: RassSlide[] = [
     subtitle: "どの視点で読むか",
     figureSrc: "/assets/slides/figures-2026/05-filter-figure.png",
     mangaSrc: "/assets/slides/manga-2026/05-filter-manga.png",
+    audioSrc: "/audio/rass-2026/05-data.mp3",
     points: ["背景", "出来事", "意味の変化", "不足"],
   },
   {
@@ -75,6 +81,7 @@ const slides: RassSlide[] = [
     subtitle: "何が見えたか",
     figureSrc: "/assets/slides/figures-2026/06-result-figure.png",
     mangaSrc: "/assets/slides/manga-2026/06-result-manga.png",
+    audioSrc: "/audio/rass-2026/06-case.mp3",
     points: ["不満だけではない", "感謝にも構造がある", "苦情にも説明不足や不信の変化がある"],
   },
   {
@@ -84,6 +91,7 @@ const slides: RassSlide[] = [
     subtitle: "何が可能になるか",
     figureSrc: "/assets/slides/figures-2026/07-significance-figure.png",
     mangaSrc: "/assets/slides/manga-2026/07-significance-manga.png",
+    audioSrc: "/audio/rass-2026/07-sensor.mp3",
     points: ["属人的な読み解きを下げる", "チームで共有できる", "改善・教育・連携・組織理解に使える"],
   },
   {
@@ -93,6 +101,7 @@ const slides: RassSlide[] = [
     subtitle: "現場実装への接続",
     figureSrc: "/assets/slides/figures-2026/08-future-figure.png",
     mangaSrc: "/assets/slides/manga-2026/08-future-manga.png",
+    audioSrc: "/audio/rass-2026/08-next.mp3",
     points: ["説明支援へ", "確認リストへ", "現場で試し、磨いていく"],
   },
 ];
@@ -228,6 +237,27 @@ const pageStyles = `
     justify-content: center;
     gap: 6px;
     white-space: nowrap;
+  }
+
+  .rass-audio-panel {
+    display: grid;
+    justify-items: start;
+    gap: 3px;
+  }
+
+  .rass-audio-note {
+    margin: 0;
+    font-size: 11px;
+    line-height: 1.45;
+    color: rgba(15, 39, 66, 0.66);
+  }
+
+  .rass-audio-status {
+    margin: 0;
+    font-size: 11px;
+    line-height: 1.45;
+    color: #a16207;
+    font-weight: 700;
   }
 
   .rass-figure-viewer {
@@ -669,10 +699,6 @@ const pageStyles = `
 function SlideImage({ src, alt }: { src?: string; alt: string }) {
   const [isMissing, setIsMissing] = useState(false);
 
-  useEffect(() => {
-    setIsMissing(false);
-  }, [src]);
-
   if (!src || isMissing) {
     return <div className="rass-image-placeholder">準備中です</div>;
   }
@@ -692,6 +718,9 @@ function SlideImage({ src, alt }: { src?: string; alt: string }) {
 export default function RASSFigureSlides2026() {
   const [activeIndex, setActiveIndex] = useState(getInitialIndex);
   const [viewMode, setViewMode] = useState<ViewMode>(getInitialMode);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [hasAudioError, setHasAudioError] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const activeSlide = slides[activeIndex];
   const slideCountLabel = useMemo(() => `${activeIndex + 1} / ${slides.length}`, [activeIndex]);
   const isFutureSlide = activeSlide.id === "08";
@@ -699,16 +728,67 @@ export default function RASSFigureSlides2026() {
   const showManga = viewMode === "both" || viewMode === "manga";
   const showFigure = viewMode === "both" || viewMode === "figure";
 
-  const goPrevious = () => setActiveIndex((current) => Math.max(0, current - 1));
-  const goNext = () => setActiveIndex((current) => Math.min(slides.length - 1, current + 1));
+  const stopAudio = () => {
+    if (!audioRef.current) return;
+    audioRef.current.pause();
+    audioRef.current.currentTime = 0;
+    setIsAudioPlaying(false);
+  };
+
+  const handleAudioToggle = async () => {
+    if (!audioRef.current || !activeSlide.audioSrc) return;
+
+    if (isAudioPlaying) {
+      stopAudio();
+      return;
+    }
+
+    try {
+      setHasAudioError(false);
+      audioRef.current.src = activeSlide.audioSrc;
+      await audioRef.current.play();
+      setIsAudioPlaying(true);
+    } catch (error) {
+      console.error("Audio playback failed:", activeSlide.audioSrc, error);
+      setIsAudioPlaying(false);
+      setHasAudioError(true);
+    }
+  };
+
+  const moveToSlide = (nextIndex: number) => {
+    const clamped = Math.max(0, Math.min(slides.length - 1, nextIndex));
+    if (clamped === activeIndex) return;
+    stopAudio();
+    setHasAudioError(false);
+    setActiveIndex(clamped);
+  };
+
+  const goPrevious = () => moveToSlide(activeIndex - 1);
+  const goNext = () => moveToSlide(activeIndex + 1);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      const stopAudioForKeyboardNav = () => {
+        if (!audioRef.current) return;
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        setIsAudioPlaying(false);
+        setHasAudioError(false);
+      };
+
       if (event.key === "ArrowLeft") {
-        goPrevious();
+        setActiveIndex((current) => {
+          const next = Math.max(0, current - 1);
+          if (next !== current) stopAudioForKeyboardNav();
+          return next;
+        });
       }
       if (event.key === "ArrowRight") {
-        goNext();
+        setActiveIndex((current) => {
+          const next = Math.min(slides.length - 1, current + 1);
+          if (next !== current) stopAudioForKeyboardNav();
+          return next;
+        });
       }
     };
 
@@ -723,10 +803,33 @@ export default function RASSFigureSlides2026() {
     window.history.replaceState(null, "", `${window.location.pathname}?${params.toString()}`);
   }, [activeSlide.id, viewMode]);
 
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const handleEnded = () => setIsAudioPlaying(false);
+    const handlePause = () => setIsAudioPlaying(false);
+    const handleError = () => {
+      setIsAudioPlaying(false);
+      setHasAudioError(true);
+    };
+
+    audio.addEventListener("ended", handleEnded);
+    audio.addEventListener("pause", handlePause);
+    audio.addEventListener("error", handleError);
+
+    return () => {
+      audio.removeEventListener("ended", handleEnded);
+      audio.removeEventListener("pause", handlePause);
+      audio.removeEventListener("error", handleError);
+    };
+  }, []);
+
   return (
     <main className="rass-figure-page">
       <style>{pageStyles}</style>
       <div className="rass-figure-shell">
+        <audio ref={audioRef} preload="none" />
         <header className="rass-figure-header">
           <div>
             <p className="rass-figure-kicker">RA-SS SLIDES 2026</p>
@@ -734,16 +837,20 @@ export default function RASSFigureSlides2026() {
             <p className="rass-figure-subtitle">漫画版で直感的に、Figure版で構造的に確認できます。</p>
           </div>
           <nav className="rass-figure-controls" aria-label="スライド操作">
-            <button
-              type="button"
-              className="rass-figure-button rass-audio-button"
-              disabled={!activeSlide.audioSrc}
-              aria-label={activeSlide.audioSrc ? "音声ガイドを再生" : "音声ガイドは準備中です"}
-              title={activeSlide.audioSrc ? "音声ガイドを再生" : "音声ガイドは準備中です"}
-            >
-              <span aria-hidden="true">🎧</span>
-              <span>{activeSlide.audioSrc ? "音声ガイド" : "音声 準備中"}</span>
-            </button>
+            <div className="rass-audio-panel">
+              <button
+                type="button"
+                className="rass-figure-button rass-audio-button"
+                disabled={!activeSlide.audioSrc}
+                onClick={handleAudioToggle}
+                aria-label={isAudioPlaying ? "音声ガイドを停止" : "音声ガイドを再生"}
+                title={isAudioPlaying ? "音声ガイドを停止" : "音声ガイドを再生"}
+              >
+                <span>{isAudioPlaying ? "■ 停止" : "▶ 音声ガイドを聞く"}</span>
+              </button>
+              <p className="rass-audio-note">音声ガイド：AI生成音声（説明補助用）</p>
+              {hasAudioError ? <p className="rass-audio-status">音声準備中</p> : null}
+            </div>
             <button type="button" className="rass-figure-button" onClick={goPrevious} disabled={activeIndex === 0}>
               前へ
             </button>
@@ -760,7 +867,7 @@ export default function RASSFigureSlides2026() {
                 key={slide.id}
                 type="button"
                 className={`rass-slide-tab${index === activeIndex ? " is-active" : ""}`}
-                onClick={() => setActiveIndex(index)}
+                onClick={() => moveToSlide(index)}
                 aria-current={index === activeIndex ? "true" : undefined}
               >
                 <span className="rass-slide-tab-id">{slide.id}</span>
@@ -812,7 +919,7 @@ export default function RASSFigureSlides2026() {
                     key={slide.id}
                     type="button"
                     className={`rass-figure-index-button${index === activeIndex ? " is-active" : ""}`}
-                    onClick={() => setActiveIndex(index)}
+                    onClick={() => moveToSlide(index)}
                   >
                     <span className="rass-figure-index-id">{slide.id}</span>
                     <span>
@@ -832,7 +939,11 @@ export default function RASSFigureSlides2026() {
                     <span className="rass-slide-card-kind">漫画版</span>
                   </div>
                   <div className="rass-figure-image-wrap">
-                    <SlideImage src={activeSlide.mangaSrc} alt={`${activeSlide.id} ${activeSlide.label} 漫画版`} />
+                    <SlideImage
+                      key={activeSlide.mangaSrc}
+                      src={activeSlide.mangaSrc}
+                      alt={`${activeSlide.id} ${activeSlide.label} 漫画版`}
+                    />
                   </div>
                 </section>
               )}
@@ -844,7 +955,11 @@ export default function RASSFigureSlides2026() {
                     <span className="rass-slide-card-kind">Figure版</span>
                   </div>
                   <div className="rass-figure-image-wrap">
-                    <SlideImage src={activeSlide.figureSrc} alt={`${activeSlide.id} ${activeSlide.label} Figure版`} />
+                    <SlideImage
+                      key={activeSlide.figureSrc}
+                      src={activeSlide.figureSrc}
+                      alt={`${activeSlide.id} ${activeSlide.label} Figure版`}
+                    />
                   </div>
                 </section>
               )}

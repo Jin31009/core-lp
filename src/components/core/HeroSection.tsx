@@ -45,11 +45,11 @@ export default function HeroSection({ setPage }: Props) {
             type="button"
             onClick={() => {
               trackEvent("lp_slides_click", { section: "hero" });
-              setPage("slides");
+              setPage("rass-figure-slides-2026");
             }}
             style={secondaryButtonStyle}
           >
-            WEBスライドを見る（事前資料）
+            WEBスライドを見る（漫画＋Figure版）
           </button>
         </div>
 

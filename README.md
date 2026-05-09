@@ -71,3 +71,9 @@ export default defineConfig([
   },
 ])
 ```
+
+## RA-SS Slides Route Policy
+
+RA-SS WEBスライド最新版は `/rass-figure-slides-2026` とする。  
+`/rass-web-slides-2026` は旧WEBスライド版、`/slides` はHybrid別体系として扱う。  
+学会共有・事前配布・音声ガイド導線は `/rass-figure-slides-2026` を正とする。
