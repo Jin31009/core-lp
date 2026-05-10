@@ -1149,14 +1149,6 @@ export default function RASSFigureSlides2026() {
             </section>
 
             <div className="rass-stage-actions">
-              <nav className="rass-bottom-nav" aria-label="前後のスライドへ移動">
-                <button type="button" className="rass-figure-button" onClick={goPrevious} disabled={activeIndex === 0}>
-                  前へ
-                </button>
-                <button type="button" className="rass-figure-button" onClick={goNext} disabled={activeIndex === slides.length - 1}>
-                  次へ
-                </button>
-              </nav>
               <div className="rass-link-group" aria-label="関連リンク">
                 <a
                   className={`rass-link-button primary${isFutureSlide ? " is-future" : ""}`}
