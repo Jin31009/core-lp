@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type ViewMode = "hybrid" | "character" | "figure";
+type AudioStatus = "checking" | "ready" | "missing" | "error";
 
 type Topic = {
   id: string;
@@ -12,6 +13,7 @@ type Topic = {
   scriptText: string;
   observationText: string;
   characterImageSrc?: string;
+  audioSrc?: string;
 };
 
 const topics: Topic[] = [
@@ -24,6 +26,7 @@ const topics: Topic[] = [
     speakerNote: "届いているが活かされない声を、構造として扱う研究の入口です。",
     scriptText: "",
     observationText: "届いている声を、どうすれば活かせるか？",
+    audioSrc: "/audio/rass-2026/00-cover.mp3",
   },
   {
     id: "01",
@@ -35,6 +38,7 @@ const topics: Topic[] = [
     scriptText: "",
     observationText: "この声は、どこで止まり、どこで流れているのか。",
     characterImageSrc: "/assets/slides/characters/01-character.png",
+    audioSrc: "/audio/rass-2026/01-problem.mp3",
   },
   {
     id: "02",
@@ -47,6 +51,7 @@ const topics: Topic[] = [
     scriptText: "",
     observationText: "感想で止まる読み方と、構造に広がる読み方を比べる。",
     characterImageSrc: "/assets/slides/characters/02-character.png",
+    audioSrc: "/audio/rass-2026/02-purpose.mp3",
   },
   {
     id: "03",
@@ -59,6 +64,7 @@ const topics: Topic[] = [
     scriptText: "",
     observationText: "分類名ではなく、重なっている要素を見る。",
     characterImageSrc: "/assets/slides/characters/03-character.png",
+    audioSrc: "/audio/rass-2026/03-structure.mp3",
   },
   {
     id: "04",
@@ -69,6 +75,7 @@ const topics: Topic[] = [
     speakerNote: "AIは大量の自由記述を整理する補助として使いました。しかし、意味の判断はすべて人が確認しています。",
     scriptText: "",
     observationText: "AIが判断するのではなく、人が意味を確定しているか。",
+    audioSrc: "/audio/rass-2026/04-rass.mp3",
   },
   {
     id: "05",
@@ -80,6 +87,7 @@ const topics: Topic[] = [
       "自由記述はそのまま読むと意味を取りこぼします。そこで、背景・出来事・意味の変化・不足という4つの視点で読み解きます。",
     scriptText: "",
     observationText: "4つの視点が、どの意味を拾っているか。",
+    audioSrc: "/audio/rass-2026/05-data.mp3",
   },
   {
     id: "06",
@@ -91,6 +99,7 @@ const topics: Topic[] = [
       "分析の結果、自由記述は単一カテゴリでは整理できず、一つの記述の中に複数の要素が重なっていることが確認されました。単純なラベルでは意味を取りこぼすため、4つのフィルターで読み解くことが重要だと考えました。",
     scriptText: "",
     observationText: "分類名ではなく、背景・変化・不足の関係を見る。",
+    audioSrc: "/audio/rass-2026/06-case.mp3",
   },
   {
     id: "07",
@@ -102,6 +111,7 @@ const topics: Topic[] = [
       "自由記述の価値は、個人の経験で読み取られてきました。今回のように構造化することで、その経験知を組織で共有できる知見に変えることができます。",
     scriptText: "",
     observationText: "個人の経験知が、どこで組織の知見に変わるか。",
+    audioSrc: "/audio/rass-2026/07-sensor.mp3",
   },
   {
     id: "08",
@@ -113,6 +123,7 @@ const topics: Topic[] = [
       "構造化は目的ではありません。自由記述を扱える形に変えることで、認識のズレを早く捉え、説明や関係の改善につなげていくことが今後の展開です。この流れを実際に試す入口として、RA-SS demoも準備しています。",
     scriptText: "",
     observationText: "次の行動へつなげる導線が見えるか。",
+    audioSrc: "/audio/rass-2026/08-next.mp3",
   },
 ];
 
@@ -121,16 +132,692 @@ const integratedSlideIds = new Set(topics.map((topic) => topic.id));
 const FIGURE_TITLE_SIZE = "17px";
 const FIGURE_NODE_SIZE = "14px";
 const FIGURE_SUB_SIZE = "12px";
+const responsiveStyles = `
+  html,
+  body,
+  #root {
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .rass-page,
+  .rass-shell,
+  .rass-header,
+  .rass-window-zone,
+  .rass-slide-frame,
+  .rass-footer,
+  .rass-footer-index,
+  .rass-footer-view {
+    box-sizing: border-box;
+  }
+
+  .rass-viewer-button {
+    transition: border-color 160ms ease, background 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+  }
+
+  .rass-viewer-button:hover:not(:disabled) {
+    border-color: rgba(125, 211, 252, 0.78) !important;
+    box-shadow: 0 0 0 1px rgba(103, 232, 249, 0.12), 0 0 16px rgba(56, 189, 248, 0.16) !important;
+    transform: translateY(-1px);
+  }
+
+  .rass-viewer-button:active:not(:disabled) {
+    transform: translateY(0) scale(0.98);
+  }
+
+  .rass-orientation-hint {
+    display: none !important;
+  }
+
+  .rass-header > *,
+  .rass-window-zone > *,
+  .rass-footer > * {
+    min-width: 0;
+  }
+
+  @media (max-width: 1023px) {
+    .rass-page {
+      width: 100vw !important;
+      max-width: 100vw !important;
+      height: auto !important;
+      min-height: 100dvh !important;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+    }
+
+    .rass-shell {
+      height: auto !important;
+      min-height: 100dvh !important;
+      overflow: visible !important;
+    }
+
+    .rass-header {
+      grid-template-columns: minmax(0, 1fr) !important;
+      min-height: auto !important;
+    }
+
+    .rass-header-title,
+    .rass-header-status,
+    .rass-header-controls {
+      justify-content: center !important;
+      text-align: center !important;
+      width: 100% !important;
+      min-width: 0 !important;
+    }
+
+    .rass-header-title {
+      font-size: clamp(15px, 2.2vw, 18px) !important;
+    }
+
+    .rass-audio-button,
+    .rass-nav-button {
+      min-height: 48px !important;
+      font-size: 15px !important;
+    }
+
+    .rass-play-button,
+    .rass-stop-button {
+      min-width: 78px !important;
+    }
+
+    .rass-replay-button {
+      min-width: 96px !important;
+    }
+
+    .rass-prev-button,
+    .rass-next-button {
+      min-width: 68px !important;
+    }
+
+    .rass-slide-frame {
+      width: min(100%, calc(100vw - 32px)) !important;
+      max-width: 100% !important;
+      max-height: none !important;
+      padding: 14px !important;
+    }
+
+    .rass-cover-slide-frame {
+      padding: 0 !important;
+    }
+
+    .rass-footer-view {
+      margin-left: auto !important;
+      max-width: 340px !important;
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 1023px) and (orientation: landscape) {
+    .rass-page {
+      padding: 6px !important;
+    }
+
+    .rass-shell {
+      padding: 8px !important;
+      gap: 8px !important;
+    }
+
+    .rass-header {
+      grid-template-columns: minmax(160px, 0.8fr) minmax(220px, 1fr) minmax(360px, 1.4fr) !important;
+      padding: 10px 12px !important;
+      gap: 10px !important;
+    }
+
+    .rass-header-title {
+      font-size: 13px !important;
+      line-height: 1.25 !important;
+      text-align: left !important;
+      justify-content: flex-start !important;
+    }
+
+    .rass-header-status {
+      justify-content: center !important;
+      gap: 8px !important;
+    }
+
+    .rass-header-controls {
+      justify-content: flex-end !important;
+      gap: 8px !important;
+    }
+
+    .rass-audio-status {
+      min-height: 36px !important;
+      padding: 7px 10px !important;
+      font-size: 11px !important;
+    }
+
+    .rass-audio-button,
+    .rass-nav-button {
+      min-height: 46px !important;
+      padding: 9px 12px !important;
+      font-size: 14px !important;
+    }
+
+    .rass-window-zone {
+      padding: 6px 0 !important;
+      gap: 8px !important;
+    }
+
+    .rass-observation {
+      min-height: auto !important;
+      padding: 8px 12px !important;
+    }
+
+    .rass-observation-label {
+      font-size: 10px !important;
+      padding: 4px 8px !important;
+    }
+
+    .rass-observation-text {
+      font-size: 14px !important;
+      line-height: 1.25 !important;
+    }
+
+    .rass-slide-frame {
+      width: min(100%, calc((100dvh - 250px) * 16 / 9), calc(100vw - 28px)) !important;
+      padding: 10px !important;
+    }
+
+    .rass-cover-slide-frame {
+      padding: 0 !important;
+    }
+
+    .rass-footer {
+      padding: 8px !important;
+      gap: 8px !important;
+    }
+
+    .rass-footer-index {
+      flex: 1 1 520px !important;
+      padding: 8px !important;
+    }
+
+    .rass-footer-view {
+      flex: 0 1 280px !important;
+      max-width: 280px !important;
+      padding: 8px !important;
+    }
+
+    .rass-index-row {
+      flex-wrap: nowrap !important;
+      overflow-x: auto !important;
+      padding-bottom: 4px !important;
+    }
+
+    .rass-index-button {
+      min-height: 40px !important;
+      padding: 8px 12px !important;
+      font-size: 13px !important;
+    }
+
+    .rass-view-pill {
+      min-height: 38px !important;
+      padding: 8px 12px !important;
+      font-size: 13px !important;
+    }
+
+    .rass-view-hint {
+      padding: 6px 8px !important;
+      font-size: 10px !important;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .rass-page {
+      height: auto !important;
+      min-height: 100dvh !important;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      padding: 6px !important;
+    }
+
+    .rass-shell {
+      width: min(100%, calc(100vw - 12px)) !important;
+      max-width: calc(100vw - 12px) !important;
+      height: auto !important;
+      min-height: 100dvh !important;
+      overflow: visible !important;
+      padding: 8px !important;
+      gap: 10px !important;
+      border-radius: 14px !important;
+    }
+
+    .rass-header {
+      width: 100% !important;
+      grid-template-columns: 1fr !important;
+      padding: 12px !important;
+      gap: 10px !important;
+      border-radius: 12px !important;
+    }
+
+    .rass-header-title {
+      max-width: 18em !important;
+      margin: 0 auto !important;
+      font-size: 16px !important;
+      line-height: 1.35 !important;
+    }
+
+    .rass-header-status {
+      gap: 8px !important;
+    }
+
+    .rass-header-controls {
+      gap: 8px !important;
+      justify-content: center !important;
+    }
+
+    .rass-audio-status {
+      min-height: 38px !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 8px 10px !important;
+      font-size: 12px !important;
+    }
+
+    .rass-audio-button,
+    .rass-nav-button,
+    .rass-index-button {
+      min-height: 48px !important;
+      padding: 11px 14px !important;
+      font-size: 14px !important;
+    }
+
+    .rass-play-button,
+    .rass-stop-button {
+      min-width: 78px !important;
+    }
+
+    .rass-replay-button {
+      min-width: 96px !important;
+    }
+
+    .rass-prev-button,
+    .rass-next-button {
+      min-width: 66px !important;
+    }
+
+    .rass-window-zone {
+      width: 100% !important;
+      display: flex !important;
+      flex-direction: column !important;
+      padding: 8px 0 !important;
+      gap: 10px !important;
+    }
+
+    .rass-slide-viewport {
+      order: 1 !important;
+      width: 100% !important;
+      filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.06)) !important;
+    }
+
+    .rass-observation {
+      order: 2 !important;
+      min-height: auto !important;
+      padding: 12px !important;
+      gap: 9px !important;
+    }
+
+    .rass-observation-label {
+      font-size: 11px !important;
+      padding: 5px 9px !important;
+    }
+
+    .rass-observation-text {
+      flex-basis: 100% !important;
+      font-size: 15px !important;
+      line-height: 1.42 !important;
+    }
+
+    .rass-slide-frame {
+      width: min(100%, calc(100vw - 32px)) !important;
+      max-width: calc(100vw - 32px) !important;
+      max-height: none !important;
+      padding: 8px !important;
+      border-radius: 12px !important;
+    }
+
+    .rass-cover-slide-frame {
+      padding: 0 !important;
+    }
+
+    .rass-footer {
+      width: 100% !important;
+      min-height: auto !important;
+      overflow: visible !important;
+      padding: 10px !important;
+      gap: 10px !important;
+    }
+
+    .rass-footer-index,
+    .rass-footer-view {
+      flex: 1 1 100% !important;
+      max-width: 100% !important;
+      width: 100% !important;
+      margin-left: 0 !important;
+      padding: 10px !important;
+    }
+
+    .rass-index-row {
+      flex-wrap: nowrap !important;
+      overflow-x: auto !important;
+      padding-bottom: 6px !important;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .rass-view-pill {
+      min-height: 42px !important;
+      display: grid !important;
+      place-items: center !important;
+    }
+
+    .rass-view-hint {
+      font-size: 11px !important;
+    }
+  }
+
+  @media (max-width: 767px) and (orientation: landscape) {
+    .rass-page {
+      padding: 3px !important;
+    }
+
+    .rass-shell {
+      min-height: auto !important;
+      padding: 5px !important;
+      gap: 5px !important;
+      border-radius: 10px !important;
+    }
+
+    .rass-header {
+      display: grid !important;
+      grid-template-columns: minmax(120px, 0.7fr) minmax(150px, 0.8fr) minmax(420px, 1.8fr) !important;
+      padding: 5px 7px !important;
+      gap: 6px !important;
+      border-radius: 9px !important;
+    }
+
+    .rass-header-title {
+      font-size: 11px !important;
+      line-height: 1.2 !important;
+      max-width: none !important;
+      text-align: left !important;
+      justify-content: flex-start !important;
+    }
+
+    .rass-header-status {
+      justify-content: center !important;
+      gap: 6px !important;
+    }
+
+    .rass-header-controls {
+      display: flex !important;
+      flex-wrap: nowrap !important;
+      justify-content: flex-end !important;
+      gap: 6px !important;
+    }
+
+    .rass-audio-status {
+      order: 0 !important;
+      min-height: 34px !important;
+      flex-basis: auto !important;
+      padding: 6px 8px !important;
+      font-size: 10px !important;
+    }
+
+    .rass-prev-button {
+      order: 1 !important;
+    }
+
+    .rass-play-button {
+      order: 2 !important;
+    }
+
+    .rass-stop-button {
+      order: 3 !important;
+    }
+
+    .rass-replay-button {
+      order: 4 !important;
+    }
+
+    .rass-next-button {
+      order: 5 !important;
+    }
+
+    .rass-audio-button,
+    .rass-nav-button {
+      min-height: 44px !important;
+      padding: 8px 10px !important;
+      font-size: 13px !important;
+      flex: 0 0 auto !important;
+      white-space: nowrap !important;
+    }
+
+    .rass-play-button,
+    .rass-stop-button {
+      min-width: 72px !important;
+    }
+
+    .rass-replay-button {
+      min-width: 88px !important;
+    }
+
+    .rass-prev-button,
+    .rass-next-button {
+      min-width: 60px !important;
+    }
+
+    .rass-window-zone {
+      padding: 4px 0 !important;
+      gap: 5px !important;
+    }
+
+    .rass-observation {
+      padding: 5px 8px !important;
+      gap: 6px !important;
+    }
+
+    .rass-observation-label {
+      font-size: 9px !important;
+      padding: 3px 7px !important;
+    }
+
+    .rass-observation-text {
+      font-size: 11px !important;
+      line-height: 1.2 !important;
+    }
+
+    .rass-slide-frame {
+      width: min(calc((100dvh - 190px) * 16 / 9), calc(100vw - 18px)) !important;
+      max-width: calc(100vw - 18px) !important;
+      padding: 5px !important;
+      border-radius: 9px !important;
+    }
+
+    .rass-cover-slide-frame {
+      padding: 0 !important;
+    }
+
+    .rass-footer {
+      padding: 5px !important;
+      gap: 5px !important;
+    }
+
+    .rass-footer-index,
+    .rass-footer-view {
+      padding: 6px !important;
+    }
+
+    .rass-footer-index {
+      flex: 1 1 470px !important;
+    }
+
+    .rass-footer-view {
+      flex: 0 1 210px !important;
+      max-width: 210px !important;
+      margin-left: auto !important;
+    }
+
+    .rass-footer p {
+      margin-bottom: 5px !important;
+      font-size: 11px !important;
+    }
+
+    .rass-index-row {
+      flex-wrap: nowrap !important;
+      overflow-x: auto !important;
+      padding-bottom: 3px !important;
+    }
+
+    .rass-index-button {
+      min-height: 36px !important;
+      padding: 7px 10px !important;
+      font-size: 12px !important;
+    }
+
+    .rass-view-pill {
+      min-height: 34px !important;
+      padding: 6px 9px !important;
+      font-size: 12px !important;
+    }
+
+    .rass-view-hint {
+      padding: 5px 7px !important;
+      font-size: 9px !important;
+    }
+  }
+
+  @media (max-width: 767px) and (orientation: portrait) {
+    .rass-header-controls {
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      align-items: stretch !important;
+      width: 100% !important;
+    }
+
+    .rass-audio-status {
+      grid-column: 1 / -1 !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    .rass-audio-button,
+    .rass-nav-button {
+      width: 100% !important;
+      min-width: 0 !important;
+      justify-content: center !important;
+      text-align: center !important;
+    }
+
+    .rass-orientation-hint {
+      display: block !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box;
+      border-radius: 12px;
+      border: 1px solid rgba(251, 191, 36, 0.38);
+      background: linear-gradient(180deg, rgba(120, 53, 15, 0.28) 0%, rgba(15, 23, 42, 0.52) 100%);
+      color: #fde68a;
+      padding: 10px 12px;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.45;
+      text-align: center;
+      box-shadow: inset 0 0 0 1px rgba(251, 191, 36, 0.08);
+    }
+
+    .rass-footer-view > div,
+    .rass-view-pill,
+    .rass-view-hint {
+      min-width: 0 !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+  }
+`;
 
 export default function RASSWebSlides2026() {
   const [topicIndex, setTopicIndex] = useState(0);
   const [mode, setMode] = useState<ViewMode>("hybrid");
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [audioStatus, setAudioStatus] = useState<AudioStatus>("checking");
+  const [audioError, setAudioError] = useState<string | null>(null);
 
   const currentTopic = topics[topicIndex];
   const currentPosition = topicIndex + 1;
   const isIntegratedSlide = integratedSlideIds.has(currentTopic.id);
   const isCoverSlide = currentTopic.id === "00";
   const viewModeLabel = isIntegratedSlide ? "統合表示" : mode.toUpperCase();
+  const canPlayAudio = Boolean(currentTopic.audioSrc) && audioStatus === "ready";
+  const audioStatusText = isPlaying
+    ? "音声ガイド再生中"
+    : audioStatus === "checking"
+      ? "音声確認中"
+      : audioStatus === "ready"
+        ? "音声ガイド"
+        : audioError ?? "音声準備中";
+
+  const resetCurrentAudio = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.pause();
+    audio.currentTime = 0;
+    setIsPlaying(false);
+  };
+
+  const handlePlayAudio = async () => {
+    if (!canPlayAudio || !audioRef.current) return;
+    setAudioError(null);
+    try {
+      await audioRef.current.play();
+      setIsPlaying(true);
+    } catch {
+      setAudioError("音声準備中");
+      setAudioStatus("error");
+      setIsPlaying(false);
+    }
+  };
+
+  const handleStopAudio = () => {
+    resetCurrentAudio();
+  };
+
+  const handleReplayAudio = async () => {
+    if (!canPlayAudio || !audioRef.current) return;
+    audioRef.current.currentTime = 0;
+    await handlePlayAudio();
+  };
+
+  useEffect(() => {
+    resetCurrentAudio();
+    setAudioError(null);
+
+    if (!currentTopic.audioSrc) {
+      setAudioStatus("missing");
+      return;
+    }
+
+    let cancelled = false;
+    setAudioStatus("checking");
+
+    fetch(currentTopic.audioSrc, { method: "HEAD", cache: "no-store" })
+      .then((response) => {
+        if (cancelled) return;
+        setAudioStatus(response.ok ? "ready" : "missing");
+        if (!response.ok) setAudioError("音声準備中");
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setAudioStatus("error");
+        setAudioError("音声準備中");
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [currentTopic.audioSrc]);
 
   const goPrev = () => {
     setTopicIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
@@ -141,12 +828,13 @@ export default function RASSWebSlides2026() {
   };
 
   return (
-    <div style={pageStyle}>
-      <div style={shellStyle}>
-        <header style={isCoverSlide ? { ...headerStyle, ...coverChromeStyle } : headerStyle}>
-          <div style={{ fontSize: "19px", fontWeight: 900, color: "#e2e8f0", whiteSpace: "nowrap", letterSpacing: "0.01em" }}>RASS 2026 WEB Slides</div>
+    <div className="rass-page" style={pageStyle}>
+      <style>{responsiveStyles}</style>
+      <div className="rass-shell" style={shellStyle}>
+        <header className="rass-header" style={isCoverSlide ? { ...headerStyle, ...coverChromeStyle } : headerStyle}>
+          <div className="rass-header-title" style={headerTitleStyle}>第28回日本医療マネジメント学会学術総会</div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap", justifyContent: "center" }}>
+          <div className="rass-header-status" style={headerStatusStyle}>
             <span style={{ fontSize: "15px", color: "#67e8f9", fontWeight: 850 }}>
               {String(currentPosition).padStart(2, "0")}/{String(totalSlides).padStart(2, "0")}
             </span>
@@ -158,24 +846,44 @@ export default function RASSWebSlides2026() {
             </span>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap", justifyContent: "flex-end" }}>
-            <button type="button" style={voiceButtonStyle} onClick={() => console.log("voice: play")}>▶ 再生</button>
-            <button type="button" style={voiceButtonStyle} onClick={() => console.log("voice: pause")}>⏸</button>
-            <button type="button" style={voiceButtonStyle} onClick={() => console.log("voice: next")}>▶▶</button>
-            <button type="button" onClick={goPrev} style={controlButtonStyle}>前へ</button>
-            <button type="button" onClick={goNext} style={controlButtonStyle}>次へ</button>
+          <div className="rass-header-controls" style={headerControlsStyle}>
+            <span className="rass-audio-status" style={audioStatusStyle}>{audioStatusText}</span>
+            <button className="rass-viewer-button rass-audio-button rass-play-button" type="button" style={{ ...voiceButtonStyle, ...(!canPlayAudio || isPlaying ? disabledButtonStyle : {}) }} onClick={handlePlayAudio} disabled={!canPlayAudio || isPlaying}>▶ 再生</button>
+            <button className="rass-viewer-button rass-audio-button rass-stop-button" type="button" style={{ ...voiceButtonStyle, ...(!isPlaying ? disabledButtonStyle : {}) }} onClick={handleStopAudio} disabled={!isPlaying}>⏸ 停止</button>
+            <button className="rass-viewer-button rass-audio-button rass-replay-button" type="button" style={{ ...voiceButtonStyle, ...(!canPlayAudio ? disabledButtonStyle : {}) }} onClick={handleReplayAudio} disabled={!canPlayAudio}>↺ もう一度</button>
+            <button className="rass-viewer-button rass-nav-button rass-prev-button" type="button" onClick={goPrev} style={controlButtonStyle}>前へ</button>
+            <button className="rass-viewer-button rass-nav-button rass-next-button" type="button" onClick={goNext} style={controlButtonStyle}>次へ</button>
           </div>
         </header>
 
-        <main style={isCoverSlide ? { ...windowZoneStyle, ...coverWindowZoneStyle } : windowZoneStyle}>
+        <audio
+          ref={audioRef}
+          src={currentTopic.audioSrc}
+          preload="metadata"
+          onEnded={() => setIsPlaying(false)}
+          onPause={() => setIsPlaying(false)}
+          onPlay={() => setIsPlaying(true)}
+          onError={() => {
+            if (!currentTopic.audioSrc) return;
+            setAudioStatus("error");
+            setAudioError("音声準備中");
+            setIsPlaying(false);
+          }}
+        />
+
+        <div className="rass-orientation-hint" style={orientationHintStyle}>
+          スマートフォンでは、横向きでご覧いただくと見やすくなります。
+        </div>
+
+        <main className="rass-window-zone" style={isCoverSlide ? { ...windowZoneStyle, ...coverWindowZoneStyle } : windowZoneStyle}>
           {isCoverSlide ? null : (
-            <div style={observationStyle}>
-              <span style={observationLabelStyle}>Speaker&apos;s Observation</span>
-              <span style={observationTextStyle}>{currentTopic.observationText}</span>
+            <div className="rass-observation" style={observationStyle}>
+              <span className="rass-observation-label" style={observationLabelStyle}>Speaker&apos;s Observation</span>
+              <span className="rass-observation-text" style={observationTextStyle}>{currentTopic.observationText}</span>
             </div>
           )}
-          <div style={slideViewportStyle}>
-            <section style={isCoverSlide ? coverSlideFrameStyle : slideFrameStyle}>
+          <div className="rass-slide-viewport" style={slideViewportStyle}>
+            <section className={isCoverSlide ? "rass-slide-frame rass-cover-slide-frame" : "rass-slide-frame"} style={isCoverSlide ? coverSlideFrameStyle : slideFrameStyle}>
               {currentTopic.id === "00" ? (
                 <Slide00CoverPanel />
               ) : currentTopic.id === "01" ? (
@@ -247,14 +955,15 @@ export default function RASSWebSlides2026() {
 
         </main>
 
-        <footer style={isCoverSlide ? { ...footerStyle, ...coverChromeStyle } : footerStyle}>
-          <div style={footerSectionStyle}>
+        <footer className="rass-footer" style={isCoverSlide ? { ...footerStyle, ...coverChromeStyle } : footerStyle}>
+          <div className="rass-footer-index" style={footerIndexSectionStyle}>
             <p style={{ margin: "0 0 9px", fontSize: "14px", letterSpacing: "0.12em", color: "#a9bfd4", fontWeight: 800 }}>INDEX</p>
-            <div style={{ display: "flex", gap: "9px", overflowX: "auto", paddingBottom: "4px" }}>
+            <div className="rass-index-row" style={indexButtonRowStyle}>
               {topics.map((topic, index) => {
                 const active = topicIndex === index;
                 return (
                   <button
+                    className="rass-viewer-button rass-index-button"
                     key={topic.id}
                     type="button"
                     title={`${topic.id} ${topic.label}`}
@@ -282,12 +991,12 @@ export default function RASSWebSlides2026() {
             </div>
           </div>
 
-          <div style={{ ...footerSectionStyle, maxWidth: "360px" }}>
+          <div className="rass-footer-view" style={footerViewSectionStyle}>
             <p style={{ margin: "0 0 9px", fontSize: "14px", letterSpacing: "0.12em", color: "#a9bfd4", fontWeight: 800 }}>VIEW</p>
             {isIntegratedSlide ? (
               <div style={integratedViewStyle}>
-                <div style={integratedViewPillStyle}>統合画像</div>
-                <div style={integratedViewHintStyle}>Character / Figure は画像内に統合</div>
+                <div className="rass-view-pill" style={integratedViewPillStyle}>統合画像</div>
+                <div className="rass-view-hint" style={integratedViewHintStyle}>Character / Figure は画像内に統合</div>
               </div>
             ) : (
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "8px" }}>
@@ -345,7 +1054,7 @@ function Slide00CoverPanel() {
         borderRadius: "14px",
         border: "1px solid rgba(125,211,252,0.14)",
         background: "linear-gradient(180deg, rgba(15,23,42,0.42) 0%, rgba(15,23,42,0.32) 100%)",
-        padding: "24px 28px",
+        padding: "14px 18px",
         height: "100%",
         display: "grid",
         placeItems: "center",
@@ -353,7 +1062,7 @@ function Slide00CoverPanel() {
     >
       <div
         style={{
-          width: "93%",
+          width: "97%",
           height: "100%",
           borderRadius: "10px",
           overflow: "hidden",
@@ -362,8 +1071,8 @@ function Slide00CoverPanel() {
         }}
       >
         <img
-          src="/assets/slides/cover/cover-00-post-bridge.png"
-          alt="POST→構造化ブリッジ型 表紙"
+          src="/assets/slides/cover/cover-00-final-qr.png"
+          alt="RA-SS 2026 WEB Slides 表紙"
           style={{
             width: "100%",
             height: "100%",
@@ -1675,6 +2384,7 @@ function Slide08FigurePanel() {
 const pageStyle: React.CSSProperties = {
   height: "100vh",
   overflowY: "hidden",
+  overflowX: "hidden",
   background: "radial-gradient(130% 130% at 50% 8%, #132742 0%, #0d1b2f 42%, #08111f 100%)",
   color: "#e2e8f0",
   padding: "8px",
@@ -1705,6 +2415,47 @@ const headerStyle: React.CSSProperties = {
   gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
   gap: "14px",
   alignItems: "center",
+};
+
+const headerTitleStyle: React.CSSProperties = {
+  color: "#e7f1ff",
+  fontSize: "clamp(16px, 1.18vw, 19px)",
+  fontWeight: 900,
+  lineHeight: 1.28,
+  letterSpacing: "0.02em",
+  overflowWrap: "anywhere",
+};
+
+const headerStatusStyle: React.CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  gap: "12px",
+  flexWrap: "wrap",
+  justifyContent: "center",
+};
+
+const headerControlsStyle: React.CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  gap: "11px",
+  flexWrap: "wrap",
+  justifyContent: "flex-end",
+};
+
+const audioStatusStyle: React.CSSProperties = {
+  borderRadius: "999px",
+  border: "1px solid rgba(148,163,184,0.34)",
+  background: "rgba(8,17,31,0.28)",
+  color: "#bdd3e8",
+  padding: "8px 12px",
+  fontSize: "12px",
+  fontWeight: 800,
+  letterSpacing: "0.04em",
+  whiteSpace: "nowrap",
+};
+
+const orientationHintStyle: React.CSSProperties = {
+  display: "none",
 };
 
 const chipStyle: React.CSSProperties = {
@@ -1810,8 +2561,8 @@ const footerStyle: React.CSSProperties = {
   minHeight: "138px",
   overflow: "hidden",
   padding: "14px 14px",
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+  display: "flex",
+  flexWrap: "wrap",
   gap: "14px",
   alignItems: "stretch",
 };
@@ -1821,6 +2572,28 @@ const footerSectionStyle: React.CSSProperties = {
   border: "1px solid rgba(125,211,252,0.24)",
   background: "rgba(19,39,66,0.58)",
   padding: "12px",
+};
+
+const footerIndexSectionStyle: React.CSSProperties = {
+  ...footerSectionStyle,
+  flex: "1 1 640px",
+  minWidth: 0,
+};
+
+const indexButtonRowStyle: React.CSSProperties = {
+  display: "flex",
+  gap: "8px",
+  flexWrap: "wrap",
+  overflowX: "visible",
+  paddingBottom: 0,
+};
+
+const footerViewSectionStyle: React.CSSProperties = {
+  ...footerSectionStyle,
+  flex: "0 1 350px",
+  width: "100%",
+  maxWidth: "350px",
+  marginLeft: "auto",
 };
 
 const integratedViewStyle: React.CSSProperties = {
@@ -1854,13 +2627,14 @@ const integratedViewHintStyle: React.CSSProperties = {
 
 const controlButtonStyle: React.CSSProperties = {
   borderRadius: "999px",
-  border: "1px solid rgba(125,211,252,0.45)",
-  background: "linear-gradient(180deg, rgba(28,58,94,0.9) 0%, rgba(19,39,66,0.9) 100%)",
-  color: "#ecf4ff",
-  padding: "9px 16px",
-  fontWeight: 800,
-  fontSize: "14px",
+  border: "1px solid rgba(125,211,252,0.62)",
+  background: "linear-gradient(180deg, rgba(34,76,118,0.96) 0%, rgba(19,49,82,0.94) 100%)",
+  color: "#f2f9ff",
+  padding: "10px 17px",
+  fontWeight: 850,
+  fontSize: "15px",
   cursor: "pointer",
+  boxShadow: "0 0 0 1px rgba(148,163,184,0.08), 0 8px 18px rgba(8,17,31,0.18)",
 };
 
 const modeButtonStyle = (active: boolean): React.CSSProperties => ({
@@ -1877,12 +2651,19 @@ const modeButtonStyle = (active: boolean): React.CSSProperties => ({
 
 const voiceButtonStyle: React.CSSProperties = {
   borderRadius: "999px",
-  border: "1px solid rgba(125,211,252,0.36)",
-  background: "rgba(19,39,66,0.68)",
-  color: "#d8e4f2",
+  border: "1px solid rgba(125,211,252,0.52)",
+  background: "linear-gradient(180deg, rgba(29,62,98,0.82) 0%, rgba(19,39,66,0.78) 100%)",
+  color: "#e9f4ff",
   textAlign: "left",
-  padding: "8px 13px",
-  fontSize: "13px",
-  fontWeight: 700,
+  padding: "9px 14px",
+  fontSize: "14px",
+  fontWeight: 780,
   cursor: "pointer",
+  boxShadow: "inset 0 0 0 1px rgba(148,163,184,0.06)",
+};
+
+const disabledButtonStyle: React.CSSProperties = {
+  opacity: 0.46,
+  cursor: "not-allowed",
+  filter: "saturate(0.72)",
 };

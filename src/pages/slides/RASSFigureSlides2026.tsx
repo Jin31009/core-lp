@@ -140,11 +140,11 @@ const pageStyles = `
     box-sizing: border-box;
     display: grid;
     grid-template-rows: auto minmax(0, 1fr) auto;
-    gap: 16px;
-    width: min(100%, 1480px);
+    gap: 12px;
+    width: min(100%, 1600px);
     min-height: 100dvh;
     margin: 0 auto;
-    padding: 18px;
+    padding: 12px 14px;
   }
 
   .rass-figure-header,
@@ -162,9 +162,9 @@ const pageStyles = `
   .rass-figure-header {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    gap: 16px;
+    gap: 12px;
     align-items: center;
-    padding: 16px 18px;
+    padding: 10px 14px;
   }
 
   .rass-figure-kicker {
@@ -183,9 +183,9 @@ const pageStyles = `
   }
 
   .rass-figure-subtitle {
-    margin: 8px 0 0;
+    margin: 4px 0 0;
     font-size: clamp(12px, 1.25vw, 15px);
-    line-height: 1.7;
+    line-height: 1.5;
     color: rgba(15, 39, 66, 0.68);
   }
 
@@ -271,7 +271,7 @@ const pageStyles = `
     gap: 8px;
     overflow-x: auto;
     border-bottom: 1px solid rgba(15, 39, 66, 0.09);
-    padding: 12px 14px;
+    padding: 9px 12px;
     scrollbar-width: thin;
   }
 
@@ -280,12 +280,12 @@ const pageStyles = `
     flex: 0 0 auto;
     align-items: center;
     gap: 8px;
-    min-height: 42px;
+    min-height: 38px;
     border: 1px solid rgba(15, 39, 66, 0.1);
     border-radius: 999px;
     background: rgba(248, 251, 253, 0.94);
     color: #0f2742;
-    padding: 0 12px 0 8px;
+    padding: 0 10px 0 7px;
     font: inherit;
     cursor: pointer;
     transition: background 160ms ease, border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
@@ -308,11 +308,11 @@ const pageStyles = `
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 30px;
-    height: 30px;
+    width: 28px;
+    height: 28px;
     border-radius: 999px;
     background: rgba(15, 39, 66, 0.1);
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 900;
   }
 
@@ -321,7 +321,7 @@ const pageStyles = `
   }
 
   .rass-slide-tab-label {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 900;
     white-space: nowrap;
   }
@@ -390,10 +390,10 @@ const pageStyles = `
   .rass-figure-stage {
     display: grid;
     grid-template-rows: auto auto minmax(0, 1fr) auto auto;
-    gap: 14px;
+    gap: 10px;
     min-width: 0;
     min-height: 0;
-    padding: 18px;
+    padding: 12px;
   }
 
   .rass-figure-meta {
@@ -410,8 +410,8 @@ const pageStyles = `
   }
 
   .rass-figure-meta-note {
-    margin: 5px 0 0;
-    font-size: 12px;
+    margin: 2px 0 0;
+    font-size: 11px;
     color: rgba(15, 39, 66, 0.58);
   }
 
@@ -428,7 +428,7 @@ const pageStyles = `
   .rass-mode-group {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px;
   }
 
   .rass-mode-button {
@@ -439,7 +439,7 @@ const pageStyles = `
 
   .rass-slide-layout {
     display: grid;
-    gap: 24px;
+    gap: 12px;
     align-items: start;
     min-width: 0;
   }
@@ -464,19 +464,19 @@ const pageStyles = `
     gap: 10px;
     align-items: center;
     border-bottom: 1px solid rgba(15, 39, 66, 0.09);
-    padding: 10px 12px;
+    padding: 8px 10px;
   }
 
   .rass-slide-card-title {
     margin: 0;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 900;
     letter-spacing: 0.12em;
     color: #168b8c;
   }
 
   .rass-slide-card-kind {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 900;
     color: rgba(15, 39, 66, 0.46);
   }
@@ -492,7 +492,7 @@ const pageStyles = `
       linear-gradient(0deg, rgba(15, 39, 66, 0.035) 1px, transparent 1px),
       #ffffff;
     background-size: 28px 28px;
-    padding: 12px;
+    padding: 8px;
   }
 
   .rass-figure-image {
@@ -518,11 +518,11 @@ const pageStyles = `
   }
 
   .rass-points-panel {
-    padding: 14px;
+    padding: 10px 12px;
   }
 
   .rass-points-title {
-    margin: 0 0 10px;
+    margin: 0 0 6px;
     font-size: 12px;
     font-weight: 900;
     letter-spacing: 0.14em;
@@ -532,7 +532,7 @@ const pageStyles = `
   .rass-points-list {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 10px;
+    gap: 8px;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -541,21 +541,21 @@ const pageStyles = `
   .rass-point-item {
     border: 1px solid rgba(15, 39, 66, 0.1);
     background: rgba(248, 251, 253, 0.92);
-    padding: 12px;
-    font-size: 13px;
+    padding: 8px;
+    font-size: 12px;
     font-weight: 800;
-    line-height: 1.55;
+    line-height: 1.4;
   }
 
   .rass-stage-actions {
     display: flex;
     justify-content: space-between;
-    gap: 12px;
+    gap: 8px;
     align-items: center;
   }
 
   .rass-bottom-nav {
-    min-width: 230px;
+    min-width: 210px;
   }
 
   .rass-bottom-nav .rass-figure-button {
@@ -602,8 +602,8 @@ const pageStyles = `
     justify-content: space-between;
     gap: 12px;
     align-items: center;
-    padding: 12px 16px;
-    font-size: 12px;
+    padding: 8px 12px;
+    font-size: 11px;
     color: rgba(15, 39, 66, 0.62);
   }
 
