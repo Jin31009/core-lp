@@ -19,10 +19,14 @@ const slides: RassSlide[] = [
     label: "表紙",
     title: "届いているのに、活かされない声がある。",
     subtitle: "研究テーマの入口",
-    figureSrc: "/assets/slides/figures-2026/00-cover-figure.png",
-    mangaSrc: "/assets/slides/manga-2026/00-cover-manga.png",
+    figureSrc: "/assets/slides/figures-2026/00-cover-figure-topic.png",
+    mangaSrc: "/assets/slides/manga-2026/00-cover-manga-topic.png",
     audioSrc: "/audio/rass-2026/00-cover.mp3",
-    points: ["発表テーマの入口", "QRからWEBスライドへ", "自由記述を構造として読む"],
+    points: [
+      "入口を確認する｜この発表が扱う問いを最初に押さえる",
+      "QRから見る｜同じWEBスライドをスマートフォンでも確認できる",
+      "声を構造として読む｜自由記述を、現場で使える知見へ変える",
+    ],
   },
   {
     id: "01",
@@ -32,7 +36,11 @@ const slides: RassSlide[] = [
     figureSrc: "/assets/slides/figures-2026/01-problem-figure.png",
     mangaSrc: "/assets/slides/manga-2026/01-problem-manga.png",
     audioSrc: "/audio/rass-2026/01-problem.mp3",
-    points: ["声は届いている", "でも個人の読み取りで止まりやすい", "組織知になりにくい"],
+    points: [
+      "声は届いている｜感謝・不安・戸惑い・苦情は病院に集まっている",
+      "個人の読み取りで止まる｜一つひとつは読まれても、共有されにくい",
+      "組織知になりにくい｜改善や説明の見直しへ接続しにくい",
+    ],
   },
   {
     id: "02",
@@ -42,7 +50,11 @@ const slides: RassSlide[] = [
     figureSrc: "/assets/slides/figures-2026/02-question-figure.png",
     mangaSrc: "/assets/slides/manga-2026/02-question-manga.png",
     audioSrc: "/audio/rass-2026/02-purpose.mp3",
-    points: ["感想ではなく構造として見る", "扱えるデータに変えられるかを問う", "05フィルターへの前段"],
+    points: [
+      "感想で終わらせない｜自由記述を、構造として読み直す",
+      "扱えるデータへ変える｜声を比較・共有できる形にできるかを問う",
+      "フィルターへ進む｜読み解くための視点を次に設定する",
+    ],
   },
   {
     id: "03",
@@ -52,7 +64,11 @@ const slides: RassSlide[] = [
     figureSrc: "/assets/slides/figures-2026/03-target-figure.png",
     mangaSrc: "/assets/slides/manga-2026/03-target-manga.png",
     audioSrc: "/audio/rass-2026/03-structure.mp3",
-    points: ["302件の声", "単純分類では整理しきれない", "一つの声に複数の意味が重なる"],
+    points: [
+      "302件の声を見る｜患者・家族から届いた自由記述を対象にする",
+      "単純分類では足りない｜感謝・苦情だけでは意味を整理しきれない",
+      "複数の意味が重なる｜一つの声の中に背景・不安・不足が含まれる",
+    ],
   },
   {
     id: "04",
@@ -62,7 +78,11 @@ const slides: RassSlide[] = [
     figureSrc: "/assets/slides/figures-2026/04-method-figure.png",
     mangaSrc: "/assets/slides/manga-2026/04-method-manga.png",
     audioSrc: "/audio/rass-2026/04-rass.mp3",
-    points: ["AIで一次整理", "人が確認・修正", "フィルターの必要性へつながる"],
+    points: [
+      "AIで一次整理する｜大量の記述を読み解く入口をつくる",
+      "人が確認・修正する｜現場感覚と文脈で読みを補正する",
+      "フィルターが必要になる｜安定して読むための視点を整理する",
+    ],
   },
   {
     id: "05",
@@ -72,7 +92,12 @@ const slides: RassSlide[] = [
     figureSrc: "/assets/slides/figures-2026/05-filter-figure.png",
     mangaSrc: "/assets/slides/manga-2026/05-filter-manga.png",
     audioSrc: "/audio/rass-2026/05-data.mp3",
-    points: ["背景", "出来事", "意味の変化", "不足"],
+    points: [
+      "背景を見る｜その声が生まれた状況を捉える",
+      "出来事を見る｜何が起きたのかを確認する",
+      "意味の変化を見る｜不安・不信・納得の変化を読む",
+      "不足を見る｜説明・確認・連携の抜けを見つける",
+    ],
   },
   {
     id: "06",
@@ -82,7 +107,11 @@ const slides: RassSlide[] = [
     figureSrc: "/assets/slides/figures-2026/06-result-figure.png",
     mangaSrc: "/assets/slides/manga-2026/06-result-manga.png",
     audioSrc: "/audio/rass-2026/06-case.mp3",
-    points: ["不満だけではない", "感謝にも構造がある", "苦情にも説明不足や不信の変化がある"],
+    points: [
+      "不満だけではない｜自由記述には複数の関係状態が表れる",
+      "感謝にも構造がある｜よい経験にも背景・出来事・意味がある",
+      "苦情にも変化がある｜説明不足や不信の立ち上がりを読み取れる",
+    ],
   },
   {
     id: "07",
@@ -92,17 +121,25 @@ const slides: RassSlide[] = [
     figureSrc: "/assets/slides/figures-2026/07-significance-figure.png",
     mangaSrc: "/assets/slides/manga-2026/07-significance-manga.png",
     audioSrc: "/audio/rass-2026/07-sensor.mp3",
-    points: ["属人的な読み解きを下げる", "チームで共有できる", "改善・教育・連携・組織理解に使える"],
+    points: [
+      "属人化を下げる｜読む人だけに依存しない見方をつくる",
+      "チームで共有する｜声の意味を共通の言葉で確認できる",
+      "現場で活かす｜改善・教育・連携・組織理解につなげる",
+    ],
   },
   {
     id: "08",
     label: "今後",
-    title: "構造化の知見を、関係を整える実践へ",
-    subtitle: "現場実装への接続",
-    figureSrc: "/assets/slides/figures-2026/08-future-figure.png",
-    mangaSrc: "/assets/slides/manga-2026/08-future-manga.png",
+    title: "投書の読み解きから、日常の違和感の読み解きへ",
+    subtitle: "現場応用への接続",
+    figureSrc: "/assets/slides/figures-2026/08-daily-sense-figure.png",
+    mangaSrc: "/assets/slides/manga-2026/08-daily-sense-manga.png",
     audioSrc: "/audio/rass-2026/08-next.mp3",
-    points: ["説明支援へ", "確認リストへ", "現場で試し、磨いていく"],
+    points: [
+      "投書から日常へ｜読む視点を、現場の違和感にも応用する",
+      "ズレを早く捉える｜不安・不足・説明の届きにくさを見る",
+      "試しながら磨く｜RA-SS DEMOで、現場応用の入口を開く",
+    ],
   },
 ];
 
@@ -199,6 +236,9 @@ const pageStyles = `
   .rass-figure-button,
   .rass-link-button,
   .rass-mode-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     min-height: 42px;
     border: 1px solid rgba(15, 39, 66, 0.16);
     background: #ffffff;
@@ -207,6 +247,7 @@ const pageStyles = `
     font: inherit;
     font-size: 13px;
     font-weight: 800;
+    line-height: 1.2;
     cursor: pointer;
     text-decoration: none;
     transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
@@ -235,8 +276,33 @@ const pageStyles = `
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 8px;
+    min-height: 44px;
+    border-color: rgba(15, 39, 66, 0.34);
+    background: linear-gradient(180deg, #ffffff 0%, #f3f8fb 100%);
+    box-shadow: inset 0 0 0 1px rgba(15, 39, 66, 0.04);
     white-space: nowrap;
+  }
+
+  .rass-audio-button:hover:not(:disabled) {
+    border-color: rgba(15, 39, 66, 0.58);
+    background: #ffffff;
+    box-shadow: 0 12px 28px rgba(15, 39, 66, 0.12);
+  }
+
+  .rass-audio-button:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 6px 16px rgba(15, 39, 66, 0.1);
+  }
+
+  .rass-audio-button.is-playing {
+    border-color: rgba(15, 39, 66, 0.78);
+    background: #0f2742;
+    color: #ffffff;
+  }
+
+  .rass-audio-label-short {
+    display: none;
   }
 
   .rass-audio-panel {
@@ -482,8 +548,11 @@ const pageStyles = `
   }
 
   .rass-figure-image-wrap {
+    position: relative;
     display: flex;
     min-width: 0;
+    width: 100%;
+    aspect-ratio: 1.414 / 1;
     align-items: center;
     justify-content: center;
     overflow: hidden;
@@ -498,11 +567,33 @@ const pageStyles = `
   .rass-figure-image {
     display: block;
     width: 100%;
-    height: auto;
+    height: 100%;
     max-height: none;
     object-fit: contain;
     border-radius: 12px;
     filter: drop-shadow(0 20px 36px rgba(15, 39, 66, 0.14));
+  }
+
+  .rass-demo-hotspot {
+    position: absolute;
+    z-index: 2;
+    left: 66%;
+    top: 73.6%;
+    width: 30.5%;
+    height: 7.2%;
+    min-height: 36px;
+    border-radius: 999px;
+    background: rgba(255, 122, 0, 0);
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    transition: background 160ms ease, outline-color 160ms ease, box-shadow 160ms ease;
+  }
+
+  .rass-demo-hotspot:hover,
+  .rass-demo-hotspot:focus-visible {
+    background: rgba(255, 122, 0, 0.12);
+    outline-color: rgba(255, 122, 0, 0.86);
+    box-shadow: 0 0 0 4px rgba(255, 122, 0, 0.12);
   }
 
   .rass-image-placeholder {
@@ -538,13 +629,33 @@ const pageStyles = `
     list-style: none;
   }
 
+  .rass-points-list.is-four-points {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
   .rass-point-item {
+    display: grid;
+    gap: 3px;
     border: 1px solid rgba(15, 39, 66, 0.1);
     background: rgba(248, 251, 253, 0.92);
     padding: 8px;
     font-size: 12px;
     font-weight: 800;
     line-height: 1.4;
+  }
+
+  .rass-point-heading {
+    color: #0f2742;
+    font-size: 12px;
+    font-weight: 900;
+    line-height: 1.35;
+  }
+
+  .rass-point-body {
+    color: rgba(15, 39, 66, 0.68);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.45;
   }
 
   .rass-stage-actions {
@@ -623,6 +734,7 @@ const pageStyles = `
     .rass-figure-controls {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-items: start;
     }
 
     .rass-figure-stage {
@@ -641,6 +753,10 @@ const pageStyles = `
 
     .rass-points-list {
       grid-template-columns: minmax(0, 1fr);
+    }
+
+    .rass-points-list.is-four-points {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 
     .rass-stage-actions {
@@ -685,7 +801,40 @@ const pageStyles = `
     }
   }
 
+  @media (max-width: 900px) {
+    .rass-points-list.is-four-points {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
   @media (max-width: 700px) {
+    .rass-figure-controls {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .rass-audio-panel {
+      grid-column: 1 / -1;
+      width: 100%;
+      justify-items: stretch;
+    }
+
+    .rass-audio-button {
+      width: 100%;
+      min-height: 48px;
+    }
+
+    .rass-points-list.is-four-points {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .rass-audio-label-long {
+      display: none;
+    }
+
+    .rass-audio-label-short {
+      display: inline;
+    }
+
     .rass-slide-tabs {
       display: none;
     }
@@ -807,7 +956,11 @@ export default function RASSFigureSlides2026() {
     const audio = audioRef.current;
     if (!audio) return;
 
-    const handleEnded = () => setIsAudioPlaying(false);
+    const handleEnded = () => {
+      setIsAudioPlaying(false);
+      setHasAudioError(false);
+      setActiveIndex((current) => (current < slides.length - 1 ? current + 1 : current));
+    };
     const handlePause = () => setIsAudioPlaying(false);
     const handleError = () => {
       setIsAudioPlaying(false);
@@ -840,13 +993,20 @@ export default function RASSFigureSlides2026() {
             <div className="rass-audio-panel">
               <button
                 type="button"
-                className="rass-figure-button rass-audio-button"
+                className={`rass-figure-button rass-audio-button${isAudioPlaying ? " is-playing" : ""}`}
                 disabled={!activeSlide.audioSrc}
                 onClick={handleAudioToggle}
-                aria-label={isAudioPlaying ? "音声ガイドを停止" : "音声ガイドを再生"}
-                title={isAudioPlaying ? "音声ガイドを停止" : "音声ガイドを再生"}
+                aria-label={isAudioPlaying ? "音声を停止" : "このスライドの音声解説を聞く"}
+                title={isAudioPlaying ? "音声を停止" : "このスライドの音声解説を聞く"}
               >
-                <span>{isAudioPlaying ? "■ 停止" : "▶ 音声ガイドを聞く"}</span>
+                {isAudioPlaying ? (
+                  <span>■ 音声を停止</span>
+                ) : (
+                  <>
+                    <span className="rass-audio-label-long">▶ このスライドの音声解説を聞く</span>
+                    <span className="rass-audio-label-short">▶ 音声解説を聞く</span>
+                  </>
+                )}
               </button>
               <p className="rass-audio-note">音声ガイド：AI生成音声（説明補助用）</p>
               {hasAudioError ? <p className="rass-audio-status">音声準備中</p> : null}
@@ -893,21 +1053,21 @@ export default function RASSFigureSlides2026() {
                 className={`rass-mode-button${viewMode === "both" ? " is-active" : ""}`}
                 onClick={() => setViewMode("both")}
               >
-                両方（おすすめ）
+                左右で見る（おすすめ）
               </button>
               <button
                 type="button"
                 className={`rass-mode-button${viewMode === "manga" ? " is-active" : ""}`}
                 onClick={() => setViewMode("manga")}
               >
-                漫画版
+                漫画で見る
               </button>
               <button
                 type="button"
                 className={`rass-mode-button${viewMode === "figure" ? " is-active" : ""}`}
                 onClick={() => setViewMode("figure")}
               >
-                Figure版
+                Figureで見る
               </button>
             </div>
 
@@ -960,6 +1120,14 @@ export default function RASSFigureSlides2026() {
                       src={activeSlide.figureSrc}
                       alt={`${activeSlide.id} ${activeSlide.label} Figure版`}
                     />
+                    {activeSlide.id === "08" ? (
+                      <a
+                        className="rass-demo-hotspot"
+                        href="/demo-intro"
+                        aria-label="RA-SS DEMOを試す"
+                        title="RA-SS DEMOを試す"
+                      />
+                    ) : null}
                   </div>
                 </section>
               )}
@@ -967,12 +1135,16 @@ export default function RASSFigureSlides2026() {
 
             <section className="rass-points-panel" aria-label="見てほしいPOINT">
               <h3 className="rass-points-title">見てほしいPOINT</h3>
-              <ul className="rass-points-list">
-                {activeSlide.points.map((point) => (
-                  <li key={point} className="rass-point-item">
-                    {point}
-                  </li>
-                ))}
+              <ul className={`rass-points-list${activeSlide.points.length === 4 ? " is-four-points" : ""}`}>
+                {activeSlide.points.map((point) => {
+                  const [heading, body] = point.split("｜");
+                  return (
+                    <li key={point} className="rass-point-item">
+                      <span className="rass-point-heading">{heading}</span>
+                      {body ? <span className="rass-point-body">{body}</span> : null}
+                    </li>
+                  );
+                })}
               </ul>
             </section>
 
@@ -990,7 +1162,7 @@ export default function RASSFigureSlides2026() {
                   className={`rass-link-button primary${isFutureSlide ? " is-future" : ""}`}
                   href="https://core-lp.vercel.app/demo-intro"
                 >
-                  RA-SS DEMOへ
+                  RA-SS DEMOを試す
                 </a>
                 <a className="rass-link-button" href="/">
                   CORE-LPへ戻る
