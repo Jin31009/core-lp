@@ -197,10 +197,7 @@ const pageStyles = `
   }
 
   .rass-figure-header {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 12px;
-    align-items: center;
+    display: block;
     padding: 10px 14px;
   }
 
@@ -226,7 +223,6 @@ const pageStyles = `
     color: rgba(15, 39, 66, 0.68);
   }
 
-  .rass-figure-controls,
   .rass-bottom-nav {
     display: flex;
     align-items: center;
@@ -339,6 +335,13 @@ const pageStyles = `
     border-bottom: 1px solid rgba(15, 39, 66, 0.09);
     padding: 9px 12px;
     scrollbar-width: thin;
+  }
+
+  .rass-viewmode-strip {
+    display: flex;
+    justify-content: flex-start;
+    gap: 6px;
+    margin-top: 8px;
   }
 
   .rass-slide-tab {
@@ -498,9 +501,10 @@ const pageStyles = `
   }
 
   .rass-mode-button {
-    min-height: 36px;
-    font-size: 12px;
+    min-height: 32px;
+    font-size: 11px;
     border-radius: 999px;
+    padding: 0 10px;
   }
 
   .rass-slide-layout {
@@ -610,6 +614,56 @@ const pageStyles = `
 
   .rass-points-panel {
     padding: 10px 12px;
+  }
+
+  .rass-operation-bar {
+    display: block;
+    align-items: center;
+    border: 1px solid rgba(15, 39, 66, 0.12);
+    border-radius: 12px;
+    background: #eef3f9;
+    padding: 10px 12px;
+  }
+
+  .rass-operation-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 12px;
+  }
+
+  .rass-operation-bar .rass-audio-panel {
+    min-width: 0;
+    justify-items: start;
+  }
+
+  .rass-operation-bar .rass-audio-button {
+    width: auto;
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 0.01em;
+    padding: 0 14px;
+    border-radius: 10px;
+  }
+
+  .rass-operation-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    min-width: 172px;
+  }
+
+  .rass-operation-nav .rass-figure-button {
+    min-height: 44px;
+    border-color: rgba(15, 39, 66, 0.24);
+    background: #ffffff;
+    color: #0f2742;
+    box-shadow: none;
+  }
+
+  .rass-operation-nav .rass-figure-button:hover:not(:disabled) {
+    border-color: rgba(15, 39, 66, 0.46);
+    box-shadow: 0 8px 16px rgba(15, 39, 66, 0.08);
   }
 
   .rass-points-title {
@@ -727,16 +781,6 @@ const pageStyles = `
       padding: 10px;
     }
 
-    .rass-figure-header {
-      grid-template-columns: minmax(0, 1fr);
-    }
-
-    .rass-figure-controls {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      align-items: start;
-    }
-
     .rass-figure-stage {
       min-height: 52vh;
       padding: 12px;
@@ -795,6 +839,8 @@ const pageStyles = `
       grid-template-columns: minmax(0, 1fr);
     }
 
+    .rass-operation-bar { padding: 10px; }
+
     .rass-figure-footer {
       align-items: flex-start;
       flex-direction: column;
@@ -808,19 +854,38 @@ const pageStyles = `
   }
 
   @media (max-width: 700px) {
-    .rass-figure-controls {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+    .rass-viewmode-strip {
+      justify-content: flex-start;
+      overflow-x: auto;
+      scrollbar-width: thin;
     }
 
-    .rass-audio-panel {
-      grid-column: 1 / -1;
+    .rass-operation-bar {
+      padding: 8px 10px;
+    }
+
+    .rass-operation-main {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      align-items: stretch;
+    }
+
+    .rass-operation-bar .rass-audio-panel {
       width: 100%;
       justify-items: stretch;
     }
 
-    .rass-audio-button {
+    .rass-operation-bar .rass-audio-button {
       width: 100%;
-      min-height: 48px;
+      min-height: 44px;
+      font-size: 13px;
+    }
+
+    .rass-operation-nav {
+      min-width: 0;
+      width: 100%;
+      grid-template-columns: 1fr 1fr;
     }
 
     .rass-points-list.is-four-points {
@@ -988,36 +1053,30 @@ export default function RASSFigureSlides2026() {
             <p className="rass-figure-kicker">RA-SS SLIDES 2026</p>
             <h1 className="rass-figure-title">RA-SS 学会発表｜漫画＋Figure版</h1>
             <p className="rass-figure-subtitle">漫画版で直感的に、Figure版で構造的に確認できます。</p>
-          </div>
-          <nav className="rass-figure-controls" aria-label="スライド操作">
-            <div className="rass-audio-panel">
+            <div className="rass-viewmode-strip" aria-label="表示モード">
               <button
                 type="button"
-                className={`rass-figure-button rass-audio-button${isAudioPlaying ? " is-playing" : ""}`}
-                disabled={!activeSlide.audioSrc}
-                onClick={handleAudioToggle}
-                aria-label={isAudioPlaying ? "音声を停止" : "このスライドの音声解説を聞く"}
-                title={isAudioPlaying ? "音声を停止" : "このスライドの音声解説を聞く"}
+                className={`rass-mode-button${viewMode === "both" ? " is-active" : ""}`}
+                onClick={() => setViewMode("both")}
               >
-                {isAudioPlaying ? (
-                  <span>■ 音声を停止</span>
-                ) : (
-                  <>
-                    <span className="rass-audio-label-long">▶ このスライドの音声解説を聞く</span>
-                    <span className="rass-audio-label-short">▶ 音声解説を聞く</span>
-                  </>
-                )}
+                左右で見る（おすすめ）
               </button>
-              <p className="rass-audio-note">音声ガイド：AI生成音声（説明補助用）</p>
-              {hasAudioError ? <p className="rass-audio-status">音声準備中</p> : null}
+              <button
+                type="button"
+                className={`rass-mode-button${viewMode === "manga" ? " is-active" : ""}`}
+                onClick={() => setViewMode("manga")}
+              >
+                漫画で見る
+              </button>
+              <button
+                type="button"
+                className={`rass-mode-button${viewMode === "figure" ? " is-active" : ""}`}
+                onClick={() => setViewMode("figure")}
+              >
+                Figureで見る
+              </button>
             </div>
-            <button type="button" className="rass-figure-button" onClick={goPrevious} disabled={activeIndex === 0}>
-              前へ
-            </button>
-            <button type="button" className="rass-figure-button" onClick={goNext} disabled={activeIndex === slides.length - 1}>
-              次へ
-            </button>
-          </nav>
+          </div>
         </header>
 
         <section className="rass-figure-viewer" aria-label="漫画＋Figure版スライド">
@@ -1047,28 +1106,31 @@ export default function RASSFigureSlides2026() {
               <div className="rass-figure-count">{slideCountLabel}</div>
             </div>
 
-            <div className="rass-mode-group" aria-label="表示モード">
-              <button
-                type="button"
-                className={`rass-mode-button${viewMode === "both" ? " is-active" : ""}`}
-                onClick={() => setViewMode("both")}
-              >
-                左右で見る（おすすめ）
-              </button>
-              <button
-                type="button"
-                className={`rass-mode-button${viewMode === "manga" ? " is-active" : ""}`}
-                onClick={() => setViewMode("manga")}
-              >
-                漫画で見る
-              </button>
-              <button
-                type="button"
-                className={`rass-mode-button${viewMode === "figure" ? " is-active" : ""}`}
-                onClick={() => setViewMode("figure")}
-              >
-                Figureで見る
-              </button>
+            <div className="rass-operation-bar" aria-label="表示と再生の操作">
+              <div className="rass-operation-main">
+                <div className="rass-audio-panel">
+                  <button
+                    type="button"
+                    className={`rass-figure-button rass-audio-button${isAudioPlaying ? " is-playing" : ""}`}
+                    disabled={!activeSlide.audioSrc}
+                    onClick={handleAudioToggle}
+                    aria-label={isAudioPlaying ? "音声を停止" : "このスライドの音声解説を聞く"}
+                    title={isAudioPlaying ? "音声を停止" : "このスライドの音声解説を聞く"}
+                  >
+                    {isAudioPlaying ? <span>■ 音声を停止</span> : <span>▶ 音声解説を聞く</span>}
+                  </button>
+                  <p className="rass-audio-note">音声ガイド：AI生成音声（説明補助用）</p>
+                  {hasAudioError ? <p className="rass-audio-status">音声準備中</p> : null}
+                </div>
+                <div className="rass-operation-nav">
+                  <button type="button" className="rass-figure-button" onClick={goPrevious} disabled={activeIndex === 0}>
+                    前へ
+                  </button>
+                  <button type="button" className="rass-figure-button" onClick={goNext} disabled={activeIndex === slides.length - 1}>
+                    次へ
+                  </button>
+                </div>
+              </div>
             </div>
 
             <details className="rass-mobile-index">
