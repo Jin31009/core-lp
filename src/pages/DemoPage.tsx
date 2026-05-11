@@ -240,8 +240,16 @@ export default function DemoPage({ setPage }: DemoPageProps) {
   const [consentNoPII, setConsentNoPII] = useState(false);
   const [consentNonDiagnosis, setConsentNonDiagnosis] = useState(false);
 
+  const hasConfirmedFinalContext =
+    !!finalContextDraft.trim() &&
+    !isGeneratingFinalContext &&
+    !finalContextDraft.includes("失敗しました") &&
+    !finalContextDraft.includes("作成しています");
+
   const caseContext =
-    finalContextDraft.trim() || contextEdited.trim() || primaryContextDraft;
+    hasConfirmedFinalContext
+      ? finalContextDraft.trim()
+      : primaryContextDraft.trim() || observationRaw.trim();
 
   const analysisContext =
     caseContext.trim() || observationRaw.trim();
@@ -485,6 +493,10 @@ export default function DemoPage({ setPage }: DemoPageProps) {
   };
 
   const goToStep2 = () => {
+    if (!hasConfirmedFinalContext || !consentNoPII || !consentNonDiagnosis) {
+      return;
+    }
+
     setMaxUnlockedStep((prev) => (prev < 2 ? 2 : prev));
     setSelectedStep(2);
   };

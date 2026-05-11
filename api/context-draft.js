@@ -25,6 +25,8 @@ const CONTEXT_SYSTEM_PROMPT = `あなたは医療・ケア現場の観察メモ�
 
 ルール:
 - contextDraft は日本語で2〜4文の「確認用下書き」
+- contextDraft は短い見出しや要約だけにせず、入力された場面の主要な出来事を含める
+- contextDraft には、何が起きたか、その後どう変化したか、未解消の不安や確認点を可能な範囲で残す
 - 断定しすぎず、観察から推測できる範囲に留める
 - 判定・結論・確定・診断は行わない
 - 人が確認するための候補として、読みやすく構造化する
@@ -90,7 +92,7 @@ export default async function handler(req, res) {
     const parsed = parseResponsePayload(response.output_text);
 
     return res.status(200).json({
-      contextDraft: normalizeContextDraft(parsed?.contextDraft),
+      contextDraft: normalizeContextDraft(parsed?.contextDraft, observationRaw),
       followups: normalizeFollowups(parsed?.followups),
     });
   } catch (error) {
@@ -128,8 +130,10 @@ function parseResponsePayload(text) {
   }
 }
 
-function normalizeContextDraft(text) {
-  if (typeof text !== "string") return FALLBACK_CONTEXT_DRAFT;
+function normalizeContextDraft(text, observationRaw = "") {
+  if (typeof text !== "string") {
+    return observationRaw || FALLBACK_CONTEXT_DRAFT;
+  }
 
   const normalized = text
     .replace(/^「|」$/g, "")
@@ -138,7 +142,23 @@ function normalizeContextDraft(text) {
     .replace(/\n{3,}/g, "\n\n")
     .trim();
 
-  return normalized || FALLBACK_CONTEXT_DRAFT;
+  if (!normalized) return observationRaw || FALLBACK_CONTEXT_DRAFT;
+
+  if (isTooShortContextDraft(normalized, observationRaw)) {
+    return observationRaw || FALLBACK_CONTEXT_DRAFT;
+  }
+
+  return normalized;
+}
+
+function isTooShortContextDraft(text, observationRaw) {
+  const source = cleanText(observationRaw);
+  if (!source) return text.length < 20;
+
+  const sentenceLikeCount = (text.match(/[。！？\n]/g) || []).length;
+  const sourceHasNarrative = source.length >= 80 || source.includes("\n");
+
+  return sourceHasNarrative && text.length < 60 && sentenceLikeCount < 2;
 }
 
 function normalizeFollowups(list) {

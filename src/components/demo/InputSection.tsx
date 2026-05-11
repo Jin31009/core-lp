@@ -245,9 +245,17 @@ export default function InputSection({
     hasContextResult &&
     (contextEdited.trim().length > 0 || contextDraft.trim().length > 0);
 
+  const hasFinalContext =
+    !!finalContextDraft.trim() &&
+    !isGeneratingFinalContext &&
+    !finalContextDraft.includes("失敗しました") &&
+    !finalContextDraft.includes("作成しています");
+
   const analysisDisabled =
     text.trim().length === 0 ||
     isGenerating ||
+    isGeneratingFinalContext ||
+    !hasFinalContext ||
     !consentNoPII ||
     !consentNonDiagnosis;
 
@@ -262,11 +270,6 @@ export default function InputSection({
     const prefix = contextEdited.trim().length > 0 ? "\n" : "";
     onContextEditedChange(`${contextEdited}${prefix}${normalized}`);
   };
-
-  const hasFinalContext =
-    !!finalContextDraft.trim() &&
-    !isGeneratingFinalContext &&
-    !finalContextDraft.includes("失敗しました");
 
   useEffect(() => {
     if (!hasFinalContext) return;
@@ -311,30 +314,6 @@ export default function InputSection({
             <p className="mt-2 text-[16px] leading-8 text-amber-900">
               場面の要点だけを、短く入力してください。
             </p>
-          </div>
-        </div>
-
-        <div className={panelCard}>
-          <p className="text-[13px] uppercase tracking-[0.18em] text-stone-500">Consent</p>
-          <div className="mt-3 space-y-3">
-            <label className="flex items-start gap-3 text-[16px] leading-8 text-stone-700">
-              <input
-                type="checkbox"
-                checked={consentNoPII}
-                onChange={(e) => onConsentNoPIIChange(e.target.checked)}
-                className="mt-1 h-4 w-4"
-              />
-              <span>個人が特定される情報を入力しないことに同意します</span>
-            </label>
-            <label className="flex items-start gap-3 text-[16px] leading-8 text-stone-700">
-              <input
-                type="checkbox"
-                checked={consentNonDiagnosis}
-                onChange={(e) => onConsentNonDiagnosisChange(e.target.checked)}
-                className="mt-1 h-4 w-4"
-              />
-              <span>このデモは診療判断ではなく、説明改善のための試作であることを理解しました</span>
-            </label>
           </div>
         </div>
 
@@ -623,11 +602,63 @@ export default function InputSection({
           <p className="text-[16px] leading-9 text-stone-700">
             下書きを確認・補足できれば、次に進めます。
           </p>
-          {!consentNoPII || !consentNonDiagnosis ? (
-            <p className="mt-2 text-[15px] leading-8 text-rose-700">
-              Step2へ進むには、上の同意チェック2項目が必要です。
+
+          <div className="mt-5 rounded-[16px] border border-stone-300 bg-white p-5">
+            <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
+              Step2 Check
             </p>
-          ) : null}
+            <p className="mt-2 text-[20px] font-semibold text-slate-900">
+              Step2へ進む前の確認
+            </p>
+            <p className="mt-3 text-[15px] leading-8 text-stone-700">
+              確認用Contextを人が見直したうえで、関係の状態を確認します。
+            </p>
+
+            <div className="mt-4 space-y-3">
+              <label className="flex items-start gap-3 rounded-[12px] border border-stone-200 bg-[#faf8f3] px-4 py-3 text-[16px] leading-8 text-stone-800">
+                <input
+                  type="checkbox"
+                  checked={consentNoPII}
+                  onChange={(e) => onConsentNoPIIChange(e.target.checked)}
+                  className="mt-1.5 h-4 w-4"
+                  disabled={!hasFinalContext}
+                />
+                <span>この確認用Contextを人が確認しました</span>
+              </label>
+              <label className="flex items-start gap-3 rounded-[12px] border border-stone-200 bg-[#faf8f3] px-4 py-3 text-[16px] leading-8 text-stone-800">
+                <input
+                  type="checkbox"
+                  checked={consentNonDiagnosis}
+                  onChange={(e) => onConsentNonDiagnosisChange(e.target.checked)}
+                  className="mt-1.5 h-4 w-4"
+                  disabled={!hasFinalContext}
+                />
+                <span>
+                  AIが結論を確定するものではなく、Δ・e・Rを確認するための一次整理であることを理解しました
+                </span>
+              </label>
+            </div>
+
+            {!hasFinalContext ? (
+              <p className="mt-4 rounded-[12px] border border-amber-200 bg-amber-50 px-4 py-3 text-[15px] leading-8 text-amber-900">
+                まず確認用Contextを確定してください。
+              </p>
+            ) : !consentNoPII || !consentNonDiagnosis ? (
+              <div className="mt-4 rounded-[12px] border border-rose-200 bg-rose-50 px-4 py-3 text-[15px] leading-8 text-rose-800">
+                <p>Step2へ進むには、上の2項目を確認してください。</p>
+                <div className="mt-2 space-y-1">
+                  {!consentNoPII && <p>未確認：この確認用Contextを人が確認しました</p>}
+                  {!consentNonDiagnosis && (
+                    <p>未確認：AIが結論を確定するものではないことを理解しました</p>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <p className="mt-4 rounded-[12px] border border-slate-200 bg-slate-50 px-4 py-3 text-[15px] leading-8 text-slate-800">
+                確認できました。Step2へ進めます。
+              </p>
+            )}
+          </div>
 
           <div className="mt-4 flex flex-wrap items-center gap-3">
             <button

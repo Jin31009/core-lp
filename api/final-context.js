@@ -66,10 +66,11 @@ export default async function handler(req, res) {
       primaryContextDraft = "",
     } = req.body || {};
 
-    const finalContext =
-      String(contextEdited).trim() ||
-      String(primaryContextDraft).trim() ||
-      String(observationRaw).trim();
+    const finalContext = buildFinalContext({
+      observationRaw,
+      primaryContextDraft,
+      contextEdited,
+    });
 
     if (!finalContext) {
       return res.status(400).json({
@@ -286,6 +287,49 @@ function buildCordPrompt({
     "今回分析に使う確認用Context:",
     finalContext,
   ].join("\n");
+}
+
+function buildFinalContext({ observationRaw, primaryContextDraft, contextEdited }) {
+  const raw = cleanString(observationRaw);
+  const draft = chooseBaseContext(cleanString(primaryContextDraft), raw);
+  const supplement = cleanString(contextEdited);
+
+  if (!supplement) return draft || raw;
+  if (!draft) return supplement || raw;
+
+  if (looksLikeEditedFullContext(supplement, draft, raw)) {
+    return supplement;
+  }
+
+  return `${draft}\n\n補足：${supplement}`;
+}
+
+function chooseBaseContext(draft, raw) {
+  if (!draft) return raw;
+  if (isShortHeadingOnly(draft, raw)) return raw || draft;
+  return draft;
+}
+
+function isShortHeadingOnly(text, raw) {
+  if (!raw) return text.length < 20;
+
+  const sentenceLikeCount = (text.match(/[。！？\n]/g) || []).length;
+  const rawHasNarrative = raw.length >= 80 || raw.includes("\n");
+
+  return rawHasNarrative && text.length < 60 && sentenceLikeCount < 2;
+}
+
+function looksLikeEditedFullContext(text, draft, raw) {
+  const sentenceLikeCount = (text.match(/[。！？\n]/g) || []).length;
+  const questionCount = (text.match(/[？?]/g) || []).length;
+  const referenceLength = Math.max(draft.length, raw.length);
+
+  return (
+    text.length >= 100 &&
+    sentenceLikeCount >= 2 &&
+    questionCount < sentenceLikeCount &&
+    text.length >= Math.min(100, referenceLength * 0.6)
+  );
 }
 
 function parseResponsePayload(text) {
