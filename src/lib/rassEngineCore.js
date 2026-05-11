@@ -124,7 +124,8 @@ export function recommendACEX(akPrimary, apceMiss, delta) {
     actions.push({
       code: "X",
       label: "補助導線",
-      reason: "Safety issues require structural support and confirmation",
+      reason:
+        "安心に関わる不安が残っているため、今後の見通しと家族が確認すべきことを整理する必要があります。",
     });
   }
 

@@ -162,7 +162,7 @@ function FinalLoadingCard() {
               </div>
               <div className="flex items-center gap-2">
                 <LoadingDots />
-                <span>最終Contextに整えています</span>
+                <span>確認用Contextに整えています</span>
               </div>
             </div>
           </div>
@@ -588,7 +588,7 @@ export default function InputSection({
                     確認用Context
                   </p>
                   <p className="mt-2 text-[21px] font-semibold text-slate-900">
-                    分析に使う最終Context
+                    分析に使う確認用Context
                   </p>
                   <p className="mt-4 max-h-[420px] overflow-y-auto text-[21px] leading-10 text-stone-900">
                     {finalContextDraft}
