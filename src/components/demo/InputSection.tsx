@@ -80,7 +80,7 @@ function LoadingCard() {
           一次整理 / Loading
         </p>
         <p className="mt-2 text-[20px] font-semibold text-slate-900">
-          一次整理を生成しています
+          確認用下書きを作成しています
         </p>
       </div>
 
@@ -132,7 +132,7 @@ function FinalLoadingCard() {
           確認用Context / Loading
         </p>
         <p className="mt-2 text-[20px] font-semibold text-slate-900">
-          最終Contextを生成しています
+          確認用Contextを作成しています
         </p>
       </div>
 
@@ -232,7 +232,7 @@ export default function InputSection({
 
   const isGenerating =
     contextRequested &&
-    (contextDraft.trim() === "下書き作成中...");
+    (contextDraft.trim() === "確認用下書きを作成しています...");
 
   const hasContextResult =
     contextRequested &&
@@ -444,7 +444,7 @@ export default function InputSection({
               type="button"
               disabled={!canRequestContext || isGenerating}
             >
-              {isGenerating ? "下書き作成中…" : "この内容を整理してみる"}
+              {isGenerating ? "確認用下書きを作成しています…" : "この内容を整理してみる"}
             </button>
 
             {!canRequestContext && (
@@ -462,7 +462,7 @@ export default function InputSection({
             {isGenerating && (
               <p className="inline-flex items-center gap-2 text-[16px] leading-8 text-stone-700">
                 <LoadingDots />
-                下書き作成中...
+                確認用下書きを作成しています...
               </p>
             )}
           </div>

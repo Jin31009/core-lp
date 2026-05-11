@@ -266,8 +266,8 @@ export default function DemoPage({ setPage }: DemoPageProps) {
 
     setContextRequested(true);
     setHasContextError(false);
-    setIsGeneratingFinalContext(true);
-    setPrimaryContextDraft("下書き作成中...");
+    setIsGeneratingFinalContext(false);
+    setPrimaryContextDraft("確認用下書きを作成しています...");
     setContextFollowups([]);
     setFinalContextDraft("");
 

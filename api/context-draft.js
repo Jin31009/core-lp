@@ -29,6 +29,7 @@ const CONTEXT_SYSTEM_PROMPT = `あなたは医療・ケア現場の観察メモ�
 - 判定・結論・確定・診断は行わない
 - 人が確認するための候補として、読みやすく構造化する
 - followups は日本語の短い確認質問を2〜3件
+- followups は自然な日本語文のみとし、記号は「、」「。」「？」だけを使う
 - マークダウンや見出しやコードブロックは使わない`;
 
 export default async function handler(req, res) {
@@ -145,7 +146,7 @@ function normalizeFollowups(list) {
 
   const normalized = list
     .filter((item) => typeof item === "string")
-    .map((item) => item.trim())
+    .map(normalizeFollowupText)
     .filter(Boolean)
     .slice(0, 3);
 
@@ -154,4 +155,21 @@ function normalizeFollowups(list) {
   }
 
   return normalized;
+}
+
+function normalizeFollowupText(text) {
+  return text
+    .replace(/\r\n/g, "\n")
+    .replace(/】【。/g, "。")
+    .replace(/[【】［］\[\]{}｛｝「」『』]/g, "")
+    .replace(/[!！]/g, "")
+    .replace(/、+/g, "、")
+    .replace(/。+/g, "。")
+    .replace(/？+/g, "？")
+    .replace(/。？/g, "？")
+    .replace(/？。/g, "？")
+    .replace(/、([。？])/g, "$1")
+    .replace(/([。？])、/g, "$1")
+    .replace(/\s+/g, " ")
+    .trim();
 }
