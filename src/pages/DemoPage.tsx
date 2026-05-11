@@ -54,8 +54,50 @@ type ResponseData = {
   statusColorClass: string;
 };
 
+type CordTimelineItem = {
+  id: string;
+  text: string;
+  deltaObservation: string;
+  cordRole:
+    | "context"
+    | "e1"
+    | "e2"
+    | "e3"
+    | "r_plus_candidate"
+    | "r_plus_established";
+};
+
+export type CordAssessment = {
+  summary: string;
+  maxDelta: "Δ0" | "Δ1" | "Δ1-Δ2" | "Δ2" | "Δ2-Δ3" | "Δ3" | "Δ4";
+  casePhase: string;
+  timeline: CordTimelineItem[];
+  e: {
+    e1: string | null;
+    e2: string | null;
+    e3: string | null;
+  };
+  trigger: {
+    value: "Yes" | "No";
+    reason: string;
+  };
+  rPlus: {
+    status: "none" | "candidate" | "established";
+    event: string | null;
+  };
+  ak: {
+    primary: string | null;
+    secondary: string | null;
+    note: string;
+  };
+  preAsset: string[];
+  humanReviewNotes: string[];
+};
+
 type FinalContextResponse = {
   finalContext?: string;
+  cordAssessment?: CordAssessment | null;
+  cordAssessmentError?: string | null;
   error?: string;
 };
 
@@ -66,6 +108,38 @@ async function readErrorMessage(response: Response, fallback: string) {
   } catch {
     return fallback;
   }
+}
+
+function buildCordResponse(cordAssessment: CordAssessment): ResponseData {
+  const preAssets = cordAssessment.preAsset.length
+    ? cordAssessment.preAsset
+    : ["人が確認すべき観点を整理する"];
+
+  return {
+    actionSummary: preAssets.join(" → "),
+    acexItems: preAssets.map((item, index) => ({
+      key: `CORD-${index + 1}`,
+      label: String(index + 1),
+      title: item,
+      body: "CORD一次整理で示されたPre-Asset候補です。人が文脈に合わせて確認してください。",
+    })),
+    flowItems: preAssets.map((item) => `Pre-Asset｜${item}`),
+    ngItems: cordAssessment.humanReviewNotes,
+    statusLabel: `${cordAssessment.maxDelta} / ${cordAssessment.casePhase}`,
+    statusSub: `${cordAssessment.trigger.value}｜${cordAssessment.trigger.reason}`,
+    statusIcon:
+      cordAssessment.trigger.value === "Yes"
+        ? "●"
+        : cordAssessment.rPlus.status === "established"
+          ? "◉"
+          : "○",
+    statusColorClass:
+      cordAssessment.trigger.value === "Yes"
+        ? "text-rose-500"
+        : cordAssessment.rPlus.status === "established"
+          ? "text-emerald-600"
+          : "text-stone-500",
+  };
 }
 
 function TabButton({
@@ -149,6 +223,8 @@ export default function DemoPage({ setPage }: DemoPageProps) {
   const [contextFollowups, setContextFollowups] = useState<string[]>([]);
 
   const [finalContextDraft, setFinalContextDraft] = useState("");
+  const [cordAssessment, setCordAssessment] = useState<CordAssessment | null>(null);
+  const [cordAssessmentError, setCordAssessmentError] = useState<string | null>(null);
   const [isGeneratingFinalContext, setIsGeneratingFinalContext] = useState(false);
 
   const [selectedStep, setSelectedStep] = useState<1 | 2 | 3 | 4 | 5>(1);
@@ -226,6 +302,17 @@ export default function DemoPage({ setPage }: DemoPageProps) {
       }
     : null;
 
+  const effectiveStep3Response =
+    cordAssessment ? buildCordResponse(cordAssessment) : step3Response;
+
+  const effectiveDelta = cordAssessment?.maxDelta || String(stepResult?.analysis.MAX_DELTA ?? 0);
+  const effectivePhaseLabel = cordAssessment?.casePhase || stepPhaseLabel;
+  const effectiveJudgment = cordAssessment
+    ? `${cordAssessment.summary} / Trigger ${cordAssessment.trigger.value}：${cordAssessment.trigger.reason}`
+    : stepJudgment;
+  const effectiveActionSummary =
+    effectiveStep3Response?.actionSummary || "判定未取得。人による確認が必要です。";
+
   const stepMeta =
     selectedStep === 1
       ? {
@@ -270,6 +357,8 @@ export default function DemoPage({ setPage }: DemoPageProps) {
     setPrimaryContextDraft("確認用下書きを作成しています...");
     setContextFollowups([]);
     setFinalContextDraft("");
+    setCordAssessment(null);
+    setCordAssessmentError(null);
 
     try {
       const response = await fetch("/api/context-draft", {
@@ -321,6 +410,8 @@ export default function DemoPage({ setPage }: DemoPageProps) {
   const handleGenerateFinalContext = async () => {
     setIsGeneratingFinalContext(true);
     setFinalContextDraft("確認用Contextを作成しています...");
+    setCordAssessment(null);
+    setCordAssessmentError(null);
 
     try {
       const response = await fetch("/api/final-context", {
@@ -351,8 +442,16 @@ export default function DemoPage({ setPage }: DemoPageProps) {
       setFinalContextDraft(
         data.finalContext || "確認用Contextを取得できませんでした。"
       );
+      setCordAssessment(data.cordAssessment || null);
+      setCordAssessmentError(
+        data.cordAssessment
+          ? null
+          : data.cordAssessmentError || "判定未取得。人による確認が必要です。"
+      );
     } catch (error) {
       console.error(error);
+      setCordAssessment(null);
+      setCordAssessmentError("判定未取得。人による確認が必要です。");
       setFinalContextDraft(
         error instanceof Error
           ? error.message
@@ -449,21 +548,52 @@ export default function DemoPage({ setPage }: DemoPageProps) {
           context_raw: maskSensitiveText(observationRaw.trim()),
           context_final: maskSensitiveText(analysisContext),
           context_source: contextSource,
-          max_delta: stepResult.analysis.MAX_DELTA,
-          trigger: stepResult.analysis.Trigger,
-          r_plus: stepResult.analysis.R_plus,
-          ak_break_type: stepResult.analysis.AK_Break_Type,
-          ak_primary: stepResult.analysis.AK_Primary,
+          max_delta: cordAssessment
+            ? (cordAssessment.maxDelta as unknown as RASSCaseRecord["max_delta"])
+            : stepResult.analysis.MAX_DELTA,
+          trigger: cordAssessment
+            ? cordAssessment.trigger.value
+            : stepResult.analysis.Trigger,
+          r_plus: cordAssessment
+            ? cordAssessment.rPlus.status === "established"
+              ? "Yes"
+              : "No"
+            : stepResult.analysis.R_plus,
+          ak_break_type: cordAssessment
+            ? ([
+                cordAssessment.ak.primary,
+                cordAssessment.ak.secondary,
+              ].filter(Boolean) as unknown as RASSCaseRecord["ak_break_type"])
+            : stepResult.analysis.AK_Break_Type,
+          ak_primary: cordAssessment
+            ? (cordAssessment.ak.primary as unknown as RASSCaseRecord["ak_primary"])
+            : stepResult.analysis.AK_Primary,
           apce_miss: stepResult.analysis.APCE_Miss,
           r_failure_reason: stepResult.analysis.R_Failure_Reason,
-          case_phase: stepResult.analysis.Case_Phase,
-          trigger_memo: stepResult.analysis.Trigger_Memo,
-          r_memo: stepResult.analysis.R_Memo,
-          acex_codes: stepResult.acex.map((action) => action.code),
-          acex_labels: stepResult.acex.map((action) => action.label),
-          acex_reasons: stepResult.acex.map((action) => action.reason),
+          case_phase: cordAssessment
+            ? (cordAssessment.casePhase as unknown as RASSCaseRecord["case_phase"])
+            : stepResult.analysis.Case_Phase,
+          trigger_memo: cordAssessment
+            ? cordAssessment.trigger.reason
+            : stepResult.analysis.Trigger_Memo,
+          r_memo: cordAssessment
+            ? cordAssessment.rPlus.status === "established"
+              ? `R+成立：${cordAssessment.rPlus.event || "回復イベントを人が確認してください。"}`
+              : cordAssessment.rPlus.status === "candidate"
+                ? `R+候補：${cordAssessment.rPlus.event || "回復可能性を人が確認してください。"}`
+                : "R+なし"
+            : stepResult.analysis.R_Memo,
+          acex_codes: cordAssessment
+            ? (effectiveStep3Response?.acexItems.map((item) => item.key) as unknown as RASSCaseRecord["acex_codes"])
+            : stepResult.acex.map((action) => action.code),
+          acex_labels: cordAssessment
+            ? effectiveStep3Response?.acexItems.map((item) => item.title) || []
+            : stepResult.acex.map((action) => action.label),
+          acex_reasons: cordAssessment
+            ? effectiveStep3Response?.acexItems.map((item) => item.body) || []
+            : stepResult.acex.map((action) => action.reason),
           engine_version: "rassEngine@1",
-          analysis_version: "rass_cases_csv@1",
+          analysis_version: cordAssessment ? "cord_assessment@1+rass_cases_csv@1" : "rass_cases_csv@1",
           why_tags: whyTags,
           next_assets: nextAssets,
           notes: maskSensitiveText(
@@ -620,33 +750,39 @@ export default function DemoPage({ setPage }: DemoPageProps) {
               {selectedStep === 1 && (
                 <InputSection
                   text={observationRaw}
-                  onTextChange={(value) => {
-                    setObservationRaw(value);
-                    setContextRequested(false);
-                    setPrimaryContextDraft("");
-                    setContextFollowups([]);
-                    setFinalContextDraft("");
-                    setConsentNoPII(false);
+	                  onTextChange={(value) => {
+	                    setObservationRaw(value);
+	                    setContextRequested(false);
+	                    setPrimaryContextDraft("");
+	                    setContextFollowups([]);
+	                    setFinalContextDraft("");
+	                    setCordAssessment(null);
+	                    setCordAssessmentError(null);
+	                    setConsentNoPII(false);
                     setConsentNonDiagnosis(false);
                     resetLearningState();
                     setMaxUnlockedStep(1);
                     setSelectedStep(1);
                   }}
                   emotion={emotion}
-                  onEmotionChange={(value) => {
-                    setEmotion(value);
-                    setFinalContextDraft("");
-                    setConsentNoPII(false);
+	                  onEmotionChange={(value) => {
+	                    setEmotion(value);
+	                    setFinalContextDraft("");
+	                    setCordAssessment(null);
+	                    setCordAssessmentError(null);
+	                    setConsentNoPII(false);
                     setConsentNonDiagnosis(false);
                     resetLearningState();
                     setMaxUnlockedStep(1);
                     setSelectedStep(1);
                   }}
                   urgency={urgency}
-                  onUrgencyChange={(value) => {
-                    setUrgency(value);
-                    setFinalContextDraft("");
-                    setConsentNoPII(false);
+	                  onUrgencyChange={(value) => {
+	                    setUrgency(value);
+	                    setFinalContextDraft("");
+	                    setCordAssessment(null);
+	                    setCordAssessmentError(null);
+	                    setConsentNoPII(false);
                     setConsentNonDiagnosis(false);
                     resetLearningState();
                     setMaxUnlockedStep(1);
@@ -654,10 +790,12 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                   }}
                   contextDraft={primaryContextDraft}
                   contextEdited={contextEdited}
-                  onContextEditedChange={(value) => {
-                    setContextEdited(value);
-                    setFinalContextDraft("");
-                  }}
+	                  onContextEditedChange={(value) => {
+	                    setContextEdited(value);
+	                    setFinalContextDraft("");
+	                    setCordAssessment(null);
+	                    setCordAssessmentError(null);
+	                  }}
                   contextRequested={contextRequested}
                   hasContextError={hasContextError}
                   onRequestContext={handleRequestContext}
@@ -669,10 +807,12 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                     setContextEdited("");
                     setContextRequested(false);
                     setHasContextError(false);
-                    setPrimaryContextDraft("");
-                    setContextFollowups([]);
-                    setFinalContextDraft("");
-                    setConsentNoPII(false);
+	                    setPrimaryContextDraft("");
+	                    setContextFollowups([]);
+	                    setFinalContextDraft("");
+	                    setCordAssessment(null);
+	                    setCordAssessmentError(null);
+	                    setConsentNoPII(false);
                     setConsentNonDiagnosis(false);
                     resetLearningState();
                     setSelectedStep(1);
@@ -693,37 +833,39 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                 <AnalysisSection
                   analysis={step2Analysis}
                   analysisText={null}
-                  delta={String(stepResult?.analysis.MAX_DELTA ?? 0)}
-                  eLevel={stepPhaseLabel}
+                  delta={effectiveDelta}
+                  eLevel={effectivePhaseLabel}
                   text={observationRaw}
-                  judgment={stepJudgment}
-                  contextText={analysisContext}
-                  onNext={goToStep3}
-                />
+                  judgment={effectiveJudgment}
+	                  contextText={analysisContext}
+	                  cordAssessment={cordAssessment}
+	                  cordAssessmentError={cordAssessmentError}
+	                  onNext={goToStep3}
+	                />
               )}
 
               {selectedStep === 3 && maxUnlockedStep >= 3 && (
                 <ResponseSection
-                  actionSummary={step3Response?.actionSummary || "該当するACEX提案なし"}
-                  acexItems={step3Response?.acexItems || []}
-                  flowItems={step3Response?.flowItems || ["該当するACEX提案はありません。"]}
-                  ngItems={step3Response?.ngItems || []}
-                  statusLabel={step3Response?.statusLabel || "Δ0 / Trigger前"}
-                  statusSub={step3Response?.statusSub || "主因不明 によりΔ上昇。Trigger No"}
-                  statusIcon={step3Response?.statusIcon || "○"}
-                  statusColorClass={step3Response?.statusColorClass || "text-stone-500"}
-                  onNext={goToStep4}
+	                  actionSummary={effectiveStep3Response?.actionSummary || "判定未取得。人による確認が必要です。"}
+	                  acexItems={effectiveStep3Response?.acexItems || []}
+	                  flowItems={effectiveStep3Response?.flowItems || ["判定未取得。人による確認が必要です。"]}
+	                  ngItems={effectiveStep3Response?.ngItems || []}
+	                  statusLabel={effectiveStep3Response?.statusLabel || "判定未取得"}
+	                  statusSub={effectiveStep3Response?.statusSub || "人がContextを確認してください。"}
+	                  statusIcon={effectiveStep3Response?.statusIcon || "○"}
+	                  statusColorClass={effectiveStep3Response?.statusColorClass || "text-stone-500"}
+	                  onNext={goToStep4}
                 />
               )}
 
               {selectedStep === 4 && maxUnlockedStep >= 4 && (
                 <CaseReportSection
                   finalContext={analysisContext}
-                  delta={String(stepResult?.analysis.MAX_DELTA ?? 0)}
-                  eLevel={stepPhaseLabel}
+                  delta={effectiveDelta}
+                  eLevel={effectivePhaseLabel}
                   text={observationRaw}
-                  judgment={stepJudgment}
-                  actionSummary={step3Response?.actionSummary || "該当するACEX提案なし"}
+                  judgment={effectiveJudgment}
+                  actionSummary={effectiveActionSummary}
                   executedActions={executedActions}
                   onExecutedActionsChange={setExecutedActions}
                   resultType={resultType}

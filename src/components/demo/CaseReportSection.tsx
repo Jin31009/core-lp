@@ -86,6 +86,7 @@ function toggle(list: string[], value: string) {
 }
 
 function getDeltaLabel(delta: string) {
+  if (delta.startsWith("Δ")) return delta;
   return `Δ${delta}`;
 }
 

@@ -22,6 +22,46 @@ type AnalysisTextData = {
   insight?: string;
 };
 
+type CordTimelineItem = {
+  id: string;
+  text: string;
+  deltaObservation: string;
+  cordRole:
+    | "context"
+    | "e1"
+    | "e2"
+    | "e3"
+    | "r_plus_candidate"
+    | "r_plus_established";
+};
+
+type CordAssessment = {
+  summary: string;
+  maxDelta: string;
+  casePhase: string;
+  timeline: CordTimelineItem[];
+  e: {
+    e1: string | null;
+    e2: string | null;
+    e3: string | null;
+  };
+  trigger: {
+    value: "Yes" | "No";
+    reason: string;
+  };
+  rPlus: {
+    status: "none" | "candidate" | "established";
+    event: string | null;
+  };
+  ak: {
+    primary: string | null;
+    secondary: string | null;
+    note: string;
+  };
+  preAsset: string[];
+  humanReviewNotes: string[];
+};
+
 type AnalysisSectionProps = {
   analysis?: AnalysisData | null;
   analysisText?: AnalysisTextData | null;
@@ -30,6 +70,8 @@ type AnalysisSectionProps = {
   text: string;
   judgment: string;
   contextText: string;
+  cordAssessment?: CordAssessment | null;
+  cordAssessmentError?: string | null;
   onNext: () => void;
 };
 
@@ -287,6 +329,38 @@ function getPhaseFallback(phase?: string, eLevel?: string) {
   return "このケースはまだ大きく崩れる前の段階です。";
 }
 
+function getCordRoleLabel(role: CordTimelineItem["cordRole"]) {
+  switch (role) {
+    case "e1":
+      return "e1｜Δを上げた行";
+    case "e2":
+      return "e2｜Δを維持・増幅した行";
+    case "e3":
+      return "e3｜Trigger確定行";
+    case "r_plus_candidate":
+      return "R+候補";
+    case "r_plus_established":
+      return "R+成立";
+    default:
+      return "文脈";
+  }
+}
+
+function getRPlusLabel(status: CordAssessment["rPlus"]["status"]) {
+  switch (status) {
+    case "candidate":
+      return "R+候補";
+    case "established":
+      return "R+成立";
+    default:
+      return "R+なし";
+  }
+}
+
+function fallbackText(value: string | null | undefined) {
+  return value && value.trim() ? value : "該当なし";
+}
+
 export default function AnalysisSection({
   analysis,
   analysisText,
@@ -295,6 +369,8 @@ export default function AnalysisSection({
   text,
   judgment,
   contextText,
+  cordAssessment,
+  cordAssessmentError,
   onNext,
 }: AnalysisSectionProps) {
   const finalContextBase = useMemo(() => {
@@ -379,6 +455,234 @@ export default function AnalysisSection({
   const groupTitle = "mt-2 text-[24px] font-semibold text-slate-900";
   const groupLead = "mt-3 text-[18px] leading-9 text-stone-800";
   const bodyText = "mt-3 text-[16px] leading-9 text-stone-800";
+
+  if (cordAssessment) {
+    const triggerTone =
+      cordAssessment.trigger.value === "Yes"
+        ? "border-rose-300 bg-rose-50 text-rose-800"
+        : "border-emerald-300 bg-emerald-50 text-emerald-800";
+
+    return (
+      <section className={sectionShell}>
+        <div className={sectionHeader}>
+          <p className="text-[11px] uppercase tracking-[0.24em] text-stone-500">
+            Step 02 / CORD Assessment
+          </p>
+          <p className="mt-2 text-[15px] leading-8 text-stone-700">匿名PoC（非診断）</p>
+          <p className="text-[15px] leading-8 text-stone-600">説明改善のための試作です</p>
+          <h2 className={sectionTitleClass}>関係の読み取り</h2>
+          <p className={leadClass}>
+            CORD Ver1.1に沿って、Δ・e・Rを人が確認するための一次整理として表示します。
+          </p>
+          <p className="mt-3 max-w-4xl rounded-[14px] border border-dashed border-stone-300 bg-white/80 px-4 py-3 text-[15px] leading-8 text-stone-700">
+            この表示はAIによる最終判断ではなく、Δ・e・Rを人が確認するための一次整理です。AKは補助ラベルとして扱います。
+          </p>
+        </div>
+
+        <div className="space-y-9 p-7 sm:p-9">
+          <div className="rounded-[18px] border-2 border-slate-400 bg-white p-7">
+            <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
+              Main Window
+            </p>
+            <p className="mt-2 text-[24px] font-semibold text-slate-900">
+              確認後の分析
+            </p>
+            <div className="mt-4 min-h-[220px] max-h-[380px] overflow-y-auto rounded-[14px] border border-stone-300 bg-[#faf8f3] p-5">
+              <p className="text-[20px] leading-10 text-stone-900">
+                {finalContextBase}
+              </p>
+            </div>
+          </div>
+
+          <div className="grid gap-4 lg:grid-cols-3">
+            <div className={summaryCard}>
+              <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
+                MAX_DELTA
+              </p>
+              <p className="mt-2 text-[30px] font-semibold tracking-[-0.02em] text-slate-900">
+                {cordAssessment.maxDelta}
+              </p>
+              <p className="mt-4 text-[15px] leading-8 text-stone-800">
+                {cordAssessment.summary}
+              </p>
+            </div>
+
+            <div className={`${summaryCard} ${triggerTone}`}>
+              <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
+                Trigger
+              </p>
+              <p className="mt-2 text-[30px] font-semibold tracking-[-0.02em]">
+                {cordAssessment.trigger.value}
+              </p>
+              <p className="mt-4 text-[15px] leading-8">
+                {cordAssessment.trigger.reason}
+              </p>
+            </div>
+
+            <div className={summaryCard}>
+              <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
+                Phase / R+
+              </p>
+              <p className="mt-2 text-[24px] font-semibold leading-9 text-slate-900">
+                {cordAssessment.casePhase}
+              </p>
+              <p className="mt-3 text-[16px] font-semibold text-slate-800">
+                {getRPlusLabel(cordAssessment.rPlus.status)}
+              </p>
+              <p className="mt-2 text-[15px] leading-8 text-stone-800">
+                {fallbackText(cordAssessment.rPlus.event)}
+              </p>
+            </div>
+          </div>
+
+          <div className="grid gap-5 xl:grid-cols-[0.95fr_1.05fr]">
+            <div className={subCard}>
+              <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
+                e / Δ Change
+              </p>
+              <div className="mt-4 space-y-4">
+                {[
+                  ["e1", cordAssessment.e.e1],
+                  ["e2", cordAssessment.e.e2],
+                  ["e3", cordAssessment.e.e3],
+                ].map(([label, value]) => (
+                  <div key={label} className="rounded-[12px] border border-stone-200 bg-white p-4">
+                    <p className="text-[13px] uppercase tracking-[0.14em] text-stone-500">
+                      {label}
+                    </p>
+                    <p className="mt-2 text-[16px] leading-8 text-stone-800">
+                      {fallbackText(value)}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className={subCard}>
+              <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
+                AK / Auxiliary Label
+              </p>
+              <p className="mt-2 text-[22px] font-semibold text-slate-900">
+                {fallbackText(cordAssessment.ak.primary)}
+              </p>
+              <p className="mt-2 text-[16px] leading-8 text-stone-800">
+                {cordAssessment.ak.note}
+              </p>
+              {cordAssessment.ak.secondary && (
+                <p className="mt-3 text-[15px] leading-7 text-stone-600">
+                  補助: {cordAssessment.ak.secondary}
+                </p>
+              )}
+            </div>
+          </div>
+
+          <details className={`${groupWrap} rounded-[14px] border border-stone-300 px-5`}>
+            <summary className="cursor-pointer list-none text-[14px] font-semibold text-stone-700">
+              timeline / pre-asset / human review を開く
+            </summary>
+            <div className="mt-6 space-y-5">
+              {cordAssessment.timeline.map((item) => (
+                <div key={`${item.id}-${item.cordRole}`} className="rounded-[14px] border border-stone-200 bg-[#fcfbf8] p-5">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <p className="text-[13px] uppercase tracking-[0.14em] text-stone-500">
+                      {item.id}
+                    </p>
+                    <span className="rounded-full border border-stone-300 bg-white px-3 py-1 text-[13px] text-stone-700">
+                      {getCordRoleLabel(item.cordRole)}
+                    </span>
+                  </div>
+                  <p className="mt-3 text-[16px] leading-8 text-stone-900">
+                    {item.text}
+                  </p>
+                  <p className="mt-3 text-[15px] leading-8 text-stone-700">
+                    {item.deltaObservation}
+                  </p>
+                </div>
+              ))}
+
+              <div className="grid gap-5 lg:grid-cols-2">
+                <div className={subCard}>
+                  <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
+                    Pre-Asset
+                  </p>
+                  <ul className="mt-4 space-y-2 text-[16px] leading-8 text-stone-800">
+                    {(cordAssessment.preAsset.length
+                      ? cordAssessment.preAsset
+                      : ["該当候補なし"]
+                    ).map((item) => (
+                      <li key={item}>・{item}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className={subCard}>
+                  <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
+                    Human Review
+                  </p>
+                  <ul className="mt-4 space-y-2 text-[16px] leading-8 text-stone-800">
+                    {(cordAssessment.humanReviewNotes.length
+                      ? cordAssessment.humanReviewNotes
+                      : ["人が文脈を確認してください。"]
+                    ).map((item) => (
+                      <li key={item}>・{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <div className="rounded-[16px] border-t border-stone-200 pt-4">
+            <div className="mt-4">
+              <button onClick={onNext} className={primaryButton} type="button">
+                確認して次の対応へ
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (cordAssessmentError) {
+    return (
+      <section className={sectionShell}>
+        <div className={sectionHeader}>
+          <p className="text-[11px] uppercase tracking-[0.24em] text-stone-500">
+            Step 02 / CORD Assessment
+          </p>
+          <h2 className={sectionTitleClass}>関係の読み取り</h2>
+          <p className={leadClass}>
+            判定未取得。人による確認が必要です。
+          </p>
+        </div>
+
+        <div className="space-y-6 p-7 sm:p-9">
+          <div className="rounded-[18px] border border-amber-300 bg-amber-50 p-6 text-amber-900">
+            <p className="text-[17px] leading-9">
+              {cordAssessmentError}
+            </p>
+            <p className="mt-3 text-[15px] leading-8">
+              APIまたはCORD判定JSONを取得できなかったため、Δ・e・Rはこの画面では確定表示しません。
+            </p>
+          </div>
+
+          <div className="rounded-[18px] border-2 border-slate-400 bg-white p-7">
+            <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
+              Main Window
+            </p>
+            <p className="mt-4 text-[20px] leading-10 text-stone-900">
+              {finalContextBase}
+            </p>
+          </div>
+
+          <button onClick={onNext} className={primaryButton} type="button">
+            人が確認して次の対応へ
+          </button>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className={sectionShell}>

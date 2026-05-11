@@ -7,6 +7,11 @@ type DBSampleSectionProps = {
   innerRef?: React.RefObject<HTMLDivElement | null>;
 };
 
+function formatDeltaLabel(value: unknown) {
+  const delta = value == null ? "0" : String(value);
+  return delta.startsWith("Δ") ? delta : `Δ${delta}`;
+}
+
 export default function DBSampleSection({
   record,
   onDownloadCsv,
@@ -86,7 +91,7 @@ export default function DBSampleSection({
 
           <div className={row}>
             <div className={label}>Delta</div>
-            <div className={value}>Δ{record?.max_delta ?? "0"}</div>
+            <div className={value}>{formatDeltaLabel(record?.max_delta)}</div>
           </div>
 
           <div className={row}>
