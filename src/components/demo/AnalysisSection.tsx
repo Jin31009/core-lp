@@ -143,9 +143,10 @@ function getDeltaMeta(delta: string) {
     case "0":
       return {
         label: "Δ0",
-        meaning: "大きな揺れはまだない",
-        title: "大きな緊張はまだ明確ではない",
-        copy: "大きな緊張はまだ明確ではありません。",
+        meaning: "Trigger前の初期ズレ",
+        title: "大きな関係破綻はまだ見られない",
+        copy:
+          "大きな関係破綻はまだ見られません。ただし、説明理解や今後の見通しについて、確認が必要な初期のズレがあります。",
         width: "8%",
       };
     case "1":
@@ -192,7 +193,7 @@ function getAkLabel(key?: string) {
     case "L":
       return "L｜役割";
     case "S":
-      return "S｜安全";
+      return "S｜安心・見通しへの不安";
     default:
       return "P｜見通し";
   }
@@ -390,6 +391,9 @@ export default function AnalysisSection({
         <h2 className={sectionTitleClass}>関係の読み取り</h2>
         <p className={leadClass}>
           人が確認・補足したContextをもとに、いま表に出ている状態を短く確認します。
+        </p>
+        <p className="mt-3 max-w-4xl rounded-[14px] border border-dashed border-stone-300 bg-white/80 px-4 py-3 text-[15px] leading-8 text-stone-700">
+          この表示はAIによる最終判断ではなく、Δ・e・Rを人が確認するための一次整理です。
         </p>
       </div>
 
