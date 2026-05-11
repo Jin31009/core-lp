@@ -264,7 +264,7 @@ export default function ResponseSection({
         <p className="text-[15px] leading-8 text-stone-600">説明改善のための試作です</p>
         <h2 className={sectionTitleClass}>次の対応</h2>
         <p className={leadClass}>
-          Step2 の読み取りをもとに、ここでは ACEX を対応案として順に確認します。
+          Step2 の読み取りをもとに、ここでは確認候補を対応案として順に確認します。
         </p>
       </div>
 
@@ -290,7 +290,7 @@ export default function ResponseSection({
           </summary>
           <div className="mt-5">
         <div className="rounded-[20px] border-2 border-slate-400 bg-white p-7 shadow-[0_8px_22px_rgba(15,23,42,0.05)]">
-          <p className={sectionLabel}>① Review Sequence</p>
+          <p className={sectionLabel}>① 確認候補の流れ</p>
           <p className="mt-2 text-[26px] font-semibold text-slate-900">
             この順で確認候補を見る
           </p>
@@ -325,7 +325,7 @@ export default function ResponseSection({
         <div className="grid gap-6 xl:grid-cols-[1.06fr_0.94fr]">
           <div className="space-y-6">
             <div className={quietCard}>
-              <p className={sectionLabel}>② Action Summary</p>
+              <p className={sectionLabel}>② 確認候補の要約</p>
               <p className="mt-2 text-[22px] font-semibold text-slate-900">
                 行動の要約
               </p>
@@ -341,7 +341,7 @@ export default function ResponseSection({
             </div>
 
             <div className={quietCard}>
-              <p className={sectionLabel}>③ Sequence Notes</p>
+              <p className={sectionLabel}>③ 確認順の補足</p>
               <p className="mt-2 text-[22px] font-semibold text-slate-900">
                 順番の補足
               </p>

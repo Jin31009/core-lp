@@ -288,7 +288,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
         actionSummary:
           stepResult.acex.length > 0
             ? stepResult.acex.map((action) => `${action.code}｜${action.label}`).join(" → ")
-            : "該当するACEX提案なし",
+            : "該当する確認候補なし",
         acexItems: stepResult.acex.map((action) => ({
           key: action.code,
           label: action.code,
@@ -300,7 +300,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
             ? stepResult.acex.map(
                 (action) => `${action.code}｜${action.label}：${action.reason}`
               )
-            : ["該当するACEX提案はありません。"],
+            : ["該当する確認候補はありません。"],
         ngItems: [],
         statusLabel: `Δ${stepResult.analysis.MAX_DELTA} / ${stepResult.analysis.Case_Phase}`,
         statusSub: stepResult.analysis.Trigger_Memo,
