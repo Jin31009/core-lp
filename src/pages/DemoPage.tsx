@@ -267,7 +267,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
     setContextRequested(true);
     setHasContextError(false);
     setIsGeneratingFinalContext(true);
-    setPrimaryContextDraft("AIが整理しています...");
+    setPrimaryContextDraft("下書き作成中...");
     setContextFollowups([]);
     setFinalContextDraft("");
 
@@ -296,7 +296,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
       if (!response.ok && !hasFallbackDraft && !hasFallbackFollowups) {
         throw new Error(
           data.error ||
-            "AIによる整理に失敗しました。もう一度お試しください。"
+            "整理に失敗しました。もう一度お試しください。"
         );
       }
 
@@ -320,7 +320,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
 
   const handleGenerateFinalContext = async () => {
     setIsGeneratingFinalContext(true);
-    setFinalContextDraft("Final Contextを生成しています...");
+    setFinalContextDraft("確認用Contextを作成しています...");
 
     try {
       const response = await fetch("/api/final-context", {
@@ -341,7 +341,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
         throw new Error(
           await readErrorMessage(
             response,
-            "Final Contextの生成に失敗しました。もう一度お試しください。"
+            "確認用Contextの作成に失敗しました。もう一度お試しください。"
           )
         );
       }
@@ -349,14 +349,14 @@ export default function DemoPage({ setPage }: DemoPageProps) {
       const data: FinalContextResponse = await response.json();
 
       setFinalContextDraft(
-        data.finalContext || "Final Contextを取得できませんでした。"
+        data.finalContext || "確認用Contextを取得できませんでした。"
       );
     } catch (error) {
       console.error(error);
       setFinalContextDraft(
         error instanceof Error
           ? error.message
-          : "Final Contextの生成に失敗しました。もう一度お試しください。"
+          : "確認用Contextの作成に失敗しました。もう一度お試しください。"
       );
     } finally {
       setIsGeneratingFinalContext(false);

@@ -389,7 +389,7 @@ export default function AnalysisSection({
         <p className="text-[15px] leading-8 text-stone-600">説明改善のための試作です</p>
         <h2 className={sectionTitleClass}>関係の読み取り</h2>
         <p className={leadClass}>
-          整理したContextをもとに、いま表に出ている状態を短く確認します。
+          人が確認・補足したContextをもとに、いま表に出ている状態を短く確認します。
         </p>
       </div>
 
@@ -399,7 +399,7 @@ export default function AnalysisSection({
             Main Window
           </p>
           <p className="mt-2 text-[24px] font-semibold text-slate-900">
-            分析確認
+            確認後の分析
           </p>
           <div className="mt-4 min-h-[260px] max-h-[420px] overflow-y-auto rounded-[14px] border border-stone-300 bg-[#faf8f3] p-5">
             <p className="text-[20px] leading-10 text-stone-900">
@@ -408,7 +408,7 @@ export default function AnalysisSection({
           </div>
           <div className="mt-4 rounded-[12px] border border-stone-300 bg-white p-4">
             <p className="text-[13px] uppercase tracking-[0.14em] text-stone-500">
-              結論メモ
+              確認メモ
             </p>
             <p className="mt-2 text-[16px] leading-9 text-stone-800">{insightBody}</p>
           </div>
@@ -609,16 +609,14 @@ export default function AnalysisSection({
           </div>
 
           <div className={nextStepNote}>
-            次の一手：内容が確認できたら、「次の対応へ」で Step3 に進みます。
+            次の一手：人が確認した内容として問題なければ、「確認して次の対応へ」で Step3 に進みます。
           </div>
           </div>
         </details>
 
         <div className="rounded-[16px] border-t border-stone-200 pt-4">
           <div className="mt-4">
-            <button onClick={onNext} className={primaryButton} type="button">
-              次の対応へ
-            </button>
+            <button onClick={onNext} className={primaryButton} type="button">確認して次の対応へ</button>
           </div>
         </div>
       </div>

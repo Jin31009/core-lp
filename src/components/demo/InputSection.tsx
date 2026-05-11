@@ -77,7 +77,7 @@ function LoadingCard() {
     >
       <div className="border-b border-stone-200 bg-[linear-gradient(180deg,#f1ece2_0%,#ece5d9_100%)] px-5 py-4">
         <p className="text-[11px] uppercase tracking-[0.22em] text-stone-500">
-          RA-AI / Loading
+          一次整理 / Loading
         </p>
         <p className="mt-2 text-[20px] font-semibold text-slate-900">
           一次整理を生成しています
@@ -92,7 +92,7 @@ function LoadingCard() {
 
           <div className="min-w-0 flex-1">
             <p className="text-[17px] leading-9 text-stone-800">
-              入力内容をもとに、場面と関係の文脈を整理しています。
+              入力内容をもとに、観察メモの下書きを整えています。
             </p>
 
             <div className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-stone-200">
@@ -110,7 +110,7 @@ function LoadingCard() {
               </div>
               <div className="flex items-center gap-2">
                 <LoadingDots />
-                <span>補足の観点を抽出しています</span>
+                <span>人が確認するための候補を整えています</span>
               </div>
             </div>
           </div>
@@ -129,7 +129,7 @@ function FinalLoadingCard() {
     >
       <div className="border-b border-slate-200 bg-[linear-gradient(180deg,#eef2f7_0%,#e8edf4_100%)] px-5 py-4">
         <p className="text-[11px] uppercase tracking-[0.22em] text-stone-500">
-          RA-AI / Final Context
+          確認用Context / Loading
         </p>
         <p className="mt-2 text-[20px] font-semibold text-slate-900">
           最終Contextを生成しています
@@ -232,8 +232,7 @@ export default function InputSection({
 
   const isGenerating =
     contextRequested &&
-    (contextDraft.trim() === "AIが整理しています..." ||
-      contextDraft.trim() === "RA-AIが整理しています...");
+    (contextDraft.trim() === "下書き作成中...");
 
   const hasContextResult =
     contextRequested &&
@@ -364,7 +363,7 @@ export default function InputSection({
             Observation
           </p>
           <p className="mt-2 text-[15px] leading-8 text-stone-700">
-            入力後に、必要な補足とAI整理を下で追加します。
+            入力後に、必要な補足と下書き整理を下で追加します。
           </p>
         </div>
 
@@ -433,7 +432,7 @@ export default function InputSection({
             いまの内容を整理する
           </p>
           <p className="mt-3 text-[16px] leading-9 text-stone-700">
-            書いた内容から、RA-AIが一次的にContextを整えます。
+            書いた内容から、確認用の下書きを作成します。最終判断は人が行います。
           </p>
 
           <div className="mt-5 flex flex-wrap items-center gap-3">
@@ -445,7 +444,7 @@ export default function InputSection({
               type="button"
               disabled={!canRequestContext || isGenerating}
             >
-              {isGenerating ? "RA-AIが整理中…" : "この内容を整理してみる"}
+              {isGenerating ? "下書き作成中…" : "この内容を整理してみる"}
             </button>
 
             {!canRequestContext && (
@@ -463,14 +462,14 @@ export default function InputSection({
             {isGenerating && (
               <p className="inline-flex items-center gap-2 text-[16px] leading-8 text-stone-700">
                 <LoadingDots />
-                RA-AIが整理しています...
+                下書き作成中...
               </p>
             )}
           </div>
 
           {!contextRequested && (
             <div className={nextStepNote}>
-              次の一手：一次整理が返ってきたら、必要に応じて短く補足します。
+              次の一手：下書きを人が確認し、必要に応じて短く補足します。
             </div>
           )}
 
@@ -490,13 +489,13 @@ export default function InputSection({
               </div>
 
               <div className="rounded-full border border-stone-300 bg-white px-4 py-2 text-[13px] text-stone-600">
-                RA-AI
+                一次整理
               </div>
             </div>
 
             <div className="mt-5 rounded-[18px] border border-stone-300 bg-[linear-gradient(180deg,#fffdfa_0%,#f6efe4_100%)] p-7 shadow-[0_12px_28px_rgba(15,23,42,0.08)]">
               <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
-                RA-AI Summary
+                確認用下書き
               </p>
               <p className="mt-3 text-[25px] font-semibold leading-[2] text-slate-950 md:text-[30px]">
                 {contextDraft || "整理結果がここに表示されます。"}
@@ -505,7 +504,7 @@ export default function InputSection({
 
             {hasContextError && (
               <div className="mt-4 rounded-[14px] border border-amber-300 bg-amber-50 px-4 py-3 text-[14px] leading-7 text-amber-900">
-                AI生成に失敗したため暫定整理を表示しています
+                整理に失敗しました。暫定の下書きを表示しています。
               </div>
             )}
 
@@ -561,7 +560,7 @@ export default function InputSection({
               />
 
               <div className={nextStepNote}>
-                次の一手：必要なら補足し、下で Final Context を生成します。
+                次の一手：この下書きを確認し、必要なら補足してから下で確認用Contextを確定します。
               </div>
 
               <div className="mt-5">
@@ -576,8 +575,8 @@ export default function InputSection({
                   } ${isGeneratingFinalContext ? "cursor-wait opacity-90" : ""}`}
                 >
                   {isGeneratingFinalContext
-                    ? "Final Contextを生成中…"
-                    : "Final Contextをつくる"}
+                    ? "確認用Contextを作成中…"
+                    : "確認用Contextを確定する"}
                 </button>
               </div>
 
@@ -586,7 +585,7 @@ export default function InputSection({
               {hasFinalContext && (
                 <div ref={finalContextRef} className="mt-5 rounded-[16px] border-2 border-slate-400 bg-white p-7 shadow-[0_6px_18px_rgba(15,23,42,0.04)]">
                   <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
-                    Final Context
+                    確認用Context
                   </p>
                   <p className="mt-2 text-[21px] font-semibold text-slate-900">
                     分析に使う最終Context
@@ -596,7 +595,7 @@ export default function InputSection({
                   </p>
 
                   <div className="mt-5 rounded-[14px] border border-dashed border-slate-400 bg-slate-50 px-5 py-4 text-[15px] leading-8 text-stone-700">
-                    次の一手：この内容でよければ、下から Step2 に進みます。
+                    次の一手：この下書きを人が確認できたら、下から Step2 に進みます。
                   </div>
                 </div>
               )}
@@ -606,10 +605,10 @@ export default function InputSection({
                 !hasFinalContext && (
                   <div className="mt-5 rounded-[16px] border-2 border-slate-400 bg-white p-7 shadow-[0_6px_18px_rgba(15,23,42,0.04)]">
                     <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
-                      Final Context
+                      確認用Context
                     </p>
                     <p className="mt-2 text-[21px] font-semibold text-slate-900">
-                      最終整理
+                      確認済みContext
                     </p>
                     <p className="mt-4 max-h-[420px] overflow-y-auto text-[21px] leading-10 text-stone-900">
                       {finalContextDraft}
@@ -622,7 +621,7 @@ export default function InputSection({
 
         <div className="rounded-[16px] border-t border-stone-200 pt-6">
           <p className="text-[16px] leading-9 text-stone-700">
-            一次整理が出れば、次に進めます。
+            下書きを確認・補足できれば、次に進めます。
           </p>
           {!consentNoPII || !consentNonDiagnosis ? (
             <p className="mt-2 text-[15px] leading-8 text-rose-700">
