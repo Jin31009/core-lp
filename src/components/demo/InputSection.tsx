@@ -23,6 +23,10 @@ type InputSectionProps = {
   onConsentNoPIIChange: (checked: boolean) => void;
   consentNonDiagnosis: boolean;
   onConsentNonDiagnosisChange: (checked: boolean) => void;
+  hasReviewedFinalContext: boolean;
+  onReviewedFinalContextChange: (checked: boolean) => void;
+  understandsDraftPurpose: boolean;
+  onUnderstandsDraftPurposeChange: (checked: boolean) => void;
 };
 
 const emotionOptions = ["不安", "怒り", "戸惑い", "悲しみ", "無反応"];
@@ -195,6 +199,10 @@ export default function InputSection({
   onConsentNoPIIChange,
   consentNonDiagnosis,
   onConsentNonDiagnosisChange,
+  hasReviewedFinalContext,
+  onReviewedFinalContextChange,
+  understandsDraftPurpose,
+  onUnderstandsDraftPurposeChange,
 }: InputSectionProps) {
   const [showSecondaryInputs, setShowSecondaryInputs] = useState(false);
   const finalContextRef = useRef<HTMLDivElement | null>(null);
@@ -228,7 +236,9 @@ export default function InputSection({
   const nextStepNote =
     "mt-6 rounded-[14px] border border-dashed border-stone-400 bg-white/90 px-5 py-4 text-[15px] leading-8 text-stone-700";
 
-  const canRequestContext = text.trim().length > 0;
+  const hasRequiredConsent = consentNoPII && consentNonDiagnosis;
+  const hasText = text.trim().length > 0;
+  const canRequestContext = hasText && hasRequiredConsent;
 
   const isGenerating =
     contextRequested &&
@@ -256,8 +266,8 @@ export default function InputSection({
     isGenerating ||
     isGeneratingFinalContext ||
     !hasFinalContext ||
-    !consentNoPII ||
-    !consentNonDiagnosis;
+    !hasReviewedFinalContext ||
+    !understandsDraftPurpose;
 
   const requestButtonClass = canRequestContext
     ? "border-slate-700 bg-slate-700 text-white hover:bg-slate-800"
@@ -314,6 +324,26 @@ export default function InputSection({
             <p className="mt-2 text-[16px] leading-8 text-amber-900">
               場面の要点だけを、短く入力してください。
             </p>
+            <div className="mt-4 space-y-3">
+              <label className="flex items-start gap-3 rounded-[12px] border border-amber-200 bg-white/75 px-4 py-3 text-[15px] leading-7 text-amber-950">
+                <input
+                  type="checkbox"
+                  checked={consentNoPII}
+                  onChange={(e) => onConsentNoPIIChange(e.target.checked)}
+                  className="mt-1.5 h-4 w-4"
+                />
+                <span>個人が特定される情報を入力しないことに同意します</span>
+              </label>
+              <label className="flex items-start gap-3 rounded-[12px] border border-amber-200 bg-white/75 px-4 py-3 text-[15px] leading-7 text-amber-950">
+                <input
+                  type="checkbox"
+                  checked={consentNonDiagnosis}
+                  onChange={(e) => onConsentNonDiagnosisChange(e.target.checked)}
+                  className="mt-1.5 h-4 w-4"
+                />
+                <span>このデモは診療判断ではなく、説明改善のための試作であることを理解しました</span>
+              </label>
+            </div>
           </div>
         </div>
 
@@ -428,7 +458,9 @@ export default function InputSection({
 
             {!canRequestContext && (
               <p className="text-[16px] leading-8 text-stone-600">
-                場面を書くと整理できます。
+                {hasText
+                  ? "整理する前に、上の2項目を確認してください。"
+                  : "場面を書くと整理できます。"}
               </p>
             )}
 
@@ -618,8 +650,8 @@ export default function InputSection({
               <label className="flex items-start gap-3 rounded-[12px] border border-stone-200 bg-[#faf8f3] px-4 py-3 text-[16px] leading-8 text-stone-800">
                 <input
                   type="checkbox"
-                  checked={consentNoPII}
-                  onChange={(e) => onConsentNoPIIChange(e.target.checked)}
+                  checked={hasReviewedFinalContext}
+                  onChange={(e) => onReviewedFinalContextChange(e.target.checked)}
                   className="mt-1.5 h-4 w-4"
                   disabled={!hasFinalContext}
                 />
@@ -628,8 +660,8 @@ export default function InputSection({
               <label className="flex items-start gap-3 rounded-[12px] border border-stone-200 bg-[#faf8f3] px-4 py-3 text-[16px] leading-8 text-stone-800">
                 <input
                   type="checkbox"
-                  checked={consentNonDiagnosis}
-                  onChange={(e) => onConsentNonDiagnosisChange(e.target.checked)}
+                  checked={understandsDraftPurpose}
+                  onChange={(e) => onUnderstandsDraftPurposeChange(e.target.checked)}
                   className="mt-1.5 h-4 w-4"
                   disabled={!hasFinalContext}
                 />
@@ -643,12 +675,12 @@ export default function InputSection({
               <p className="mt-4 rounded-[12px] border border-amber-200 bg-amber-50 px-4 py-3 text-[15px] leading-8 text-amber-900">
                 まず確認用Contextを確定してください。
               </p>
-            ) : !consentNoPII || !consentNonDiagnosis ? (
+            ) : !hasReviewedFinalContext || !understandsDraftPurpose ? (
               <div className="mt-4 rounded-[12px] border border-rose-200 bg-rose-50 px-4 py-3 text-[15px] leading-8 text-rose-800">
                 <p>Step2へ進むには、上の2項目を確認してください。</p>
                 <div className="mt-2 space-y-1">
-                  {!consentNoPII && <p>未確認：この確認用Contextを人が確認しました</p>}
-                  {!consentNonDiagnosis && (
+                  {!hasReviewedFinalContext && <p>未確認：この確認用Contextを人が確認しました</p>}
+                  {!understandsDraftPurpose && (
                     <p>未確認：AIが結論を確定するものではないことを理解しました</p>
                   )}
                 </div>

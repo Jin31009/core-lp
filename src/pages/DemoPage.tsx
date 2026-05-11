@@ -239,6 +239,8 @@ export default function DemoPage({ setPage }: DemoPageProps) {
   const [nextAssets, setNextAssets] = useState<string[]>([]);
   const [consentNoPII, setConsentNoPII] = useState(false);
   const [consentNonDiagnosis, setConsentNonDiagnosis] = useState(false);
+  const [hasReviewedFinalContext, setHasReviewedFinalContext] = useState(false);
+  const [understandsDraftPurpose, setUnderstandsDraftPurpose] = useState(false);
 
   const hasConfirmedFinalContext =
     !!finalContextDraft.trim() &&
@@ -367,6 +369,8 @@ export default function DemoPage({ setPage }: DemoPageProps) {
     setFinalContextDraft("");
     setCordAssessment(null);
     setCordAssessmentError(null);
+    setHasReviewedFinalContext(false);
+    setUnderstandsDraftPurpose(false);
 
     try {
       const response = await fetch("/api/context-draft", {
@@ -420,6 +424,8 @@ export default function DemoPage({ setPage }: DemoPageProps) {
     setFinalContextDraft("確認用Contextを作成しています...");
     setCordAssessment(null);
     setCordAssessmentError(null);
+    setHasReviewedFinalContext(false);
+    setUnderstandsDraftPurpose(false);
 
     try {
       const response = await fetch("/api/final-context", {
@@ -493,7 +499,13 @@ export default function DemoPage({ setPage }: DemoPageProps) {
   };
 
   const goToStep2 = () => {
-    if (!hasConfirmedFinalContext || !consentNoPII || !consentNonDiagnosis) {
+    if (
+      !hasConfirmedFinalContext ||
+      !consentNoPII ||
+      !consentNonDiagnosis ||
+      !hasReviewedFinalContext ||
+      !understandsDraftPurpose
+    ) {
       return;
     }
 
@@ -762,52 +774,54 @@ export default function DemoPage({ setPage }: DemoPageProps) {
               {selectedStep === 1 && (
                 <InputSection
                   text={observationRaw}
-	                  onTextChange={(value) => {
-	                    setObservationRaw(value);
-	                    setContextRequested(false);
-	                    setPrimaryContextDraft("");
-	                    setContextFollowups([]);
-	                    setFinalContextDraft("");
-	                    setCordAssessment(null);
-	                    setCordAssessmentError(null);
-	                    setConsentNoPII(false);
-                    setConsentNonDiagnosis(false);
+                  onTextChange={(value) => {
+                    setObservationRaw(value);
+                    setContextRequested(false);
+                    setPrimaryContextDraft("");
+                    setContextFollowups([]);
+                    setFinalContextDraft("");
+                    setCordAssessment(null);
+                    setCordAssessmentError(null);
+                    setHasReviewedFinalContext(false);
+                    setUnderstandsDraftPurpose(false);
                     resetLearningState();
                     setMaxUnlockedStep(1);
                     setSelectedStep(1);
                   }}
                   emotion={emotion}
-	                  onEmotionChange={(value) => {
-	                    setEmotion(value);
-	                    setFinalContextDraft("");
-	                    setCordAssessment(null);
-	                    setCordAssessmentError(null);
-	                    setConsentNoPII(false);
-                    setConsentNonDiagnosis(false);
+                  onEmotionChange={(value) => {
+                    setEmotion(value);
+                    setFinalContextDraft("");
+                    setCordAssessment(null);
+                    setCordAssessmentError(null);
+                    setHasReviewedFinalContext(false);
+                    setUnderstandsDraftPurpose(false);
                     resetLearningState();
                     setMaxUnlockedStep(1);
                     setSelectedStep(1);
                   }}
                   urgency={urgency}
-	                  onUrgencyChange={(value) => {
-	                    setUrgency(value);
-	                    setFinalContextDraft("");
-	                    setCordAssessment(null);
-	                    setCordAssessmentError(null);
-	                    setConsentNoPII(false);
-                    setConsentNonDiagnosis(false);
+                  onUrgencyChange={(value) => {
+                    setUrgency(value);
+                    setFinalContextDraft("");
+                    setCordAssessment(null);
+                    setCordAssessmentError(null);
+                    setHasReviewedFinalContext(false);
+                    setUnderstandsDraftPurpose(false);
                     resetLearningState();
                     setMaxUnlockedStep(1);
                     setSelectedStep(1);
                   }}
                   contextDraft={primaryContextDraft}
                   contextEdited={contextEdited}
-	                  onContextEditedChange={(value) => {
-	                    setContextEdited(value);
-	                    setFinalContextDraft("");
-	                    setCordAssessment(null);
-	                    setCordAssessmentError(null);
-	                  }}
+                  onContextEditedChange={(value) => {
+                    setContextEdited(value);
+                    setFinalContextDraft("");
+                    setCordAssessment(null);
+                    setCordAssessmentError(null);
+                    setHasReviewedFinalContext(false);
+                    setUnderstandsDraftPurpose(false);
+                  }}
                   contextRequested={contextRequested}
                   hasContextError={hasContextError}
                   onRequestContext={handleRequestContext}
@@ -819,13 +833,15 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                     setContextEdited("");
                     setContextRequested(false);
                     setHasContextError(false);
-	                    setPrimaryContextDraft("");
-	                    setContextFollowups([]);
-	                    setFinalContextDraft("");
-	                    setCordAssessment(null);
-	                    setCordAssessmentError(null);
-	                    setConsentNoPII(false);
+                    setPrimaryContextDraft("");
+                    setContextFollowups([]);
+                    setFinalContextDraft("");
+                    setCordAssessment(null);
+                    setCordAssessmentError(null);
+                    setConsentNoPII(false);
                     setConsentNonDiagnosis(false);
+                    setHasReviewedFinalContext(false);
+                    setUnderstandsDraftPurpose(false);
                     resetLearningState();
                     setSelectedStep(1);
                     setMaxUnlockedStep(1);
@@ -838,6 +854,10 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                   onConsentNoPIIChange={setConsentNoPII}
                   consentNonDiagnosis={consentNonDiagnosis}
                   onConsentNonDiagnosisChange={setConsentNonDiagnosis}
+                  hasReviewedFinalContext={hasReviewedFinalContext}
+                  onReviewedFinalContextChange={setHasReviewedFinalContext}
+                  understandsDraftPurpose={understandsDraftPurpose}
+                  onUnderstandsDraftPurposeChange={setUnderstandsDraftPurpose}
                 />
               )}
 
