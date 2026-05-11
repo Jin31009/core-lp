@@ -432,7 +432,7 @@ export default function InputSection({
             いまの内容を整理する
           </p>
           <p className="mt-3 text-[16px] leading-9 text-stone-700">
-            書いた内容から、確認用の下書きを作成します。最終判断は人が行います。
+            書いた内容から、確認用の下書きを作成します。結論の確定は人が行います。
           </p>
 
           <div className="mt-5 flex flex-wrap items-center gap-3">

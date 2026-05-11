@@ -353,7 +353,7 @@ function getRPlusLabel(status: CordAssessment["rPlus"]["status"]) {
     case "established":
       return "R+成立";
     default:
-      return "R+なし";
+      return "R+未成立";
   }
 }
 
@@ -475,7 +475,7 @@ export default function AnalysisSection({
             CORD Ver1.1に沿って、Δ・e・Rを人が確認するための一次整理として表示します。
           </p>
           <p className="mt-3 max-w-4xl rounded-[14px] border border-dashed border-stone-300 bg-white/80 px-4 py-3 text-[15px] leading-8 text-stone-700">
-            この表示はAIによる最終判断ではなく、Δ・e・Rを人が確認するための一次整理です。AKは補助ラベルとして扱います。
+            この表示はAIが結論を確定するものではなく、Δ・e・Rを人が確認するための一次整理です。AKは補助ラベルとして扱います。
           </p>
         </div>
 
@@ -603,7 +603,7 @@ export default function AnalysisSection({
               <div className="grid gap-5 lg:grid-cols-2">
                 <div className={subCard}>
                   <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
-                    Pre-Asset
+                    確認候補
                   </p>
                   <ul className="mt-4 space-y-2 text-[16px] leading-8 text-stone-800">
                     {(cordAssessment.preAsset.length
@@ -697,7 +697,7 @@ export default function AnalysisSection({
           人が確認・補足したContextをもとに、いま表に出ている状態を短く確認します。
         </p>
         <p className="mt-3 max-w-4xl rounded-[14px] border border-dashed border-stone-300 bg-white/80 px-4 py-3 text-[15px] leading-8 text-stone-700">
-          この表示はAIによる最終判断ではなく、Δ・e・Rを人が確認するための一次整理です。
+          この表示はAIが結論を確定するものではなく、Δ・e・Rを人が確認するための一次整理です。
         </p>
       </div>
 

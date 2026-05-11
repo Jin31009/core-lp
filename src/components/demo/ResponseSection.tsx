@@ -290,9 +290,9 @@ export default function ResponseSection({
           </summary>
           <div className="mt-5">
         <div className="rounded-[20px] border-2 border-slate-400 bg-white p-7 shadow-[0_8px_22px_rgba(15,23,42,0.05)]">
-          <p className={sectionLabel}>① ACEX Sequence</p>
+          <p className={sectionLabel}>① Review Sequence</p>
           <p className="mt-2 text-[26px] font-semibold text-slate-900">
-            この順で対応案を確認する
+            この順で確認候補を見る
           </p>
           <p className="mt-3 text-[16px] leading-9 text-stone-700">
             まず最初の一手を置き、次の行動を順に重ねます。
@@ -312,7 +312,7 @@ export default function ResponseSection({
           {acexItems.length === 0 && (
             <div className="mt-6 rounded-[16px] border border-stone-300 bg-[#faf8f3] p-6">
               <p className="text-[15px] leading-8 text-stone-800">
-                該当するACEX提案はありません。
+                該当する確認候補はありません。
               </p>
             </div>
           )}

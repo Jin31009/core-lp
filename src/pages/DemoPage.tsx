@@ -118,12 +118,12 @@ function buildCordResponse(cordAssessment: CordAssessment): ResponseData {
   return {
     actionSummary: preAssets.join(" → "),
     acexItems: preAssets.map((item, index) => ({
-      key: `CORD-${index + 1}`,
-      label: String(index + 1),
-      title: item,
-      body: "CORD一次整理で示されたPre-Asset候補です。人が文脈に合わせて確認してください。",
+      key: "C",
+      label: `確認観点${index + 1}`,
+      title: `確認観点${index + 1}｜${item}`,
+      body: "CORD一次整理で示された確認候補です。人が文脈に合わせて確認してください。",
     })),
-    flowItems: preAssets.map((item) => `Pre-Asset｜${item}`),
+    flowItems: preAssets.map((item) => `確認候補｜${item}`),
     ngItems: cordAssessment.humanReviewNotes,
     statusLabel: `${cordAssessment.maxDelta} / ${cordAssessment.casePhase}`,
     statusSub: `${cordAssessment.trigger.value}｜${cordAssessment.trigger.reason}`,
@@ -581,7 +581,7 @@ export default function DemoPage({ setPage }: DemoPageProps) {
               ? `R+成立：${cordAssessment.rPlus.event || "回復イベントを人が確認してください。"}`
               : cordAssessment.rPlus.status === "candidate"
                 ? `R+候補：${cordAssessment.rPlus.event || "回復可能性を人が確認してください。"}`
-                : "R+なし"
+                : "R+未成立"
             : stepResult.analysis.R_Memo,
           acex_codes: cordAssessment
             ? (effectiveStep3Response?.acexItems.map((item) => item.key) as unknown as RASSCaseRecord["acex_codes"])

@@ -157,7 +157,7 @@ export function exportRASSCaseToMarkdown(record: RASSCaseRecord): string {
     "",
     "## Context",
     `- Raw: ${maskedContextRaw}`,
-    `- Final: ${maskedContextFinal}`,
+    `- 確認用Context: ${maskedContextFinal}`,
     "",
     "## Analysis",
     `- Delta: ${record.max_delta}`,
