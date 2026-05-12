@@ -167,9 +167,7 @@ const getInitialIndex = () => {
 const pageStyles = `
   .rass-figure-page {
     min-height: 100dvh;
-    background:
-      radial-gradient(circle at 12% 10%, rgba(20, 184, 166, 0.12), transparent 30%),
-      linear-gradient(135deg, #f8fbfd 0%, #eef5f8 100%);
+    background: #f5f7fb;
     color: #0f2742;
   }
 
@@ -190,10 +188,10 @@ const pageStyles = `
   .rass-slide-card,
   .rass-points-panel,
   .rass-mobile-index {
-    border: 1px solid rgba(15, 39, 66, 0.11);
-    background: rgba(255, 255, 255, 0.88);
-    box-shadow: 0 18px 52px rgba(15, 39, 66, 0.08);
-    backdrop-filter: blur(18px);
+    border: 1px solid rgba(15, 39, 66, 0.1);
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 10px 28px rgba(15, 39, 66, 0.06);
   }
 
   .rass-figure-header {
@@ -274,16 +272,17 @@ const pageStyles = `
     justify-content: center;
     gap: 8px;
     min-height: 44px;
-    border-color: rgba(15, 39, 66, 0.34);
-    background: linear-gradient(180deg, #ffffff 0%, #f3f8fb 100%);
-    box-shadow: inset 0 0 0 1px rgba(15, 39, 66, 0.04);
+    border-color: rgba(15, 39, 66, 0.52);
+    background: #153456;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(15, 39, 66, 0.12);
     white-space: nowrap;
   }
 
   .rass-audio-button:hover:not(:disabled) {
-    border-color: rgba(15, 39, 66, 0.58);
-    background: #ffffff;
-    box-shadow: 0 12px 28px rgba(15, 39, 66, 0.12);
+    border-color: rgba(15, 39, 66, 0.72);
+    background: #1a3f67;
+    box-shadow: 0 6px 14px rgba(15, 39, 66, 0.14);
   }
 
   .rass-audio-button:active:not(:disabled) {
@@ -292,8 +291,8 @@ const pageStyles = `
   }
 
   .rass-audio-button.is-playing {
-    border-color: rgba(15, 39, 66, 0.78);
-    background: #0f2742;
+    border-color: rgba(217, 155, 61, 0.56);
+    background: #13324f;
     color: #ffffff;
   }
 
@@ -1212,6 +1211,9 @@ export default function RASSFigureSlides2026() {
 
             <div className="rass-stage-actions">
               <div className="rass-link-group" aria-label="関連リンク">
+                <a className="rass-link-button" href="/slides/print">
+                  A4印刷版を見る
+                </a>
                 <a
                   className={`rass-link-button primary${isFutureSlide ? " is-future" : ""}`}
                   href="https://core-lp.vercel.app/demo-intro"

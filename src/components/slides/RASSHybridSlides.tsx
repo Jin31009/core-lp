@@ -697,7 +697,7 @@ export default function RASSHybridSlides() {
                 <span className="text-slate-500">|</span>
                 <span className="max-w-[38%] truncate text-slate-400">{slide.group}</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex shrink-0 items-center gap-2">
                 <button
                   type="button"
                   onClick={goPrevSlide}
@@ -715,6 +715,15 @@ export default function RASSHybridSlides() {
                   次へ
                 </button>
               </div>
+            </div>
+
+            <div className="mt-2 flex justify-end">
+              <a
+                href="/slides/print"
+                className="inline-flex min-h-9 shrink-0 items-center justify-center whitespace-nowrap rounded-lg border border-cyan-300/70 bg-cyan-400/20 px-3 py-1.5 text-xs font-semibold text-cyan-50 transition hover:bg-cyan-300/30"
+              >
+                A4印刷版を見る
+              </a>
             </div>
 
             {isMenuOpen ? (
