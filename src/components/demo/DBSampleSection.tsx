@@ -22,31 +22,31 @@ export default function DBSampleSection({
     "border-y border-stone-200 bg-white";
 
   const sectionHeader =
-    "border-b border-stone-200 px-6 py-8 sm:px-8";
+    "border-b border-stone-200 px-4 py-6 sm:px-8 sm:py-8";
 
   const sectionTitleClass =
-    "mt-3 text-[36px] font-semibold tracking-[-0.02em] text-slate-900";
+    "mt-2 text-[28px] sm:text-[36px] font-semibold tracking-[-0.02em] text-slate-900";
 
   const leadClass =
-    "mt-4 max-w-4xl text-[18px] leading-9 text-stone-700";
+    "mt-3 max-w-4xl text-[15px] leading-7 text-stone-700 sm:mt-4 sm:text-[18px] sm:leading-9";
 
   const tableCard =
-    "border-t border-stone-200 bg-white py-6";
+    "border-t border-stone-200 bg-white py-5 sm:py-6";
 
   const blockCard =
-    "border-t border-stone-200 bg-[#f7f4ee] py-6";
+    "border-t border-stone-200 bg-[#f7f4ee] py-5 sm:py-6";
 
   const row =
-    "grid grid-cols-[140px_1fr] gap-4 border-b border-stone-200 py-4 last:border-b-0";
+    "grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-2 sm:gap-4 border-b border-stone-200 py-3 sm:py-4 last:border-b-0";
 
   const label =
-    "text-[13px] font-medium text-stone-500";
+    "text-xs sm:text-[13px] font-medium text-stone-500";
 
   const value =
-    "text-[15px] leading-8 text-stone-800";
+    "text-sm sm:text-[15px] leading-7 sm:leading-8 text-stone-800";
 
   const secondaryButton =
-    "border border-stone-300 bg-white px-5 py-4 text-[12px] font-medium uppercase tracking-[0.14em] text-stone-700 transition hover:bg-[#f7f4ee]";
+    "border border-stone-300 bg-white px-4 py-3 text-xs font-medium uppercase tracking-[0.12em] text-stone-700 transition hover:bg-[#f7f4ee]";
 
   const resolvedAction = record && record.acex_labels.length > 0
     ? record.acex_labels.map((label, index) => {

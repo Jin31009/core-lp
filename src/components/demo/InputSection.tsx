@@ -210,31 +210,31 @@ export default function InputSection({
     "border-y border-stone-200 bg-white";
 
   const sectionHeader =
-    "border-b border-stone-300 px-6 py-9 sm:px-8";
+    "border-b border-stone-300 px-4 py-6 sm:px-8 sm:py-9";
 
   const sectionTitleClass =
-    "mt-3 text-[34px] font-semibold tracking-[-0.02em] text-slate-900";
+    "mt-2 text-[28px] font-semibold tracking-[-0.02em] text-slate-900 sm:mt-3 sm:text-[34px]";
 
   const leadClass =
-    "mt-4 max-w-4xl text-[19px] leading-10 text-stone-800";
+    "mt-3 max-w-4xl text-[15px] leading-7 text-stone-800 sm:mt-4 sm:text-[19px] sm:leading-10";
 
   const softCard =
-    "border-t border-stone-300 bg-[#f7f4ee] p-7";
+    "border-t border-stone-300 bg-[#f7f4ee] p-4 sm:p-7";
 
   const panelCard =
-    "border-t border-stone-300 bg-white py-7";
+    "border-t border-stone-300 bg-white py-5 sm:py-7";
 
   const contextWrap =
-    "border-t border-stone-400 bg-[#f3efe7] p-7";
+    "border-t border-stone-400 bg-[#f3efe7] p-4 sm:p-7";
 
   const primaryButton =
-    "w-full rounded-[14px] bg-slate-900 py-4.5 text-[17px] font-medium text-white transition hover:bg-slate-800";
+    "w-full rounded-[14px] bg-slate-900 py-4 text-sm sm:text-[17px] font-medium text-white transition hover:bg-slate-800";
 
   const secondaryButton =
-    "rounded-[12px] border border-stone-400 bg-white px-6 py-4 text-[16px] font-medium text-stone-800 transition hover:bg-stone-50";
+    "rounded-[12px] border border-stone-400 bg-white px-4 py-3 text-sm sm:px-6 sm:py-4 sm:text-[16px] font-medium text-stone-800 transition hover:bg-stone-50";
 
   const nextStepNote =
-    "mt-6 rounded-[14px] border border-dashed border-stone-400 bg-white/90 px-5 py-4 text-[15px] leading-8 text-stone-700";
+    "mt-4 rounded-[14px] border border-dashed border-stone-400 bg-white/90 px-4 py-3 text-xs sm:mt-6 sm:px-5 sm:py-4 sm:text-[15px] leading-7 sm:leading-8 text-stone-700";
 
   const hasRequiredConsent = consentNoPII && consentNonDiagnosis;
   const hasText = text.trim().length > 0;
@@ -311,7 +311,7 @@ export default function InputSection({
         </p>
       </div>
 
-      <div className="space-y-9 p-7 sm:p-9">
+      <div className="space-y-4 p-4 sm:space-y-9 sm:p-9">
         <div className={panelCard}>
           <div className="rounded-[14px] border border-amber-300 bg-amber-50 p-4">
             <p className="text-[16px] font-semibold leading-7 text-amber-900">安心して試すためのお願い</p>
@@ -360,7 +360,7 @@ export default function InputSection({
             onChange={(e) => onTextChange(e.target.value)}
             placeholder="例：患者が説明のあとも不安そうで、何度も確認していた。"
             rows={5}
-            className="mt-4 min-h-[260px] max-h-[480px] w-full overflow-y-auto rounded-[16px] border border-stone-400 bg-white p-6 text-[19px] leading-10 text-slate-900 shadow-[inset_0_1px_2px_rgba(15,23,42,0.03)] placeholder:text-stone-500 focus:border-slate-600 focus:outline-none"
+            className="mt-4 min-h-[220px] max-h-[480px] w-full overflow-y-auto rounded-[16px] border border-stone-400 bg-white p-4 sm:p-6 text-[15px] leading-7 sm:text-[19px] sm:leading-10 text-slate-900 shadow-[inset_0_1px_2px_rgba(15,23,42,0.03)] placeholder:text-stone-500 focus:border-slate-600 focus:outline-none"
           />
           <div className="mt-4 text-[15px] leading-8 text-stone-600">
             断片のままで問題ありません。まず書き出しを優先します。
@@ -388,7 +388,7 @@ export default function InputSection({
               補足入力（任意）
             </summary>
             {showSecondaryInputs && (
-              <div className="mt-5 grid gap-6 lg:grid-cols-2">
+              <div className="mt-5 grid gap-4 sm:gap-6 lg:grid-cols-2">
               <div>
                 <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
                   Sensor 01
@@ -447,7 +447,7 @@ export default function InputSection({
           <div className="mt-5 flex flex-wrap items-center gap-3">
             <button
               onClick={onRequestContext}
-              className={`rounded-[12px] border px-6 py-4 text-[16px] font-medium transition ${requestButtonClass} ${
+              className={`rounded-[12px] border px-4 py-3 text-sm sm:px-6 sm:py-4 sm:text-[16px] font-medium transition ${requestButtonClass} ${
                 isGenerating ? "cursor-wait opacity-90" : ""
               }`}
               type="button"
@@ -504,11 +504,11 @@ export default function InputSection({
               </div>
             </div>
 
-            <div className="mt-5 rounded-[18px] border border-stone-300 bg-[linear-gradient(180deg,#fffdfa_0%,#f6efe4_100%)] p-7 shadow-[0_12px_28px_rgba(15,23,42,0.08)]">
+            <div className="mt-5 rounded-[18px] border border-stone-300 bg-[linear-gradient(180deg,#fffdfa_0%,#f6efe4_100%)] p-4 sm:p-7 shadow-[0_12px_28px_rgba(15,23,42,0.08)]">
               <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
                 確認用下書き
               </p>
-              <p className="mt-3 text-[25px] font-semibold leading-[2] text-slate-950 md:text-[30px]">
+              <p className="mt-3 text-[18px] font-semibold leading-9 text-slate-950 md:text-[30px] md:leading-[2]">
                 {contextDraft || "整理結果がここに表示されます。"}
               </p>
             </div>
@@ -567,7 +567,7 @@ export default function InputSection({
                 onChange={(e) => onContextEditedChange(e.target.value)}
                 placeholder="必要なら短く補足してください。"
                 rows={9}
-                className="mt-5 min-h-[280px] max-h-[520px] w-full overflow-y-auto rounded-[16px] border border-stone-400 bg-white p-6 text-[18px] leading-10 text-slate-900 shadow-[inset_0_1px_2px_rgba(15,23,42,0.03)] placeholder:text-stone-500 focus:border-slate-600 focus:outline-none"
+                className="mt-5 min-h-[240px] max-h-[520px] w-full overflow-y-auto rounded-[16px] border border-stone-400 bg-white p-4 sm:p-6 text-[15px] leading-7 sm:text-[18px] sm:leading-10 text-slate-900 shadow-[inset_0_1px_2px_rgba(15,23,42,0.03)] placeholder:text-stone-500 focus:border-slate-600 focus:outline-none"
               />
 
               <div className={nextStepNote}>
@@ -594,18 +594,18 @@ export default function InputSection({
               {isGeneratingFinalContext && <FinalLoadingCard />}
 
               {hasFinalContext && (
-                <div ref={finalContextRef} className="mt-5 rounded-[16px] border-2 border-slate-400 bg-white p-7 shadow-[0_6px_18px_rgba(15,23,42,0.04)]">
+                <div ref={finalContextRef} className="mt-5 rounded-[16px] border-2 border-slate-400 bg-white p-4 sm:p-7 shadow-[0_6px_18px_rgba(15,23,42,0.04)]">
                   <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
                     確認用Context
                   </p>
                   <p className="mt-2 text-[21px] font-semibold text-slate-900">
                     分析に使う確認用Context
                   </p>
-                  <p className="mt-4 max-h-[420px] overflow-y-auto text-[21px] leading-10 text-stone-900">
+                  <p className="mt-4 max-h-[420px] overflow-y-auto text-[16px] leading-8 sm:text-[21px] sm:leading-10 text-stone-900">
                     {finalContextDraft}
                   </p>
 
-                  <div className="mt-5 rounded-[14px] border border-dashed border-slate-400 bg-slate-50 px-5 py-4 text-[15px] leading-8 text-stone-700">
+                  <div className="mt-5 rounded-[14px] border border-dashed border-slate-400 bg-slate-50 px-4 py-3 text-xs sm:px-5 sm:py-4 sm:text-[15px] leading-7 sm:leading-8 text-stone-700">
                     次の一手：この下書きを人が確認できたら、下から Step2 に進みます。
                   </div>
                 </div>
@@ -614,14 +614,14 @@ export default function InputSection({
               {!!finalContextDraft.trim() &&
                 !isGeneratingFinalContext &&
                 !hasFinalContext && (
-                  <div className="mt-5 rounded-[16px] border-2 border-slate-400 bg-white p-7 shadow-[0_6px_18px_rgba(15,23,42,0.04)]">
+                  <div className="mt-5 rounded-[16px] border-2 border-slate-400 bg-white p-4 sm:p-7 shadow-[0_6px_18px_rgba(15,23,42,0.04)]">
                     <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
                       確認用Context
                     </p>
                     <p className="mt-2 text-[21px] font-semibold text-slate-900">
                       確認済みContext
                     </p>
-                    <p className="mt-4 max-h-[420px] overflow-y-auto text-[21px] leading-10 text-stone-900">
+                    <p className="mt-4 max-h-[420px] overflow-y-auto text-[16px] leading-8 sm:text-[21px] sm:leading-10 text-stone-900">
                       {finalContextDraft}
                     </p>
                   </div>
@@ -647,7 +647,7 @@ export default function InputSection({
             </p>
 
             <div className="mt-4 space-y-3">
-              <label className="flex items-start gap-3 rounded-[12px] border border-stone-200 bg-[#faf8f3] px-4 py-3 text-[16px] leading-8 text-stone-800">
+              <label className="flex items-start gap-3 rounded-[12px] border border-stone-200 bg-[#faf8f3] px-3 py-2 text-sm sm:px-4 sm:py-3 sm:text-[16px] leading-7 sm:leading-8 text-stone-800">
                 <input
                   type="checkbox"
                   checked={hasReviewedFinalContext}
@@ -657,7 +657,7 @@ export default function InputSection({
                 />
                 <span>この確認用Contextを人が確認しました</span>
               </label>
-              <label className="flex items-start gap-3 rounded-[12px] border border-stone-200 bg-[#faf8f3] px-4 py-3 text-[16px] leading-8 text-stone-800">
+              <label className="flex items-start gap-3 rounded-[12px] border border-stone-200 bg-[#faf8f3] px-3 py-2 text-sm sm:px-4 sm:py-3 sm:text-[16px] leading-7 sm:leading-8 text-stone-800">
                 <input
                   type="checkbox"
                   checked={understandsDraftPurpose}

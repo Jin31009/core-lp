@@ -148,28 +148,28 @@ export default function CaseReportSection({
     "border-y border-stone-200 bg-white";
 
   const sectionHeader =
-    "border-b border-stone-200 px-6 py-8 sm:px-8";
+    "border-b border-stone-200 px-4 py-6 sm:px-8 sm:py-8";
 
   const sectionTitleClass =
-    "mt-3 text-[34px] font-semibold tracking-[-0.02em] text-slate-900";
+    "mt-2 text-[28px] font-semibold tracking-[-0.02em] text-slate-900 sm:mt-3 sm:text-[34px]";
 
   const leadClass =
-    "mt-4 max-w-4xl text-[18px] leading-9 text-stone-700";
+    "mt-3 max-w-4xl text-[15px] leading-7 text-stone-700 sm:mt-4 sm:text-[18px] sm:leading-9";
 
   const card =
-    "border-t border-stone-200 bg-white py-6";
+    "border-t border-stone-200 bg-white py-5 sm:py-6";
 
   const label =
     "text-[12px] uppercase tracking-[0.18em] text-stone-500";
 
   const body =
-    "mt-3 text-[15px] leading-8 text-stone-700";
+    "mt-3 text-sm sm:text-[15px] leading-7 sm:leading-8 text-stone-700";
 
   const nextStepNote =
-    "mt-5 rounded-[14px] border border-dashed border-stone-300 bg-white/80 px-4 py-3 text-[14px] leading-7 text-stone-600";
+    "mt-4 rounded-[14px] border border-dashed border-stone-300 bg-white/80 px-4 py-3 text-xs sm:mt-5 sm:text-[14px] leading-7 text-stone-600";
 
   const primaryButton =
-    "w-full rounded-[14px] bg-slate-900 py-4 text-[16px] font-medium text-white transition hover:bg-slate-800";
+    "w-full rounded-[14px] bg-slate-900 py-4 text-sm sm:text-[16px] font-medium text-white transition hover:bg-slate-800";
 
   return (
     <section className={sectionShell}>
@@ -185,12 +185,12 @@ export default function CaseReportSection({
         </p>
       </div>
 
-      <div className="space-y-6 p-6 sm:p-8">
+      <div className="space-y-4 p-4 sm:space-y-6 sm:p-8">
         <div className={card}>
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <p className={label}>01 / Case Overview</p>
-              <p className="mt-2 text-[23px] font-semibold text-slate-900">
+              <p className="mt-2 text-[18px] sm:text-[23px] font-semibold text-slate-900">
                 今回のケース
               </p>
               
@@ -217,10 +217,10 @@ export default function CaseReportSection({
             </div>
 
             <div className="flex flex-wrap gap-2">
-              <span className="rounded-full border border-stone-300 bg-[#faf8f3] px-3 py-1 text-[12px] font-medium text-stone-700">
+              <span className="rounded-full border border-stone-300 bg-[#faf8f3] px-2 py-1 text-xs font-medium text-stone-700">
                 {getDeltaLabel(delta)}
               </span>
-              <span className="rounded-full border border-stone-300 bg-[#faf8f3] px-3 py-1 text-[12px] font-medium text-stone-700">
+              <span className="rounded-full border border-stone-300 bg-[#faf8f3] px-2 py-1 text-xs font-medium text-stone-700">
                 {eLevel}
               </span>
             </div>
@@ -238,7 +238,7 @@ export default function CaseReportSection({
 
         <div className={card}>
           <p className={label}>02 / Executed</p>
-          <p className="mt-2 text-[23px] font-semibold text-slate-900">
+          <p className="mt-2 text-[18px] sm:text-[23px] font-semibold text-slate-900">
             実施したこと
           </p>
           <p className={body}>
@@ -257,7 +257,7 @@ export default function CaseReportSection({
                   onClick={() =>
                     onExecutedActionsChange(toggle(executedActions, item.key))
                   }
-                  className={`rounded-[14px] border px-4 py-4 text-left transition ${
+                  className={`rounded-[14px] border px-3 py-3 sm:px-4 sm:py-4 text-left transition ${
                     active
                       ? "border-slate-700 bg-slate-700 text-white shadow-sm"
                       : "border-stone-300 bg-white text-stone-700 hover:bg-stone-50"
@@ -282,7 +282,7 @@ export default function CaseReportSection({
 
         <div className={card}>
           <p className={label}>03 / Result</p>
-          <p className="mt-2 text-[23px] font-semibold text-slate-900">
+          <p className="mt-2 text-[18px] sm:text-[23px] font-semibold text-slate-900">
             結果
           </p>
           <p className={body}>
@@ -305,7 +305,7 @@ export default function CaseReportSection({
                   }`}
                 >
                   <p
-                    className={`text-[16px] font-semibold ${
+                    className={`text-sm sm:text-[16px] font-semibold ${
                       active ? resultTone.chip : "text-slate-900"
                     }`}
                   >
@@ -320,10 +320,10 @@ export default function CaseReportSection({
           </div>
         </div>
 
-        <div className="grid gap-6 xl:grid-cols-2">
+        <div className="grid gap-4 sm:gap-6 xl:grid-cols-2">
           <div className={card}>
             <p className={label}>04 / Learning</p>
-            <p className="mt-2 text-[23px] font-semibold text-slate-900">
+            <p className="mt-2 text-[18px] sm:text-[23px] font-semibold text-slate-900">
               学び
             </p>
             <p className={body}>
@@ -376,7 +376,7 @@ export default function CaseReportSection({
 
           <div className={card}>
             <p className={label}>05 / Keep for Next</p>
-            <p className="mt-2 text-[23px] font-semibold text-slate-900">
+            <p className="mt-2 text-[18px] sm:text-[23px] font-semibold text-slate-900">
               次に残す
             </p>
             <p className={body}>

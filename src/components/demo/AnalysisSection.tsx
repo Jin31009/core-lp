@@ -429,32 +429,32 @@ export default function AnalysisSection({
     "border-y border-stone-200 bg-white";
 
   const sectionHeader =
-    "border-b border-stone-300 px-6 py-9 sm:px-8";
+    "border-b border-stone-300 px-4 py-6 sm:px-8 sm:py-9";
 
   const sectionTitleClass =
-    "mt-3 text-[34px] font-semibold tracking-[-0.02em] text-slate-900";
+    "mt-2 text-[28px] font-semibold tracking-[-0.02em] text-slate-900 sm:mt-3 sm:text-[34px]";
 
   const leadClass =
-    "mt-4 max-w-4xl text-[19px] leading-10 text-stone-800";
+    "mt-3 max-w-4xl text-[15px] leading-7 text-stone-800 sm:mt-4 sm:text-[19px] sm:leading-10";
 
   const groupWrap =
-    "border-t border-stone-300 bg-white py-7";
+    "border-t border-stone-300 bg-white py-5 sm:py-7";
 
   const subCard =
-    "border-t border-stone-300 bg-[#fcfbf8] p-6";
+    "border-t border-stone-300 bg-[#fcfbf8] p-4 sm:p-6";
 
   const summaryCard =
-    "border-t border-stone-300 bg-white p-6";
+    "border-t border-stone-300 bg-white p-4 sm:p-6";
 
   const primaryButton =
-    "w-full rounded-[14px] bg-blue-600 py-4.5 text-[17px] font-medium text-white transition hover:bg-blue-700";
+    "w-full rounded-[14px] bg-blue-600 py-4 text-sm sm:text-[17px] font-medium text-white transition hover:bg-blue-700";
 
   const nextStepNote =
-    "mt-6 rounded-[14px] border border-dashed border-stone-400 bg-white/90 px-5 py-4 text-[15px] leading-8 text-stone-700";
+    "mt-4 rounded-[14px] border border-dashed border-stone-400 bg-white/90 px-4 py-3 text-xs sm:mt-6 sm:px-5 sm:py-4 sm:text-[15px] leading-7 sm:leading-8 text-stone-700";
 
-  const groupTitle = "mt-2 text-[24px] font-semibold text-slate-900";
-  const groupLead = "mt-3 text-[18px] leading-9 text-stone-800";
-  const bodyText = "mt-3 text-[16px] leading-9 text-stone-800";
+  const groupTitle = "mt-2 text-[20px] sm:text-[24px] font-semibold text-slate-900";
+  const groupLead = "mt-3 text-sm sm:text-[18px] leading-7 sm:leading-9 text-stone-800";
+  const bodyText = "mt-3 text-sm sm:text-[16px] leading-7 sm:leading-9 text-stone-800";
 
   if (cordAssessment) {
     const triggerTone =
@@ -479,8 +479,8 @@ export default function AnalysisSection({
           </p>
         </div>
 
-        <div className="space-y-9 p-7 sm:p-9">
-          <div className="rounded-[18px] border-2 border-slate-400 bg-white p-7">
+        <div className="space-y-4 p-4 sm:space-y-9 sm:p-9">
+          <div className="rounded-[18px] border-2 border-slate-400 bg-white p-4 sm:p-7">
             <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
               Main Window
             </p>
@@ -488,7 +488,7 @@ export default function AnalysisSection({
               確認後の分析
             </p>
             <div className="mt-4 min-h-[220px] max-h-[380px] overflow-y-auto rounded-[14px] border border-stone-300 bg-[#faf8f3] p-5">
-              <p className="text-[20px] leading-10 text-stone-900">
+              <p className="text-sm sm:text-[16px] leading-7 sm:leading-8 sm:text-[20px] sm:leading-10 text-stone-900">
                 {finalContextBase}
               </p>
             </div>
@@ -499,7 +499,7 @@ export default function AnalysisSection({
               <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
                 MAX_DELTA
               </p>
-              <p className="mt-2 text-[30px] font-semibold tracking-[-0.02em] text-slate-900">
+              <p className="mt-2 text-[24px] sm:text-[30px] font-semibold tracking-[-0.02em] text-slate-900">
                 {cordAssessment.maxDelta}
               </p>
               <p className="mt-4 text-[15px] leading-8 text-stone-800">
@@ -511,7 +511,7 @@ export default function AnalysisSection({
               <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
                 Trigger
               </p>
-              <p className="mt-2 text-[30px] font-semibold tracking-[-0.02em]">
+              <p className="mt-2 text-[24px] sm:text-[30px] font-semibold tracking-[-0.02em]">
                 {cordAssessment.trigger.value}
               </p>
               <p className="mt-4 text-[15px] leading-8">
@@ -550,7 +550,7 @@ export default function AnalysisSection({
                     <p className="text-[13px] uppercase tracking-[0.14em] text-stone-500">
                       {label}
                     </p>
-                    <p className="mt-2 text-[16px] leading-8 text-stone-800">
+                    <p className="mt-2 text-sm sm:text-[16px] leading-7 sm:leading-8 text-stone-800">
                       {fallbackText(value)}
                     </p>
                   </div>
@@ -562,10 +562,10 @@ export default function AnalysisSection({
               <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
                 AK / Auxiliary Label
               </p>
-              <p className="mt-2 text-[22px] font-semibold text-slate-900">
+              <p className="mt-2 text-[18px] sm:text-[22px] font-semibold text-slate-900">
                 {fallbackText(cordAssessment.ak.primary)}
               </p>
-              <p className="mt-2 text-[16px] leading-8 text-stone-800">
+              <p className="mt-2 text-sm sm:text-[16px] leading-7 sm:leading-8 text-stone-800">
                 {cordAssessment.ak.note}
               </p>
               {cordAssessment.ak.secondary && (
@@ -576,13 +576,13 @@ export default function AnalysisSection({
             </div>
           </div>
 
-          <details className={`${groupWrap} rounded-[14px] border border-stone-300 px-5`}>
+          <details className={`${groupWrap} rounded-[14px] border border-stone-300 px-4 sm:px-5`}>
             <summary className="cursor-pointer list-none text-[14px] font-semibold text-stone-700">
               timeline / pre-asset / human review を開く
             </summary>
             <div className="mt-6 space-y-5">
               {cordAssessment.timeline.map((item) => (
-                <div key={`${item.id}-${item.cordRole}`} className="rounded-[14px] border border-stone-200 bg-[#fcfbf8] p-5">
+                <div key={`${item.id}-${item.cordRole}`} className="rounded-[14px] border border-stone-200 bg-[#fcfbf8] p-4 sm:p-5">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <p className="text-[13px] uppercase tracking-[0.14em] text-stone-500">
                       {item.id}
@@ -591,7 +591,7 @@ export default function AnalysisSection({
                       {getCordRoleLabel(item.cordRole)}
                     </span>
                   </div>
-                  <p className="mt-3 text-[16px] leading-8 text-stone-900">
+                  <p className="mt-3 text-sm sm:text-[16px] leading-7 sm:leading-8 text-stone-900">
                     {item.text}
                   </p>
                   <p className="mt-3 text-[15px] leading-8 text-stone-700">
@@ -605,7 +605,7 @@ export default function AnalysisSection({
                   <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
                     確認候補
                   </p>
-                  <ul className="mt-4 space-y-2 text-[16px] leading-8 text-stone-800">
+                  <ul className="mt-4 space-y-2 text-sm sm:text-[16px] leading-7 sm:leading-8 text-stone-800">
                     {(cordAssessment.preAsset.length
                       ? cordAssessment.preAsset
                       : ["該当候補なし"]
@@ -619,7 +619,7 @@ export default function AnalysisSection({
                   <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
                     Human Review
                   </p>
-                  <ul className="mt-4 space-y-2 text-[16px] leading-8 text-stone-800">
+                  <ul className="mt-4 space-y-2 text-sm sm:text-[16px] leading-7 sm:leading-8 text-stone-800">
                     {(cordAssessment.humanReviewNotes.length
                       ? cordAssessment.humanReviewNotes
                       : ["人が文脈を確認してください。"]
@@ -659,7 +659,7 @@ export default function AnalysisSection({
 
         <div className="space-y-6 p-7 sm:p-9">
           <div className="rounded-[18px] border border-amber-300 bg-amber-50 p-6 text-amber-900">
-            <p className="text-[17px] leading-9">
+            <p className="text-sm sm:text-[17px] leading-7 sm:leading-9">
               {cordAssessmentError}
             </p>
             <p className="mt-3 text-[15px] leading-8">
@@ -667,11 +667,11 @@ export default function AnalysisSection({
             </p>
           </div>
 
-          <div className="rounded-[18px] border-2 border-slate-400 bg-white p-7">
+          <div className="rounded-[18px] border-2 border-slate-400 bg-white p-4 sm:p-7">
             <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
               Main Window
             </p>
-            <p className="mt-4 text-[20px] leading-10 text-stone-900">
+            <p className="mt-4 text-sm sm:text-[16px] leading-7 sm:leading-8 sm:text-[20px] sm:leading-10 text-stone-900">
               {finalContextBase}
             </p>
           </div>
@@ -701,8 +701,8 @@ export default function AnalysisSection({
         </p>
       </div>
 
-      <div className="space-y-9 p-7 sm:p-9">
-        <div className="rounded-[18px] border-2 border-slate-400 bg-white p-7">
+      <div className="space-y-4 p-4 sm:space-y-9 sm:p-9">
+        <div className="rounded-[18px] border-2 border-slate-400 bg-white p-4 sm:p-7">
           <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
             Main Window
           </p>
@@ -710,7 +710,7 @@ export default function AnalysisSection({
             確認後の分析
           </p>
           <div className="mt-4 min-h-[260px] max-h-[420px] overflow-y-auto rounded-[14px] border border-stone-300 bg-[#faf8f3] p-5">
-            <p className="text-[20px] leading-10 text-stone-900">
+            <p className="text-sm sm:text-[16px] leading-7 sm:leading-8 sm:text-[20px] sm:leading-10 text-stone-900">
               {finalContextBase}
             </p>
           </div>
@@ -729,7 +729,7 @@ export default function AnalysisSection({
                 <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
                   MAX_DELTA
                 </p>
-                <p className="mt-2 text-[30px] font-semibold tracking-[-0.02em] text-slate-900">
+                <p className="mt-2 text-[24px] sm:text-[30px] font-semibold tracking-[-0.02em] text-slate-900">
                   {`${deltaMeta.label}（${deltaMeta.meaning}）`}
                 </p>
               </div>
@@ -748,7 +748,7 @@ export default function AnalysisSection({
                 <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
                   Trigger
                 </p>
-                <p className="mt-2 text-[30px] font-semibold tracking-[-0.02em] text-slate-900">
+                <p className="mt-2 text-[24px] sm:text-[30px] font-semibold tracking-[-0.02em] text-slate-900">
                   {effectiveTrigger === "Yes" ? "Yes（局所イベントあり）" : "No（局所イベントなし）"}
                 </p>
               </div>
@@ -767,7 +767,7 @@ export default function AnalysisSection({
                 <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">
                   AK_Primary
                 </p>
-                <p className="mt-2 text-[30px] font-semibold tracking-[-0.02em] text-slate-900">
+                <p className="mt-2 text-[24px] sm:text-[30px] font-semibold tracking-[-0.02em] text-slate-900">
                   {`${effectiveAK}（主因）`}
                 </p>
               </div>
@@ -779,7 +779,7 @@ export default function AnalysisSection({
           </div>
         </div>
 
-        <details className={`${groupWrap} rounded-[14px] border border-stone-300 px-5`}>
+        <details className={`${groupWrap} rounded-[14px] border border-stone-300 px-4 sm:px-5`}>
           <summary className="cursor-pointer list-none text-[14px] font-semibold text-stone-700">
             詳細読解を開く
           </summary>
@@ -797,7 +797,7 @@ export default function AnalysisSection({
               <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
                 Signal
               </p>
-              <p className="mt-2 text-[22px] font-semibold text-slate-900">
+              <p className="mt-2 text-[18px] sm:text-[22px] font-semibold text-slate-900">
                 {signalTitle}
               </p>
               <p className={bodyText}>{signalBody}</p>
@@ -813,7 +813,7 @@ export default function AnalysisSection({
                 </span>
               </div>
 
-              <p className="mt-2 text-[22px] font-semibold text-slate-900">
+              <p className="mt-2 text-[18px] sm:text-[22px] font-semibold text-slate-900">
                 {deltaMeta.title}
               </p>
 
@@ -847,7 +847,7 @@ export default function AnalysisSection({
               <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
                 AK / ズレの原因
               </p>
-              <p className="mt-2 text-[22px] font-semibold text-slate-900">
+              <p className="mt-2 text-[18px] sm:text-[22px] font-semibold text-slate-900">
                 {getAkLabel(effectiveAK)}
               </p>
               <p className={bodyText}>{akBody}</p>
@@ -857,7 +857,7 @@ export default function AnalysisSection({
               <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
                 APCE / 不足している関わり
               </p>
-              <p className="mt-2 text-[22px] font-semibold text-slate-900">
+              <p className="mt-2 text-[18px] sm:text-[22px] font-semibold text-slate-900">
                 {getApceLabel(effectiveApce)}
               </p>
               <p className={bodyText}>{apceBody}</p>
@@ -867,7 +867,7 @@ export default function AnalysisSection({
               <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
                 R
               </p>
-              <p className="mt-2 text-[22px] font-semibold text-slate-900">
+              <p className="mt-2 text-[18px] sm:text-[22px] font-semibold text-slate-900">
                 {getRLabel(effectiveRPlus)}
               </p>
               <p className={bodyText}>{rBody}</p>
@@ -889,7 +889,7 @@ export default function AnalysisSection({
           </p>
 
           <div className="mt-6 grid gap-5 lg:grid-cols-[1.05fr_0.95fr]">
-            <div className={`rounded-[16px] border p-6 ${triggerTone.card}`}>
+            <div className={`rounded-[16px] border p-4 sm:p-6 ${triggerTone.card}`}>
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
                   Trigger
@@ -909,7 +909,7 @@ export default function AnalysisSection({
               <p className="text-[12px] uppercase tracking-[0.18em] text-stone-500">
                 Phase
               </p>
-              <p className="mt-2 text-[22px] font-semibold text-slate-900">
+              <p className="mt-2 text-[18px] sm:text-[22px] font-semibold text-slate-900">
                 {effectivePhase || eLevel}
               </p>
               <p className={bodyText}>{phaseBody}</p>

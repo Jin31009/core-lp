@@ -102,7 +102,7 @@ function StepItem({
   index: number;
 }) {
   return (
-    <div className="flex gap-4 rounded-[14px] border border-stone-300 bg-white px-5 py-4.5">
+    <div className="flex gap-4 rounded-[14px] border border-stone-300 bg-white px-4 py-3.5 sm:px-5 sm:py-4.5">
       <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-slate-700 text-[12px] font-semibold text-white">
         {index + 1}
       </div>
@@ -136,7 +136,7 @@ function OrderedActionCard({
   const cardPaddingClass = tone === "primary" ? "p-7" : "p-5";
   const titleClass =
     tone === "primary"
-      ? "mt-2 text-[26px] font-semibold text-slate-950"
+      ? "mt-2 text-[20px] sm:text-[26px] font-semibold text-slate-950"
       : "mt-2 text-[18px] font-semibold text-slate-900";
   const noteClass =
     tone === "primary"
@@ -193,7 +193,7 @@ function CompactNgCard({
   const meta = getNgMeta(text);
 
   return (
-    <div className="rounded-[16px] border border-rose-300 bg-white p-5 shadow-[0_2px_10px_rgba(15,23,42,0.03)]">
+    <div className="rounded-[16px] border border-rose-300 bg-white p-4 sm:p-5 shadow-[0_2px_10px_rgba(15,23,42,0.03)]">
       <div className="rounded-[10px] border border-rose-200 bg-rose-50 px-3 py-2">
         <p className="text-[12px] uppercase tracking-[0.14em] text-rose-500">
           NG
@@ -230,29 +230,30 @@ export default function ResponseSection({
     "border-y border-stone-200 bg-white";
 
   const sectionHeader =
-    "border-b border-stone-300 px-6 py-9 sm:px-8";
+    "border-b border-stone-300 px-4 py-6 sm:px-8 sm:py-9";
 
   const sectionTitleClass =
-    "mt-3 text-[34px] font-semibold tracking-[-0.02em] text-slate-900";
+    "mt-2 text-[28px] font-semibold tracking-[-0.02em] text-slate-900 sm:mt-3 sm:text-[34px]";
 
   const leadClass =
-    "mt-4 max-w-4xl text-[19px] leading-10 text-stone-800";
+    "mt-3 max-w-4xl text-[15px] leading-7 text-stone-800 sm:mt-4 sm:text-[19px] sm:leading-10";
 
   const mainCard =
-    "border-t border-stone-300 bg-white py-7";
+    "border-t border-stone-300 bg-white py-5 sm:py-7";
   const quietCard =
-    "border-t border-stone-300 bg-[#f8f6f1] p-6";
+    "border-t border-stone-300 bg-[#f8f6f1] p-4 sm:p-6";
 
   const sectionLabel =
     "text-[13px] uppercase tracking-[0.18em] text-stone-600";
 
   const bodyText = "mt-3 text-[16px] leading-9 text-stone-800";
+  
 
   const nextStepNote =
-    "mt-6 rounded-[14px] border border-dashed border-stone-400 bg-white/90 px-5 py-4 text-[15px] leading-8 text-stone-700";
+    "mt-4 rounded-[14px] border border-dashed border-stone-400 bg-white/90 px-4 py-3 text-xs sm:mt-6 sm:px-5 sm:py-4 sm:text-[15px] leading-7 sm:leading-8 text-stone-700";
 
   const primaryButton =
-    "w-full rounded-[14px] bg-orange-500 py-4.5 text-[17px] font-medium text-white transition hover:bg-orange-600";
+    "w-full rounded-[14px] bg-orange-500 py-4 text-sm sm:text-[17px] font-medium text-white transition hover:bg-orange-600";
 
   return (
     <section className={sectionShell}>
@@ -268,14 +269,14 @@ export default function ResponseSection({
         </p>
       </div>
 
-      <div className="space-y-7 p-7 sm:p-9">
-        <div className="rounded-[20px] border-2 border-slate-400 bg-white p-7 shadow-[0_8px_22px_rgba(15,23,42,0.05)]">
+      <div className="space-y-4 p-4 sm:space-y-7 sm:p-9">
+        <div className="rounded-[20px] border-2 border-slate-400 bg-white p-4 sm:p-7 shadow-[0_8px_22px_rgba(15,23,42,0.05)]">
           <p className={sectionLabel}>Main Window</p>
-          <p className="mt-2 text-[26px] font-semibold text-slate-900">
+          <p className="mt-2 text-[20px] sm:text-[26px] font-semibold text-slate-900">
             結論＋対応
           </p>
-          <div className="mt-4 min-h-[240px] max-h-[420px] overflow-y-auto rounded-[14px] border border-stone-300 bg-[#faf8f3] p-5">
-            <p className="text-[19px] leading-10 text-stone-900">{actionSummary}</p>
+          <div className="mt-4 min-h-[240px] max-h-[420px] overflow-y-auto rounded-[14px] border border-stone-300 bg-[#faf8f3] p-4 sm:p-5">
+            <p className="text-[15px] leading-7 sm:text-[19px] sm:leading-10 text-stone-900">{actionSummary}</p>
             <div className="mt-4 space-y-3">
               {flowItems.slice(0, 3).map((item, index) => (
                 <StepItem key={`${item}-${index}`} text={item} index={index} />
@@ -289,9 +290,9 @@ export default function ResponseSection({
             詳細対応を開く
           </summary>
           <div className="mt-5">
-        <div className="rounded-[20px] border-2 border-slate-400 bg-white p-7 shadow-[0_8px_22px_rgba(15,23,42,0.05)]">
+        <div className="rounded-[20px] border-2 border-slate-400 bg-white p-4 sm:p-7 shadow-[0_8px_22px_rgba(15,23,42,0.05)]">
           <p className={sectionLabel}>① 確認候補の流れ</p>
-          <p className="mt-2 text-[26px] font-semibold text-slate-900">
+          <p className="mt-2 text-[20px] sm:text-[26px] font-semibold text-slate-900">
             この順で確認候補を見る
           </p>
           <p className="mt-3 text-[16px] leading-9 text-stone-700">
@@ -322,15 +323,15 @@ export default function ResponseSection({
           </div>
         </div>
 
-        <div className="grid gap-6 xl:grid-cols-[1.06fr_0.94fr]">
-          <div className="space-y-6">
+        <div className="grid gap-4 sm:gap-6 xl:grid-cols-[1.06fr_0.94fr]">
+          <div className="space-y-4 sm:space-y-6">
             <div className={quietCard}>
               <p className={sectionLabel}>② 確認候補の要約</p>
-              <p className="mt-2 text-[22px] font-semibold text-slate-900">
+              <p className="mt-2 text-[18px] sm:text-[22px] font-semibold text-slate-900">
                 行動の要約
               </p>
 
-              <div className="mt-5 rounded-[16px] border border-sky-300 bg-sky-50 p-6">
+              <div className="mt-5 rounded-[16px] border border-sky-300 bg-sky-50 p-4 sm:p-6">
                 <p className="text-[13px] uppercase tracking-[0.14em] text-sky-700">
                   Summary
                 </p>
@@ -342,7 +343,7 @@ export default function ResponseSection({
 
             <div className={quietCard}>
               <p className={sectionLabel}>③ 確認順の補足</p>
-              <p className="mt-2 text-[22px] font-semibold text-slate-900">
+              <p className="mt-2 text-[18px] sm:text-[22px] font-semibold text-slate-900">
                 順番の補足
               </p>
               <p className={bodyText}>
@@ -357,7 +358,7 @@ export default function ResponseSection({
             </div>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             <div className={quietCard}>
               <p className={sectionLabel}>Status</p>
               <div className="mt-3 flex flex-wrap items-start justify-between gap-4">
@@ -382,7 +383,7 @@ export default function ResponseSection({
             {ngItems.length > 0 && (
               <div className={mainCard}>
                 <p className={sectionLabel}>注意</p>
-                <p className="mt-2 text-[23px] font-semibold text-slate-900">
+                <p className="mt-2 text-[18px] sm:text-[23px] font-semibold text-slate-900">
                   避けたい対応
                 </p>
 

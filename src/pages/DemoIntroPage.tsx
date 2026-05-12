@@ -70,13 +70,13 @@ const pageStyle: React.CSSProperties = {
   minHeight: "100vh",
   background: "#f7f5f2",
   color: "#111",
-  padding: "32px 20px 56px",
+  padding: "20px 14px 40px",
 };
 
 const shellStyle: React.CSSProperties = {
   maxWidth: 960,
   margin: "0 auto",
-  padding: "72px 0 40px",
+  padding: "52px 0 30px",
 };
 
 const heroStyle: React.CSSProperties = {
@@ -96,7 +96,7 @@ const eyebrowStyle: React.CSSProperties = {
 
 const headlineStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: "clamp(2rem, 7.8vw, 3.25rem)",
+  fontSize: "clamp(1.55rem, 6.4vw, 3.25rem)",
   lineHeight: 1.2,
   letterSpacing: "-0.02em",
   fontWeight: 600,
@@ -105,10 +105,10 @@ const headlineStyle: React.CSSProperties = {
 };
 
 const leadStyle: React.CSSProperties = {
-  margin: "22px auto 0",
+  margin: "16px auto 0",
   maxWidth: 680,
-  fontSize: "clamp(14px, 3.8vw, 17px)",
-  lineHeight: 1.8,
+  fontSize: "clamp(13px, 3.3vw, 17px)",
+  lineHeight: 1.7,
   color: "#404040",
   textAlign: "center",
 };
@@ -116,25 +116,25 @@ const leadStyle: React.CSSProperties = {
 const stepsGridStyle: React.CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-  gap: 18,
-  marginTop: 32,
+  gap: 12,
+  marginTop: 22,
 };
 
 const stepCardStyle: React.CSSProperties = {
-  padding: "10px 8px",
+  padding: "8px 6px",
 };
 
 const stepTextStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: "clamp(15px, 3.6vw, 17px)",
-  lineHeight: 1.65,
+  fontSize: "clamp(14px, 3.1vw, 17px)",
+  lineHeight: 1.55,
   color: "#111",
   whiteSpace: "pre-line",
   textAlign: "center",
 };
 
 const noteCardStyle: React.CSSProperties = {
-  marginTop: 18,
+  marginTop: 14,
   maxWidth: 680,
   padding: "6px 0 0",
   marginLeft: "auto",
@@ -143,14 +143,14 @@ const noteCardStyle: React.CSSProperties = {
 
 const noteTextStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: "clamp(14px, 3.6vw, 16px)",
-  lineHeight: 1.8,
+  fontSize: "clamp(13px, 3.1vw, 16px)",
+  lineHeight: 1.7,
   color: "#404040",
   textAlign: "center",
 };
 
 const ctaBlockStyle: React.CSSProperties = {
-  marginTop: 24,
+  marginTop: 18,
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
@@ -159,8 +159,8 @@ const ctaBlockStyle: React.CSSProperties = {
 
 const ctaIntroStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: "clamp(14px, 3.6vw, 16px)",
-  lineHeight: 1.8,
+  fontSize: "clamp(13px, 3.1vw, 16px)",
+  lineHeight: 1.65,
   color: "#525252",
   textAlign: "center",
 };
@@ -173,19 +173,19 @@ const ctaStyle: React.CSSProperties = {
   borderRadius: 999,
   background: "#111",
   color: "#fff",
-  fontSize: 15,
+  fontSize: 14,
   fontWeight: 500,
   cursor: "pointer",
 };
 
 const ctaSubStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: 14,
+  fontSize: 12,
   color: "#737373",
 };
 
 const backWrapStyle: React.CSSProperties = {
-  marginTop: 34,
+  marginTop: 24,
   textAlign: "center",
 };
 
