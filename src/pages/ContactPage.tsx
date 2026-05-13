@@ -66,6 +66,20 @@ export default function ContactPage({ setPage }: Props) {
               summary="これは導入ではなく、一緒に試すための入口です。"
             />
 
+            <div className="mx-auto mt-10 max-w-3xl border border-stone-200 bg-white/60 px-6 py-6 text-left sm:mt-12 sm:px-8 sm:py-7">
+              <p className="text-[13px] font-medium uppercase tracking-[0.18em] text-stone-500">
+                病院広報工房へのご相談
+              </p>
+              <p className="mt-4 text-[15px] leading-8 text-stone-700 sm:text-[16px] sm:leading-9">
+                自由記述分析、WEBスライド型説明資料、院内広報物の整理など、
+                <br className="hidden sm:block" />
+                病院広報を「伝える」から「理解と関係を整える」取り組みへ進めるためのご相談を受け付けています。
+              </p>
+              <p className="mt-3 text-[15px] font-medium leading-8 text-stone-800 sm:text-[16px]">
+                まずは小さなテーマからご相談ください。
+              </p>
+            </div>
+
             <SectionScrollCue targetId="contact-options" emphasis="soft" subdued />
           </div>
         </section>
@@ -153,6 +167,9 @@ export default function ContactPage({ setPage }: Props) {
                   <br />
                   そこから無理のない対話を始めます。
                 </p>
+                <p className="mx-auto mt-5 max-w-xl text-center text-[13px] leading-7 text-stone-500">
+                  現在、この問い合わせフォームは開発中です。このフォームからの正式送信は行われません。ご相談をご希望の方は、学会発表時にお声がけいただくか、後日公開予定の正式問い合わせ導線をご利用ください。
+                </p>
 
                 <div className="mt-8 space-y-7 sm:mt-10 sm:space-y-8">
                   <label className="block">
@@ -186,19 +203,19 @@ export default function ContactPage({ setPage }: Props) {
                     type="submit"
                     className="inline-flex min-h-11 items-center justify-center bg-stone-900 px-7 text-[12px] font-medium uppercase tracking-[0.16em] text-white transition hover:opacity-90"
                   >
-                    内容を共有する
+                    入力内容を確認する（仮）
                   </button>
                 </div>
               </form>
             ) : (
               <div className="mx-auto mt-14 max-w-2xl border-t border-stone-300 pt-8 text-center sm:mt-16">
                 <p className="text-[28px] font-semibold tracking-[-0.02em] text-stone-900">
-                  ありがとうございます
+                  入力内容を確認しました
                 </p>
                 <p className="mt-5 text-[15px] leading-8 text-stone-700 sm:mt-6 sm:text-[17px] sm:leading-9">
-                  内容を受け取りました。
+                  現在は開発中のため、このフォームからの正式送信は行われません。
                   <br />
-                  ここから、無理のない形で対話を始めていければと思います。
+                  正式な問い合わせ導線は準備中です。
                 </p>
               </div>
             )}
