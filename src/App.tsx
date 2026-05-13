@@ -8,6 +8,7 @@ import DemoPage from "./pages/DemoPage";
 import StructurePage from "./pages/structure/StructurePage";
 import PocPage from "./pages/PocPage";
 import ContactPage from "./pages/ContactPage";
+import KouhouOsDevPage from "./pages/KouhouOsDevPage";
 import ReportsPage from "./pages/reports/ReportsPage";
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 
@@ -72,6 +73,7 @@ export default function App() {
       <Route path="/rass-figure-slides-2026" element={<RASSFigureSlides2026 />} />
       <Route path="/rass-web-slides-2026" element={<RASSWebSlides2026 />} />
       <Route path="/rass-web-slides-2026/*" element={<RASSWebSlides2026 />} />
+      <Route path="/kouhou-os-dev" element={<KouhouOsDevPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
