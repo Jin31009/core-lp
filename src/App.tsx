@@ -58,8 +58,9 @@ export default function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<CoreLPPage setPage={setPage} />} />
+      <Route path="/" element={<KouhouOsDevPage />} />
       <Route path="/lp" element={<CoreLPPage setPage={setPage} />} />
+      <Route path="/lp-legacy" element={<CoreLPPage setPage={setPage} />} />
       <Route path="/structure" element={<StructurePage setPage={setPage} />} />
       <Route
         path="/poc"
