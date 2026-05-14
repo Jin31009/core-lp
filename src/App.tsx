@@ -72,7 +72,8 @@ export default function App() {
       <Route path="/demo" element={<DemoPage setPage={setPage} />} />
       <Route path="/case" element={<CoreLPPage setPage={setPage} />} />
       <Route path="/evidence" element={<CoreLPPage setPage={setPage} />} />
-      <Route path="/slides" element={<RASSHybridSlides />} />
+      <Route path="/slides" element={<RASSWebSlides2026 />} />
+      <Route path="/slides-hybrid" element={<RASSHybridSlides />} />
       <Route path="/slides/print" element={<RASSPrintSlides2026 />} />
       <Route path="/slides/a4-print" element={<RASSPrintSlides2026 />} />
       <Route path="/conference-slides" element={<RASSConferenceSlides />} />
