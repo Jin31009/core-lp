@@ -323,6 +323,10 @@ function SectionTitle({
 }
 
 export default function KouhouOsDevPage() {
+  const isCoreMode =
+    typeof window !== "undefined" &&
+    new URLSearchParams(window.location.search).get("core") === "1";
+
   return (
     <main className="min-h-screen bg-[#f7f8f5] text-slate-900">
       <header className="sticky top-0 z-10 border-b border-slate-200 bg-[#f7f8f5]/92 backdrop-blur">
@@ -707,6 +711,16 @@ export default function KouhouOsDevPage() {
         </div>
         {import.meta.env.DEV && <SelfTestPanel />}
       </section>
+      {isCoreMode ? (
+        <a
+          className="fixed bottom-5 right-5 z-50 rounded-full border border-cyan-200 bg-slate-950 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-slate-900/20 transition hover:-translate-y-0.5 hover:bg-cyan-900"
+          href="http://127.0.0.1:5179/"
+          rel="noreferrer"
+          target="_blank"
+        >
+          CORE NAVIを開く
+        </a>
+      ) : null}
     </main>
   );
 }
