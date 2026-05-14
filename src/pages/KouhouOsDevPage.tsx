@@ -713,12 +713,12 @@ export default function KouhouOsDevPage() {
       </section>
       {isCoreMode ? (
         <a
-          className="fixed bottom-5 right-5 z-50 rounded-full border border-cyan-200 bg-slate-950 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-slate-900/20 transition hover:-translate-y-0.5 hover:bg-cyan-900"
+          className="fixed bottom-5 left-5 z-[999] rounded-full border border-cyan-200 bg-slate-950 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-slate-900/20 transition hover:-translate-y-0.5 hover:bg-cyan-900"
           href="http://127.0.0.1:5179/"
           rel="noreferrer"
           target="_blank"
         >
-          CORE NAVIを開く
+          CORE専用｜CORE NAVIを開く
         </a>
       ) : null}
     </main>
