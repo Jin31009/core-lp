@@ -67,22 +67,25 @@ const cockpitItems = [
 
 const journals = [
   {
-    category: "始動宣言",
-    title: "GWの宿題⑦｜病院広報工房、始動",
-    text: "病院広報工房が、WEBスライドとRA-SS DEMOを入口に動き出した記録です。",
-    href: "https://note.com/pr_kobo/n/n9ebe14ab817c",
+    category: "始動編",
+    title: "GWの宿題",
+    text: "AIと一緒に、自分の思考を作り直していく記録です。思考のOS、AI共創環境、WEBスライド、RA-SS DEMOへつながる、病院広報工房の始動編です。",
+    buttonLabel: "GWの宿題を読む",
+    href: "https://note.com/pr_kobo/m/mbc4b960764ef",
   },
   {
-    category: "病院広報の思想",
-    title: "なぜ今、病院広報を学び直すのか",
-    text: "病院広報を、病院の価値を社会の言葉で見える化する仕事として捉え直します。",
-    href: "https://note.com/pr_kobo/n/n29a3d5b5f980",
+    category: "思想編",
+    title: "病院広報を、もう一度定義する",
+    text: "病院広報を「情報発信」だけでなく、理解と関係を整える仕事として捉え直すための連載です。広報OS、CI/VI、説明・案内・教育への接続を整理しています。",
+    buttonLabel: "再定義の記録を読む",
+    href: "https://note.com/pr_kobo/m/m072738cbaccd",
   },
   {
-    category: "広報OSの背景",
-    title: "AIと一緒に考え続けるための「専用OS」",
-    text: "AIと考え続けるための仕組みが、広報OSの考え方につながっています。",
-    href: "https://note.com/pr_kobo/n/n7dc9a2e1877e",
+    category: "学会準備編",
+    title: "64歳、学会への挑戦｜スライドの裏側",
+    text: "5月27日の学会発表に向けて、患者さんの声、現場の気づき、AI協働、WEBスライド、RA-SS DEMOの背景を整理した記録です。",
+    buttonLabel: "スライドの裏側を読む",
+    href: "https://note.com/pr_kobo/m/m0f1275bacff7",
   },
 ];
 
@@ -658,22 +661,22 @@ export default function KouhouOsDevPage() {
           title={
             <>
               <span className="block">noteでは、</span>
-              <span className="block">広報OSを育てる記録を公開していく。</span>
+              <span className="block">病院広報工房が育っていく記録を公開しています。</span>
             </>
           }
-          text="思想、開発過程、学会準備、現場で得た問いを、病院広報工房の言葉として積み上げます。"
+          text="AIとの学び直し、病院広報の再定義、学会発表に向けた試作と検証を、noteマガジンとして整理しています。"
         />
-        <div className="mx-auto mt-8 grid max-w-6xl gap-4 px-5 md:grid-cols-3">
+        <div className="mx-auto mt-8 grid max-w-6xl items-stretch gap-4 px-5 md:grid-cols-2 lg:grid-cols-3">
           {journals.map((item) => (
-            <article key={item.title} className="rounded-lg border border-slate-200 bg-[#f7f8f5] p-5">
-              <p className="text-xs font-bold tracking-[0.16em] text-cyan-700">{item.category}</p>
-              <h3 className="font-bold">{item.title}</h3>
-              <p className="mt-2 text-sm leading-6 text-slate-600">{item.text}</p>
-              <a className="mt-4 inline-flex items-center gap-2 rounded-md bg-slate-950 px-4 py-2 text-sm font-semibold text-white" href={item.href} target="_blank" rel="noreferrer">
+            <article key={item.title} className="flex h-full min-h-[17.25rem] flex-col rounded-lg border border-slate-200 bg-[#f7f8f5] p-5">
+              <p className="inline-flex w-fit rounded-md border border-cyan-200 bg-white px-2.5 py-1 text-xs font-bold tracking-[0.16em] text-cyan-700">{item.category}</p>
+              <h3 className="mt-4 font-bold leading-7">{item.title}</h3>
+              <p className="mt-3 flex-1 text-sm leading-6 text-slate-600">{item.text}</p>
+              <a className="mt-5 inline-flex w-fit items-center gap-2 rounded-md bg-slate-950 px-4 py-2 text-sm font-semibold text-white" href={item.href} target="_blank" rel="noopener noreferrer">
                 <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white">
                   <img src="/assets/brand/note-icon.svg" alt="" className="h-3.5 w-3.5" />
                 </span>
-                noteで読む →
+                {item.buttonLabel}
               </a>
             </article>
           ))}
