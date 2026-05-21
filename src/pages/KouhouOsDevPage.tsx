@@ -1,16 +1,11 @@
 import type { ReactNode } from "react";
 
 const navItems = [
-  { label: "病院広報工房とは", href: "#about" },
-  { label: "困りごと", href: "#problems" },
-  { label: "広報領域", href: "#domains" },
-  { label: "相談メニュー", href: "#consultation" },
-  { label: "広報OS", href: "#kouhou-os" },
-  { label: "実証", href: "#evidence" },
-  { label: "学会補足", href: "/kouhou-os-dev/jhm2026" },
-  { label: "note", href: "#journal" },
-  { label: "FAQ", href: "#faq" },
-  { label: "お問い合わせ", href: "#cta" },
+  { label: "病院広報工房", href: "/kouhou-os-dev" },
+  { label: "WEBスライド", href: "/slides" },
+  { label: "RA-SS DEMO", href: "/demo-intro" },
+  { label: "note", href: "/kouhou-os-dev#journal" },
+  { label: "相談する", href: "/contact" },
 ];
 
 const problems = [
@@ -24,7 +19,7 @@ const problems = [
 ];
 
 const roles = [
-  { icon: "target", name: "CORE", label: "黒江 仁（くろえ ひとし）の経験知・現場感・最終判断", layer: "Human judgement", text: "黒江 仁（くろえ ひとし）の病院広報経験をもとに、現場の声を読み、問いを立て、人が確認する前提で最終判断を行う。" },
+  { icon: "target", name: "CORE", label: "黒江仁（くろえ ひとし）の経験知・現場感・最終判断", layer: "Human judgement", text: "黒江仁（くろえ ひとし）の病院広報経験をもとに、現場の声を読み、問いを立て、人が確認する前提で最終判断を行う。" },
   { icon: "book", name: "NAVI", label: "構造化・設計・監査", layer: "GPT支援レイヤー", text: "GPTを構造化支援として使い、情報と導線を伝わる順序へ整理する。" },
   { icon: "cloud", name: "SORA", label: "翻訳・共感・可読性", layer: "GPT支援レイヤー", text: "GPTを翻訳支援として使い、専門情報をやさしい言葉と読みやすい表現に整える。" },
   { icon: "code", name: "CODEX", label: "実装・制御・公開", layer: "GPT支援レイヤー", text: "GPTを実装支援として使い、WEBや資料として公開できる形に組み立てる。" },
@@ -407,24 +402,22 @@ export default function KouhouOsDevPage() {
     <main className="min-h-screen bg-[#f7f8f5] text-slate-900">
       <header className="sticky top-0 z-10 border-b border-slate-200 bg-[#f7f8f5]/92 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
-          <a href="#hero" className="font-bold tracking-wide text-slate-950">
-            病院広報工房
+          <a href="/kouhou-os-dev" className="min-w-0 text-slate-950">
+            <span className="block text-sm font-bold tracking-wide md:text-base">黒江仁｜病院広報工房</span>
+            <span className="mt-1 block text-[11px] font-semibold leading-4 text-slate-500">
+              病院広報を、理解と関係を整える仕組みへ
+            </span>
           </a>
-          <nav className="hidden gap-3 text-xs xl:flex xl:text-sm">
+          <nav className="hidden gap-3 text-xs lg:flex xl:text-sm">
             {navItems.map((item) => (
               <a key={item.label} className="text-slate-600 hover:text-slate-950" href={item.href}>
                 {item.label}
               </a>
             ))}
           </nav>
-          <div className="hidden items-center gap-2 xl:flex">
-            <a className="rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-950" href="/slides">
-              WEBスライド
-            </a>
-            <a className="rounded-md bg-slate-950 px-3 py-2 text-xs font-semibold text-white" href="/demo-intro">
-              RA-SS DEMO
-            </a>
-          </div>
+          <a className="rounded-md bg-slate-950 px-3 py-2 text-xs font-semibold text-white lg:hidden" href="/contact">
+            相談する
+          </a>
         </div>
       </header>
 
@@ -441,7 +434,7 @@ export default function KouhouOsDevPage() {
               </span>
             </h1>
             <p className="mt-6 max-w-2xl text-base leading-8 text-slate-700 md:text-lg md:leading-9">
-              病院広報工房は、黒江 仁（くろえ ひとし）が、制作物を単発で代行するのではなく、
+              病院広報工房は、黒江仁（くろえ ひとし）が、制作物を単発で代行するのではなく、
               患者さん・ご家族・職員・地域との関係が伝わるように、広報の考え方と運用を一緒に整える伴走型の広報設計パートナーです。
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
@@ -598,7 +591,7 @@ export default function KouhouOsDevPage() {
               <span className="block">GPT支援レイヤー</span>
             </>
           }
-          text="広報OSは、COREである黒江 仁（くろえ ひとし）の病院広報経験を中心に、GPTを役割別に使い分けるAI協働レイヤーです。AIは判断を置き換えるものではなく、人が確認するための補助線として使います。"
+          text="広報OSは、COREである黒江仁（くろえ ひとし）の病院広報経験を中心に、GPTを役割別に使い分けるAI協働レイヤーです。AIは判断を置き換えるものではなく、人が確認するための補助線として使います。"
         />
         <div className="mx-auto mt-8 grid max-w-6xl gap-4 px-5 md:grid-cols-4">
           {roles.map((role) => (
@@ -621,7 +614,7 @@ export default function KouhouOsDevPage() {
           <h2 className="mt-3 max-w-3xl text-2xl font-bold leading-tight text-slate-950 md:text-4xl">CORE NAVI｜広報OSの操縦席</h2>
           <p className="mt-3 max-w-3xl text-xl font-bold leading-8 text-slate-900">納品物ではなく、現場と一緒に動かす仕組み。</p>
           <p className="mt-4 max-w-3xl text-base leading-8 text-slate-600">
-            CORE NAVIは、病院ごとの広報OSを操作し、記録し、改善していくための操縦席です。COREである黒江 仁（くろえ ひとし）の経験知を起点に、NAVI・SORA・CODEXというGPT支援レイヤーを使い分け、病院側の担当者と一緒に、広報・説明・案内・教育の仕組みを育てます。
+            CORE NAVIは、病院ごとの広報OSを操作し、記録し、改善していくための操縦席です。COREである黒江仁（くろえ ひとし）の経験知を起点に、NAVI・SORA・CODEXというGPT支援レイヤーを使い分け、病院側の担当者と一緒に、広報・説明・案内・教育の仕組みを育てます。
           </p>
         </div>
         <div className="mx-auto mt-8 grid max-w-6xl gap-4 px-5 md:grid-cols-3">
@@ -888,7 +881,7 @@ export default function KouhouOsDevPage() {
                 HP、SNS、広報誌、院内掲示、採用ページ、患者さんの声。いま気になっている入口から、病院ごとの広報の言葉と導線を一緒に整えます。
               </p>
               <p className="mt-3 text-sm font-semibold leading-7 text-slate-700">
-                黒江 仁（くろえ ひとし）が、制作物だけでなく、現場に残る考え方と運用まで伴走します。
+                黒江仁（くろえ ひとし）が、制作物だけでなく、現場に残る考え方と運用まで伴走します。
               </p>
             </div>
             <div className="grid gap-3">
@@ -906,6 +899,23 @@ export default function KouhouOsDevPage() {
         </div>
         {import.meta.env.DEV && <SelfTestPanel />}
       </section>
+
+      <footer className="border-t border-slate-200 bg-white py-12">
+        <div className="mx-auto max-w-6xl px-5">
+          <p className="text-base font-bold tracking-wide text-slate-950">黒江仁｜病院広報工房</p>
+          <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
+            病院広報に35年以上携わってきた黒江仁が、患者さんの声、職員の気づき、病院の理念や専門性を、理解と関係を整える広報へつなぎ直すためのサイトです。
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3 text-sm font-semibold">
+            {navItems.map((item) => (
+              <a key={item.label} className="rounded-full border border-slate-200 px-4 py-2 text-slate-700 hover:border-cyan-300 hover:text-slate-950" href={item.href}>
+                {item.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      </footer>
+
       {isCoreMode ? (
         <a
           className="fixed bottom-5 left-5 z-[999] rounded-full border border-cyan-200 bg-slate-950 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-slate-900/20 transition hover:-translate-y-0.5 hover:bg-cyan-900"

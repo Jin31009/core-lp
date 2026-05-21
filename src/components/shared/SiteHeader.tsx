@@ -5,23 +5,30 @@ type Props = {
   currentPage?: string;
 };
 
-const NAV_ITEMS = [
-  { key: "theory", label: "理論の裏側", page: "structure" },
-  { key: "case", label: "事例", page: "poc" },
-  { key: "reports", label: "分析レポート", page: "reports" },
-  { key: "contact", label: "一緒に試す", page: "contact" },
-] as const;
+type NavItem = {
+  key: string;
+  label: string;
+  href: string;
+  page?: string;
+};
 
-function isActive(currentPage: string | undefined, page: string) {
+const NAV_ITEMS: NavItem[] = [
+  { key: "kouhou", label: "病院広報工房", page: "top", href: "/kouhou-os-dev" },
+  { key: "slides", label: "WEBスライド", page: "slides", href: "/slides" },
+  { key: "demo", label: "RA-SS DEMO", page: "demo-intro", href: "/demo-intro" },
+  { key: "note", label: "note", href: "/kouhou-os-dev#journal" },
+  { key: "contact", label: "相談する", page: "contact", href: "/contact" },
+];
+
+function isActive(currentPage: string | undefined, key: string) {
   if (!currentPage) return false;
-  if (page === "structure") return currentPage === "structure" || currentPage === "evidence";
-  if (page === "poc") return currentPage === "poc";
-  if (page === "reports") return currentPage === "reports";
-  if (page === "contact") return currentPage === "contact" || currentPage === "participation";
-  if (page === "demo") {
+  if (key === "kouhou") return currentPage === "top" || currentPage === "kouhou-os-dev" || currentPage === "corelp";
+  if (key === "slides") return currentPage === "slides" || currentPage === "slides-print";
+  if (key === "demo") {
     return currentPage === "demo" || currentPage === "demo-intro" || currentPage === "prototype";
   }
-  return currentPage === page;
+  if (key === "contact") return currentPage === "contact" || currentPage === "participation";
+  return false;
 }
 
 export default function SiteHeader({ setPage, currentPage }: Props) {
@@ -31,7 +38,7 @@ export default function SiteHeader({ setPage, currentPage }: Props) {
 
   useEffect(() => {
     const updateLayout = () => {
-      const nextIsMobile = window.innerWidth < 768;
+      const nextIsMobile = window.innerWidth < 980;
       setIsMobileNav(nextIsMobile);
 
       if (!nextIsMobile) {
@@ -73,8 +80,15 @@ export default function SiteHeader({ setPage, currentPage }: Props) {
     };
   }, [isMenuOpen]);
 
-  const navigateTo = (page: string) => {
-    setPage(page);
+  const navigateTo = (item: NavItem) => {
+    if (item.page) {
+      setPage(item.page);
+      if (item.href && window.location.pathname !== item.href.split("#")[0]) {
+        window.history.pushState(null, "", item.href);
+      }
+    } else {
+      window.location.href = item.href;
+    }
     setIsMenuOpen(false);
   };
 
@@ -82,9 +96,9 @@ export default function SiteHeader({ setPage, currentPage }: Props) {
     <>
       <header ref={headerRef} style={headerStyle}>
         <div style={innerStyle}>
-          <button onClick={() => navigateTo("top")} style={brandButtonStyle}>
-            <span style={brandSubStyle}>CORE project</span>
-            <span style={brandStyle}>黒江仁｜医療広報・関係性設計</span>
+          <button onClick={() => navigateTo(NAV_ITEMS[0])} style={brandButtonStyle}>
+            <span style={brandStyle}>黒江仁｜病院広報工房</span>
+            <span style={brandSubStyle}>病院広報を、理解と関係を整える仕組みへ</span>
           </button>
 
           {isMobileNav ? (
@@ -125,12 +139,12 @@ export default function SiteHeader({ setPage, currentPage }: Props) {
           ) : (
             <nav style={navStyle}>
               {NAV_ITEMS.map((item) => {
-                const active = isActive(currentPage, item.page);
+                const active = isActive(currentPage, item.key);
 
                 return (
                   <button
                     key={item.key}
-                    onClick={() => navigateTo(item.page)}
+                    onClick={() => navigateTo(item)}
                     style={{
                       ...navItemStyle,
                       ...(active ? navItemActiveStyle : null),
@@ -140,16 +154,6 @@ export default function SiteHeader({ setPage, currentPage }: Props) {
                   </button>
                 );
               })}
-
-              <button
-                onClick={() => navigateTo("demo-intro")}
-                style={{
-                  ...demoItemStyle,
-                  ...(isActive(currentPage, "demo") ? demoItemActiveStyle : null),
-                }}
-              >
-                体験する
-              </button>
             </nav>
           )}
         </div>
@@ -158,13 +162,13 @@ export default function SiteHeader({ setPage, currentPage }: Props) {
           <div style={mobileMenuStyle}>
             <nav style={mobileNavStyle}>
               {NAV_ITEMS.map((item) => {
-                const active = isActive(currentPage, item.page);
+                const active = isActive(currentPage, item.key);
 
                 return (
                   <button
                     key={item.key}
                     type="button"
-                    onClick={() => navigateTo(item.page)}
+                    onClick={() => navigateTo(item)}
                     style={{
                       ...mobileNavItemStyle,
                       ...(active ? mobileNavItemActiveStyle : null),
@@ -175,20 +179,6 @@ export default function SiteHeader({ setPage, currentPage }: Props) {
                   </button>
                 );
               })}
-
-              <button
-                type="button"
-                onClick={() => navigateTo("demo-intro")}
-                style={{
-                  ...mobileNavItemStyle,
-                  ...(isActive(currentPage, "demo") ? mobileNavItemActiveStyle : null),
-                }}
-              >
-                <span style={mobileNavLabelStyle}>体験する</span>
-                {isActive(currentPage, "demo") ? (
-                  <span style={mobileNavCurrentStyle}>現在地</span>
-                ) : null}
-              </button>
             </nav>
           </div>
         ) : null}
@@ -235,21 +225,19 @@ const brandButtonStyle: React.CSSProperties = {
 };
 
 const brandSubStyle: React.CSSProperties = {
-  margin: "0 0 2px",
-  fontSize: 10,
+  margin: "3px 0 0",
+  fontSize: 11,
   lineHeight: 1.4,
-  letterSpacing: "0.16em",
-  textTransform: "uppercase",
   color: "#8a8a8a",
   fontWeight: 500,
 };
 
 const brandStyle: React.CSSProperties = {
-  fontSize: "clamp(12px, 2.6vw, 14px)",
+  fontSize: "clamp(14px, 2.6vw, 16px)",
   lineHeight: 1.45,
   letterSpacing: "0.01em",
   color: "#262626",
-  fontWeight: 400,
+  fontWeight: 600,
   textAlign: "left",
   whiteSpace: "normal",
   textWrap: "balance",
@@ -395,22 +383,4 @@ const navItemStyle: React.CSSProperties = {
 
 const navItemActiveStyle: React.CSSProperties = {
   background: "rgba(0,0,0,0.05)",
-};
-
-const demoItemStyle: React.CSSProperties = {
-  border: "1px solid rgba(0,0,0,0.16)",
-  background: "rgba(255,255,255,0.72)",
-  color: "#262626",
-  padding: "10px 14px",
-  margin: 0,
-  cursor: "pointer",
-  borderRadius: 999,
-  fontSize: 12,
-  fontWeight: 500,
-  minHeight: 44,
-};
-
-const demoItemActiveStyle: React.CSSProperties = {
-  background: "rgba(0,0,0,0.08)",
-  borderColor: "rgba(0,0,0,0.24)",
 };

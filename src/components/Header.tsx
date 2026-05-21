@@ -25,13 +25,13 @@ export default function Header({
           className="text-left transition hover:opacity-80"
         >
           <div className="text-[10px] tracking-[0.28em] text-slate-400">
-            RELATION DESIGN
+            病院広報を、理解と関係を整える仕組みへ
           </div>
           <div className="mt-1 text-sm font-medium text-slate-900 sm:text-base">
-            黒江 仁
+            黒江仁｜病院広報工房
           </div>
           <div className="mt-1 text-[10px] leading-4 text-slate-500 sm:text-[11px]">
-            病院広報の限界を超える｜関係マネジメントとAIによる新しい設計（CORE）
+            CORE / CORE_NAVI は、病院広報工房の実証・開発プロジェクトです。
           </div>
         </button>
 

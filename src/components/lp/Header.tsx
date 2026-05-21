@@ -18,10 +18,10 @@ export default function Header({
           className="text-left transition opacity-90 hover:opacity-100"
         >
           <div className="text-[10px] font-medium uppercase tracking-[0.28em] text-stone-400">
-            Relational Architecture Sensing System
+            病院広報を、理解と関係を整える仕組みへ
           </div>
           <div className="mt-1 text-[15px] font-semibold tracking-[0.04em] text-stone-900">
-            RA-SS
+            黒江仁｜病院広報工房
           </div>
         </button>
 
@@ -31,31 +31,31 @@ export default function Header({
             onClick={onOpenTop}
             className="text-[12px] font-medium uppercase tracking-[0.16em] text-stone-500 transition hover:text-stone-900"
           >
-            TOP
+            病院広報工房
           </button>
           <button
             type="button"
             onClick={onOpenDemo}
             className="text-[12px] font-medium uppercase tracking-[0.16em] text-stone-500 transition hover:text-stone-900"
           >
-            DEMO
+            RA-SS DEMO
           </button>
           <button
             type="button"
             onClick={onOpenContact}
             className="text-[12px] font-medium uppercase tracking-[0.16em] text-stone-500 transition hover:text-stone-900"
           >
-            CONTACT
+            相談する
           </button>
         </nav>
 
         <div className="flex items-center gap-2">
           <button
             type="button"
-            onClick={onOpenDemo}
+            onClick={onOpenContact}
             className="inline-flex bg-stone-900 px-4 py-2 text-[12px] font-medium uppercase tracking-[0.14em] text-white transition hover:opacity-90"
           >
-            DEMO
+            相談する
           </button>
         </div>
       </div>

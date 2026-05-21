@@ -15,19 +15,17 @@ export default function Footer({
         <div className="grid gap-12 md:grid-cols-[1.2fr_0.8fr]">
           <div>
             <p className="text-[11px] font-medium uppercase tracking-[0.26em] text-stone-400">
-              Relational Architecture Sensing System
+              黒江仁｜病院広報工房
             </p>
 
             <h3 className="mt-4 text-3xl font-semibold leading-tight tracking-[-0.02em] text-stone-900 md:text-4xl">
-              違和感を、
+              病院広報を、
               <br />
-              関係の構造として扱う。
+              理解と関係を整える仕組みへ。
             </h3>
 
             <p className="mt-5 max-w-2xl text-[15px] leading-8 text-stone-600">
-              RA-SSは、接点で生まれる違和感を観察し、構造として整理し、
-              次の一手・学習・記録へ接続するための実践基盤です。
-              それは単なる機能ではなく、関係を扱うための編集された方法です。
+              病院広報に35年以上携わってきた黒江仁が、患者さんの声、職員の気づき、病院の理念や専門性を、理解と関係を整える広報へつなぎ直すためのサイトです。
             </p>
           </div>
 
@@ -43,21 +41,21 @@ export default function Footer({
                   onClick={onOpenTop}
                   className="text-left text-[14px] text-stone-600 transition hover:text-stone-900"
                 >
-                  TOP
+                  病院広報工房
                 </button>
                 <button
                   type="button"
                   onClick={onOpenDemo}
                   className="text-left text-[14px] text-stone-600 transition hover:text-stone-900"
                 >
-                  DEMO
+                  RA-SS DEMO
                 </button>
                 <button
                   type="button"
                   onClick={onOpenContact}
                   className="text-left text-[14px] text-stone-600 transition hover:text-stone-900"
                 >
-                  CONTACT
+                  相談する
                 </button>
               </div>
             </div>
@@ -73,21 +71,21 @@ export default function Footer({
                   onClick={onOpenTop}
                   className="text-left text-[14px] text-stone-600 transition hover:text-stone-900"
                 >
-                  TOP
+                  病院広報工房
                 </button>
                 <button
                   type="button"
                   onClick={onOpenDemo}
                   className="text-left text-[14px] text-stone-600 transition hover:text-stone-900"
                 >
-                  DEMO
+                  RA-SS DEMO
                 </button>
                 <button
                   type="button"
                   onClick={onOpenContact}
                   className="text-left text-[14px] text-stone-600 transition hover:text-stone-900"
                 >
-                  CONTACT
+                  相談する
                 </button>
               </div>
             </div>
@@ -95,7 +93,7 @@ export default function Footer({
         </div>
 
         <div className="mt-12 border-t border-stone-200 pt-6 text-[11px] uppercase tracking-[0.18em] text-stone-400">
-          © RA-SS / CORE
+          CORE / CORE_NAVI は、病院広報工房の実証・開発プロジェクトです。
         </div>
       </div>
     </footer>

@@ -2,42 +2,46 @@ type Props = {
   setPage?: (page: string) => void;
 };
 
-const NAV_ITEMS = [
-  { label: "理論の裏側", page: "structure" },
-  { label: "事例", page: "poc" },
-  { label: "分析レポート", page: "reports" },
-  { label: "一緒に試す", page: "contact" },
-  { label: "体験する", page: "demo" },
-] as const;
+type FooterNavItem = {
+  label: string;
+  href: string;
+  page?: string;
+};
+
+const NAV_ITEMS: FooterNavItem[] = [
+  { label: "病院広報工房", page: "top", href: "/kouhou-os-dev" },
+  { label: "WEBスライド", page: "slides", href: "/slides" },
+  { label: "RA-SS DEMO", page: "demo-intro", href: "/demo-intro" },
+  { label: "note", href: "/kouhou-os-dev#journal" },
+  { label: "相談する", page: "contact", href: "/contact" },
+];
 
 export default function FooterSection({ setPage }: Props) {
   return (
     <footer style={footerStyle}>
       <div style={innerStyle}>
-        <p style={brandStyle}>CORE project</p>
+        <p style={brandStyle}>黒江仁｜病院広報工房</p>
         <p style={subTextStyle}>
-          理論から実証、そして実装へ。
-          <br />
-          関係の構造として広報を捉え直すためのサイトです。
+          病院広報に35年以上携わってきた黒江仁が、患者さんの声、職員の気づき、病院の理念や専門性を、理解と関係を整える広報へつなぎ直すためのサイトです。
         </p>
 
         <div style={navWrapStyle}>
           {NAV_ITEMS.map((item) => (
-            <button
-              key={item.page}
-              onClick={() => setPage?.(item.page)}
+            <a
+              key={item.label}
+              href={item.href}
+              onClick={(event) => {
+                if (!item.page || !setPage) return;
+                event.preventDefault();
+                setPage(item.page);
+                window.history.pushState(null, "", item.href);
+              }}
               style={navButtonStyle}
             >
               {item.label}
-            </button>
+            </a>
           ))}
         </div>
-
-        <p style={guideTextStyle}>
-          背景となる知見を読む方は「分析レポート」へ、
-          <br />
-          すぐに体験したい方は「体験する」から進めます。
-        </p>
       </div>
     </footer>
   );
@@ -57,11 +61,10 @@ const innerStyle: React.CSSProperties = {
 
 const brandStyle: React.CSSProperties = {
   margin: "0 0 8px",
-  fontSize: 10,
-  letterSpacing: "0.16em",
-  textTransform: "uppercase",
-  color: "#737373",
-  fontWeight: 500,
+  fontSize: 16,
+  letterSpacing: "0.02em",
+  color: "#262626",
+  fontWeight: 600,
 };
 
 const subTextStyle: React.CSSProperties = {
@@ -81,6 +84,9 @@ const navWrapStyle: React.CSSProperties = {
 };
 
 const navButtonStyle: React.CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
   border: "1px solid rgba(0,0,0,0.12)",
   background: "transparent",
   padding: "10px 14px",
@@ -90,12 +96,5 @@ const navButtonStyle: React.CSSProperties = {
   fontSize: 13,
   color: "#262626",
   fontWeight: 500,
-};
-
-const guideTextStyle: React.CSSProperties = {
-  margin: "18px auto 0",
-  maxWidth: 680,
-  fontSize: 13,
-  lineHeight: 1.8,
-  color: "#525252",
+  textDecoration: "none",
 };

@@ -1227,7 +1227,10 @@ export default function RASSFigureSlides2026() {
                   RA-SS DEMOを試す
                 </a>
                 <a className="rass-link-button" href="/">
-                  CORE-LPへ戻る
+                  病院広報工房へ戻る
+                </a>
+                <a className="rass-link-button" href="/contact">
+                  相談する
                 </a>
               </div>
             </div>

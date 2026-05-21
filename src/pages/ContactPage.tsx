@@ -176,14 +176,14 @@ export default function ContactPage({ setPage }: Props) {
               label="PROFILE"
               marker="square"
               title={
-                <>黒江 仁（くろえ ひとし）｜医療広報・関係性設計</>
+                <>黒江仁｜病院広報工房</>
               }
               summary="現場と往復しながら、コーディネーター／ファシリテーターとして伴走します。"
             />
 
             <div className="mx-auto mt-12 max-w-3xl border-t border-stone-200 sm:mt-14">
               {[
-                "COREプロジェクトとして進行しています",
+                "CORE / CORE_NAVIは、病院広報工房の実証・開発プロジェクトとして進行しています",
               ].map((item) => (
                 <p key={item} className="border-b border-stone-200 py-4 text-[15px] leading-8 text-stone-700 sm:py-5 sm:text-[17px] sm:leading-9">
                   {item}

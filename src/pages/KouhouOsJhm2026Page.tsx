@@ -40,6 +40,14 @@ const links = [
   { label: "病院広報工房トップへ", href: "/kouhou-os-dev" },
 ];
 
+const siteNavLinks = [
+  { label: "病院広報工房", href: "/kouhou-os-dev" },
+  { label: "WEBスライド", href: "/slides" },
+  { label: "RA-SS DEMO", href: "/demo-intro" },
+  { label: "note", href: "/kouhou-os-dev#journal" },
+  { label: "相談する", href: "/contact" },
+];
+
 const phaseCounts = [
   { label: "入院", count: 182 },
   { label: "外来", count: 97 },
@@ -108,6 +116,27 @@ function BarGroup({
 export default function KouhouOsJhm2026Page() {
   return (
     <main className="min-h-screen bg-[#f7f8f5] text-slate-950">
+      <header className="sticky top-0 z-10 border-b border-slate-200 bg-[#f7f8f5]/92 backdrop-blur">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4">
+          <a href="/kouhou-os-dev" className="min-w-0 text-slate-950">
+            <span className="block text-sm font-bold tracking-wide md:text-base">黒江仁｜病院広報工房</span>
+            <span className="mt-1 block text-[11px] font-semibold leading-4 text-slate-500">
+              病院広報を、理解と関係を整える仕組みへ
+            </span>
+          </a>
+          <nav className="hidden gap-3 text-xs lg:flex xl:text-sm">
+            {siteNavLinks.map((item) => (
+              <a key={item.label} className="text-slate-600 hover:text-slate-950" href={item.href}>
+                {item.label}
+              </a>
+            ))}
+          </nav>
+          <a className="rounded-md bg-slate-950 px-3 py-2 text-xs font-semibold text-white lg:hidden" href="/contact">
+            相談する
+          </a>
+        </div>
+      </header>
+
       <section className="border-b border-slate-200 bg-white py-14 md:py-20">
         <div className="mx-auto max-w-6xl px-5">
           <p className="text-xs font-bold uppercase tracking-[0.22em] text-cyan-700">Conference Supplement</p>
@@ -271,6 +300,22 @@ export default function KouhouOsJhm2026Page() {
           </div>
         </div>
       </section>
+
+      <footer className="border-t border-slate-200 bg-white py-12">
+        <div className="mx-auto max-w-6xl px-5">
+          <p className="text-base font-bold tracking-wide text-slate-950">黒江仁｜病院広報工房</p>
+          <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
+            病院広報に35年以上携わってきた黒江仁が、患者さんの声、職員の気づき、病院の理念や専門性を、理解と関係を整える広報へつなぎ直すためのサイトです。
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3 text-sm font-semibold">
+            {siteNavLinks.map((item) => (
+              <a key={item.label} className="rounded-full border border-slate-200 px-4 py-2 text-slate-700 hover:border-cyan-300 hover:text-slate-950" href={item.href}>
+                {item.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      </footer>
     </main>
   );
 }
