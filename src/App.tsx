@@ -10,6 +10,7 @@ import LPPage from "./pages/LPPage";
 import ContactPage from "./pages/ContactPage";
 import ParticipationPage from "./pages/ParticipationPage";
 import PocPage from "./pages/PocPage";
+import KouhouOsDevPage from "./pages/KouhouOsDevPage";
 
 // ===== pages（フォルダ内）=====
 import StructurePage from "./pages/structure/StructurePage";
@@ -17,14 +18,30 @@ import ProcessPage from "./pages/process/ProcessPage";
 import ReportsTopPage from "./pages/reports/ReportsTopPage";
 import { initAnalytics } from "./lib/analytics";
 
+function getInitialPage() {
+  if (typeof window !== "undefined" && window.location.pathname === "/kouhou-os-dev") {
+    return "kouhou-os-dev";
+  }
+
+  return "top";
+}
+
 export default function App() {
-  const [page, setPage] = useState("top");
+  const [page, setPage] = useState(getInitialPage);
 
   useEffect(() => {
     initAnalytics();
   }, []);
 
   useEffect(() => {
+    if (page === "kouhou-os-dev" && window.location.hash) {
+      const targetId = window.location.hash.slice(1);
+      window.requestAnimationFrame(() => {
+        document.getElementById(targetId)?.scrollIntoView({ block: "start" });
+      });
+      return;
+    }
+
     window.scrollTo({
       top: 0,
       left: 0,
@@ -42,6 +59,9 @@ export default function App() {
 
       {/* NEW LP */}
       {page === "lp" && <LPPage setPage={setPage} />}
+
+      {/* KOUHOU OS DEV */}
+      {page === "kouhou-os-dev" && <KouhouOsDevPage />}
 
       {/* DEV TOP */}
       {page === "devtop" && <TopPage setPage={setPage} />}
