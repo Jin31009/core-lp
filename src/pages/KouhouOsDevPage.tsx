@@ -2,29 +2,39 @@ import type { ReactNode } from "react";
 
 const navItems = [
   { label: "病院広報工房とは", href: "#about" },
+  { label: "困りごと", href: "#problems" },
+  { label: "広報領域", href: "#domains" },
+  { label: "相談メニュー", href: "#consultation" },
   { label: "広報OS", href: "#kouhou-os" },
-  { label: "CORE NAVI", href: "#cockpit" },
-  { label: "初期設定", href: "#setup" },
-  { label: "提供領域", href: "#services" },
   { label: "実証", href: "#evidence" },
   { label: "学会補足", href: "/kouhou-os-dev/jhm2026" },
   { label: "note", href: "#journal" },
+  { label: "FAQ", href: "#faq" },
   { label: "お問い合わせ", href: "#cta" },
 ];
 
 const problems = [
-  { icon: "users", title: "広報が属人的", text: "担当者の経験やスキルに依存し、継続しにくい。" },
-  { icon: "clipboard", title: "掲示がバラバラ", text: "掲示物や配布物の表現が統一されていない。" },
-  { icon: "file", title: "説明資料が部署ごとに違う", text: "説明の粒度や導線が部署ごとに異なる。" },
-  { icon: "route", title: "紙・WEB・SNSが分断", text: "媒体ごとに情報が切れ、全体像が見えにくい。" },
-  { icon: "message", title: "患者さんの声を活かしきれない", text: "自由記述や意見が整理されず、改善に接続しにくい。" },
+  { icon: "route", title: "HP・SNS・広報誌がバラバラ", text: "媒体ごとに情報が切れ、病院としての伝え方がそろいにくい。" },
+  { icon: "users", title: "広報担当者のワンオペ", text: "担当者の頑張りに依存し、引き継ぎや改善が残りにくい。" },
+  { icon: "message", title: "患者さんの声を活かせていない", text: "投書や自由記述が、共有や改善の材料になりきっていない。" },
+  { icon: "clipboard", title: "採用が条件比較・紹介会社依存になっている", text: "働く理由や現場の魅力が、採用広報の言葉になっていない。" },
+  { icon: "file", title: "地域連携室と広報がつながっていない", text: "連携先に伝える情報と、病院全体の発信が分かれやすい。" },
+  { icon: "cloud", title: "AI活用が不安", text: "何を入れてよいか、どこまで任せてよいかの線引きが難しい。" },
+  { icon: "book", title: "理念や強みが伝わる言葉になっていない", text: "大切にしていることが、患者さんや職員に届く表現になりにくい。" },
 ];
 
 const roles = [
-  { icon: "target", name: "CORE", label: "黒江仁の経験知・現場感・最終判断", layer: "Human judgement", text: "黒江仁の病院広報経験をもとに、現場の声を読み、問いを立て、最終判断を行う。" },
+  { icon: "target", name: "CORE", label: "黒江 仁（くろえ ひとし）の経験知・現場感・最終判断", layer: "Human judgement", text: "黒江 仁（くろえ ひとし）の病院広報経験をもとに、現場の声を読み、問いを立て、人が確認する前提で最終判断を行う。" },
   { icon: "book", name: "NAVI", label: "構造化・設計・監査", layer: "GPT支援レイヤー", text: "GPTを構造化支援として使い、情報と導線を伝わる順序へ整理する。" },
   { icon: "cloud", name: "SORA", label: "翻訳・共感・可読性", layer: "GPT支援レイヤー", text: "GPTを翻訳支援として使い、専門情報をやさしい言葉と読みやすい表現に整える。" },
   { icon: "code", name: "CODEX", label: "実装・制御・公開", layer: "GPT支援レイヤー", text: "GPTを実装支援として使い、WEBや資料として公開できる形に組み立てる。" },
+];
+
+const kouhouDomains = [
+  { icon: "message", title: "患者・家族向け広報", text: "外来、入院、検査、退院までの不安や疑問を、説明・案内・WEB導線として整えます。" },
+  { icon: "users", title: "職員・院内広報", text: "院内のお知らせ、教育、委員会活動を、職員が共有しやすい言葉と形式にそろえます。" },
+  { icon: "clipboard", title: "採用広報", text: "条件だけでは伝わりにくい現場の姿勢や働き方を、採用ページや説明資料に接続します。" },
+  { icon: "route", title: "地域連携広報", text: "地域連携室、医療機関、自治体に向けた情報を、病院全体の広報とつなげます。" },
 ];
 
 const serviceAreas = [
@@ -104,26 +114,33 @@ const conferenceEntryLinks = [
 
 const flagshipLinks = [
   {
-    title: "WEBスライド型APP",
-    subtitle: "広報OSの考え方を共有する",
-    items: ["漫画版", "Figure版", "Hybrid版", "音声ガイド"],
+    title: "理解する｜WEBスライド",
+    subtitle: "病院広報工房の考え方を短く共有する",
+    items: ["学会用スライド", "Figure版", "音声ガイド", "補足ページ導線"],
     buttonLabel: "WEBスライドを見る",
     href: "/slides",
   },
   {
-    title: "RA-SS DEMO",
-    subtitle: "自由記述を知見化する",
+    title: "実証する｜RA-SS DEMO",
+    subtitle: "自由記述を構造として読み直す",
     items: ["自由記述入力", "構造化", "確認リスト", "匿名集計"],
     buttonLabel: "DEMOを試す",
     href: "/demo-intro",
   },
   {
-    title: "CORE NAVI",
-    subtitle: "広報OSの操縦席",
-    status: "近日公開予定｜学会後に公開予定",
-    items: ["思想・規定の記録", "制作ログ", "Asset管理", "次アクション整理"],
-    buttonLabel: "近日公開予定",
+    title: "相談する｜病院広報工房",
+    subtitle: "一つの課題から広報の設計を見直す",
+    items: ["初回相談", "広報診断", "導線整理", "院内共有"],
+    buttonLabel: "初回相談・広報壁打ち",
+    href: "/contact",
   },
+];
+
+const consultationMenus = [
+  { title: "初回相談・広報診断", text: "HP、SNS、広報誌、院内掲示、患者さんの声などを見ながら、最初に整える課題を一緒に確認します。" },
+  { title: "広報体系づくり・伴走支援", text: "部署ごとの発信や説明資料を、病院としての言葉・導線・運用にそろえていきます。" },
+  { title: "AI活用・広報OS設計", text: "AIは判断を置き換えるものではなく、人が確認するための補助線として、扱い方と記録の仕組みを整えます。" },
+  { title: "院内勉強会・ワークショップ", text: "広報担当者だけで抱え込まず、現場の声を共有し、言葉にしていく場づくりを支援します。" },
 ];
 
 const evidenceItems = [
@@ -157,9 +174,36 @@ const processSteps = [
 ];
 
 const ctaItems = [
-  { title: "自由記述分析を試す", role: "RA-SS DEMOで、声を構造化する流れを確認する。", href: "/demo-intro", buttonLabel: "RA-SS DEMOを試す" },
-  { title: "WEBスライドを見る", role: "学会前の共有資料として、WEBスライドの見え方を確認する。", href: "/slides", buttonLabel: "WEBスライドを見る" },
-  { title: "院内広報物を整理する", role: "掲示物・配布物・説明資料を、広報OSの入口として見直す。", href: "/contact", buttonLabel: "相談の入口を確認する" },
+  { title: "まず相談する", role: "HP、SNS、広報誌、患者さんの声など、一つの課題から現状を一緒に確認する。", href: "/contact", buttonLabel: "まずは一つの課題から相談する" },
+  { title: "考え方を見る", role: "WEBスライドで、自由記述を改善に使える知見へ変える流れを確認する。", href: "/slides", buttonLabel: "WEBスライドを見る" },
+  { title: "自由記述分析を試す", role: "RA-SS DEMOで、声を構造として読み直す流れを確認する。", href: "/demo-intro", buttonLabel: "RA-SS DEMOを試す" },
+];
+
+const faqItems = [
+  {
+    question: "何から相談できますか？",
+    answer: "HP、SNS、広報誌、院内掲示、採用ページ、患者さんの声など、いま気になっている一つの課題から相談できます。最初に全体を大きく変える必要はありません。",
+  },
+  {
+    question: "丸投げ制作はできますか？",
+    answer: "単発の制作代行だけを目的にするのではなく、病院側の考え方や運用が残るように伴走します。必要な制作物は、その設計の一部として一緒に整えます。",
+  },
+  {
+    question: "AIに患者情報を入れてよいですか？",
+    answer: "個人情報や個票をそのまま扱う前提にはしません。AIは判断を置き換えるものではなく、人が確認するための補助線として、匿名化や確認手順を含めて設計します。",
+  },
+  {
+    question: "小規模病院・自治体病院でも相談できますか？",
+    answer: "相談できます。規模の大小よりも、担当者だけで抱え込まず、現場で続けられる広報の形に整えることを重視します。",
+  },
+  {
+    question: "料金は決まっていますか？",
+    answer: "内容や期間によって変わるため、最初に課題と優先順位を確認したうえで、必要な範囲を相談します。強い営業文句ではなく、無理のない進め方を一緒に決めます。",
+  },
+  {
+    question: "問い合わせ後はどう進みますか？",
+    answer: "まず現状の困りごとを伺い、必要に応じて既存の広報物や導線を確認します。そのうえで、最初に扱うテーマと進め方を整理します。",
+  },
 ];
 const deprecatedOsLabel = ["制", "作", "OS"].join("");
 
@@ -167,15 +211,20 @@ const selfTests = [
   {
     name: "nav has expected primary sections",
     pass:
+      navItems.some((item) => item.label === "困りごと") &&
+      navItems.some((item) => item.label === "広報領域") &&
+      navItems.some((item) => item.label === "相談メニュー") &&
       navItems.some((item) => item.label === "広報OS") &&
-      navItems.some((item) => item.label === "CORE NAVI") &&
-      navItems.some((item) => item.label === "初期設定") &&
-      navItems.some((item) => item.label === "提供領域") &&
+      navItems.some((item) => item.label === "FAQ") &&
       navItems.some((item) => item.label === "実証"),
   },
   {
+    name: "problem and domain counts match LP scope",
+    pass: problems.length === 7 && kouhouDomains.length === 4,
+  },
+  {
     name: "service area count is six",
-    pass: serviceAreas.length === 6,
+    pass: serviceAreas.length === 6 && consultationMenus.length === 4,
   },
   {
     name: "role count is four",
@@ -191,7 +240,7 @@ const selfTests = [
   },
   {
     name: "all content uses 広報OS wording",
-    pass: !JSON.stringify({ navItems, problems, roles, serviceAreas, serviceSetupAreas, cockpitItems, journals, heroFlow, flagshipLinks }).includes(deprecatedOsLabel),
+    pass: !JSON.stringify({ navItems, problems, roles, kouhouDomains, serviceAreas, serviceSetupAreas, cockpitItems, journals, heroFlow, flagshipLinks, consultationMenus, faqItems }).includes(deprecatedOsLabel),
   },
 ];
 
@@ -361,14 +410,14 @@ export default function KouhouOsDevPage() {
           <a href="#hero" className="font-bold tracking-wide text-slate-950">
             病院広報工房
           </a>
-          <nav className="hidden gap-5 text-sm lg:flex">
+          <nav className="hidden gap-3 text-xs xl:flex xl:text-sm">
             {navItems.map((item) => (
               <a key={item.label} className="text-slate-600 hover:text-slate-950" href={item.href}>
                 {item.label}
               </a>
             ))}
           </nav>
-          <div className="hidden items-center gap-2 lg:flex">
+          <div className="hidden items-center gap-2 xl:flex">
             <a className="rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-950" href="/slides">
               WEBスライド
             </a>
@@ -385,46 +434,48 @@ export default function KouhouOsDevPage() {
             <p className="text-xs font-bold uppercase tracking-[0.24em] text-cyan-700">1. Hero｜Hospital Kouhou Kobo</p>
             <h1 className="mt-5 max-w-[42rem] text-4xl font-bold leading-[1.12] text-slate-950 md:text-5xl lg:text-6xl">
               <span className="block">病院広報を、</span>
-              <span className="block">伝える広報から、</span>
+              <span className="block">情報発信から、</span>
               <span className="block">
                 <span className="whitespace-nowrap">理解と関係を整える</span>
-                <span className="block md:inline">広報へ。</span>
+                <span className="block md:inline">仕組みへ。</span>
               </span>
             </h1>
             <p className="mt-6 max-w-2xl text-base leading-8 text-slate-700 md:text-lg md:leading-9">
-              <span className="block">届いている声を、</span>
-              <span className="block">扱える知見に変える。</span>
-              <span className="mt-2 block">病院広報工房は、</span>
-              <span className="block">患者さん・ご家族・職員の声を、</span>
-              <span className="block">広報・説明・案内・教育に接続する</span>
-              <span className="block">広報OSです。</span>
+              病院広報工房は、黒江 仁（くろえ ひとし）が、制作物を単発で代行するのではなく、
+              患者さん・ご家族・職員・地域との関係が伝わるように、広報の考え方と運用を一緒に整える伴走型の広報設計パートナーです。
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <a className="rounded-md bg-slate-950 px-5 py-3 text-sm font-semibold text-white" href="#about">
-                病院広報工房とは
+              <a className="rounded-md bg-slate-950 px-5 py-3 text-sm font-semibold text-white" href="/contact">
+                初回相談・広報壁打ち
               </a>
               <a className="rounded-md border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-950" href="/slides">
                 WEBスライドを見る
               </a>
+              <a className="rounded-md border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-950" href="#problems">
+                困りごとを見る
+              </a>
             </div>
             <div className="mt-5 max-w-2xl rounded-lg border border-slate-200 bg-white/70 p-4">
               <p className="text-sm font-semibold leading-7 text-slate-700">
-                まずは、考え方を見る・自由記述分析を試す・相談するところから始められます。
+                WEBスライド、RA-SS DEMO、noteを、実証・理解・相談の入口として整理しています。
               </p>
               <div className="mt-3 flex flex-wrap gap-2 text-xs font-semibold text-slate-700">
                 <a className="rounded-full border border-slate-200 bg-white px-3 py-1.5 hover:border-cyan-300" href="/slides">
-                  見る：WEBスライド
+                  理解：WEBスライド
                 </a>
                 <a className="rounded-full border border-slate-200 bg-white px-3 py-1.5 hover:border-cyan-300" href="/demo-intro">
-                  試す：RA-SS DEMO
+                  実証：RA-SS DEMO
+                </a>
+                <a className="rounded-full border border-slate-200 bg-white px-3 py-1.5 hover:border-cyan-300" href="#journal">
+                  記録：note
                 </a>
                 <a className="rounded-full border border-slate-200 bg-white px-3 py-1.5 hover:border-cyan-300" href="/contact">
-                  相談する：病院広報工房
+                  相談：病院広報工房
                 </a>
               </div>
             </div>
           </div>
-          <div className="border border-slate-300 bg-white p-5 shadow-sm">
+          <div className="hidden border border-slate-300 bg-white p-5 shadow-sm md:block">
             <div className="flex items-center justify-between border-b border-slate-200 pb-4">
               <p className="text-sm font-semibold text-slate-800">Official site wireframe</p>
               <span className="rounded-full border border-cyan-200 bg-cyan-50 px-3 py-1 text-xs font-semibold text-cyan-800">
@@ -453,70 +504,101 @@ export default function KouhouOsDevPage() {
         </div>
       </section>
 
-      <section className="border-b border-slate-200 bg-white py-8">
-        <div className="mx-auto max-w-6xl px-5">
-          <div className="rounded-lg border border-cyan-100 bg-cyan-50 p-5 md:flex md:items-center md:justify-between md:gap-8">
-            <div className="max-w-3xl">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-700">Conference</p>
-              <h2 className="mt-2 text-xl font-bold leading-8 text-slate-950 md:text-2xl">第28回日本医療マネジメント学会 発表補足</h2>
-              <p className="mt-3 text-sm leading-7 text-slate-700">
-                自由記述302件を、改善に使える知見へ。本発表では、患者さん・ご家族から寄せられた自由記述を、単なる苦情・感謝分類ではなく、関係のズレや回復可能性を確認するための構造として整理しています。
-              </p>
-            </div>
-            <div className="mt-5 flex flex-wrap gap-3 md:mt-0 md:justify-end">
-              {conferenceEntryLinks.map((item) => (
-                <a
-                  key={item.href}
-                  className={
-                    item.primary
-                      ? "rounded-md bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white"
-                      : "rounded-md border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-950"
-                  }
-                  href={item.href}
-                >
-                  {item.label}
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="about" className="scroll-mt-20 border-b border-slate-200 py-16">
+      <section id="problems" className="scroll-mt-20 border-b border-slate-200 bg-white py-16">
         <SectionTitle
-          eyebrow="2. とは"
-          title={
-            <>
-              <span className="block">病院広報は、伝える仕事から、</span>
-              <span className="block">現場の理解を整える仕事へ。</span>
-            </>
-          }
-          text="広報物、説明資料、院内掲示、WEB導線、自由記述。ばらばらに届いている情報を読み解き、病院ごとのCI / VIに沿って継続的に展開できる形へ整えます。"
+          eyebrow="2. 困りごと"
+          title="こんなことで困っていませんか？"
+          text="広報の課題は、制作物そのものよりも、言葉・導線・担当者の負担・現場とのつながりに表れることがあります。"
         />
-        <div className="mx-auto mt-10 max-w-6xl px-5">
-          <p className="text-xs font-bold uppercase tracking-[0.22em] text-cyan-700">3. 課題</p>
-        </div>
-        <div id="problem" className="mx-auto mt-4 grid max-w-6xl scroll-mt-20 gap-4 px-5 md:grid-cols-5">
+        <div className="mx-auto mt-8 grid max-w-6xl gap-4 px-5 sm:grid-cols-2 lg:grid-cols-4">
           {problems.map((item) => (
-            <article key={item.title} className="rounded-lg border border-slate-200 bg-white p-5">
+            <article key={item.title} className="rounded-lg border border-slate-200 bg-[#f7f8f5] p-5">
               <LocalIcon name={item.icon} className="h-7 w-7 text-cyan-800" />
               <h3 className="mt-5 text-base font-bold leading-6">{item.title}</h3>
               <p className="mt-3 text-sm leading-6 text-slate-600">{item.text}</p>
             </article>
           ))}
         </div>
+        <div className="mx-auto mt-8 max-w-6xl px-5">
+          <a className="inline-flex rounded-md bg-slate-950 px-5 py-3 text-sm font-semibold text-white" href="/contact">
+            まずは一つの課題から相談する
+          </a>
+        </div>
+      </section>
+
+      <section id="about" className="scroll-mt-20 border-b border-slate-200 py-16">
+        <SectionTitle
+          eyebrow="3. とは"
+          title={
+            <>
+              <span className="block">制作代行ではなく、</span>
+              <span className="block">伴走型の広報設計パートナー。</span>
+            </>
+          }
+          text="広報物、説明資料、院内掲示、WEB導線、自由記述。ばらばらに届いている情報を読み解き、病院ごとの考え方に沿って継続的に展開できる形へ整えます。"
+        />
+        <div className="mx-auto mt-8 grid max-w-6xl gap-4 px-5 md:grid-cols-3">
+          {[
+            { title: "現状を読む", text: "HP、SNS、広報誌、院内掲示、患者さんの声を分けて見ず、関係する導線として確認します。" },
+            { title: "言葉と導線を整える", text: "理念や強みを、患者さん・職員・連携先に伝わる順序と表現へ置き換えます。" },
+            { title: "運用に残す", text: "担当者だけに閉じないよう、テンプレート、記録、確認手順として残します。" },
+          ].map((item) => (
+            <article key={item.title} className="rounded-lg border border-slate-200 bg-white p-5">
+              <h3 className="font-bold text-slate-950">{item.title}</h3>
+              <p className="mt-3 text-sm leading-6 text-slate-600">{item.text}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section id="domains" className="scroll-mt-20 border-b border-slate-200 bg-[#f7f8f5] py-16">
+        <SectionTitle
+          eyebrow="4. 広報領域"
+          title="病院広報工房が整える4つの広報領域"
+          text="患者さん・ご家族、職員、採用候補者、地域の連携先へ向けた情報を、別々の制作物ではなく一つの広報体系として整理します。"
+        />
+        <div className="mx-auto mt-8 grid max-w-6xl gap-4 px-5 md:grid-cols-4">
+          {kouhouDomains.map((domain) => (
+            <article key={domain.title} className="rounded-lg border border-slate-200 bg-white p-5">
+              <LocalIcon name={domain.icon} className="h-7 w-7 text-cyan-800" />
+              <h3 className="mt-5 text-base font-bold leading-6">{domain.title}</h3>
+              <p className="mt-3 text-sm leading-6 text-slate-600">{domain.text}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section id="consultation" className="scroll-mt-20 border-b border-slate-200 bg-white py-16">
+        <SectionTitle
+          eyebrow="5. 相談メニュー"
+          title="一つの課題から、広報の仕組みへ広げる。"
+          text="最初から大きなシステムを導入するのではなく、いま困っている発信・説明・声の整理から始め、病院ごとの運用に合わせて伴走します。"
+        />
+        <div className="mx-auto mt-8 grid max-w-6xl gap-4 px-5 md:grid-cols-4">
+          {consultationMenus.map((item) => (
+            <article key={item.title} className="rounded-lg border border-slate-200 bg-[#f7f8f5] p-5">
+              <h3 className="font-bold text-slate-950">{item.title}</h3>
+              <p className="mt-3 text-sm leading-6 text-slate-600">{item.text}</p>
+            </article>
+          ))}
+        </div>
+        <div className="mx-auto mt-8 max-w-6xl px-5">
+          <a className="inline-flex rounded-md bg-slate-950 px-5 py-3 text-sm font-semibold text-white" href="/contact">
+            初回相談・広報壁打ち
+          </a>
+        </div>
       </section>
 
       <section id="kouhou-os" className="scroll-mt-20 border-b border-slate-200 bg-white py-16">
         <SectionTitle
-          eyebrow="4. 広報OS"
+          eyebrow="6. 広報OS"
           title={
             <>
               <span className="block">COREの経験知 ×</span>
               <span className="block">GPT支援レイヤー</span>
             </>
           }
-          text="広報OSは、CORE（黒江仁）の病院広報経験を中心に、GPTを役割別に使い分けるAI協働レイヤーです。NAVIは構造化、SORAは翻訳、CODEXは実装を支援し、最終判断はCOREが行います。"
+          text="広報OSは、COREである黒江 仁（くろえ ひとし）の病院広報経験を中心に、GPTを役割別に使い分けるAI協働レイヤーです。AIは判断を置き換えるものではなく、人が確認するための補助線として使います。"
         />
         <div className="mx-auto mt-8 grid max-w-6xl gap-4 px-5 md:grid-cols-4">
           {roles.map((role) => (
@@ -535,11 +617,11 @@ export default function KouhouOsDevPage() {
 
       <section id="cockpit" className="scroll-mt-20 border-b border-slate-200 bg-[#f7f8f5] py-16">
         <div className="mx-auto max-w-6xl px-5">
-          <p className="text-xs font-bold uppercase tracking-[0.22em] text-cyan-700">5. 操縦席</p>
+          <p className="text-xs font-bold uppercase tracking-[0.22em] text-cyan-700">7. 操縦席</p>
           <h2 className="mt-3 max-w-3xl text-2xl font-bold leading-tight text-slate-950 md:text-4xl">CORE NAVI｜広報OSの操縦席</h2>
           <p className="mt-3 max-w-3xl text-xl font-bold leading-8 text-slate-900">納品物ではなく、現場と一緒に動かす仕組み。</p>
           <p className="mt-4 max-w-3xl text-base leading-8 text-slate-600">
-            CORE NAVIは、病院ごとの広報OSを操作し、記録し、改善していくための操縦席です。CORE（黒江仁）の経験知を起点に、NAVI・SORA・CODEXというGPT支援レイヤーを使い分け、病院側の担当者と一緒に、広報・説明・案内・教育の仕組みを育てます。
+            CORE NAVIは、病院ごとの広報OSを操作し、記録し、改善していくための操縦席です。COREである黒江 仁（くろえ ひとし）の経験知を起点に、NAVI・SORA・CODEXというGPT支援レイヤーを使い分け、病院側の担当者と一緒に、広報・説明・案内・教育の仕組みを育てます。
           </p>
         </div>
         <div className="mx-auto mt-8 grid max-w-6xl gap-4 px-5 md:grid-cols-3">
@@ -554,7 +636,7 @@ export default function KouhouOsDevPage() {
 
       <section id="setup" className="scroll-mt-20 border-b border-slate-200 py-16">
         <div className="mx-auto max-w-6xl px-5">
-          <p className="text-xs font-bold uppercase tracking-[0.22em] text-cyan-700">6. 初期設定</p>
+          <p className="text-xs font-bold uppercase tracking-[0.22em] text-cyan-700">8. 初期設定</p>
           <h2 className="mt-3 max-w-3xl text-2xl font-bold leading-tight text-slate-950 md:text-4xl">広報OS 初期設定</h2>
           <p className="mt-3 max-w-3xl text-xl font-bold leading-8 text-slate-900">病院ごとの広報OSを、最初に整える。</p>
           <p className="mt-4 max-w-3xl text-base leading-8 text-slate-600">
@@ -579,7 +661,7 @@ export default function KouhouOsDevPage() {
 
       <section id="services" className="scroll-mt-20 border-b border-slate-200 py-16">
         <SectionTitle
-          eyebrow="7. 提供領域"
+          eyebrow="9. 出力体系"
           title={
             <>
               <span className="block">広報・案内・説明支援から、</span>
@@ -614,13 +696,13 @@ export default function KouhouOsDevPage() {
       <section id="flagship" className="scroll-mt-20 border-b border-slate-200 bg-slate-950 py-16 text-white">
         <div className="mx-auto max-w-6xl px-5">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-cyan-300">8. 公開プロトタイプ</p>
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-cyan-300">10. 実証・理解・相談</p>
             <h2 className="mt-3 text-3xl font-bold leading-tight md:text-4xl">
-              <span className="block">Flagship｜</span>
-              <span className="block">広報OSの公開プロトタイプ</span>
+              <span className="block">WEBスライド、DEMO、相談を</span>
+              <span className="block">一つの流れで確認する。</span>
             </h2>
             <p className="mt-5 max-w-4xl leading-8 text-slate-300">
-              WEBスライド型APP、RA-SS DEMO、CORE NAVIは、病院広報工房が目指す広報OSを実際に触れる形にした公開プロトタイプです。完成品を納品するための見本ではなく、病院ごとの思想・規定・運用に合わせて共同開発していくための出発点です。
+              WEBスライドで考え方を理解し、RA-SS DEMOで患者さんの声を構造として読み、必要に応じて病院ごとの広報設計を相談できます。プロトタイプは完成品の見本ではなく、現場に合わせて一緒に整えるための入口です。
             </p>
           </div>
           <div className="mt-8 grid gap-4 md:grid-cols-3">
@@ -628,9 +710,6 @@ export default function KouhouOsDevPage() {
               <article key={item.title} className="rounded-lg border border-white/15 bg-white/8 p-5">
                 <div className="flex items-start justify-between gap-3">
                   <h3 className="text-lg font-bold">{item.title}</h3>
-                  {item.status ? (
-                    <span className="rounded-md border border-cyan-300/40 px-2 py-1 text-xs font-semibold text-cyan-100">{item.status}</span>
-                  ) : null}
                 </div>
                 <p className="mt-2 text-sm font-semibold text-cyan-200">{item.subtitle}</p>
                 <ul className="mt-4 grid gap-2 text-sm leading-6 text-slate-300">
@@ -653,9 +732,38 @@ export default function KouhouOsDevPage() {
         </div>
       </section>
 
+      <section className="border-b border-slate-200 bg-white py-8">
+        <div className="mx-auto max-w-6xl px-5">
+          <div className="rounded-lg border border-cyan-100 bg-cyan-50 p-5 md:flex md:items-center md:justify-between md:gap-8">
+            <div className="max-w-3xl">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-700">Conference / Evidence</p>
+              <h2 className="mt-2 text-xl font-bold leading-8 text-slate-950 md:text-2xl">第28回日本医療マネジメント学会 発表補足</h2>
+              <p className="mt-3 text-sm leading-7 text-slate-700">
+                自由記述302件を、改善に使える知見へ。本発表では、患者さん・ご家族から寄せられた自由記述を、単なる苦情・感謝分類ではなく、関係のズレや回復可能性を確認するための構造として整理しています。
+              </p>
+            </div>
+            <div className="mt-5 flex flex-wrap gap-3 md:mt-0 md:justify-end">
+              {conferenceEntryLinks.map((item) => (
+                <a
+                  key={item.href}
+                  className={
+                    item.primary
+                      ? "rounded-md bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white"
+                      : "rounded-md border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-950"
+                  }
+                  href={item.href}
+                >
+                  {item.label}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section id="evidence" className="scroll-mt-20 border-b border-slate-200 bg-white py-16">
         <SectionTitle
-          eyebrow="9. 実証"
+          eyebrow="11. 実証"
           title="実証｜自由記述302件を、改善に使える知見へ"
           text="患者さん・ご家族から届いた自由記述302件を、CASEと集計の両面から読み直しています。詳しい整理軸や集計の見方は、学会発表補足ページにまとめています。"
         />
@@ -720,7 +828,7 @@ export default function KouhouOsDevPage() {
 
       <section id="journal" className="scroll-mt-20 border-b border-slate-200 bg-white py-16">
         <SectionTitle
-          eyebrow="10. note / Journal"
+          eyebrow="12. note / Journal"
           title={
             <>
               <span className="block">noteでは、</span>
@@ -746,20 +854,41 @@ export default function KouhouOsDevPage() {
         </div>
       </section>
 
+      <section id="faq" className="scroll-mt-20 border-b border-slate-200 bg-[#f7f8f5] py-16">
+        <SectionTitle
+          eyebrow="13. FAQ"
+          title="よくある相談前の質問"
+          text="まずは一つの課題からで大丈夫です。制作物を急いで増やす前に、何を整えると現場で使いやすくなるかを一緒に確認します。"
+        />
+        <div className="mx-auto mt-8 grid max-w-6xl gap-4 px-5 md:grid-cols-2">
+          {faqItems.map((item) => (
+            <article key={item.question} className="rounded-lg border border-slate-200 bg-white p-5">
+              <h3 className="font-bold text-slate-950">{item.question}</h3>
+              <p className="mt-3 text-sm leading-7 text-slate-600">{item.answer}</p>
+            </article>
+          ))}
+        </div>
+        <div className="mx-auto mt-8 max-w-6xl px-5">
+          <a className="inline-flex rounded-md bg-slate-950 px-5 py-3 text-sm font-semibold text-white" href="/contact">
+            まずは一つの課題から相談する
+          </a>
+        </div>
+      </section>
+
       <section id="cta" className="scroll-mt-20 py-16">
         <div className="mx-auto max-w-6xl px-5">
           <div className="grid gap-8 border border-slate-300 bg-white p-6 md:grid-cols-[0.9fr_1.1fr] md:p-8">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-cyan-700">11. CTA</p>
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-cyan-700">14. CTA</p>
               <h2 className="mt-3 text-3xl font-bold leading-tight text-slate-950">
                 <span className="block">まずは、</span>
-                <span className="block">小さく試してみませんか。</span>
+                <span className="block">一つの課題から相談する。</span>
               </h2>
               <p className="mt-5 leading-8 text-slate-600">
-                自由記述分析、WEBスライド型説明資料、院内広報物の整理から、病院ごとの広報OSを一緒に組み立てます。
+                HP、SNS、広報誌、院内掲示、採用ページ、患者さんの声。いま気になっている入口から、病院ごとの広報の言葉と導線を一緒に整えます。
               </p>
               <p className="mt-3 text-sm font-semibold leading-7 text-slate-700">
-                まずは、考え方を見る・体験する・相談するところから始められます。
+                黒江 仁（くろえ ひとし）が、制作物だけでなく、現場に残る考え方と運用まで伴走します。
               </p>
             </div>
             <div className="grid gap-3">
