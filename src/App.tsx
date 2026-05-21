@@ -36,71 +36,12 @@ function getInitialPage() {
   return pathToPage[window.location.pathname] ?? "top";
 }
 
-const jhm2026Path = "/kouhou-os-dev/jhm2026";
-
-function appendJhm2026Link(
-  parent: Element | null,
-  key: string,
-  label: string,
-  className: string,
-  prepend = false,
-) {
-  if (!parent || parent.querySelector(`[data-jhm2026-link="${key}"]`)) {
-    return;
-  }
-
-  const link = document.createElement("a");
-  link.href = jhm2026Path;
-  link.textContent = label;
-  link.className = className;
-  link.dataset.jhm2026Link = key;
-
-  if (prepend) {
-    parent.prepend(link);
-    return;
-  }
-
-  parent.append(link);
-}
-
-function addJhm2026Links() {
-  appendJhm2026Link(
-    document.querySelector("header nav"),
-    "nav",
-    "学会補足",
-    "text-slate-600 hover:text-slate-950",
-  );
-  appendJhm2026Link(
-    document.querySelector("#hero .mt-8.flex.flex-wrap.gap-3"),
-    "hero",
-    "学会発表補足を見る",
-    "rounded-md bg-cyan-700 px-5 py-3 text-sm font-semibold text-white",
-  );
-  appendJhm2026Link(
-    document.querySelector("#evidence .mx-auto.mt-6.flex.max-w-6xl.flex-wrap.gap-3.px-5"),
-    "evidence",
-    "302件解析の補足を見る",
-    "rounded-md bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white",
-    true,
-  );
-}
-
 export default function App() {
   const [page, setPage] = useState(getInitialPage);
 
   useEffect(() => {
     initAnalytics();
   }, []);
-
-  useEffect(() => {
-    if (page !== "top" && page !== "kouhou-os-dev") {
-      return;
-    }
-
-    addJhm2026Links();
-    const frame = window.requestAnimationFrame(addJhm2026Links);
-    return () => window.cancelAnimationFrame(frame);
-  }, [page]);
 
   useEffect(() => {
     if (page === "kouhou-os-dev" && window.location.hash) {
