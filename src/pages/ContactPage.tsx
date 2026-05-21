@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import SectionScrollCue from "../components/core/SectionScrollCue";
 import SiteHeader from "../components/shared/SiteHeader";
 import EditorialSectionHeader from "../components/shared/EditorialSectionHeader";
@@ -22,28 +20,45 @@ type Props = {
 
 const collaborationItems = [
   {
-    title: "小さく試す",
-    body: "まずは違和感のあるケースをひとつ扱い、DEMO を通して整理します。",
+    title: "小さく相談する",
+    body: "現在の広報物や課題を一緒に見ながら、どこから整えるとよいかを確認します。",
   },
   {
     title: "一緒に振り返る",
-    body: "出てきたズレや次の一手を、その場で一緒に見直します。",
+    body: "患者さんの声、職員の気づき、採用・地域連携の課題を整理し、次の一手を考えます。",
   },
   {
     title: "続け方を決める",
-    body: "試す価値があるかを確認し、必要なら次の進め方を相談します。",
+    body: "必要に応じて、伴走支援、AI活用、院内勉強会など、無理のない進め方を相談します。",
   },
 ];
 
-export default function ContactPage({ setPage }: Props) {
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+const consultationTopics = [
+  "HP・SNS・広報誌の役割を整理したい",
+  "患者さんの声や自由記述を活かしたい",
+  "採用広報を見直したい",
+  "地域連携室と広報をつなげたい",
+  "AIを安全に広報へ使いたい",
+  "広報担当者のワンオペを軽くしたい",
+];
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitted(true);
-  };
+const consultationMailSubject = "病院広報工房への相談";
+const consultationMailBody = `病院広報工房への相談です。
+
+【お名前】
+【ご所属・病院名】
+【ご相談したいこと】
+例：広報誌／ホームページ／SNS／患者さんの声／採用広報／地域連携／AI活用 など
+
+【現在困っていること】
+【希望する連絡方法】
+【その他】`;
+
+const consultationMailto = `mailto:admin@pr-kobo.com?subject=${encodeURIComponent(
+  consultationMailSubject,
+)}&body=${encodeURIComponent(consultationMailBody)}`;
+
+export default function ContactPage({ setPage }: Props) {
 
   return (
     <div className={pageShellClass}>
@@ -58,12 +73,20 @@ export default function ContactPage({ setPage }: Props) {
               hero
               title={
                 <>
-                  関心を持ったあとに、
+                  病院広報の課題を、
                   <br />
-                  一緒に試していく入口
+                  まず一つからご相談ください。
                 </>
               }
-              summary="これは導入ではなく、一緒に試すための入口です。"
+              summary={
+                <>
+                  広報誌、ホームページ、SNS、患者さんの声、採用広報、地域連携、AI活用。
+                  <br />
+                  すべてを一度に整える必要はありません。
+                  <br />
+                  いま一番困っていることを、一緒に確認するところから始めます。
+                </>
+              }
             />
 
             <SectionScrollCue targetId="contact-options" emphasis="soft" subdued />
@@ -78,12 +101,12 @@ export default function ContactPage({ setPage }: Props) {
                 marker="none"
                 title={
                   <>
-                    関わり方は、
+                    相談の始め方は、
                     <br />
                     3つあります
                   </>
                 }
-                summary="大きく始める必要はありません。まずは小さく試し、振り返り、続け方を決めるところから始められます。"
+                summary="大きく始める必要はありません。現在の広報物や気になっている課題を見ながら、無理のない進め方を一緒に決めていきます。"
               />
 
               <div className={`${editorialFigureBlockClass} grid gap-4 md:grid-cols-3`}>
@@ -126,10 +149,17 @@ export default function ContactPage({ setPage }: Props) {
             />
 
             <div className={`${editorialFigureBlockClass} flex flex-wrap justify-center gap-3`}>
+              <a
+                href={consultationMailto}
+                className="inline-flex min-h-11 items-center justify-center bg-stone-900 px-7 text-[12px] font-medium uppercase tracking-[0.16em] text-white transition hover:opacity-90"
+              >
+                メールで相談する
+              </a>
+
               <button
                 type="button"
                 onClick={() => setPage("demo-intro")}
-                className="inline-flex min-h-11 items-center justify-center bg-stone-900 px-7 text-[12px] font-medium uppercase tracking-[0.16em] text-white transition hover:opacity-90"
+                className="inline-flex min-h-11 items-center justify-center border border-stone-300 px-7 text-[12px] font-medium uppercase tracking-[0.16em] text-stone-700 transition hover:bg-[#f7f4ee]"
               >
                 DEMOを体験する
               </button>
@@ -143,65 +173,42 @@ export default function ContactPage({ setPage }: Props) {
               </button>
             </div>
 
-            {!submitted ? (
-              <form
-                onSubmit={handleSubmit}
-                className={`mx-auto max-w-2xl border-t border-stone-300 pt-8 ${editorialFigureBlockClass}`}
-              >
-                <p className="text-center text-[16px] leading-8 text-stone-700">
-                  短く共有いただければ十分です。
-                  <br />
-                  そこから無理のない対話を始めます。
-                </p>
+            <section className={`mx-auto max-w-3xl border-t border-stone-300 pt-8 ${editorialFigureBlockClass}`}>
+              <EditorialSectionHeader
+                label="TOPICS"
+                marker="none"
+                title="たとえば、こんなことをご相談いただけます"
+                summary="まだ整理できていない段階でも構いません。気になっている入口をひとつ選ぶところから始められます。"
+              />
 
-                <div className="mt-8 space-y-7 sm:mt-10 sm:space-y-8">
-                  <label className="block">
-                    <span className="block text-[13px] uppercase tracking-[0.14em] text-stone-500">
-                      メールアドレス
-                    </span>
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="example@hospital.jp"
-                      className="mt-3 w-full border-0 border-b border-stone-400 bg-transparent px-0 py-3 text-[16px] outline-none placeholder:text-stone-400"
-                    />
-                  </label>
-
-                  <label className="block">
-                    <span className="block text-[13px] uppercase tracking-[0.14em] text-stone-500">
-                      一言（任意）
-                    </span>
-                    <textarea
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      placeholder="気になっていること、試してみたいことなど"
-                      className="mt-3 min-h-36 w-full border border-stone-300 bg-white/40 px-4 py-4 text-[15px] leading-7 outline-none placeholder:text-stone-400 sm:min-h-40 sm:text-[16px] sm:leading-8"
-                    />
-                  </label>
-                </div>
-
-                <div className="mt-10 text-center">
-                  <button
-                    type="submit"
-                    className="inline-flex min-h-11 items-center justify-center bg-stone-900 px-7 text-[12px] font-medium uppercase tracking-[0.16em] text-white transition hover:opacity-90"
+              <div className="mt-8 grid gap-3 sm:grid-cols-2">
+                {consultationTopics.map((item) => (
+                  <p
+                    key={item}
+                    className="border border-stone-200 bg-white/50 px-4 py-3 text-[15px] leading-7 text-stone-700"
                   >
-                    内容を共有する
-                  </button>
-                </div>
-              </form>
-            ) : (
-              <div className="mx-auto mt-14 max-w-2xl border-t border-stone-300 pt-8 text-center sm:mt-16">
-                <p className="text-[28px] font-semibold tracking-[-0.02em] text-stone-900">
-                  ありがとうございます
-                </p>
-                <p className="mt-5 text-[15px] leading-8 text-stone-700 sm:mt-6 sm:text-[17px] sm:leading-9">
-                  内容を受け取りました。
-                  <br />
-                  ここから、無理のない形で対話を始めていければと思います。
-                </p>
+                    {item}
+                  </p>
+                ))}
               </div>
-            )}
+            </section>
+
+            <section className={`mx-auto max-w-2xl border-t border-stone-300 pt-8 text-center ${editorialFigureBlockClass}`}>
+              <p className="text-[16px] leading-8 text-stone-700">
+                ボタンを押すと、お使いのメールアプリが開きます。
+                <br />
+                まだ内容がまとまっていなくても大丈夫です。
+                <br />
+                いま一番困っていることを一つだけお送りください。
+              </p>
+
+              <a
+                href={consultationMailto}
+                className="mt-8 inline-flex min-h-11 items-center justify-center bg-stone-900 px-7 text-[12px] font-medium uppercase tracking-[0.16em] text-white transition hover:opacity-90"
+              >
+                メールで相談する
+              </a>
+            </section>
 
             <div className="mt-12 flex justify-center">
               <SectionScrollCue targetId="contact-close" emphasis="soft" subdued />
@@ -215,7 +222,7 @@ export default function ContactPage({ setPage }: Props) {
               label="PROFILE"
               marker="square"
               title={
-                <>黒江仁｜医療広報・関係性設計</>
+                <>黒江 仁（くろえ ひとし）｜医療広報・関係性設計</>
               }
               summary="現場と往復しながら、コーディネーター／ファシリテーターとして伴走します。"
             />
