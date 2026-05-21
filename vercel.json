@@ -1,6 +1,14 @@
 {
   "rewrites": [
     {
+      "source": "/kouhou-os-dev/assets/:path*",
+      "destination": "/assets/:path*"
+    },
+    {
+      "source": "/kouhou-os-dev/favicon.svg",
+      "destination": "/favicon.svg"
+    },
+    {
       "source": "/kouhou-os-dev",
       "destination": "/index.html"
     },
