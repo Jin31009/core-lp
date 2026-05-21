@@ -12,7 +12,8 @@ import ParticipationPage from "./pages/ParticipationPage";
 import PocPage from "./pages/PocPage";
 import KouhouOsDevPage from "./pages/KouhouOsDevPage";
 import KouhouOsJhm2026Page from "./pages/KouhouOsJhm2026Page";
-import SlidesPage from "./pages/SlidesPage";
+import RASSFigureSlides2026 from "./pages/slides/RASSFigureSlides2026";
+import RASSPrintSlides2026 from "./pages/slides/RASSPrintSlides2026";
 
 // ===== pages（フォルダ内）=====
 import StructurePage from "./pages/structure/StructurePage";
@@ -30,6 +31,7 @@ function getInitialPage() {
     "/kouhou-os-dev": "kouhou-os-dev",
     "/kouhou-os-dev/jhm2026": "kouhou-os-jhm2026",
     "/slides": "slides",
+    "/slides/print": "slides-print",
     "/demo-intro": "demo-intro",
     "/demo": "demo",
     "/contact": "contact",
@@ -104,8 +106,9 @@ export default function App() {
 
       {/* SLIDES */}
       {page === "slides" && (
-        <SlidesPage onNavigate={setPage} onBackPrev={() => setPage("kouhou-os-dev")} />
+        <RASSFigureSlides2026 />
       )}
+      {page === "slides-print" && <RASSPrintSlides2026 />}
     </div>
   );
 }

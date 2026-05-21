@@ -21,6 +21,10 @@
       "destination": "/index.html"
     },
     {
+      "source": "/slides/print",
+      "destination": "/index.html"
+    },
+    {
       "source": "/demo-intro",
       "destination": "/index.html"
     },
