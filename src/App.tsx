@@ -11,6 +11,7 @@ import ContactPage from "./pages/ContactPage";
 import ParticipationPage from "./pages/ParticipationPage";
 import PocPage from "./pages/PocPage";
 import KouhouOsDevPage from "./pages/KouhouOsDevPage";
+import KouhouOsJhm2026Page from "./pages/KouhouOsJhm2026Page";
 import SlidesPage from "./pages/SlidesPage";
 
 // ===== pages（フォルダ内）=====
@@ -27,6 +28,7 @@ function getInitialPage() {
   const pathToPage: Record<string, string> = {
     "/": "top",
     "/kouhou-os-dev": "kouhou-os-dev",
+    "/kouhou-os-dev/jhm2026": "kouhou-os-jhm2026",
     "/slides": "slides",
     "/demo-intro": "demo-intro",
   };
@@ -70,6 +72,7 @@ export default function App() {
 
       {/* KOUHOU OS DEV */}
       {page === "kouhou-os-dev" && <KouhouOsDevPage />}
+      {page === "kouhou-os-jhm2026" && <KouhouOsJhm2026Page />}
 
       {/* DEV TOP */}
       {page === "devtop" && <TopPage setPage={setPage} />}

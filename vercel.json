@@ -5,6 +5,10 @@
       "destination": "/index.html"
     },
     {
+      "source": "/kouhou-os-dev/jhm2026",
+      "destination": "/index.html"
+    },
+    {
       "source": "/slides",
       "destination": "/index.html"
     },
