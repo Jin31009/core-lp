@@ -584,12 +584,12 @@ export default function RASSPrintSlides2026() {
                 <strong>RA-SS WEB Slides</strong>
                 <p>WEB版スライドを見る</p>
                 <img
-                  src="https://api.qrserver.com/v1/create-qr-code/?size=360x360&data=https%3A%2F%2Fcore-lp.vercel.app%2Frass-figure-slides-2026"
+                  src="https://api.qrserver.com/v1/create-qr-code/?size=360x360&data=https%3A%2F%2Fcore-lp.vercel.app%2Fslides"
                   alt="RA-SS WEB Slides QRコード"
                   loading="lazy"
                   decoding="async"
                 />
-                <code>https://core-lp.vercel.app/rass-figure-slides-2026</code>
+                <code>https://core-lp.vercel.app/slides</code>
               </article>
               <article className="print-final-qr">
                 <strong>RA-SS DEMO</strong>
