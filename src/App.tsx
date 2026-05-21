@@ -11,6 +11,7 @@ import ContactPage from "./pages/ContactPage";
 import ParticipationPage from "./pages/ParticipationPage";
 import PocPage from "./pages/PocPage";
 import KouhouOsDevPage from "./pages/KouhouOsDevPage";
+import SlidesPage from "./pages/SlidesPage";
 
 // ===== pages（フォルダ内）=====
 import StructurePage from "./pages/structure/StructurePage";
@@ -19,11 +20,18 @@ import ReportsTopPage from "./pages/reports/ReportsTopPage";
 import { initAnalytics } from "./lib/analytics";
 
 function getInitialPage() {
-  if (typeof window !== "undefined" && window.location.pathname === "/kouhou-os-dev") {
-    return "kouhou-os-dev";
+  if (typeof window === "undefined") {
+    return "top";
   }
 
-  return "top";
+  const pathToPage: Record<string, string> = {
+    "/": "top",
+    "/kouhou-os-dev": "kouhou-os-dev",
+    "/slides": "slides",
+    "/demo-intro": "demo-intro",
+  };
+
+  return pathToPage[window.location.pathname] ?? "top";
 }
 
 export default function App() {
@@ -90,6 +98,9 @@ export default function App() {
       )}
 
       {/* SLIDES */}
+      {page === "slides" && (
+        <SlidesPage onNavigate={setPage} onBackPrev={() => setPage("kouhou-os-dev")} />
+      )}
     </div>
   );
 }
