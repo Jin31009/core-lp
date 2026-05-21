@@ -19,7 +19,7 @@ const slides: RassSlide[] = [
     label: "表紙",
     title: "届いているのに、活かされない声がある。",
     subtitle: "研究テーマの入口",
-    figureSrc: "/assets/slides/figures-2026/00-cover-figure-topic.png",
+    figureSrc: "/assets/slides/figures-2026/00-cover-figure-topic-coauthors.svg",
     mangaSrc: "/assets/slides/manga-2026/00-cover-manga-topic.png",
     audioSrc: "/audio/rass-2026/00-cover.mp3",
     points: [
