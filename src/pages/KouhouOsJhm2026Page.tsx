@@ -40,6 +40,71 @@ const links = [
   { label: "病院広報工房トップへ", href: "/kouhou-os-dev" },
 ];
 
+const phaseCounts = [
+  { label: "入院", count: 182 },
+  { label: "外来", count: 97 },
+  { label: "救急", count: 23 },
+];
+
+const deltaCounts = [
+  { label: "Δ0", count: 54 },
+  { label: "Δ1", count: 86 },
+  { label: "Δ2", count: 86 },
+  { label: "Δ3", count: 70 },
+  { label: "Δ4", count: 6 },
+];
+
+const empathyCounts = [
+  { label: "認識不足", count: 158 },
+  { label: "未分類", count: 72 },
+  { label: "見通し不足", count: 31 },
+  { label: "説明不足", count: 27 },
+  { label: "手順不明", count: 14 },
+];
+
+const triggerCounts = [
+  { label: "Triggerなし", count: 235 },
+  { label: "Triggerあり", count: 67 },
+];
+
+const phaseDeltaRows = [
+  { phase: "入院", d0: 36, d1: 57, d2: 51, d3: 35, d4: 3, total: 182 },
+  { phase: "外来", d0: 15, d1: 23, d2: 26, d3: 30, d4: 3, total: 97 },
+  { phase: "救急", d0: 3, d1: 6, d2: 9, d3: 5, d4: 0, total: 23 },
+];
+
+function BarGroup({
+  title,
+  items,
+}: {
+  title: string;
+  items: { label: string; count: number }[];
+}) {
+  const max = Math.max(...items.map((item) => item.count));
+
+  return (
+    <article className="rounded-lg border border-slate-200 bg-white p-5">
+      <h3 className="text-sm font-bold text-slate-950">{title}</h3>
+      <div className="mt-4 grid gap-3">
+        {items.map((item) => (
+          <div key={item.label}>
+            <div className="mb-1 flex items-baseline justify-between gap-3 text-sm">
+              <span className="font-semibold text-slate-700">{item.label}</span>
+              <span className="font-black text-slate-950">{item.count}</span>
+            </div>
+            <div className="h-2.5 overflow-hidden rounded-full bg-slate-100">
+              <div
+                className="h-full rounded-full bg-cyan-700"
+                style={{ width: `${Math.max((item.count / max) * 100, 2)}%` }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    </article>
+  );
+}
+
 export default function KouhouOsJhm2026Page() {
   return (
     <main className="min-h-screen bg-[#f7f8f5] text-slate-950">
@@ -93,6 +158,74 @@ export default function KouhouOsJhm2026Page() {
                 </span>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-b border-slate-200 py-12 md:py-16">
+        <div className="mx-auto max-w-6xl px-5">
+          <div className="rounded-lg border border-slate-200 bg-white p-5 md:p-7">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-700">初期集計</p>
+            <h2 className="mt-3 text-2xl font-bold text-slate-950">302件から見えた初期集計</h2>
+            <p className="mt-4 text-sm leading-7 text-slate-600 md:text-base md:leading-8">
+              初期集計では、302件の自由記述のうち、入院に関する記述が182件、外来が97件、救急が23件でした。Delta分布では、Δ1・Δ2が各86件、Δ3が70件であり、軽微な違和感から中程度以上の関係のズレまで、幅のある記述が含まれていました。Empathy分類では、認識不足が158件と最も多く、説明不足や見通し不足だけでなく、患者さん・ご家族と病院側の認識のズレを確認する視点が重要であることが示唆されました。
+            </p>
+
+            <div className="mt-6 grid gap-4 lg:grid-cols-3">
+              <BarGroup title="Phase別件数" items={phaseCounts} />
+              <BarGroup title="Delta分布" items={deltaCounts} />
+              <BarGroup title="Empathy主要分類" items={empathyCounts} />
+            </div>
+
+            <div className="mt-6 grid gap-4 lg:grid-cols-[0.75fr_1.25fr]">
+              <article className="rounded-lg border border-slate-200 bg-[#f7f8f5] p-5">
+                <h3 className="text-sm font-bold text-slate-950">Triggerあり／なし</h3>
+                <div className="mt-3 overflow-hidden rounded-md border border-slate-200 bg-white">
+                  {triggerCounts.map((item) => (
+                    <div key={item.label} className="flex items-center justify-between border-b border-slate-100 px-3 py-3 text-sm last:border-b-0">
+                      <span className="font-semibold text-slate-700">{item.label}</span>
+                      <span className="font-black text-slate-950">{item.count}</span>
+                    </div>
+                  ))}
+                </div>
+              </article>
+
+              <article className="rounded-lg border border-slate-200 bg-[#f7f8f5] p-5">
+                <h3 className="text-sm font-bold text-slate-950">Phase × Delta</h3>
+                <div className="mt-3 overflow-x-auto rounded-md border border-slate-200 bg-white">
+                  <table className="w-full min-w-[34rem] border-collapse text-left text-sm">
+                    <thead className="bg-slate-50 text-xs font-bold uppercase tracking-[0.12em] text-slate-500">
+                      <tr>
+                        <th className="px-3 py-3">Phase</th>
+                        <th className="px-3 py-3">Δ0</th>
+                        <th className="px-3 py-3">Δ1</th>
+                        <th className="px-3 py-3">Δ2</th>
+                        <th className="px-3 py-3">Δ3</th>
+                        <th className="px-3 py-3">Δ4</th>
+                        <th className="px-3 py-3">Total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {phaseDeltaRows.map((row) => (
+                        <tr key={row.phase} className="border-t border-slate-100">
+                          <th className="px-3 py-3 font-bold text-slate-950">{row.phase}</th>
+                          <td className="px-3 py-3 text-slate-700">{row.d0}</td>
+                          <td className="px-3 py-3 text-slate-700">{row.d1}</td>
+                          <td className="px-3 py-3 text-slate-700">{row.d2}</td>
+                          <td className="px-3 py-3 text-slate-700">{row.d3}</td>
+                          <td className="px-3 py-3 text-slate-700">{row.d4}</td>
+                          <td className="px-3 py-3 font-black text-slate-950">{row.total}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </article>
+            </div>
+
+            <p className="mt-6 rounded-md border border-cyan-100 bg-cyan-50 px-4 py-3 text-xs leading-6 text-slate-600">
+              Phaseは外来・入院・救急の粗分類です。各記述には複数要素が含まれるため、単一原因の順位ではなく、現場で確認するための初期集計として扱います。
+            </p>
           </div>
         </div>
       </section>
