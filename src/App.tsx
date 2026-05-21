@@ -62,7 +62,7 @@ export default function App() {
   return (
     <div>
       {/* TOP */}
-      {page === "top" && <CoreLPPage setPage={setPage} />}
+      {page === "top" && <KouhouOsDevPage />}
 
       {/* CORE LP */}
       {page === "corelp" && <CoreLPPage setPage={setPage} />}
