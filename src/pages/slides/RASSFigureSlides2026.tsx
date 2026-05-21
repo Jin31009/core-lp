@@ -24,7 +24,8 @@ const slides: RassSlide[] = [
     audioSrc: "/audio/rass-2026/00-cover.mp3",
     points: [
       "入口を確認する｜この発表が扱う問いを最初に押さえる",
-      "QRから見る｜同じWEBスライドをスマートフォンでも確認できる",
+      "共同演者｜佐藤先生・中内看護部長",
+      "補足ページで確認｜発表補足・初期集計・CASEは補足ページで確認できます",
       "声を構造として読む｜自由記述を、現場で使える知見へ変える",
     ],
   },
@@ -65,9 +66,9 @@ const slides: RassSlide[] = [
     mangaSrc: "/assets/slides/manga-2026/03-target-manga.png",
     audioSrc: "/audio/rass-2026/03-structure.mp3",
     points: [
-      "302件の声を見る｜患者・家族から届いた自由記述を対象にする",
-      "単純分類では足りない｜感謝・苦情だけでは意味を整理しきれない",
-      "複数の意味が重なる｜一つの声の中に背景・不安・不足が含まれる",
+      "302件の声を見る｜患者さん・ご家族から届いた自由記述を対象にする",
+      "単純分類では足りない｜単なる苦情／感謝分類では意味を整理しきれない",
+      "構造として読み直す｜背景・出来事・不足・関係のズレとして読み直しました",
     ],
   },
   {
@@ -111,6 +112,7 @@ const slides: RassSlide[] = [
       "不満だけではない｜自由記述には複数の関係状態が表れる",
       "感謝にも構造がある｜よい経験にも背景・出来事・意味がある",
       "苦情にも変化がある｜説明不足や不信の立ち上がりを読み取れる",
+      "初期集計｜入院182件、外来97件、救急23件。Delta分布やEmpathy分類の詳細は、補足ページで確認できます",
     ],
   },
   {
@@ -139,6 +141,7 @@ const slides: RassSlide[] = [
       "投書から日常へ｜読む視点を、現場の違和感にも応用する",
       "ズレを早く捉える｜不安・不足・説明の届きにくさを見る",
       "試しながら磨く｜RA-SS DEMOで、現場応用の入口を開く",
+      "補足資料へ｜自由記述302件を、構造として読み、現場改善に使える知見へ。詳細な集計・CASE・補足資料はQRまたは補足ページから確認できます",
     ],
   },
 ];
@@ -1213,6 +1216,9 @@ export default function RASSFigureSlides2026() {
               <div className="rass-link-group" aria-label="関連リンク">
                 <a className="rass-link-button" href="/slides/print">
                   A4印刷版を見る
+                </a>
+                <a className="rass-link-button" href="/kouhou-os-dev/jhm2026">
+                  発表補足を見る
                 </a>
                 <a
                   className={`rass-link-button primary${isFutureSlide ? " is-future" : ""}`}
