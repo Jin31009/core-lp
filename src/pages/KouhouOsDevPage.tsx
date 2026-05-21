@@ -95,6 +95,12 @@ const heroFlow = [
   { label: "扱える知見", text: "広報・説明・案内・教育へ" },
 ];
 
+const conferenceEntryLinks = [
+  { label: "発表補足を見る", href: "/kouhou-os-dev#evidence", primary: true },
+  { label: "WEBスライドを見る", href: "/slides" },
+  { label: "RA-SS DEMOを試す", href: "/demo-intro" },
+];
+
 const flagshipLinks = [
   {
     title: "WEBスライド型APP",
@@ -120,9 +126,43 @@ const flagshipLinks = [
 ];
 
 const evidenceItems = [
-  { value: "対象", label: "自由記述302件", text: "患者さん・ご家族から届いた自由記述を、改善に使える知見へ変換する対象として扱う。" },
-  { value: "CASE", label: "具体的な記述を読み解く", text: "表面の苦情・感謝だけでなく、背景、出来事、不安、見通しの不足を読み取る。" },
-  { value: "集計", label: "傾向として共有する", text: "個別の声を匿名化・集計し、委員会や現場で共有できる改善データとして整理する。" },
+  {
+    value: "対象",
+    label: "自由記述302件",
+    text: "患者さん・ご家族から寄せられた自由記述302件を対象に、感謝・不満・要望・不安・説明への疑問などがどのように含まれているかを整理しました。",
+  },
+  {
+    value: "CASE",
+    label: "具体的な記述を読み解く",
+    text: "表面上の「苦情」「感謝」だけでなく、その背景にある出来事、受け止め方、見通し不足、関係のズレを読み取ります。",
+  },
+  {
+    value: "集計",
+    label: "傾向として共有する",
+    text: "個別の声を匿名化・分類し、単純な良否分類では捉えきれない傾向を、委員会や現場で共有できる改善データとして整理します。",
+  },
+];
+
+const evidenceLinks = [
+  { label: "WEBスライドを見る", href: "/slides" },
+  { label: "RA-SS DEMOを試す", href: "/demo-intro" },
+  { label: "病院広報工房について見る", href: "/kouhou-os-dev#about" },
+];
+
+const simpleAggregationItems = [
+  { axis: "Delta", view: "ズレ強度の全体像" },
+  { axis: "Trigger", view: "不安・不満・感謝などが生じた入口" },
+  { axis: "Empathy", view: "安心・説明・配慮・見通しなどの不足要素" },
+  { axis: "R", view: "関係回復や再利用可能な対応の兆し" },
+  { axis: "Phase", view: "外来・入院・検査・会計・退院などの体験場面" },
+];
+
+const crossAggregationItems = [
+  { axis: "Phase × Delta", point: "どの場面で強いズレが生じやすいか" },
+  { axis: "Trigger × Delta", point: "何をきっかけにズレが深刻化しやすいか" },
+  { axis: "Empathy × Delta", point: "何の不足がズレの強さと関係するか" },
+  { axis: "R × Delta", point: "深刻でも回復可能なケースがあるか" },
+  { axis: "Phase × Empathy", point: "場面ごとの不足パターン" },
 ];
 
 const evidenceFeedback = ["CASEを具体的に知りたい", "集計結果はどうなっているのか"];
@@ -329,6 +369,7 @@ export default function KouhouOsDevPage() {
   const isCoreMode =
     typeof window !== "undefined" &&
     new URLSearchParams(window.location.search).get("core") === "1";
+  const coreNaviUrl = "http://localhost:5173/";
 
   return (
     <main className="min-h-screen bg-[#f7f8f5] text-slate-900">
@@ -424,6 +465,35 @@ export default function KouhouOsDevPage() {
               <span>広報</span>
               <span>説明</span>
               <span>案内</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-b border-slate-200 bg-white py-8">
+        <div className="mx-auto max-w-6xl px-5">
+          <div className="rounded-lg border border-cyan-100 bg-cyan-50 p-5 md:flex md:items-center md:justify-between md:gap-8">
+            <div className="max-w-3xl">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-700">Conference</p>
+              <h2 className="mt-2 text-xl font-bold leading-8 text-slate-950 md:text-2xl">第28回日本医療マネジメント学会 発表補足</h2>
+              <p className="mt-3 text-sm leading-7 text-slate-700">
+                自由記述302件を、改善に使える知見へ。本発表では、患者さん・ご家族から寄せられた自由記述を、単なる苦情・感謝分類ではなく、関係のズレや回復可能性を確認するための構造として整理しています。
+              </p>
+            </div>
+            <div className="mt-5 flex flex-wrap gap-3 md:mt-0 md:justify-end">
+              {conferenceEntryLinks.map((item) => (
+                <a
+                  key={item.href}
+                  className={
+                    item.primary
+                      ? "rounded-md bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white"
+                      : "rounded-md border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-950"
+                  }
+                  href={item.href}
+                >
+                  {item.label}
+                </a>
+              ))}
             </div>
           </div>
         </div>
@@ -605,11 +675,12 @@ export default function KouhouOsDevPage() {
           eyebrow="9. 実証"
           title={
             <>
-              <span className="block">実証｜自由記述302件を、</span>
-              <span className="block">改善に使える知見へ</span>
+              <span className="block">第28回日本医療マネジメント学会</span>
+              <span className="block">補足資料</span>
+              <span className="mt-3 block text-lg leading-8 text-cyan-700 md:text-2xl">自由記述302件を、改善に使える知見へ</span>
             </>
           }
-          text="学会前の実証では、自由記述を単なる感謝・苦情・要望として終わらせず、具体的なCASEと集計結果の両面から、現場で共有できる改善データへ整えることを示します。"
+          text="本ページは、第28回日本医療マネジメント学会での発表補足として、自由記述302件の整理・解析の考え方、具体的なCASE、集計結果の見方をまとめたものです。口演では時間の関係で要点のみを報告しますが、ここでは現場で共有・検討できる改善データとしての可能性を補足します。"
         />
         <div className="mx-auto mt-8 grid max-w-6xl gap-4 px-5 md:grid-cols-3">
           {evidenceItems.map((item) => (
@@ -619,6 +690,57 @@ export default function KouhouOsDevPage() {
               <p className="mt-3 text-sm leading-6 text-slate-600">{item.text}</p>
             </article>
           ))}
+        </div>
+        <div className="mx-auto mt-6 flex max-w-6xl flex-wrap gap-3 px-5">
+          {evidenceLinks.map((item, index) => (
+            <a
+              key={item.href}
+              className={
+                index === 0
+                  ? "rounded-md bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white"
+                  : "rounded-md border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-950"
+              }
+              href={item.href}
+            >
+              {item.label}
+            </a>
+          ))}
+        </div>
+        <div className="mx-auto mt-8 max-w-6xl px-5">
+          <div className="rounded-lg border border-slate-200 bg-[#f7f8f5] p-5">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-700">302件集計アウトライン</p>
+            <h3 className="mt-3 text-xl font-bold text-slate-950">5軸で、改善に使える見取り図へ</h3>
+            <p className="mt-3 text-sm leading-7 text-slate-600">
+              自由記述302件を、苦情／感謝の二分法ではなく、Delta・Trigger・Empathy・R・Phaseの5軸で整理することで、「どの場面で、どの程度のズレが、何をきっかけに生じ、何が不足し、どう回復しうるか」を同時に確認できます。本補足では、詳細な数値表ではなく、改善に使える見取り図として、単純集計とクロス集計の読み方を示します。
+            </p>
+            <div className="mt-5 grid gap-4 lg:grid-cols-[0.95fr_1.05fr]">
+              <div>
+                <p className="text-sm font-bold text-slate-950">単純集計で見えること</p>
+                <div className="mt-3 grid gap-2">
+                  {simpleAggregationItems.map((item) => (
+                    <div key={item.axis} className="grid gap-1 rounded-md border border-slate-200 bg-white p-3 sm:grid-cols-[5.5rem_1fr]">
+                      <p className="text-sm font-black text-slate-950">{item.axis}</p>
+                      <p className="text-sm leading-6 text-slate-600">{item.view}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <p className="text-sm font-bold text-slate-950">クロス集計で見える改善ポイント</p>
+                <div className="mt-3 overflow-hidden rounded-md border border-slate-200 bg-white">
+                  {crossAggregationItems.map((item) => (
+                    <div key={item.axis} className="grid gap-1 border-b border-slate-100 p-3 last:border-b-0 sm:grid-cols-[8.5rem_1fr]">
+                      <p className="text-sm font-black text-slate-950">{item.axis}</p>
+                      <p className="text-sm leading-6 text-slate-600">{item.point}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <p className="mt-5 rounded-md border border-cyan-100 bg-white px-4 py-3 text-xs leading-6 text-slate-600">
+              本ページでは、詳細な数値表ではなく、分類軸によって何が見えるかを示しています。各記述には複数の要素が含まれるため、結果は単一原因としてではなく、現場で確認するための見取り図として扱います。
+            </p>
+          </div>
         </div>
         <div className="mx-auto mt-6 max-w-6xl px-5">
           <div className="rounded-lg border border-cyan-100 bg-cyan-50 p-5">
@@ -717,7 +839,7 @@ export default function KouhouOsDevPage() {
       {isCoreMode ? (
         <a
           className="fixed bottom-5 left-5 z-[999] rounded-full border border-cyan-200 bg-slate-950 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-slate-900/20 transition hover:-translate-y-0.5 hover:bg-cyan-900"
-          href="http://127.0.0.1:5179/"
+          href={coreNaviUrl}
           rel="noreferrer"
           target="_blank"
         >
