@@ -31,6 +31,8 @@ function getInitialPage() {
     "/kouhou-os-dev/jhm2026": "kouhou-os-jhm2026",
     "/slides": "slides",
     "/demo-intro": "demo-intro",
+    "/demo": "demo",
+    "/contact": "contact",
   };
 
   return pathToPage[window.location.pathname] ?? "top";
