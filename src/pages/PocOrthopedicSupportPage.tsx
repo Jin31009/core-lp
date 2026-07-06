@@ -680,14 +680,7 @@ function SafetyNotice({ children, tone = "amber" }: { children: ReactNode; tone?
   );
 }
 
-function PocHero({ onStartDemo }: { onStartDemo: () => void }) {
-  const ctas = [
-    ["患者用スマホ画面を見る", "patient"],
-    ["職員用タブレット画面を見る", "staff"],
-    ["違和感入力を見る", "insight"],
-    ["改善ループを見る", "loop"],
-  ] as const;
-
+function PocHero() {
   return (
     <section className="bg-white px-4 py-14 sm:px-6 sm:py-18 lg:px-8">
       <div className="mx-auto grid max-w-6xl gap-9 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
@@ -702,11 +695,19 @@ function PocHero({ onStartDemo }: { onStartDemo: () => void }) {
           <div className="mt-6 max-w-3xl rounded-lg border border-teal-200 bg-teal-50 p-5">
             <h2 className="text-xl font-semibold text-slate-950">広報モジュール開発の代表事例</h2>
             <p className="mt-3 text-sm leading-7 text-slate-700">
-              このページは、病院広報工房の「広報モジュール開発」の代表事例です。大腿骨頸部骨折を題材に、患者・家族が見返せる情報、職員が説明に使える資料、LINE・QR・FAQへの展開、看護師の違和感を改善候補に戻す流れをPoCとして試作しています。
+              このページは、病院広報工房の「広報モジュール開発」の代表事例です。セカンドオピニオンで見えた課題を、患者・家族・職員に届く小さな広報モジュールとして設計・試作する流れを示しています。
             </p>
             <p className="mt-3 text-sm leading-7 text-slate-700">
-              これは完成システムではなく、1疾患・1フェーズから小さく試すためのプロトタイプです。実際の導入では、各病院のクリティカルパス、医療者確認、院内運用体制を前提に調整します。
+              30分相談や初期点検で見えた課題を、基幹コンテンツ、QR付き資料、LINE入口、FAQ、職員説明メモなどへ展開する流れを確認できます。
             </p>
+            <p className="mt-3 text-sm leading-7 text-slate-700">
+              大腿骨頸部骨折を題材に、患者・家族が見返せる情報、職員が説明に使える資料、LINE・QR・FAQへの展開、看護師の違和感を改善候補に戻す流れをPoCとして試作しています。
+            </p>
+            <div className="mt-4">
+              <SafetyNotice tone="teal">
+                これは完成システムではなくPoCです。医療判断、診断・治療方針、患者個人情報は扱いません。基幹コンテンツは医療者確認を前提にします。
+              </SafetyNotice>
+            </div>
           </div>
           <div className="mt-8 flex flex-wrap gap-3">
             <a
@@ -719,25 +720,18 @@ function PocHero({ onStartDemo }: { onStartDemo: () => void }) {
             </a>
             <button
               type="button"
-              onClick={onStartDemo}
-              className="inline-flex min-h-11 items-center justify-center rounded-lg bg-amber-500 px-4 text-sm font-semibold text-slate-950 transition hover:bg-amber-400"
+              onClick={() => scrollToSection("demo-area")}
+              className="inline-flex min-h-11 items-center justify-center rounded-lg bg-teal-700 px-4 text-sm font-semibold text-white transition hover:bg-teal-800"
             >
-              退院前デモを開始
+              デモを見る
             </button>
-            {ctas.map(([label, id], index) => (
-              <button
-                key={id}
-                type="button"
-                onClick={() => scrollToSection(id)}
-                className={`inline-flex min-h-11 items-center justify-center rounded-lg px-4 text-sm font-semibold transition ${
-                  index === 0
-                    ? "bg-teal-700 text-white hover:bg-teal-800"
-                    : "border border-slate-300 bg-white text-slate-800 hover:bg-slate-50"
-                }`}
-              >
-                {label}
-              </button>
-            ))}
+            <button
+              type="button"
+              onClick={() => scrollToSection("decision-area")}
+              className="inline-flex min-h-11 items-center justify-center rounded-lg border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-800 transition hover:bg-slate-50"
+            >
+              導入判断を見る
+            </button>
           </div>
         </div>
 
@@ -880,12 +874,23 @@ function SharedContentBar({ content, demoActive = false }: { content: SharedCont
   );
 }
 
-function DemoGuide() {
+function DemoGuide({ onStartDemo }: { onStartDemo: () => void }) {
   return (
     <section className="border-t border-slate-200 bg-slate-50 px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl rounded-lg border border-slate-200 bg-white p-5">
-        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-teal-700">Demo Guide</p>
-        <h2 className="mt-2 text-xl font-semibold text-slate-950">デモの見方</h2>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-teal-700">Demo Guide</p>
+            <h2 className="mt-2 text-xl font-semibold text-slate-950">デモの見方</h2>
+          </div>
+          <button
+            type="button"
+            onClick={onStartDemo}
+            className="inline-flex min-h-11 items-center justify-center rounded-lg bg-amber-500 px-4 text-sm font-semibold text-slate-950 transition hover:bg-amber-400"
+          >
+            退院前デモを開始
+          </button>
+        </div>
         <ol className="mt-4 grid gap-3 text-sm leading-6 text-slate-700 md:grid-cols-3 lg:grid-cols-7">
           {[
             "患者スマホ画面で「退院前」を選ぶ",
@@ -2502,7 +2507,7 @@ export default function PocOrthopedicSupportPage() {
           box-shadow: 0 0 0 3px rgb(20 184 166 / 0.18);
         }
       `}</style>
-      <PocHero onStartDemo={startDemo} />
+      <PocHero />
       <MiniNav />
       <DemoProgressCard
         activeStepIndex={activeDemoStepIndex}
@@ -2517,7 +2522,7 @@ export default function PocOrthopedicSupportPage() {
         body="患者さん・ご家族がスマホで見返し、職員がタブレットで説明し、看護師の違和感を改善候補として回収する流れを確認します。"
       />
       <SharedContentBar content={sharedContent} demoActive={activeDemoStepIndex !== null} />
-      <DemoGuide />
+      <DemoGuide onStartDemo={startDemo} />
       <ConceptFormula />
       <PatientPhoneMock
         selectedPhase={selectedPatientPhase}
