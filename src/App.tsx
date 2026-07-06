@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 
 
 // ===== pages（直下）=====
@@ -21,6 +21,8 @@ import ProcessPage from "./pages/process/ProcessPage";
 import ReportsTopPage from "./pages/reports/ReportsTopPage";
 import { initAnalytics } from "./lib/analytics";
 
+const PocOrthopedicSupportPage = lazy(() => import("./pages/PocOrthopedicSupportPage"));
+
 function getInitialPage() {
   if (typeof window === "undefined") {
     return "top";
@@ -35,6 +37,7 @@ function getInitialPage() {
     "/demo-intro": "demo-intro",
     "/demo": "demo",
     "/contact": "contact",
+    "/poc-orthopedic-support": "poc-orthopedic-support",
   };
 
   return pathToPage[window.location.pathname] ?? "top";
@@ -99,6 +102,11 @@ export default function App() {
       {page === "contact" && <ContactPage setPage={setPage} />}
       {page === "poc" && (
         <PocPage onNavigate={setPage} onBackPrev={() => setPage("top")} />
+      )}
+      {page === "poc-orthopedic-support" && (
+        <Suspense fallback={<div className="p-6 text-slate-700">PoCページを読み込み中...</div>}>
+          <PocOrthopedicSupportPage />
+        </Suspense>
       )}
       {page === "participation" && (
         <ParticipationPage onNavigate={setPage} onBackPrev={() => setPage("poc")} />
