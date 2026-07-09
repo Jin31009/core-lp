@@ -37,7 +37,7 @@ const patientPhases = [
     body: "家族と確認したい生活準備、転倒予防、相談先",
   },
   {
-    title: "退院後生活",
+    title: "退院後の生活",
     body: "困ったときの相談先、再診までの確認事項",
   },
 ] as const;
@@ -57,37 +57,37 @@ const patientPhasePreviews: Record<
     info: "股関節まわりを強く痛がるときに、家族が確認したいこと",
     familyCheck: "お薬手帳、既往歴、転倒時の状況、連絡先",
     contents: ["転倒して股関節まわりを強く痛がるとき、家族が確認したいこと"],
-    media: ["WP記事", "FAQ", "QR", "LINE入口"],
+    media: ["Web記事", "FAQ", "QR", "LINE入口"],
   },
   "救急受診・診断": {
     info: "救急外来、検査、入院までの流れ",
     familyCheck: "既往歴、服薬情報、家族の連絡先、入院時に確認したいこと",
     contents: ["救急外来、検査、入院までの流れ", "大腿骨頸部骨折とは"],
-    media: ["WP記事", "PDF", "QR", "職員説明メモ"],
+    media: ["Web記事", "PDF", "QR", "職員説明メモ"],
   },
   "入院・手術前": {
     info: "手術説明を受けたあとに、家族と確認したいこと",
     familyCheck: "今日説明されたこと、まだ確認したいこと、次回聞きたいこと",
     contents: ["手術説明を受けたあとに、家族と確認したいこと"],
-    media: ["WP記事", "PDF", "QR", "職員説明メモ"],
+    media: ["Web記事", "PDF", "QR", "職員説明メモ"],
   },
   "手術後・リハビリ": {
     info: "手術後のリハビリはなぜ必要か",
     familyCheck: "本人が何を目標にしているか、どの動作に不安があるか",
     contents: ["手術後のリハビリはなぜ必要か"],
-    media: ["WP記事", "動画", "FAQ", "QR", "職員説明メモ"],
+    media: ["Web記事", "動画", "FAQ", "QR", "職員説明メモ"],
   },
   退院前: {
     info: "退院前に家族と確認したいこと",
     familyCheck: "段差、夜間トイレ、履物、手すり、介助の範囲、相談先",
     contents: ["退院前に家族と確認したいこと", "退院後の転倒予防と生活動作"],
-    media: ["WP記事", "PDF", "QR付きA4資料", "LINE入口", "職員説明メモ"],
+    media: ["Web記事", "PDF", "QR付きA4資料", "LINE入口", "職員説明メモ"],
   },
-  退院後生活: {
+  退院後の生活: {
     info: "困ったときの相談先、再診までの確認事項",
     familyCheck: "再診日、生活動作で困っていること、相談先、家族の見守り体制",
     contents: ["困ったときの相談先", "退院後の転倒予防と生活動作"],
-    media: ["WP記事", "LINE入口", "FAQ", "QR"],
+    media: ["Web記事", "LINE入口", "FAQ", "QR"],
   },
 };
 
@@ -99,7 +99,7 @@ const staffPhases = [
   "手術後",
   "リハビリ",
   "退院前",
-  "退院後生活",
+  "退院後の生活",
 ] as const;
 
 type StaffPhase = (typeof staffPhases)[number];
@@ -112,7 +112,7 @@ const staffToPatientPhase: Record<StaffPhase, PatientPhase> = {
   手術後: "手術後・リハビリ",
   リハビリ: "手術後・リハビリ",
   退院前: "退院前",
-  退院後生活: "退院後生活",
+  退院後の生活: "退院後の生活",
 };
 
 const patientToStaffPhase: Record<PatientPhase, StaffPhase> = {
@@ -121,7 +121,7 @@ const patientToStaffPhase: Record<PatientPhase, StaffPhase> = {
   "入院・手術前": "手術前",
   "手術後・リハビリ": "リハビリ",
   退院前: "退院前",
-  退院後生活: "退院後生活",
+  退院後の生活: "退院後の生活",
 };
 
 const patientToLineMenu: Record<PatientPhase, string> = {
@@ -130,7 +130,7 @@ const patientToLineMenu: Record<PatientPhase, string> = {
   "入院・手術前": "手術前確認",
   "手術後・リハビリ": "リハビリ",
   退院前: "退院前チェック",
-  退院後生活: "退院後生活",
+  退院後の生活: "退院後の生活",
 };
 
 const lineMenuToPatient: Record<string, PatientPhase> = {
@@ -139,9 +139,9 @@ const lineMenuToPatient: Record<string, PatientPhase> = {
   手術前確認: "入院・手術前",
   リハビリ: "手術後・リハビリ",
   退院前チェック: "退院前",
-  退院後生活: "退院後生活",
+  退院後の生活: "退院後の生活",
   家族の方へ: "退院前",
-  相談先: "退院後生活",
+  相談先: "退院後の生活",
 };
 
 const lineMenuItems = [
@@ -150,7 +150,7 @@ const lineMenuItems = [
   "手術前確認",
   "リハビリ",
   "退院前チェック",
-  "退院後生活",
+  "退院後の生活",
   "家族の方へ",
   "相談先",
 ] as const;
@@ -167,49 +167,49 @@ const lineMenuPreviews: Record<
   転倒した時: {
     title: "転倒して股関節まわりを強く痛がるとき、家族が確認したいこと",
     body: "転倒時の状況、お薬手帳、既往歴、連絡先など、受診時に伝えたい情報を整理します。",
-    returnTargets: ["WP記事へ戻る", "FAQへ戻る", "QR資料へ戻る", "相談先へ戻る"],
-    actions: ["WP記事を読む", "FAQを見る", "家族に共有", "相談先"],
+    returnTargets: ["Web記事へ戻る", "FAQへ戻る", "QR資料へ戻る", "相談先へ戻る"],
+    actions: ["Web記事を読む", "FAQを見る", "家族に共有", "相談先"],
   },
   入院された方へ: {
-    title: "入院から退院後生活までの見通し",
+    title: "入院から退院後の生活までの見通し",
     body: "救急受診、検査、入院後の説明を見返し、家族内で同じ情報を共有します。",
-    returnTargets: ["WP記事へ戻る", "PDFへ戻る", "FAQへ戻る", "職員説明メモへ戻る"],
-    actions: ["WP記事を読む", "PDFを見る", "家族に共有", "FAQ"],
+    returnTargets: ["Web記事へ戻る", "PDFへ戻る", "FAQへ戻る", "職員説明メモへ戻る"],
+    actions: ["Web記事を読む", "PDFを見る", "家族に共有", "FAQ"],
   },
   手術前確認: {
     title: "手術説明を受けたあとに、家族と確認したいこと",
     body: "説明されたこと、まだ確認したいこと、次回聞きたいことを家族で整理します。",
-    returnTargets: ["WP記事へ戻る", "PDFへ戻る", "QR資料へ戻る", "職員説明メモへ戻る"],
-    actions: ["WP記事を読む", "PDFを見る", "家族に共有", "職員説明メモ"],
+    returnTargets: ["Web記事へ戻る", "PDFへ戻る", "QR資料へ戻る", "職員説明メモへ戻る"],
+    actions: ["Web記事を読む", "PDFを見る", "家族に共有", "職員説明メモ"],
   },
   リハビリ: {
     title: "手術後のリハビリはなぜ必要か",
     body: "リハビリの目的、本人の目標、不安のある動作を家族と見返します。",
-    returnTargets: ["WP記事へ戻る", "動画へ戻る", "FAQへ戻る", "QR資料へ戻る"],
-    actions: ["WP記事を読む", "動画を見る", "FAQを見る", "職員説明メモ"],
+    returnTargets: ["Web記事へ戻る", "動画へ戻る", "FAQへ戻る", "QR資料へ戻る"],
+    actions: ["Web記事を読む", "動画を見る", "FAQを見る", "職員説明メモ"],
   },
   退院前チェック: {
     title: "退院前に家族と確認したいこと",
-    body: "家の中の段差、夜間トイレ、履物、手すり、介助の範囲、困った時の相談先を確認します。",
-    returnTargets: ["WP記事へ戻る", "PDFへ戻る", "FAQへ戻る", "QR付きA4資料へ戻る"],
-    actions: ["WP記事を読む", "PDFを見る", "家族に共有", "FAQを見る"],
+    body: "家の中の段差、夜間トイレ、履物、手すり、介助の範囲、困ったときの相談先を確認します。",
+    returnTargets: ["Web記事へ戻る", "PDFへ戻る", "FAQへ戻る", "QR付きA4資料へ戻る"],
+    actions: ["Web記事を読む", "PDFを見る", "家族に共有", "FAQを見る"],
   },
-  退院後生活: {
+  退院後の生活: {
     title: "困ったときの相談先、再診までの確認事項",
     body: "退院後に困ったときの相談先、再診日、生活動作で不安なことを見返します。",
-    returnTargets: ["WP記事へ戻る", "FAQへ戻る", "LINE入口へ戻る", "相談先へ戻る"],
-    actions: ["WP記事を読む", "FAQを見る", "LINEで見返す", "相談先"],
+    returnTargets: ["Web記事へ戻る", "FAQへ戻る", "LINE入口へ戻る", "相談先へ戻る"],
+    actions: ["Web記事を読む", "FAQを見る", "LINEで見返す", "相談先"],
   },
   家族の方へ: {
     title: "家族と共有したい確認事項",
     body: "本人だけでなく、家族があとから同じ情報に戻れるように確認事項を整理します。",
-    returnTargets: ["WP記事へ戻る", "PDFへ戻る", "FAQへ戻る", "QR付きA4資料へ戻る"],
-    actions: ["WP記事を読む", "PDFを見る", "家族に共有", "FAQ"],
+    returnTargets: ["Web記事へ戻る", "PDFへ戻る", "FAQへ戻る", "QR付きA4資料へ戻る"],
+    actions: ["Web記事を読む", "PDFを見る", "家族に共有", "FAQ"],
   },
   相談先: {
-    title: "困った時の相談先",
-    body: "退院後生活で迷ったときに、どこへ相談するかを確認します。",
-    returnTargets: ["FAQへ戻る", "相談先ページへ戻る", "LINE入口へ戻る", "WP記事へ戻る"],
+    title: "困ったときの相談先",
+    body: "退院後の生活で迷ったときに、どこへ相談するかを確認します。",
+    returnTargets: ["FAQへ戻る", "相談先ページへ戻る", "LINE入口へ戻る", "Web記事へ戻る"],
     actions: ["相談先を見る", "FAQを見る", "家族に共有", "LINEで見返す"],
   },
 };
@@ -238,7 +238,7 @@ const staffPhaseDetails: Record<
       "家族が様子見でよいのか迷っている",
       "本人の訴えが家族に十分伝わっていない",
     ],
-    media: ["WP記事", "QR", "LINE入口", "FAQ"],
+    media: ["Web記事", "QR", "LINE入口", "FAQ"],
   },
   救急受診: {
     contents: [
@@ -255,24 +255,24 @@ const staffPhaseDetails: Record<
       "検査の意味が伝わっていない",
       "入院までの流れが家族内で共有されていない",
     ],
-    media: ["WP記事", "PDF", "QR", "職員説明メモ"],
+    media: ["Web記事", "PDF", "QR", "職員説明メモ"],
   },
   "診断・入院": {
     contents: [
       "大腿骨頸部骨折とは",
-      "入院から退院後生活までの見通し",
+      "入院から退院後の生活までの見通し",
       "入院時に家族と確認したいこと",
     ],
     points: [
       "病名と今後の流れを家族が言葉にできるか",
       "入院中に誰へ連絡するか決まっているか",
-      "退院後生活まで含めた見通しを早めに共有できているか",
+      "退院後の生活まで含めた見通しを早めに共有できているか",
     ],
     insights: [
       "診断名だけが先行して生活の見通しが抜けている",
       "キーパーソンへ情報が届いていない",
     ],
-    media: ["WP記事", "PDF", "FAQ", "LINE入口"],
+    media: ["Web記事", "PDF", "FAQ", "LINE入口"],
   },
   手術前: {
     contents: [
@@ -306,7 +306,7 @@ const staffPhaseDetails: Record<
       "リハビリ開始を早すぎると感じている",
       "術後の状態を家族が断片的に受け取っている",
     ],
-    media: ["WP記事", "PDF", "FAQ", "職員説明メモ"],
+    media: ["Web記事", "PDF", "FAQ", "職員説明メモ"],
   },
   リハビリ: {
     contents: [
@@ -323,12 +323,12 @@ const staffPhaseDetails: Record<
       "リハビリの意味が伝わっていない",
       "本人の意欲と家族の期待にズレがある",
     ],
-    media: ["WP記事", "動画", "QR", "職員説明メモ"],
+    media: ["Web記事", "動画", "QR", "職員説明メモ"],
   },
   退院前: {
     contents: ["退院前に家族と確認したいこと", "退院後の転倒予防と生活動作", "困ったときの相談先"],
     points: [
-      "家族が退院後生活を具体的に想像できているか",
+      "家族が退院後の生活を具体的に想像できているか",
       "本人が「大丈夫」と思い込みすぎていないか",
       "夜間トイレ、段差、履物、手すりを確認したか",
       "介助する家族が無理をしすぎない設計になっているか",
@@ -338,11 +338,11 @@ const staffPhaseDetails: Record<
       "転倒リスクの認識が不足している",
       "家族に共有されていない",
     ],
-    media: ["WP記事", "PDF", "QR", "LINE入口", "FAQ", "職員説明メモ"],
+    media: ["Web記事", "PDF", "QR", "LINE入口", "FAQ", "職員説明メモ"],
   },
-  退院後生活: {
+  退院後の生活: {
     contents: [
-      "退院後生活で困ったときの相談先",
+      "退院後の生活で困ったときの相談先",
       "再診までに確認したいこと",
       "転倒予防を続けるための生活メモ",
     ],
@@ -355,24 +355,24 @@ const staffPhaseDetails: Record<
       "困りごとの相談先がわからない",
       "退院後に同じ質問が繰り返される",
     ],
-    media: ["WP記事", "LINE入口", "FAQ", "QR"],
+    media: ["Web記事", "LINE入口", "FAQ", "QR"],
   },
 };
 
 const contentCards = [
   {
     title: "大腿骨頸部骨折とは",
-    body: "入院から退院後生活までの見通し",
+    body: "入院から退院後の生活までの見通し",
     phase: "全体像",
     functionLabel: "理解支援",
-    media: ["WP記事", "PDF", "FAQ"],
+    media: ["Web記事", "PDF", "FAQ"],
   },
   {
     title: "転倒して股関節まわりを強く痛がるとき、家族が確認したいこと",
     body: "発症時・救急受診の導線",
     phase: "発症時・救急受診",
     functionLabel: "初動確認",
-    media: ["WP記事", "QR", "LINE入口"],
+    media: ["Web記事", "QR", "LINE入口"],
   },
   {
     title: "手術説明を受けたあとに、家族と確認したいこと",
@@ -386,14 +386,14 @@ const contentCards = [
     body: "理解支援・行動支援",
     phase: "手術後・リハビリ",
     functionLabel: "行動支援",
-    media: ["WP記事", "PDF", "QR", "動画"],
+    media: ["Web記事", "PDF", "QR", "動画"],
   },
   {
     title: "退院前に家族と確認したいこと",
     body: "転倒予防・生活準備・相談先",
     phase: "退院前",
     functionLabel: "生活準備",
-    media: ["WP記事", "PDF", "QR", "LINE入口", "FAQ", "職員説明メモ"],
+    media: ["Web記事", "PDF", "QR", "LINE入口", "FAQ", "職員説明メモ"],
   },
 ] as const;
 
@@ -421,7 +421,7 @@ const improvementTargets = [
 type InsightType = (typeof insightTypes)[number];
 type ImprovementTarget = (typeof improvementTargets)[number];
 
-type DemoStepId = "patient" | "staff" | "insight" | "preview" | "line-entry" | "backyard" | "media-flow";
+type DemoStepId = "staff" | "patient" | "insight" | "preview" | "line-entry" | "backyard" | "loop";
 
 type SharedContent = {
   title: string;
@@ -452,12 +452,12 @@ const sharedContentByPatientPhase: Record<PatientPhase, SharedContent> = {
   },
   退院前: {
     title: "退院前に家族と確認したいこと",
-    phases: "退院前 / 退院後生活 / 家族支援",
-    media: ["患者スマホ", "職員タブレット", "QR付きA4", "LINE入口", "PDF", "FAQ"],
+    phases: "退院前 / 退院後の生活 / 家族支援",
+    media: ["患者スマホ", "職員タブレット", "QR付きA4資料", "LINE入口", "PDF", "FAQ"],
   },
-  退院後生活: {
+  退院後の生活: {
     title: "困ったときの相談先",
-    phases: "退院後生活 / 相談先 / 家族支援",
+    phases: "退院後の生活 / 相談先 / 家族支援",
     media: ["患者スマホ", "LINE入口", "FAQ", "QR"],
   },
 };
@@ -474,19 +474,19 @@ const insightPreviewExamples: Record<string, InsightPreview> = {
     rass: "退院前フェーズにおける家族共有・生活準備情報の不足",
     missingFunctions: "家族共有／不安整理／行動支援",
     candidates: ["退院前に家族と確認したいこと", "退院後の転倒予防と生活動作"],
-    media: ["WP記事", "PDF", "QR付きA4資料", "LINE入口", "職員説明メモ"],
+    media: ["Web記事", "PDF", "QR付きA4資料", "LINE入口", "職員説明メモ"],
   },
   "リハビリ|リハビリの意味が伝わっていない|動画": {
     rass: "リハビリ期における治療理解・行動支援情報の不足",
     missingFunctions: "理解支援／行動支援／不安整理",
     candidates: ["手術後のリハビリはなぜ必要か"],
-    media: ["WP記事", "動画", "FAQ", "職員説明メモ", "QR"],
+    media: ["Web記事", "動画", "FAQ", "職員説明メモ", "QR"],
   },
   "発症時|不安が言葉になっていない|FAQ": {
     rass: "発症時・受傷直後における家族の行動迷いと不安整理情報の不足",
     missingFunctions: "案内／不安整理／行動支援",
     candidates: ["転倒して股関節まわりを強く痛がるとき、家族が確認したいこと"],
-    media: ["WP記事", "FAQ", "QR", "LINE入口"],
+    media: ["Web記事", "FAQ", "QR", "LINE入口"],
   },
 };
 
@@ -504,17 +504,17 @@ function getInsightPreview(phase: StaffPhase, insight: InsightType, target: Impr
     手術後: "手術後フェーズにおける状態理解と不安整理",
     リハビリ: "リハビリ期における理解支援と行動支援",
     退院前: "退院前フェーズにおける家族共有・生活準備",
-    退院後生活: "退院後生活における相談先理解と不安整理",
+    退院後の生活: "退院後の生活における相談先理解と不安整理",
   };
 
   const mediaByTarget: Record<ImprovementTarget, string[]> = {
-    FAQ: ["WP記事", "FAQ", "QR"],
-    PDF: ["WP記事", "PDF", "QR"],
-    QR付き資料: ["WP記事", "PDF", "QR付きA4資料", "職員説明メモ"],
-    患者向けページ: ["WP記事", "LINE入口", "FAQ", "QR"],
+    FAQ: ["Web記事", "FAQ", "QR"],
+    PDF: ["Web記事", "PDF", "QR"],
+    QR付き資料: ["Web記事", "PDF", "QR付きA4資料", "職員説明メモ"],
+    患者向けページ: ["Web記事", "LINE入口", "FAQ", "QR"],
     職員説明メモ: ["職員説明メモ", "PDF", "QR"],
-    LINE入口: ["WP記事", "LINE入口", "FAQ"],
-    動画: ["WP記事", "動画", "FAQ", "QR"],
+    LINE入口: ["Web記事", "LINE入口", "FAQ"],
+    動画: ["Web記事", "動画", "FAQ", "QR"],
   };
 
   const phaseContents = staffPhaseDetails[phase].contents.slice(0, 2);
@@ -539,21 +539,21 @@ const loopSteps = [
   "RA-SSで整理",
   "不足している情報・説明機能を抽出",
   "基幹コンテンツを更新",
-  "WP記事・PDF・QR・LINE入口・職員説明メモへ展開",
+  "Web記事・PDF・QR・LINE入口・職員説明メモへ展開",
   "患者・家族が見返す／職員が説明に使う",
   "バックヤードで利用状況と違和感をモニター",
 ] as const;
 
 const demoSteps: Array<{ id: DemoStepId; targetId: string; message: string }> = [
   {
-    id: "patient",
-    targetId: "patient",
-    message: "患者スマホ画面で退院前フェーズを選び、家族が見返す情報を確認します。",
-  },
-  {
     id: "staff",
     targetId: "staff",
-    message: "職員タブレットで同じ退院前フェーズの説明ポイントを確認します。",
+    message: "職員タブレットで退院前フェーズの説明ポイントを確認します。",
+  },
+  {
+    id: "patient",
+    targetId: "patient",
+    message: "患者スマホ画面で退院前フェーズを選び、家族と確認する内容を見返します。",
   },
   {
     id: "insight",
@@ -562,7 +562,7 @@ const demoSteps: Array<{ id: DemoStepId; targetId: string; message: string }> = 
   },
   {
     id: "preview",
-    targetId: "insight",
+    targetId: "improvement-preview",
     message: "RA-SS整理により、不足している情報・説明機能と改善候補が見えます。",
   },
   {
@@ -573,29 +573,30 @@ const demoSteps: Array<{ id: DemoStepId; targetId: string; message: string }> = 
   {
     id: "backyard",
     targetId: "backyard",
-    message: "LINEからの再閲覧が、バックヤードで改善データとして確認できます。",
+    message: "バックヤードで「退院前 × 家族共有不足」が改善候補になっていることを確認します。",
   },
   {
-    id: "media-flow",
-    targetId: "media-flow",
-    message: "基幹コンテンツをWP/PDF/QR/LINE/FAQ/職員メモへ再展開する流れを確認します。",
+    id: "loop",
+    targetId: "loop",
+    message: "基幹コンテンツがFAQ、QR付きA4資料、LINE入口、職員説明メモへ再展開される流れを確認します。",
   },
 ];
 
 const safetyNotes = {
   patient: "この画面は、説明内容を見返すためのPoCです。実際の判断は医師・医療機関の説明を前提とします。",
-  line: "LINEは情報本体ではなく、WP記事・PDF・FAQへ戻るための入口です。個別医療相談には使いません。",
+  line: "LINEは医療情報そのものを置く場所ではなく、Web記事・PDF・FAQへ戻るための入口です。個別医療相談には使いません。",
   insight: "PoC段階では、患者名・ID・個別症状などの個人情報は入力しません。",
 } as const;
 
 const miniNavItems = [
   ["デモ", "demo-area"],
-  ["患者", "patient"],
   ["職員", "staff"],
+  ["患者", "patient"],
   ["違和感", "insight"],
+  ["改善候補", "improvement-preview"],
   ["LINE", "line-entry"],
   ["バックヤード", "backyard"],
-  ["導入判断", "decision-area"],
+  ["改善ループ", "loop"],
 ] as const;
 
 function scrollToSection(id: string) {
@@ -635,39 +636,6 @@ function Section({
   );
 }
 
-function AreaIntro({
-  id,
-  eyebrow,
-  title,
-  body,
-  tone = "light",
-}: {
-  id: string;
-  eyebrow: string;
-  title: string;
-  body: string;
-  tone?: "light" | "strong";
-}) {
-  return (
-    <section
-      id={id}
-      className={`scroll-mt-24 border-t px-4 py-8 sm:px-6 lg:px-8 ${
-        tone === "strong" ? "border-teal-300 bg-teal-900 text-white" : "border-slate-200 bg-slate-50 text-slate-900"
-      }`}
-    >
-      <div className="mx-auto max-w-6xl">
-        <p className={`text-xs font-semibold uppercase tracking-[0.16em] ${tone === "strong" ? "text-teal-100" : "text-teal-700"}`}>
-          {eyebrow}
-        </p>
-        <h2 className="mt-2 text-2xl font-semibold leading-tight sm:text-3xl">{title}</h2>
-        <p className={`mt-3 max-w-4xl text-base leading-8 ${tone === "strong" ? "text-teal-50" : "text-slate-700"}`}>
-          {body}
-        </p>
-      </div>
-    </section>
-  );
-}
-
 function SafetyNotice({ children, tone = "amber" }: { children: ReactNode; tone?: "amber" | "teal" }) {
   return (
     <div
@@ -687,41 +655,32 @@ function PocHero() {
         <div>
           <p className="text-sm font-semibold text-teal-700">広報モジュール開発の代表事例</p>
           <h1 className="mt-4 text-4xl font-semibold leading-[1.18] text-slate-950 sm:text-5xl">
-            大腿骨頸部骨折の患者さん・ご家族を、発症から退院後生活まで支える情報導線
+            大腿骨頸部骨折の退院前・退院後の生活支援PoC
           </h1>
           <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-700">
-            患者・家族はスマホで見返す。職員はタブレットで説明に使う。看護師の違和感は、次の基幹コンテンツ改善へ戻す。
+            職員がタブレットで退院前説明に使い、患者・家族が同じ基幹コンテンツをスマホで見返す流れを確認するデモです。
           </p>
-          <div className="mt-6 max-w-3xl rounded-lg border border-teal-200 bg-teal-50 p-5">
-            <h2 className="text-xl font-semibold text-slate-950">広報モジュール開発の代表事例</h2>
-            <p className="mt-3 text-sm leading-7 text-slate-700">
-              このページは、病院広報工房の「広報モジュール開発」の代表事例です。セカンドオピニオンで見えた課題を、患者・家族・職員に届く小さな広報モジュールとして設計・試作する流れを示しています。
-            </p>
-            <p className="mt-3 text-sm leading-7 text-slate-700">
-              30分相談や初期点検で見えた課題を、基幹コンテンツ、QR付き資料、LINE入口、FAQ、職員説明メモなどへ展開する流れを確認できます。
-            </p>
-            <p className="mt-3 text-sm leading-7 text-slate-700">
-              大腿骨頸部骨折を題材に、患者・家族が見返せる情報、職員が説明に使える資料、LINE・QR・FAQへの展開、看護師の違和感を改善候補に戻す流れをPoCとして試作しています。
-            </p>
-            <div className="mt-4">
-              <SafetyNotice tone="teal">
-                これは完成システムではなくPoCです。医療判断、診断・治療方針、患者個人情報は扱いません。基幹コンテンツは医療者確認を前提にします。
-              </SafetyNotice>
-            </div>
+          <p className="mt-4 max-w-3xl text-base leading-8 text-slate-700">
+            説明時に看護師が感じた違和感を、RA-SSで改善候補として整理し、LINE入口やバックヤード確認を経て、次の基幹コンテンツ改善へ戻します。
+          </p>
+          <div className="mt-5 max-w-3xl">
+            <SafetyNotice tone="teal">
+              本PoCは医療判断や診断を行うものではありません。患者・家族の理解支援、職員の説明支援、情報導線の改善を検証するための表示デモです。
+            </SafetyNotice>
           </div>
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-6 flex flex-wrap gap-3">
             <a
               href="https://calendar.app.google/oEc8eoHxxSij79au9"
               target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex min-h-11 items-center justify-center rounded-lg bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800"
+              rel="noopener"
+              className="inline-flex min-h-11 items-center justify-center rounded-lg bg-teal-700 px-4 text-sm font-semibold text-white transition hover:bg-teal-800"
             >
               初回30分相談を予約する
             </a>
             <button
               type="button"
               onClick={() => scrollToSection("demo-area")}
-              className="inline-flex min-h-11 items-center justify-center rounded-lg bg-teal-700 px-4 text-sm font-semibold text-white transition hover:bg-teal-800"
+              className="inline-flex min-h-11 items-center justify-center rounded-lg border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-800 transition hover:bg-slate-50"
             >
               デモを見る
             </button>
@@ -736,10 +695,13 @@ function PocHero() {
         </div>
 
         <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 shadow-sm">
+          <p className="mb-4 text-sm leading-7 text-slate-700">
+            このPoCでは、職員説明、患者・家族の見返し、現場の違和感、改善管理を一つの流れとして確認します。
+          </p>
           <div className="grid gap-3 sm:grid-cols-2">
             {[
-              { icon: Smartphone, title: "患者・家族", body: "スマホで段階別に見返す" },
               { icon: Tablet, title: "職員", body: "タブレットで説明に使う" },
+              { icon: Smartphone, title: "患者・家族", body: "スマホで段階別に見返す" },
               { icon: ClipboardList, title: "違和感", body: "現場メモを改善候補へ戻す" },
               { icon: BarChart3, title: "バックヤード", body: "利用状況と不足を確認する" },
             ].map((item) => (
@@ -753,10 +715,10 @@ function PocHero() {
           <div className="mt-4 rounded-lg border border-teal-200 bg-white p-4">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-teal-700">PoC Operation Loop</p>
             <div className="mt-3 flex flex-wrap items-center gap-2 text-sm font-semibold text-slate-800">
-              {["スマホ", "タブレット", "違和感", "RA-SS", "改善", "再展開"].map((step, index) => (
+              {["タブレット", "スマホ", "違和感", "RA-SS", "LINE入口", "バックヤード", "改善"].map((step, index) => (
                 <span key={step} className="inline-flex items-center gap-2">
                   <span className="rounded-full bg-teal-50 px-3 py-1 text-teal-900">{step}</span>
-                  {index < 5 && <span className="text-slate-400">→</span>}
+                  {index < 6 && <span className="text-slate-400">→</span>}
                 </span>
               ))}
             </div>
@@ -876,12 +838,18 @@ function SharedContentBar({ content, demoActive = false }: { content: SharedCont
 
 function DemoGuide({ onStartDemo }: { onStartDemo: () => void }) {
   return (
-    <section className="border-t border-slate-200 bg-slate-50 px-4 py-8 sm:px-6 lg:px-8">
+    <section id="demo-area" className="scroll-mt-24 border-t border-slate-200 bg-slate-50 px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl rounded-lg border border-slate-200 bg-white p-5">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-teal-700">Demo Guide</p>
-            <h2 className="mt-2 text-xl font-semibold text-slate-950">デモの見方</h2>
+            <h2 className="mt-2 text-xl font-semibold text-slate-950">
+              デモで見る：職員説明から、患者の見返し、改善ループまで
+            </h2>
+            <p className="mt-3 max-w-4xl text-sm leading-7 text-slate-700">
+              職員がタブレットで退院前説明に使い、患者・家族が同じ基幹コンテンツをスマホで見返します。
+              説明時に看護師が感じた違和感は、RA-SSで改善候補として整理し、LINE入口やバックヤード確認を経て、次の基幹コンテンツ改善へ戻します。
+            </p>
           </div>
           <button
             type="button"
@@ -893,13 +861,13 @@ function DemoGuide({ onStartDemo }: { onStartDemo: () => void }) {
         </div>
         <ol className="mt-4 grid gap-3 text-sm leading-6 text-slate-700 md:grid-cols-3 lg:grid-cols-7">
           {[
-            "患者スマホ画面で「退院前」を選ぶ",
             "職員タブレットで退院前フェーズの説明ポイントを見る",
+            "患者スマホ画面で「退院前」を選び、家族と確認する内容を見返す",
             "看護師の違和感入力で「家族に共有されていない」を選ぶ",
-            "改善プレビューでRA-SS整理と改善先候補を見る",
+            "RA-SS改善プレビューで、不足している情報・説明機能と改善先候補を見る",
             "LINE入口で「退院前チェック」をあとから見返す",
-            "バックヤードで「退院前 × 家族共有不足」が改善候補になる",
-            "基幹コンテンツがWP/PDF/QR/LINE/FAQ/職員メモへ展開される",
+            "バックヤードで「退院前 × 家族共有不足」が改善候補になっていることを確認する",
+            "改善ループで、基幹コンテンツがFAQ、QR付きA4資料、LINE入口、職員説明メモへ再展開される流れを見る",
           ].map((item, index) => (
             <li key={item} className="rounded-lg border border-slate-200 bg-slate-50 p-3">
               <span className="mb-2 flex h-7 w-7 items-center justify-center rounded-full bg-teal-700 text-xs font-semibold text-white">
@@ -911,6 +879,91 @@ function DemoGuide({ onStartDemo }: { onStartDemo: () => void }) {
         </ol>
       </div>
     </section>
+  );
+}
+
+function DischargeRouteSummary() {
+  const routeItems = [
+    {
+      title: "退院前フェーズの確認項目",
+      body: "段差、夜間トイレ、履物、手すり、介助範囲、相談先を基幹コンテンツとして整理する。",
+      icon: ClipboardList,
+    },
+    {
+      title: "職員タブレット説明画面",
+      body: "職員が同じ基幹コンテンツを開き、説明ポイントと家族共有の確認に使う。",
+      icon: Tablet,
+    },
+    {
+      title: "QR付きA4資料",
+      body: "退院前説明時に、現場配布用・アクセス導線付きの要約資料として渡す。",
+      icon: QrCode,
+    },
+    {
+      title: "スマホで見返す",
+      body: "患者・家族が退院後も、QRやLINE入口から基幹コンテンツへ戻れるようにする。",
+      icon: Smartphone,
+    },
+  ];
+
+  const coreItems = ["WordPress記事", "FAQ", "PDF", "QR付きA4資料"];
+  const mediaItems = ["LINE入口", "タブレット説明画面", "広報誌", "PPT"];
+
+  return (
+    <Section id="discharge-route" eyebrow="Discharge Route" title="退院前フェーズから、QR付きA4資料とスマホ見返し導線へ">
+      <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+        <div className="rounded-lg border border-slate-200 bg-slate-50 p-5">
+          <p className="text-sm leading-7 text-slate-700">
+            大腿骨頸部骨折の退院前支援では、退院前フェーズの確認項目を基幹コンテンツとして整理します。
+            職員は同じ内容をタブレット説明画面で確認し、患者・家族にはQR付きA4資料を渡します。
+            患者・家族は退院後もスマホで情報を見返すことができます。
+            この流れは、疾患別IC支援モジュールを統合コンテンツ設計単位として扱うための代表事例です。
+          </p>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            <div className="rounded-lg border border-teal-200 bg-white p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-teal-700">基幹コンテンツ</p>
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                患者・家族が見返し、職員が説明に使う情報の本体。
+              </p>
+              <MediaChips media={coreItems} className="mt-3" />
+            </div>
+            <div className="rounded-lg border border-sky-200 bg-white p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-sky-700">接続メディア</p>
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                基幹コンテンツへ戻る、説明に使う、共有するための媒体。
+              </p>
+              <MediaChips media={mediaItems} className="mt-3" />
+            </div>
+          </div>
+        </div>
+
+        <ol className="grid gap-3">
+          {routeItems.map((item, index) => {
+            const Icon = item.icon;
+
+            return (
+              <li key={item.title} className="relative rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+                <div className="flex gap-3">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-teal-50 text-teal-700 ring-1 ring-teal-100">
+                    <Icon aria-hidden className="h-5 w-5" />
+                  </span>
+                  <div>
+                    <p className="text-xs font-semibold text-teal-700">STEP {index + 1}</p>
+                    <h3 className="mt-1 text-base font-semibold leading-6 text-slate-950">{item.title}</h3>
+                    <p className="mt-1 text-sm leading-6 text-slate-600">{item.body}</p>
+                  </div>
+                </div>
+                {index < routeItems.length - 1 ? (
+                  <div className="mt-3 text-center text-sm font-semibold text-teal-600" aria-hidden="true">
+                    ↓
+                  </div>
+                ) : null}
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+    </Section>
   );
 }
 
@@ -941,7 +994,7 @@ function DemoSummaryCard({ visible }: { visible: boolean }) {
           ))}
         </ol>
         <p className="mt-4 text-sm leading-6 text-slate-700">
-          違和感を集めて終わりではなく、基幹コンテンツと展開メディアの改善に戻します。
+          違和感を集めて終わりではなく、基幹コンテンツと接続メディアの改善に戻します。
         </p>
       </div>
     </section>
@@ -953,7 +1006,7 @@ function ConceptFormula() {
     <Section id="concept" eyebrow="Structure" title="全体構造">
       <div className="rounded-lg border border-slate-200 bg-slate-50 p-5 sm:p-7">
         <div className="grid gap-3 text-center text-base font-semibold text-slate-950 sm:grid-cols-[1.2fr_0.55fr_1fr_0.9fr] sm:items-stretch">
-          {["（診療科 × 疾患群 × フェーズ）", "RA-SS", "情報・説明機能", "展開メディア"].map((item, index) => (
+          {["（診療科 × 疾患群 × フェーズ）", "RA-SS", "情報・説明機能", "接続メディア"].map((item, index) => (
             <div key={item} className="flex min-h-20 items-center justify-center rounded-lg border border-slate-200 bg-white px-4">
               {index > 0 && <span className="mr-3 text-teal-700">×</span>}
               <span>{item}</span>
@@ -1085,15 +1138,15 @@ function LineEntryMock({
       <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
         <div className="rounded-lg border border-slate-200 bg-slate-50 p-5">
           <p className="text-base leading-8 text-slate-700">
-            LINEは情報本体ではなく、患者さん・ご家族が必要な情報へ戻るためのスマホ入口として設計します。
-            情報本体はWP記事・PDF・FAQなどの基幹コンテンツ側に置きます。
+            LINEは医療情報そのものを置く場所ではなく、患者さん・ご家族が必要な情報へ戻るためのスマホ入口として設計します。
+            医療情報の本体はWeb記事・PDF・FAQなどの中心コンテンツ側に置きます。
           </p>
           <div className="mt-5 rounded-lg border border-amber-200 bg-amber-50 p-4">
             <p className="text-sm leading-6 text-amber-900">{safetyNotes.line}</p>
           </div>
           <div className="mt-4 rounded-lg border border-teal-200 bg-white p-4">
             <p className="text-sm font-semibold leading-6 text-teal-900">
-              LINEは情報本体ではなく、必要な情報に戻るためのスマホ入口として想定しています。
+              LINE入口は、医療情報そのものを置く場所ではなく、医療者が確認した中心コンテンツへ戻るための入口として扱います。
             </p>
           </div>
         </div>
@@ -1246,7 +1299,7 @@ function StaffTabletMock({
               </ul>
             </div>
             <div className="rounded-lg border border-teal-200 bg-teal-50 p-4">
-              <h4 className="font-semibold text-teal-950">推奨される展開メディア</h4>
+              <h4 className="font-semibold text-teal-950">推奨される接続メディア</h4>
               <MediaChips media={selectedDetails.media} className="mt-3" />
             </div>
           </div>
@@ -1296,7 +1349,7 @@ function StaffTabletMock({
                         "手すり",
                         "杖・歩行器",
                         "介助する家族の負担",
-                        "困った時の相談先",
+                        "困ったときの相談先",
                       ].map((item) => (
                         <li key={item} className="rounded border border-slate-200 px-3 py-2">
                           {item}
@@ -1343,17 +1396,17 @@ function DummyQr() {
 }
 
 function ContentMediaFlow({ highlighted = false }: { highlighted?: boolean }) {
-  const media = ["WP記事", "PDF", "QR付きA4資料", "LINE入口", "FAQ", "職員説明メモ", "タブレット説明画面"];
+  const media = ["Web記事", "PDF", "QR付きA4資料", "LINE入口", "FAQ", "職員説明メモ", "タブレット説明画面"];
 
   return (
-    <Section id="media-flow" eyebrow="Media Expansion" title="基幹コンテンツのメディア展開図" highlighted={highlighted}>
+    <Section id="media-flow" eyebrow="Media Expansion" title="基幹コンテンツから接続メディアへの展開図" highlighted={highlighted}>
       <div className={`rounded-lg border p-5 sm:p-7 ${highlighted ? "border-teal-400 bg-white" : "border-slate-200 bg-slate-50"}`}>
         <div className="grid gap-5 lg:grid-cols-[0.9fr_0.2fr_1.2fr] lg:items-center">
           <div className="rounded-lg border border-teal-200 bg-white p-5">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-teal-700">Core Content</p>
             <h3 className="mt-3 text-xl font-semibold leading-8 text-slate-950">退院前に家族と確認したいこと</h3>
             <p className="mt-3 text-sm leading-6 text-slate-600">
-              1本の基幹コンテンツを、患者・家族が見返すメディアと、職員が説明に使うメディアへ展開する。
+              1本の基幹コンテンツを、患者・家族が見返す入口と、職員が説明に使う接続メディアへ展開する。
             </p>
           </div>
           <div className="flex justify-center text-2xl font-semibold text-teal-700">↓</div>
@@ -1373,9 +1426,9 @@ function ContentCardList({ onSelectSharedContent }: { onSelectSharedContent: (co
   const selectedExpansion =
     selected.title === "退院前に家族と確認したいこと"
       ? {
-          phase: "退院前／退院後生活／家族支援",
+          phase: "退院前／退院後の生活／家族支援",
           functions: "家族共有／不安整理／行動支援／職員説明支援",
-          media: ["WP記事", "PDF", "QR付きA4資料", "LINE入口", "FAQ", "職員説明メモ", "タブレット説明画面"],
+          media: ["Web記事", "PDF", "QR付きA4資料", "LINE入口", "FAQ", "職員説明メモ", "タブレット説明画面"],
         }
       : {
           phase: selected.phase,
@@ -1409,7 +1462,7 @@ function ContentCardList({ onSelectSharedContent }: { onSelectSharedContent: (co
               <LabelRow label="フェーズ" value={content.phase} />
               <LabelRow label="情報・説明機能" value={content.functionLabel} />
               <div className="rounded-lg bg-slate-50 p-3">
-                <span className="text-xs font-semibold text-slate-500">展開メディア</span>
+                <span className="text-xs font-semibold text-slate-500">接続メディア</span>
                 <MediaChips media={content.media} className="mt-2" />
               </div>
             </div>
@@ -1424,21 +1477,21 @@ function ContentCardList({ onSelectSharedContent }: { onSelectSharedContent: (co
           <PreviewItem label="情報・説明機能" value={selectedExpansion.functions} />
         </div>
         <div className="mt-4 rounded-lg border border-teal-200 bg-white p-4">
-          <p className="text-xs font-semibold text-slate-500">展開メディア</p>
+          <p className="text-xs font-semibold text-slate-500">接続メディア</p>
           <MediaChips media={selectedExpansion.media} className="mt-3" />
         </div>
         <p className="mt-4 text-sm leading-6 text-slate-700">
-          1本の基幹コンテンツを、患者・家族が見返すメディアと、職員が説明に使うメディアへ展開します。
+          1本の基幹コンテンツを、患者・家族が見返す入口と、職員が説明に使う接続メディアへ展開します。
         </p>
         <div className="mt-5 grid gap-4 lg:grid-cols-2">
           <div className="rounded-lg border border-slate-200 bg-white p-4">
             <p className="font-semibold text-slate-950">職員説明メモ</p>
             <p className="mt-2 text-sm font-semibold text-slate-700">退院前説明時の確認ポイント</p>
             <ul className="mt-3 space-y-2 text-sm leading-6 text-slate-700">
-              <li>家族が退院後生活を具体的に想像できているか</li>
+              <li>家族が退院後の生活を具体的に想像できているか</li>
               <li>夜間トイレ、段差、履物、手すりを確認したか</li>
               <li>本人が「大丈夫」と思い込みすぎていないか</li>
-              <li>困った時の相談先を家族が把握しているか</li>
+              <li>困ったときの相談先を家族が把握しているか</li>
               <li>QR付きA4資料を家族に共有したか</li>
             </ul>
           </div>
@@ -1506,16 +1559,14 @@ function InsightFormMock({
   onTargetChange: (target: ImprovementTarget) => void;
   highlighted?: boolean;
 }) {
-  const preview = getInsightPreview(selectedPhase, selectedInsight, selectedTarget);
-
   return (
-    <Section id="insight" eyebrow="Nurse Insight" title="看護師の違和感入力画面" highlighted={highlighted}>
+    <Section id="insight" eyebrow="Nurse Insight" title="看護師の違和感・気づき入力画面" highlighted={highlighted}>
       <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 sm:p-6">
         <div className="mb-5">
           <SafetyNotice>{safetyNotes.insight}</SafetyNotice>
         </div>
         <div className="rounded-lg border border-slate-200 bg-white p-5">
-          <h3 className="text-2xl font-semibold text-slate-950">看護師の違和感メモ</h3>
+          <h3 className="text-2xl font-semibold text-slate-950">看護師の違和感・気づきメモ</h3>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             <Field label="フェーズを選ぶ">
               <select
@@ -1576,32 +1627,55 @@ function InsightFormMock({
             </button>
           </div>
         </div>
-        <div className="mt-5 rounded-lg border border-teal-200 bg-white p-5">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-teal-700">Preview</p>
-              <h3 className="mt-2 text-xl font-semibold text-slate-950">この違和感から想定される改善候補</h3>
-            </div>
-            <span className="inline-flex w-fit items-center rounded-full bg-teal-50 px-3 py-1 text-xs font-semibold text-teal-800">
-              入力後プレビュー
-            </span>
-          </div>
+      </div>
+    </Section>
+  );
+}
 
-          <div className="mt-5 rounded-lg border border-slate-200 bg-slate-50 p-4">
-            <p className="text-xs font-semibold text-slate-500">選択中の入力例</p>
-            <p className="mt-2 text-sm leading-6 text-slate-700">
-              {selectedPhase} / {selectedInsight} / 改善先：{selectedTarget}
-            </p>
+function ImprovementPreviewSection({
+  selectedPhase,
+  selectedInsight,
+  selectedTarget,
+  preview,
+  highlighted = false,
+}: {
+  selectedPhase: StaffPhase;
+  selectedInsight: InsightType;
+  selectedTarget: ImprovementTarget;
+  preview: InsightPreview;
+  highlighted?: boolean;
+}) {
+  return (
+    <Section id="improvement-preview" eyebrow="RA-SS / Improvement Preview" title="RA-SS改善プレビュー" highlighted={highlighted}>
+      <div className="rounded-lg border border-teal-200 bg-white p-5">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-teal-700">Preview</p>
+            <h3 className="mt-2 text-xl font-semibold text-slate-950">この違和感から想定される改善候補</h3>
           </div>
+          <span className="inline-flex w-fit items-center rounded-full bg-teal-50 px-3 py-1 text-xs font-semibold text-teal-800">
+            入力後プレビュー
+          </span>
+        </div>
 
-          <div className="mt-4 grid gap-3 md:grid-cols-2">
-            <PreviewItem label="RA-SS整理" value={preview.rass} />
-            <PreviewItem label="不足している情報・説明機能" value={preview.missingFunctions} />
-            <PreviewItem label="改善先候補" value={preview.candidates.join("／")} />
-            <div className="rounded-lg border border-slate-200 bg-white p-4">
-              <p className="text-xs font-semibold text-slate-500">展開メディア候補</p>
-              <MediaChips media={preview.media} className="mt-3" />
-            </div>
+        <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-700">
+          看護師の違和感を診断や判定に使うのではなく、説明支援に必要な情報・説明機能の不足として一次整理します。
+        </p>
+
+        <div className="mt-5 rounded-lg border border-slate-200 bg-slate-50 p-4">
+          <p className="text-xs font-semibold text-slate-500">選択中の入力例</p>
+          <p className="mt-2 text-sm leading-6 text-slate-700">
+            {selectedPhase} / {selectedInsight} / 改善先：{selectedTarget}
+          </p>
+        </div>
+
+        <div className="mt-4 grid gap-3 md:grid-cols-2">
+          <PreviewItem label="RA-SS整理" value={preview.rass} />
+          <PreviewItem label="不足している情報・説明機能" value={preview.missingFunctions} />
+          <PreviewItem label="改善先候補" value={preview.candidates.join("／")} />
+          <div className="rounded-lg border border-slate-200 bg-white p-4">
+            <p className="text-xs font-semibold text-slate-500">接続メディア候補</p>
+            <MediaChips media={preview.media} className="mt-3" />
           </div>
         </div>
       </div>
@@ -1672,10 +1746,10 @@ function ImprovementLoop({ highlighted = false }: { highlighted?: boolean }) {
           </div>
         </div>
         <p className="mt-4 text-sm leading-6 text-slate-700">
-          違和感を集めて終わりではなく、基幹コンテンツと展開メディアの改善に戻します。
+          違和感を集めて終わりではなく、基幹コンテンツと接続メディアの改善に戻します。
         </p>
         <p className="mt-3 text-sm leading-6 text-slate-700">
-          違和感から改善された基幹コンテンツは、WP記事・PDF・FAQとして更新され、LINE入口から患者・家族があとから見返せる導線へ再展開されます。
+          違和感から改善された基幹コンテンツは、Web記事・PDF・FAQとして更新され、LINE入口から患者・家族があとから見返せる導線へ再展開されます。
         </p>
       </div>
     </Section>
@@ -1696,12 +1770,12 @@ function BackyardDashboard({
   highlighted?: boolean;
 }) {
   return (
-    <Section id="backyard" eyebrow="Backyard Monitor" title="バックヤードモニター画面" highlighted={highlighted}>
+    <Section id="backyard" eyebrow="Backyard Monitor" title="運用モニター画面" highlighted={highlighted}>
       <div className="rounded-lg border border-slate-200 bg-slate-950 p-4 text-white sm:p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-teal-200">Dashboard</p>
-            <h3 className="mt-2 text-2xl font-semibold">バックヤード・モニター</h3>
+            <h3 className="mt-2 text-2xl font-semibold">運用モニター</h3>
           </div>
           <RefreshCcw aria-hidden className="h-6 w-6 text-teal-200" />
         </div>
@@ -1710,7 +1784,7 @@ function BackyardDashboard({
             <ol className="space-y-2 text-sm">
               <li>1. 退院前</li>
               <li>2. リハビリ</li>
-              <li>3. 退院後生活</li>
+              <li>3. 退院後の生活</li>
             </ol>
           </MetricCard>
           <MetricCard icon={FileText} title="よく開かれた基幹コンテンツ">
@@ -1749,7 +1823,7 @@ function BackyardDashboard({
               <li className={highlighted ? "rounded bg-amber-300/20 px-2 py-1 text-amber-100" : ""}>
                 退院前チェック：42件
               </li>
-              <li>困った時の相談先：18件</li>
+              <li>困ったときの相談先：18件</li>
               <li>リハビリはなぜ必要か：15件</li>
               <li>家族と確認すること：13件</li>
             </ul>
@@ -1757,7 +1831,7 @@ function BackyardDashboard({
         </div>
         <div className={`mt-4 rounded-lg border p-4 ${highlighted ? "border-amber-200 bg-amber-300/20" : "border-white/10 bg-white/8"}`}>
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-teal-100">Draft Reflection</p>
-          <h4 className="mt-2 text-xl font-semibold text-white">仮反映中の違和感</h4>
+          <h4 className="mt-2 text-xl font-semibold text-white">仮反映中の改善候補</h4>
           <div className="mt-4 grid gap-3 text-sm leading-6 text-slate-100 md:grid-cols-2">
             <p>
               <span className="font-semibold text-white">フェーズ：</span>
@@ -1849,8 +1923,8 @@ function DecisionSupportSections() {
 function SafetyDesignSection() {
   const cards = [
     {
-      title: "LINEには医療情報本体を置かない",
-      body: "LINEは、WP記事・PDF・FAQなどの基幹コンテンツへ戻るための入口として扱う。医療情報の正本は、医療機関が確認・管理できる場所に置く。",
+      title: "LINEには医療情報そのものを置かない",
+      body: "LINEは、医療情報そのものを置く場所ではなく、Web記事・PDF・FAQなどの中心コンテンツへ戻るための入口として扱う。医療情報の本体は、医療機関が確認・管理できる場所に置く。",
     },
     {
       title: "診断・治療判断は扱わない",
@@ -1972,7 +2046,7 @@ function StakeholderValueSection() {
     },
     {
       title: "広報・事務",
-      body: "WP記事、PDF、FAQ、LINE入口、QR導線を、基幹コンテンツ単位で整理できる。媒体別にバラバラな情報管理を減らせる。",
+      body: "Web記事、PDF、FAQ、LINE入口、QR導線を、基幹コンテンツ単位で整理できる。媒体別にバラバラな情報管理を減らせる。",
     },
     {
       title: "病院全体",
@@ -2002,7 +2076,7 @@ function NextPocPlanSection() {
     },
     {
       title: "退院前フェーズに集中",
-      body: "家族共有、転倒予防、相談先、退院後生活の見通しを重点確認する",
+      body: "家族共有、転倒予防、相談先、退院後の生活の見通しを重点確認する",
     },
     {
       title: "QR資料・LINE入口・職員メモを試す",
@@ -2055,7 +2129,7 @@ function ExpansionImageSection() {
         <div className="rounded-lg border border-teal-200 bg-teal-50 p-5">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-teal-700">First PoC</p>
           <div className="mt-4 space-y-3">
-            {["整形外科", "大腿骨頸部骨折", "退院前・退院後生活支援"].map((item, index, items) => (
+            {["整形外科", "大腿骨頸部骨折", "退院前・退院後の生活支援"].map((item, index, items) => (
               <div key={item}>
                 <div className="rounded-lg border border-teal-200 bg-white p-4 text-center font-semibold text-slate-950">
                   {item}
@@ -2078,15 +2152,15 @@ function ExpansionImageSection() {
 }
 
 function DemoScriptSection() {
-  const script = `このPoCは、大腿骨頸部骨折の患者さんとご家族を、発症から退院後生活まで支える情報導線の試作です。
+  const script = `このPoCは、大腿骨頸部骨折の患者さんとご家族を、発症から退院後の生活まで支える情報導線の試作です。
 
-まず患者さん・ご家族は、スマホで退院前の情報を見返します。
-職員は、同じ基幹コンテンツをタブレットで開き、説明ポイントやQR付きA4資料を使って説明します。
+まず職員は、同じ基幹コンテンツをタブレットで開き、退院前フェーズの説明ポイントやQR付きA4資料を使って説明します。
+患者さん・ご家族は、説明後にスマホで退院前の情報を見返します。
 
 説明の中で、看護師が『家族に共有されていないかもしれない』『退院後に困りそう』と感じた違和感を入力します。
 その違和感はRA-SS的に整理され、不足している情報・説明機能として見える化されます。
 
-改善候補になった基幹コンテンツは、WP記事、PDF、QR、LINE入口、FAQ、職員説明メモへ再展開されます。
+改善候補になった基幹コンテンツは、Web記事、PDF、QR、LINE入口、FAQ、職員説明メモへ再展開されます。
 退院後には、患者さんやご家族がLINE入口やQRからもう一度見返すことができます。
 
 このPoCでは、医療判断ではなく、患者・家族の理解支援と職員の説明支援、そして情報改善の流れを検証します。`;
@@ -2103,7 +2177,7 @@ function DemoScriptSection() {
 function OperationRolesSection() {
   const roles = [
     ["看護師", "違和感メモ、説明時の利用、FAQ候補の発見"],
-    ["広報・事務", "WP記事、PDF、QR、LINE入口の反映"],
+    ["広報・事務", "Web記事、PDF、QR、LINE入口の反映"],
     ["医師・専門職", "疾患説明、治療説明、リハビリ内容の確認"],
     ["現場責任者", "改善優先度の確認、導入範囲の判断"],
     ["管理者", "バックヤード指標の確認、更新状況の管理"],
@@ -2146,6 +2220,28 @@ function PocImplementationPackageSection() {
   );
 }
 
+function PocDesignLinkSection() {
+  return (
+    <section id="decision-area" className="scroll-mt-24 border-t border-slate-200 bg-slate-950 px-4 py-10 text-white sm:px-6 lg:px-8">
+      <div className="mx-auto flex max-w-6xl flex-col gap-4 rounded-lg border border-white/10 bg-white/8 p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-teal-200">PoC Design</p>
+          <h2 className="mt-2 text-xl font-semibold">PoCの設計・安全性・実施範囲を確認する</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-7 text-slate-200">
+            このページは、大腿骨頸部骨折PoCの画面デモに絞っています。PoCの目的、安全設計、実施範囲、検証指標、医療者確認・監修の考え方は、PoC設計ページで確認できます。
+          </p>
+        </div>
+        <a
+          href="/rass-ic-module-poc"
+          className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg bg-white px-4 text-sm font-semibold text-slate-950 transition hover:bg-slate-100"
+        >
+          PoC設計を見る
+        </a>
+      </div>
+    </section>
+  );
+}
+
 function TrialScopeCard() {
   const materials = ["退院前に家族と確認したいこと", "QR付きA4資料", "LINE入口", "FAQ", "職員説明メモ"];
   const roles = ["看護師", "リハビリ職", "医師または専門職確認者", "広報・事務担当", "現場責任者"];
@@ -2160,7 +2256,7 @@ function TrialScopeCard() {
           <ScopeRow label="対象疾患" value="大腿骨頸部骨折／大腿骨近位部骨折" />
           <ScopeRow
             label="対象フェーズ"
-            value="退院前フェーズに集中。退院後生活、家族共有、転倒予防、相談先確認を重点対象にする"
+            value="退院前フェーズに集中。退院後の生活、家族共有、転倒予防、相談先確認を重点対象にする"
           />
           <ScopeRow label="試行期間" value="まずは1〜2週間" />
         </div>
@@ -2197,7 +2293,7 @@ function PreStartChecklistCard() {
     "QR付きA4資料を病棟・外来で配布できる",
     "患者・家族がスマホで見返せるURLがある",
     "LINE入口はリンク集として運用する",
-    "LINEには医療情報本体を置かない",
+    "LINEには医療情報そのものを置かない",
     "看護師が違和感メモを残せる",
     "違和感メモに個人情報を入力しない",
     "改善候補を週1回確認する担当者がいる",
@@ -2285,7 +2381,7 @@ function RiskCountermeasureCard() {
     },
     {
       title: "LINEへの過信",
-      body: "LINEは情報本体ではなく、WP記事・PDF・FAQへ戻る入口として扱う。個別医療相談や緊急判断には使わない。",
+      body: "LINEは医療情報そのものを置く場所ではなく、Web記事・PDF・FAQへ戻る入口として扱う。個別医療相談や緊急判断には使わない。",
     },
     {
       title: "入力負担の増加",
@@ -2373,7 +2469,7 @@ function FinalSlideCard() {
     },
     {
       label: "使うもの",
-      value: "WP記事、QR付きA4資料、LINE入口、FAQ、職員説明メモ、違和感メモ",
+      value: "Web記事、QR付きA4資料、LINE入口、FAQ、職員説明メモ、違和感メモ",
     },
     {
       label: "見る指標",
@@ -2418,6 +2514,9 @@ function Disclaimer() {
   );
 }
 
+const hiddenDesignSectionsForReference = [DischargeRouteSummary, ConceptFormula, ContentMediaFlow, ContentCardList, DecisionSupportSections];
+void hiddenDesignSectionsForReference;
+
 export default function PocOrthopedicSupportPage() {
   const [selectedPatientPhase, setSelectedPatientPhase] = useState<PatientPhase>("退院前");
   const [selectedLineMenu, setSelectedLineMenu] = useState<string>(patientToLineMenu["退院前"]);
@@ -2432,8 +2531,7 @@ export default function PocOrthopedicSupportPage() {
   const activeDemoStep = activeDemoStepIndex === null ? null : demoSteps[activeDemoStepIndex].id;
 
   useEffect(() => {
-    document.title =
-      "整形外科 包括患者支援モジュール PoC | 大腿骨頸部骨折を例にした、患者・家族・職員のための情報導線プロトタイプ";
+    document.title = "大腿骨頸部骨折PoCデモ｜疾患別IC支援モジュール代表事例";
   }, []);
 
   const syncFromPatientPhase = (phase: PatientPhase) => {
@@ -2515,34 +2613,19 @@ export default function PocOrthopedicSupportPage() {
         onNext={() => activeDemoStepIndex !== null && moveDemoTo(activeDemoStepIndex + 1)}
         onEnd={endDemo}
       />
-      <AreaIntro
-        id="demo-area"
-        eyebrow="Demo Area"
-        title="1. デモで見る：患者・職員・LINE・改善ループ"
-        body="患者さん・ご家族がスマホで見返し、職員がタブレットで説明し、看護師の違和感を改善候補として回収する流れを確認します。"
-      />
       <SharedContentBar content={sharedContent} demoActive={activeDemoStepIndex !== null} />
       <DemoGuide onStartDemo={startDemo} />
-      <ConceptFormula />
-      <PatientPhoneMock
-        selectedPhase={selectedPatientPhase}
-        onSelectPhase={syncFromPatientPhase}
-        highlighted={activeDemoStep === "patient"}
-      />
-      <LineEntryMock
-        selectedMenu={selectedLineMenu}
-        onSelectMenu={syncFromLineMenu}
-        highlighted={activeDemoStep === "line-entry"}
-      />
       <StaffTabletMock
         selectedPhase={selectedStaffPhase}
         onSelectPhase={syncFromStaffPhase}
         onOpenPatientPage={openPatientPage}
         highlighted={activeDemoStep === "staff"}
       />
-      <ContentMediaFlow highlighted={activeDemoStep === "media-flow"} />
-      <DemoSummaryCard visible={demoCompleted} />
-      <ContentCardList onSelectSharedContent={setSharedContent} />
+      <PatientPhoneMock
+        selectedPhase={selectedPatientPhase}
+        onSelectPhase={syncFromPatientPhase}
+        highlighted={activeDemoStep === "patient"}
+      />
       <InsightFormMock
         selectedPhase={selectedInsightPhase}
         selectedInsight={selectedInsight}
@@ -2550,9 +2633,20 @@ export default function PocOrthopedicSupportPage() {
         onPhaseChange={setSelectedInsightPhase}
         onInsightChange={setSelectedInsight}
         onTargetChange={setSelectedTarget}
-        highlighted={activeDemoStep === "insight" || activeDemoStep === "preview"}
+        highlighted={activeDemoStep === "insight"}
       />
-      <ImprovementLoop highlighted={activeDemoStep === "preview"} />
+      <ImprovementPreviewSection
+        selectedPhase={selectedInsightPhase}
+        selectedInsight={selectedInsight}
+        selectedTarget={selectedTarget}
+        preview={insightPreview}
+        highlighted={activeDemoStep === "preview"}
+      />
+      <LineEntryMock
+        selectedMenu={selectedLineMenu}
+        onSelectMenu={syncFromLineMenu}
+        highlighted={activeDemoStep === "line-entry"}
+      />
       <BackyardDashboard
         selectedPhase={selectedInsightPhase}
         selectedInsight={selectedInsight}
@@ -2560,14 +2654,10 @@ export default function PocOrthopedicSupportPage() {
         preview={insightPreview}
         highlighted={activeDemoStep === "backyard"}
       />
-      <AreaIntro
-        id="decision-area"
-        eyebrow="Decision Area"
-        title="2. 導入判断で読む：安全設計・検証指標・実施範囲"
-        body="院内で小さく試すために、実施範囲、安全設計、検証指標、運用ロール、PoC後の判断基準を確認します。"
-        tone="strong"
-      />
-      <DecisionSupportSections />
+      <ImprovementLoop highlighted={activeDemoStep === "loop"} />
+      <DemoSummaryCard visible={demoCompleted} />
+      <DemoScriptSection />
+      <PocDesignLinkSection />
       <Disclaimer />
     </main>
   );
