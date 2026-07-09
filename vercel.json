@@ -39,6 +39,14 @@
     {
       "source": "/poc-orthopedic-support",
       "destination": "/index.html"
+    },
+    {
+      "source": "/rass-ic-module-poc-slides",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/rass-ic-module-poc-slides-print",
+      "destination": "/index.html"
     }
   ]
 }

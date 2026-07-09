@@ -22,6 +22,7 @@ import ReportsTopPage from "./pages/reports/ReportsTopPage";
 import { initAnalytics } from "./lib/analytics";
 
 const PocOrthopedicSupportPage = lazy(() => import("./pages/PocOrthopedicSupportPage"));
+const RassIcModulePocSlidesPage = lazy(() => import("./pages/RassIcModulePocSlidesPage"));
 
 function getInitialPage() {
   if (typeof window === "undefined") {
@@ -38,6 +39,8 @@ function getInitialPage() {
     "/demo": "demo",
     "/contact": "contact",
     "/poc-orthopedic-support": "poc-orthopedic-support",
+    "/rass-ic-module-poc-slides": "rass-ic-module-poc-slides",
+    "/rass-ic-module-poc-slides-print": "rass-ic-module-poc-slides-print",
   };
 
   return pathToPage[window.location.pathname] ?? "top";
@@ -106,6 +109,16 @@ export default function App() {
       {page === "poc-orthopedic-support" && (
         <Suspense fallback={<div className="p-6 text-slate-700">PoCページを読み込み中...</div>}>
           <PocOrthopedicSupportPage />
+        </Suspense>
+      )}
+      {page === "rass-ic-module-poc-slides" && (
+        <Suspense fallback={<div className="p-6 text-slate-700">Webスライドを読み込み中...</div>}>
+          <RassIcModulePocSlidesPage />
+        </Suspense>
+      )}
+      {page === "rass-ic-module-poc-slides-print" && (
+        <Suspense fallback={<div className="p-6 text-slate-700">印刷用スライドを読み込み中...</div>}>
+          <RassIcModulePocSlidesPage printMode />
         </Suspense>
       )}
       {page === "participation" && (
