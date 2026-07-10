@@ -22,6 +22,7 @@ import ReportsTopPage from "./pages/reports/ReportsTopPage";
 import { initAnalytics } from "./lib/analytics";
 
 const PocOrthopedicSupportPage = lazy(() => import("./pages/PocOrthopedicSupportPage"));
+const RassIcModulePocPage = lazy(() => import("./pages/RassIcModulePocPage"));
 const RassIcModulePocSlidesPage = lazy(() => import("./pages/RassIcModulePocSlidesPage"));
 
 function getInitialPage() {
@@ -39,6 +40,7 @@ function getInitialPage() {
     "/demo": "demo",
     "/contact": "contact",
     "/poc-orthopedic-support": "poc-orthopedic-support",
+    "/rass-ic-module-poc": "rass-ic-module-poc",
     "/rass-ic-module-poc-slides": "rass-ic-module-poc-slides",
     "/rass-ic-module-poc-slides-print": "rass-ic-module-poc-slides-print",
   };
@@ -109,6 +111,11 @@ export default function App() {
       {page === "poc-orthopedic-support" && (
         <Suspense fallback={<div className="p-6 text-slate-700">PoCページを読み込み中...</div>}>
           <PocOrthopedicSupportPage />
+        </Suspense>
+      )}
+      {page === "rass-ic-module-poc" && (
+        <Suspense fallback={<div className="p-6 text-slate-700">PoC表示デモを読み込み中...</div>}>
+          <RassIcModulePocPage />
         </Suspense>
       )}
       {page === "rass-ic-module-poc-slides" && (

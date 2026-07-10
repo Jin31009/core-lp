@@ -41,6 +41,10 @@
       "destination": "/index.html"
     },
     {
+      "source": "/rass-ic-module-poc",
+      "destination": "/index.html"
+    },
+    {
       "source": "/rass-ic-module-poc-slides",
       "destination": "/index.html"
     },
