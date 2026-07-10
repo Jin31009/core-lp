@@ -46,6 +46,10 @@ export type SlideContent = {
 
 export const slideLinks = [
   {
+    href: "/rass-ic-module-poc",
+    label: "PoC設計を見る",
+  },
+  {
     href: "/poc-orthopedic-support",
     label: "大腿骨頸部骨折PoCデモを見る",
   },
