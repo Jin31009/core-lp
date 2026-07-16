@@ -258,11 +258,11 @@ export default function ResponseSection({
     <section className={sectionShell}>
       <div className={sectionHeader}>
         <p className="text-[11px] uppercase tracking-[0.24em] text-stone-500">
-          Step 03 / Response
+          Step 03 / NAVI Support
         </p>
-        <h2 className={sectionTitleClass}>次の対応</h2>
+        <h2 className={sectionTitleClass}>選択可能な支援候補</h2>
         <p className={leadClass}>
-          Step2 の読み取りをもとに、ここでは ACEX を対応案として順に確認します。
+          Step2の観測下書きをもとに、NAVIが情報・Asset・支援の候補を提示します。最終判断は人が行います。
         </p>
       </div>
 
@@ -270,10 +270,10 @@ export default function ResponseSection({
         <div className="rounded-[20px] border-2 border-slate-300 bg-white p-6 shadow-[0_8px_22px_rgba(15,23,42,0.05)]">
           <p className={sectionLabel}>① ACEX Sequence</p>
           <p className="mt-2 text-[26px] font-semibold text-slate-900">
-            この順で対応案を確認する
+            支援候補を確認する
           </p>
           <p className="mt-3 text-[15px] leading-8 text-stone-600">
-            まず最初の一手を置き、次の行動を順に重ねます。
+            表示内容は正解や命令ではありません。状況に応じて人が選択・修正します。
           </p>
 
           <div className="mt-6 grid gap-4 xl:grid-cols-3">
@@ -378,7 +378,7 @@ export default function ResponseSection({
         <div className="rounded-[16px] border-t border-stone-200 pt-4">
           <div className="mt-4">
             <button onClick={onNext} className={primaryButton} type="button">
-              ケース記録へ進む
+              Human Gateへ進む
             </button>
           </div>
         </div>
