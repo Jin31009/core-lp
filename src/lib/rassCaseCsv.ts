@@ -9,6 +9,9 @@ import type {
 } from "./rassEngine";
 
 export type ContextSource = "raw" | "draft" | "edited";
+export type HumanTriggerStatus = "unreviewed" | "confirmed" | "not_trigger";
+export type HumanRiskStatus = "unreviewed" | "risk" | "not_risk";
+export type HumanOrgIntervention = "unreviewed" | "required" | "not_required";
 
 export type RASSCaseRecord = {
   case_id: string;
@@ -19,6 +22,12 @@ export type RASSCaseRecord = {
   context_source: ContextSource;
   max_delta: DeltaLevel;
   trigger: YesNo;
+  ai_trigger_draft: YesNo;
+  human_trigger_status: HumanTriggerStatus;
+  human_risk_status: HumanRiskStatus;
+  human_org_intervention: HumanOrgIntervention;
+  human_review_note: string;
+  human_reviewed_at: string;
   r_plus: YesNo;
   ak_break_type: AKCode[];
   ak_primary: AKCode | null;
@@ -46,6 +55,12 @@ export const RASS_CASE_COLUMNS = [
   "context_source",
   "max_delta",
   "trigger",
+  "ai_trigger_draft",
+  "human_trigger_status",
+  "human_risk_status",
+  "human_org_intervention",
+  "human_review_note",
+  "human_reviewed_at",
   "r_plus",
   "ak_break_type",
   "ak_primary",
@@ -83,6 +98,12 @@ export function toRASSCaseCells(record: RASSCaseRecord): string[] {
     normalizeScalar(record.context_source),
     normalizeScalar(record.max_delta),
     normalizeScalar(record.trigger),
+    normalizeScalar(record.ai_trigger_draft),
+    normalizeScalar(record.human_trigger_status),
+    normalizeScalar(record.human_risk_status),
+    normalizeScalar(record.human_org_intervention),
+    normalizeScalar(record.human_review_note),
+    normalizeScalar(record.human_reviewed_at),
     normalizeScalar(record.r_plus),
     joinPipeDelimited(record.ak_break_type),
     normalizeScalar(record.ak_primary),
