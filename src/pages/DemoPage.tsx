@@ -219,18 +219,18 @@ export default function DemoPage({ setPage }: DemoPageProps) {
         }
       : selectedStep === 2
         ? {
-            title: "Step2 / Analysis",
-            body: "整理したContextを、関係の状態として読み取る段階です。",
+            title: "Step2 / RA-SS Sensing",
+            body: "AIが関係状態を観測し、確認前の下書きとして整理する段階です。",
           }
         : selectedStep === 3
           ? {
-              title: "Step3 / Response",
-              body: "読み取った状態をもとに、次の対応を考える段階です。",
+              title: "Step3 / NAVI Support",
+              body: "観測下書きから、選択可能な情報・支援候補を確認する段階です。",
             }
           : selectedStep === 4
             ? {
-                title: "Step4 / Case Learning",
-                body: "今回の場面・対応・結果を、次に使える学びとして残す段階です。",
+                title: "Step4 / Human Gate",
+                body: "Trigger・RISK・組織介入の必要性を、人が確認する段階です。",
               }
             : {
                 title: "Step5 / Structured Record",
@@ -512,24 +512,24 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                 />
                 <TabButton
                   stepNo="02"
-                  en="Analysis"
-                  ja="確認結果"
+                  en="RA-SS Sensing"
+                  ja="観測下書き"
                   isActive={selectedStep === 2}
                   isReached={maxUnlockedStep >= 2}
                   onClick={() => openStep(2)}
                 />
                 <TabButton
                   stepNo="03"
-                  en="Response"
-                  ja="次の対応"
+                  en="NAVI Support"
+                  ja="支援候補"
                   isActive={selectedStep === 3}
                   isReached={maxUnlockedStep >= 3}
                   onClick={() => openStep(3)}
                 />
                 <TabButton
                   stepNo="04"
-                  en="Case Learning"
-                  ja="学びの記録"
+                  en="Human Gate"
+                  ja="人による確認"
                   isActive={selectedStep === 4}
                   isReached={maxUnlockedStep >= 4}
                   onClick={() => openStep(4)}
