@@ -148,6 +148,10 @@ export default function DemoPage({ setPage }: DemoPageProps) {
   const [whyTags, setWhyTags] = useState<string[]>([]);
   const [whyMemo, setWhyMemo] = useState("");
   const [nextAssets, setNextAssets] = useState<string[]>([]);
+  const [humanTriggerStatus, setHumanTriggerStatus] = useState("unreviewed");
+  const [humanRiskStatus, setHumanRiskStatus] = useState("unreviewed");
+  const [humanOrgIntervention, setHumanOrgIntervention] = useState("unreviewed");
+  const [humanReviewNote, setHumanReviewNote] = useState("");
 
   const caseContext =
     finalContextDraft.trim() || contextEdited.trim() || primaryContextDraft;
@@ -219,18 +223,18 @@ export default function DemoPage({ setPage }: DemoPageProps) {
         }
       : selectedStep === 2
         ? {
-            title: "Step2 / Analysis",
-            body: "整理したContextを、関係の状態として読み取る段階です。",
+            title: "Step2 / RA-SS Sensing",
+            body: "AIが関係状態を観測し、確認前の下書きとして整理する段階です。",
           }
         : selectedStep === 3
           ? {
-              title: "Step3 / Response",
-              body: "読み取った状態をもとに、次の対応を考える段階です。",
+              title: "Step3 / NAVI Support",
+              body: "観測下書きから、選択可能な情報・支援候補を確認する段階です。",
             }
           : selectedStep === 4
             ? {
-                title: "Step4 / Case Learning",
-                body: "今回の場面・対応・結果を、次に使える学びとして残す段階です。",
+                title: "Step4 / Human Gate",
+                body: "Trigger・RISK・組織介入の必要性を、人が確認する段階です。",
               }
             : {
                 title: "Step5 / Structured Record",
@@ -350,6 +354,10 @@ export default function DemoPage({ setPage }: DemoPageProps) {
     setWhyTags([]);
     setWhyMemo("");
     setNextAssets([]);
+    setHumanTriggerStatus("unreviewed");
+    setHumanRiskStatus("unreviewed");
+    setHumanOrgIntervention("unreviewed");
+    setHumanReviewNote("");
   };
 
   const startFlow = () => {
@@ -414,6 +422,17 @@ export default function DemoPage({ setPage }: DemoPageProps) {
           context_source: contextSource,
           max_delta: stepResult.analysis.MAX_DELTA,
           trigger: stepResult.analysis.Trigger,
+          ai_trigger_draft: stepResult.analysis.Trigger,
+          human_trigger_status: humanTriggerStatus as RASSCaseRecord["human_trigger_status"],
+          human_risk_status: humanRiskStatus as RASSCaseRecord["human_risk_status"],
+          human_org_intervention: humanOrgIntervention as RASSCaseRecord["human_org_intervention"],
+          human_review_note: humanReviewNote.trim(),
+          human_reviewed_at:
+            humanTriggerStatus !== "unreviewed" ||
+            humanRiskStatus !== "unreviewed" ||
+            humanOrgIntervention !== "unreviewed"
+              ? timestamp
+              : "",
           r_plus: stepResult.analysis.R_plus,
           ak_break_type: stepResult.analysis.AK_Break_Type,
           ak_primary: stepResult.analysis.AK_Primary,
@@ -512,24 +531,24 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                 />
                 <TabButton
                   stepNo="02"
-                  en="Analysis"
-                  ja="確認結果"
+                  en="RA-SS Sensing"
+                  ja="観測下書き"
                   isActive={selectedStep === 2}
                   isReached={maxUnlockedStep >= 2}
                   onClick={() => openStep(2)}
                 />
                 <TabButton
                   stepNo="03"
-                  en="Response"
-                  ja="次の対応"
+                  en="NAVI Support"
+                  ja="支援候補"
                   isActive={selectedStep === 3}
                   isReached={maxUnlockedStep >= 3}
                   onClick={() => openStep(3)}
                 />
                 <TabButton
                   stepNo="04"
-                  en="Case Learning"
-                  ja="学びの記録"
+                  en="Human Gate"
+                  ja="人による確認"
                   isActive={selectedStep === 4}
                   isReached={maxUnlockedStep >= 4}
                   onClick={() => openStep(4)}
@@ -657,6 +676,15 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                   text={observationRaw}
                   judgment={stepJudgment}
                   actionSummary={step3Response?.actionSummary || "該当するACEX提案なし"}
+                  aiTriggerDraft={stepResult?.analysis.Trigger || "No"}
+                  humanTriggerStatus={humanTriggerStatus}
+                  onHumanTriggerStatusChange={setHumanTriggerStatus}
+                  humanRiskStatus={humanRiskStatus}
+                  onHumanRiskStatusChange={setHumanRiskStatus}
+                  humanOrgIntervention={humanOrgIntervention}
+                  onHumanOrgInterventionChange={setHumanOrgIntervention}
+                  humanReviewNote={humanReviewNote}
+                  onHumanReviewNoteChange={setHumanReviewNote}
                   executedActions={executedActions}
                   onExecutedActionsChange={setExecutedActions}
                   resultType={resultType}

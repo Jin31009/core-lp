@@ -614,14 +614,14 @@ export default function AnalysisSection({
           </div>
 
           <div className={nextStepNote}>
-            次の一手：内容が確認できたら、「次の対応へ」で Step3 に進みます。
+            この内容はAIによる観測下書きです。確認できたら、NAVIの支援候補へ進みます。
           </div>
         </div>
 
         <div className="rounded-[16px] border-t border-stone-200 pt-4">
           <div className="mt-4">
             <button onClick={onNext} className={primaryButton} type="button">
-              次の対応へ
+              NAVIの支援候補へ
             </button>
           </div>
         </div>
