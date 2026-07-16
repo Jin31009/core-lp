@@ -166,15 +166,43 @@ export default function CaseReportSection({
     <section className={sectionShell}>
       <div className={sectionHeader}>
         <p className="text-[11px] uppercase tracking-[0.24em] text-stone-500">
-          Step 04 / Case Learning
+          Step 04 / Human Gate + Case Learning
         </p>
-        <h2 className={sectionTitleClass}>今回の対応を、次に使える形で残す</h2>
+        <h2 className={sectionTitleClass}>人が確認し、学びとして残す</h2>
         <p className={leadClass}>
-          ここでは正しい報告書ではなく、この場面の構造を学びとして残し、次に使える形へ整えます。
+          まずTrigger・RISK・組織介入の必要性を人が確認し、その後に今回の場面を学びとして残します。
         </p>
       </div>
 
       <div className="space-y-6 p-6 sm:p-8">
+        <div className="rounded-[20px] border-2 border-amber-300 bg-amber-50 p-6 shadow-[0_8px_22px_rgba(15,23,42,0.05)]">
+          <p className="text-[12px] uppercase tracking-[0.18em] text-amber-700">
+            Human Gate / Visual Mock
+          </p>
+          <h3 className="mt-2 text-[26px] font-semibold text-slate-900">
+            AIの下書きを、人が確認する
+          </h3>
+          <p className="mt-3 text-[15px] leading-8 text-stone-700">
+            TriggerとRISKはAIが確定しません。RISKはRZのうち、組織介入が必要な状態として、人または組織が確認します。
+          </p>
+          <div className="mt-5 grid gap-3 md:grid-cols-3">
+            {[
+              ["Trigger", "未確認", "兆候の有無を確認"],
+              ["RISK", "未判定", "組織介入の必要性を確認"],
+              ["Organization", "未接続", "必要時に担当導線へ接続"],
+            ].map(([label, status, note]) => (
+              <div key={label} className="rounded-[14px] border border-amber-200 bg-white p-4">
+                <p className="text-[11px] uppercase tracking-[0.14em] text-stone-500">{label}</p>
+                <p className="mt-2 text-[18px] font-semibold text-slate-900">{status}</p>
+                <p className="mt-2 text-[13px] leading-6 text-stone-600">{note}</p>
+              </div>
+            ))}
+          </div>
+          <p className="mt-5 text-[13px] leading-7 text-amber-800">
+            この版は視覚モックです。判定値の保存や組織連絡はまだ実装していません。
+          </p>
+        </div>
+
         <div className={card}>
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
