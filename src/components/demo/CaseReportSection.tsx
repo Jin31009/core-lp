@@ -5,6 +5,15 @@ type CaseReportSectionProps = {
   text: string;
   judgment: string;
   actionSummary: string;
+  aiTriggerDraft: string;
+  humanTriggerStatus: string;
+  onHumanTriggerStatusChange: (value: string) => void;
+  humanRiskStatus: string;
+  onHumanRiskStatusChange: (value: string) => void;
+  humanOrgIntervention: string;
+  onHumanOrgInterventionChange: (value: string) => void;
+  humanReviewNote: string;
+  onHumanReviewNoteChange: (value: string) => void;
 
   executedActions: string[];
   onExecutedActionsChange: (actions: string[]) => void;
@@ -112,6 +121,15 @@ export default function CaseReportSection({
   eLevel,
   judgment,
   actionSummary,
+  aiTriggerDraft,
+  humanTriggerStatus,
+  onHumanTriggerStatusChange,
+  humanRiskStatus,
+  onHumanRiskStatusChange,
+  humanOrgIntervention,
+  onHumanOrgInterventionChange,
+  humanReviewNote,
+  onHumanReviewNoteChange,
 
   executedActions,
   onExecutedActionsChange,
@@ -177,7 +195,7 @@ export default function CaseReportSection({
       <div className="space-y-6 p-6 sm:p-8">
         <div className="rounded-[20px] border-2 border-amber-300 bg-amber-50 p-6 shadow-[0_8px_22px_rgba(15,23,42,0.05)]">
           <p className="text-[12px] uppercase tracking-[0.18em] text-amber-700">
-            Human Gate / Visual Mock
+            Human Gate / Human Review
           </p>
           <h3 className="mt-2 text-[26px] font-semibold text-slate-900">
             AIの下書きを、人が確認する
@@ -185,21 +203,44 @@ export default function CaseReportSection({
           <p className="mt-3 text-[15px] leading-8 text-stone-700">
             TriggerとRISKはAIが確定しません。RISKはRZのうち、組織介入が必要な状態として、人または組織が確認します。
           </p>
-          <div className="mt-5 grid gap-3 md:grid-cols-3">
-            {[
-              ["Trigger", "未確認", "兆候の有無を確認"],
-              ["RISK", "未判定", "組織介入の必要性を確認"],
-              ["Organization", "未接続", "必要時に担当導線へ接続"],
-            ].map(([label, status, note]) => (
-              <div key={label} className="rounded-[14px] border border-amber-200 bg-white p-4">
-                <p className="text-[11px] uppercase tracking-[0.14em] text-stone-500">{label}</p>
-                <p className="mt-2 text-[18px] font-semibold text-slate-900">{status}</p>
-                <p className="mt-2 text-[13px] leading-6 text-stone-600">{note}</p>
-              </div>
-            ))}
+          <div className="mt-4 rounded-[14px] border border-amber-200 bg-white p-4">
+            <p className="text-[11px] uppercase tracking-[0.14em] text-stone-500">AI Draft</p>
+            <p className="mt-2 text-[15px] text-slate-900">Trigger：{aiTriggerDraft}</p>
           </div>
-          <p className="mt-5 text-[13px] leading-7 text-amber-800">
-            この版は視覚モックです。判定値の保存や組織連絡はまだ実装していません。
+
+          <div className="mt-5 grid gap-4 lg:grid-cols-3">
+            <GateChoice
+              label="Trigger"
+              value={humanTriggerStatus}
+              onChange={onHumanTriggerStatusChange}
+              options={[["unreviewed", "未確認"], ["confirmed", "確認"], ["not_trigger", "否定"]]}
+            />
+            <GateChoice
+              label="RISK"
+              value={humanRiskStatus}
+              onChange={onHumanRiskStatusChange}
+              options={[["unreviewed", "未判定"], ["risk", "該当"], ["not_risk", "非該当"]]}
+            />
+            <GateChoice
+              label="Organization"
+              value={humanOrgIntervention}
+              onChange={onHumanOrgInterventionChange}
+              options={[["unreviewed", "未確認"], ["required", "介入要"], ["not_required", "介入不要"]]}
+            />
+          </div>
+
+          <label className="mt-5 block text-[12px] uppercase tracking-[0.14em] text-stone-500">
+            Human Review Note
+          </label>
+          <textarea
+            value={humanReviewNote}
+            onChange={(event) => onHumanReviewNoteChange(event.target.value)}
+            rows={3}
+            placeholder="確認根拠、引き継ぎ事項、組織接続先など"
+            className="mt-2 w-full rounded-[14px] border border-amber-200 bg-white px-4 py-3 text-[14px] leading-7 text-stone-800 outline-none focus:border-amber-500"
+          />
+          <p className="mt-4 text-[13px] leading-7 text-amber-800">
+            RISKはRZのうち組織介入が必要な状態です。入力内容は記録用であり、組織への自動連絡は行いません。
           </p>
         </div>
 
@@ -459,5 +500,41 @@ export default function CaseReportSection({
         </div>
       </div>
     </section>
+  );
+}
+
+function GateChoice({
+  label,
+  value,
+  onChange,
+  options,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  options: string[][];
+}) {
+  return (
+    <fieldset className="rounded-[14px] border border-amber-200 bg-white p-4">
+      <legend className="px-1 text-[11px] uppercase tracking-[0.14em] text-stone-500">
+        {label}
+      </legend>
+      <div className="mt-2 grid gap-2">
+        {options.map(([optionValue, optionLabel]) => (
+          <button
+            key={optionValue}
+            type="button"
+            onClick={() => onChange(optionValue)}
+            className={`rounded-[10px] border px-3 py-2 text-left text-[13px] transition ${
+              value === optionValue
+                ? "border-amber-500 bg-amber-100 text-amber-950"
+                : "border-stone-200 bg-white text-stone-700 hover:bg-amber-50"
+            }`}
+          >
+            {optionLabel}
+          </button>
+        ))}
+      </div>
+    </fieldset>
   );
 }
