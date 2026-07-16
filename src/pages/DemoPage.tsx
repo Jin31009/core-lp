@@ -148,6 +148,10 @@ export default function DemoPage({ setPage }: DemoPageProps) {
   const [whyTags, setWhyTags] = useState<string[]>([]);
   const [whyMemo, setWhyMemo] = useState("");
   const [nextAssets, setNextAssets] = useState<string[]>([]);
+  const [humanTriggerStatus, setHumanTriggerStatus] = useState("unreviewed");
+  const [humanRiskStatus, setHumanRiskStatus] = useState("unreviewed");
+  const [humanOrgIntervention, setHumanOrgIntervention] = useState("unreviewed");
+  const [humanReviewNote, setHumanReviewNote] = useState("");
 
   const caseContext =
     finalContextDraft.trim() || contextEdited.trim() || primaryContextDraft;
@@ -350,6 +354,10 @@ export default function DemoPage({ setPage }: DemoPageProps) {
     setWhyTags([]);
     setWhyMemo("");
     setNextAssets([]);
+    setHumanTriggerStatus("unreviewed");
+    setHumanRiskStatus("unreviewed");
+    setHumanOrgIntervention("unreviewed");
+    setHumanReviewNote("");
   };
 
   const startFlow = () => {
@@ -414,6 +422,17 @@ export default function DemoPage({ setPage }: DemoPageProps) {
           context_source: contextSource,
           max_delta: stepResult.analysis.MAX_DELTA,
           trigger: stepResult.analysis.Trigger,
+          ai_trigger_draft: stepResult.analysis.Trigger,
+          human_trigger_status: humanTriggerStatus as RASSCaseRecord["human_trigger_status"],
+          human_risk_status: humanRiskStatus as RASSCaseRecord["human_risk_status"],
+          human_org_intervention: humanOrgIntervention as RASSCaseRecord["human_org_intervention"],
+          human_review_note: humanReviewNote.trim(),
+          human_reviewed_at:
+            humanTriggerStatus !== "unreviewed" ||
+            humanRiskStatus !== "unreviewed" ||
+            humanOrgIntervention !== "unreviewed"
+              ? timestamp
+              : "",
           r_plus: stepResult.analysis.R_plus,
           ak_break_type: stepResult.analysis.AK_Break_Type,
           ak_primary: stepResult.analysis.AK_Primary,
@@ -657,6 +676,15 @@ export default function DemoPage({ setPage }: DemoPageProps) {
                   text={observationRaw}
                   judgment={stepJudgment}
                   actionSummary={step3Response?.actionSummary || "該当するACEX提案なし"}
+                  aiTriggerDraft={stepResult?.analysis.Trigger || "No"}
+                  humanTriggerStatus={humanTriggerStatus}
+                  onHumanTriggerStatusChange={setHumanTriggerStatus}
+                  humanRiskStatus={humanRiskStatus}
+                  onHumanRiskStatusChange={setHumanRiskStatus}
+                  humanOrgIntervention={humanOrgIntervention}
+                  onHumanOrgInterventionChange={setHumanOrgIntervention}
+                  humanReviewNote={humanReviewNote}
+                  onHumanReviewNoteChange={setHumanReviewNote}
                   executedActions={executedActions}
                   onExecutedActionsChange={setExecutedActions}
                   resultType={resultType}
