@@ -29,7 +29,7 @@ const sceneLabels = [
 const subtitles = [
   "本日は、完成製品の導入提案ではなく、病院広報を関係構築・関係支援へ広げる考え方と、その成立可能性についてご相談します。",
   "医療が、自ら考え、選び、決めて利用するものへ変わるなか、広報も情報を伝えるだけでなく、患者・家族と病院の関係を構築し、支える役割へ変わる必要があります。",
-  "関係支援は三つの実装軸で構成します。患者・家族の言葉を扱うCommunication Console、病院の考え方を示す疾患広報モジュール、支援後の変化を捉えるRA-SSです。AIコンシェルジュとHuman Gateが連動し、整理と人の判断をつなぎます。",
+  "関係支援は三つの実装軸で構成します。患者・家族の言葉を扱うCommunication Consoleは、CORE Console v18cとして実装しています。病院の考え方を示す疾患広報モジュール、支援後の変化を捉えるRA-SSとともに、AIコンシェルジュとHuman Gateが整理と人の判断をつなぎます。",
   "ここからは説明を続けず、完成プロトタイプを一続きの体験としてご覧ください。",
   "デモで見た体験を、四つの構造へ戻して確認します。患者・家族の言葉、必要な情報、AIと人による整理・判断、支援後に残る課題です。",
   "この構造が今可能になった背景には、ICD、DPC、ガイドライン、クリティカルパスなど医療情報の体系化と、散在する情報をAIが柔軟に統合・整理できる環境があります。",
@@ -140,6 +140,12 @@ export default function SatoConsultationPage() {
             alt={`Scene ${String(scene).padStart(2, "0")}：${sceneLabels[scene]}`}
             className="h-auto max-h-[calc(100vh-11rem)] w-full object-contain"
           />
+
+          {scene === 2 && (
+            <div className="absolute bottom-5 left-1/2 -translate-x-1/2 rounded-full bg-[#075866] px-5 py-2 text-center text-xs font-semibold text-white shadow-lg md:text-sm">
+              Communication Console ＝ CORE Console v18cとして実装
+            </div>
+          )}
 
           {scene === 3 && (
             <div className="absolute inset-x-0 bottom-5 flex justify-center px-4">
