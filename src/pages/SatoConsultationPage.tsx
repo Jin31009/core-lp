@@ -45,7 +45,7 @@ export default function SatoConsultationPage() {
   const [scene, setScene] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
-  const [showSubtitles, setShowSubtitles] = useState(true);
+  const [showSubtitles, setShowSubtitles] = useState(false);
   const [audioReady, setAudioReady] = useState(true);
   const [finalStep, setFinalStep] = useState(1);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -141,7 +141,7 @@ export default function SatoConsultationPage() {
             className="h-auto max-h-[calc(100vh-11rem)] w-full object-contain"
           />
 
-          {scene === 3 && (
+          {showSubtitles && scene === 3 && (
             <div className="absolute inset-x-0 bottom-5 flex justify-center px-4">
               <button onClick={openDemo} className="inline-flex min-h-12 items-center gap-2 rounded-full bg-[#075866] px-6 text-sm font-semibold text-white shadow-lg transition hover:bg-[#064b56] focus:outline-none focus:ring-4 focus:ring-teal-200">
                 CORE Console v18cを開く <ExternalLink className="h-4 w-4" />
@@ -149,7 +149,7 @@ export default function SatoConsultationPage() {
             </div>
           )}
 
-          {scene === 7 && (
+          {showSubtitles && scene === 7 && (
             <div className="absolute inset-x-0 bottom-5 flex justify-center gap-2 px-4">
               {finalStep < 3 ? (
                 <button onClick={() => setFinalStep((value) => Math.min(3, value + 1))} className="rounded-full bg-[#075866] px-6 py-3 text-sm font-semibold text-white shadow-lg">
@@ -162,7 +162,7 @@ export default function SatoConsultationPage() {
           )}
         </section>
 
-        {scene === 2 && (
+        {showSubtitles && scene === 2 && (
           <aside className="mx-auto mt-3 w-full max-w-6xl rounded-md border border-[#075866]/30 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm" aria-label="用語の関係">
             <div className="grid gap-2 md:grid-cols-3">
               <p><strong className="text-[#075866]">構想名</strong><br />CORE Communication Console</p>
@@ -181,7 +181,7 @@ export default function SatoConsultationPage() {
           </aside>
         )}
 
-        {scene === 5 && (
+        {showSubtitles && scene === 5 && (
           <aside className="mx-auto mt-3 w-full max-w-5xl rounded-md border border-slate-300 bg-white px-4 py-3 text-center text-sm text-slate-700" aria-label="技術の位置づけ">
             院内運用や電子カルテを置き換えるものではなく、診療記録の手前と周辺に置くコミュニケーション補助層です。
           </aside>
@@ -210,7 +210,7 @@ export default function SatoConsultationPage() {
             </button>
             <button onClick={replay} disabled={!audioReady} aria-label="音声を最初から再生" className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-300 bg-white disabled:opacity-35"><RotateCcw className="h-4 w-4" /></button>
             <button onClick={() => setMuted((value) => !value)} aria-label={muted ? "音声をオン" : "音声をオフ"} className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-300 bg-white">{muted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}</button>
-            <button onClick={() => setShowSubtitles((value) => !value)} aria-pressed={showSubtitles} className="inline-flex h-11 items-center gap-2 rounded-full border border-slate-300 bg-white px-4 text-sm font-semibold"><Subtitles className="h-5 w-5" /> 字幕</button>
+            <button onClick={() => setShowSubtitles((value) => !value)} aria-pressed={showSubtitles} className="inline-flex h-11 items-center gap-2 rounded-full border border-slate-300 bg-white px-4 text-sm font-semibold"><Subtitles className="h-5 w-5" /> 字幕・注釈</button>
             {!audioReady && <span className="text-xs font-medium text-amber-800">音声ファイルを配置すると再生できます</span>}
           </div>
 
