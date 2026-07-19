@@ -29,7 +29,7 @@ const sceneLabels = [
 const subtitles = [
   "本日は、完成製品の導入提案ではなく、病院広報を関係構築・関係支援へ広げる考え方と、その成立可能性についてご相談します。",
   "医療が、自ら考え、選び、決めて利用するものへ変わるなか、広報も情報を伝えるだけでなく、患者・家族と病院の関係を構築し、支える役割へ変わる必要があります。",
-  "関係支援は三つの実装軸で構成します。患者・家族の言葉を扱うCommunication Consoleは、CORE Console v18cとして実装しています。病院の考え方を示す疾患広報モジュール、支援後の変化を捉えるRA-SSとともに、AIコンシェルジュとHuman Gateが整理と人の判断をつなぎます。",
+  "関係支援は三つの実装軸で構成します。患者・家族の言葉を扱うCommunication Console、病院の考え方を示す疾患広報モジュール、支援後の変化を捉えるRA-SSです。AIコンシェルジュとHuman Gateが連動し、整理と人の判断をつなぎます。",
   "ここからは説明を続けず、完成プロトタイプを一続きの体験としてご覧ください。",
   "デモで見た体験を、四つの構造へ戻して確認します。患者・家族の言葉、必要な情報、AIと人による整理・判断、支援後に残る課題です。",
   "この構造が今可能になった背景には、ICD、DPC、ガイドライン、クリティカルパスなど医療情報の体系化と、散在する情報をAIが柔軟に統合・整理できる環境があります。",
@@ -141,16 +141,10 @@ export default function SatoConsultationPage() {
             className="h-auto max-h-[calc(100vh-11rem)] w-full object-contain"
           />
 
-          {scene === 2 && (
-            <div className="absolute right-4 top-4 max-w-[calc(100%-2rem)] rounded-md border-2 border-[#075866] bg-white px-5 py-3 text-center text-sm font-bold text-[#075866] shadow-xl md:right-7 md:top-7 md:text-base">
-              Communication Console ＝ CORE Console v18cとして実装
-            </div>
-          )}
-
           {scene === 3 && (
             <div className="absolute inset-x-0 bottom-5 flex justify-center px-4">
               <button onClick={openDemo} className="inline-flex min-h-12 items-center gap-2 rounded-full bg-[#075866] px-6 text-sm font-semibold text-white shadow-lg transition hover:bg-[#064b56] focus:outline-none focus:ring-4 focus:ring-teal-200">
-                v18c DEMOを別タブで開く <ExternalLink className="h-4 w-4" />
+                CORE Console v18cを開く <ExternalLink className="h-4 w-4" />
               </button>
             </div>
           )}
@@ -167,6 +161,37 @@ export default function SatoConsultationPage() {
             </div>
           )}
         </section>
+
+        {scene === 2 && (
+          <aside className="mx-auto mt-3 w-full max-w-6xl rounded-md border border-[#075866]/30 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm" aria-label="用語の関係">
+            <div className="grid gap-2 md:grid-cols-3">
+              <p><strong className="text-[#075866]">構想名</strong><br />CORE Communication Console</p>
+              <p><strong className="text-[#075866]">中核機能</strong><br />Communication Console</p>
+              <p><strong className="text-[#075866]">現在の実装試作</strong><br />CORE Console v18c</p>
+            </div>
+            <p className="mt-2 border-t border-slate-200 pt-2 text-xs leading-5 text-slate-600">
+              広報モジュール群＝疾患広報＋病院広報 ／ Human Gate＝人が確認・判断する関門
+            </p>
+          </aside>
+        )}
+
+        {scene === 3 && (
+          <aside className="mx-auto mt-3 w-full max-w-5xl rounded-md border border-amber-300 bg-amber-50 px-4 py-3 text-center text-sm font-semibold text-amber-950" aria-label="DEMO操作案内">
+            DEMO内で「総論テストを開始」→ 終了後はDEMOタブを閉じる → Scene 04へ自動復帰
+          </aside>
+        )}
+
+        {scene === 5 && (
+          <aside className="mx-auto mt-3 w-full max-w-5xl rounded-md border border-slate-300 bg-white px-4 py-3 text-center text-sm text-slate-700" aria-label="技術の位置づけ">
+            院内運用や電子カルテを置き換えるものではなく、診療記録の手前と周辺に置くコミュニケーション補助層です。
+          </aside>
+        )}
+
+        {scene === 7 && (
+          <aside className="mx-auto mt-3 w-full max-w-5xl text-center text-xs font-semibold tracking-[0.08em] text-slate-600" aria-label="相談進行">
+            進行：第一印象を聞く → 論点を表示する → 相談を始める
+          </aside>
+        )}
 
         {showSubtitles && (
           <div className="mx-auto mt-3 w-full max-w-5xl rounded bg-slate-950/90 px-5 py-3 text-center text-sm leading-7 text-white md:text-base">
