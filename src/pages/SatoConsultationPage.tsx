@@ -48,8 +48,8 @@ export default function SatoConsultationPage() {
   const [showSubtitles, setShowSubtitles] = useState(false);
   const [audioReady, setAudioReady] = useState(true);
   const [finalStep, setFinalStep] = useState(1);
+  const [demoOpen, setDemoOpen] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
-  const demoWindowRef = useRef<Window | null>(null);
 
   const goToScene = useCallback((next: number) => {
     setScene(clampScene(next));
@@ -85,16 +85,6 @@ export default function SatoConsultationPage() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [goToScene, scene]);
 
-  useEffect(() => {
-    const interval = window.setInterval(() => {
-      if (demoWindowRef.current?.closed) {
-        demoWindowRef.current = null;
-        goToScene(4);
-      }
-    }, 800);
-    return () => window.clearInterval(interval);
-  }, [goToScene]);
-
   const togglePlayback = () => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -110,8 +100,13 @@ export default function SatoConsultationPage() {
   };
 
   const openDemo = () => {
-    demoWindowRef.current = window.open("https://core-a0-demo.vercel.app/", "core-v18c-demo");
-    demoWindowRef.current?.focus();
+    audioRef.current?.pause();
+    setDemoOpen(true);
+  };
+
+  const closeDemo = () => {
+    setDemoOpen(false);
+    goToScene(4);
   };
 
   return (
@@ -142,13 +137,6 @@ export default function SatoConsultationPage() {
             className="h-auto max-h-[calc(100vh-11rem)] w-full object-contain"
           />
 
-          {scene === 3 && (
-            <div className="absolute inset-x-0 bottom-5 flex justify-center px-4">
-              <button onClick={openDemo} className="inline-flex min-h-12 items-center gap-2 rounded-full bg-[#075866] px-6 text-sm font-semibold text-white shadow-lg transition hover:bg-[#064b56] focus:outline-none focus:ring-4 focus:ring-teal-200">
-                CORE Console v18cを開く <ExternalLink className="h-4 w-4" />
-              </button>
-            </div>
-          )}
 
           {scene === 7 && (
             <div className="absolute inset-x-0 bottom-5 flex justify-center gap-2 px-4">
@@ -162,6 +150,26 @@ export default function SatoConsultationPage() {
             </div>
           )}
         </section>
+
+        {scene === 3 && (
+          <section className="mx-auto mt-3 w-full max-w-6xl rounded-lg border border-[#075866]/20 bg-white px-4 py-3 shadow-sm" aria-label="DEMOで体感するポイント">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+              <div className="shrink-0">
+                <p className="text-xs font-bold tracking-[0.12em] text-[#075866]">DEMOで体感する4点</p>
+                <p className="mt-1 text-sm font-semibold text-slate-900">説明ではなく、実際の利用場面としてご覧ください。</p>
+              </div>
+              <div className="grid flex-1 grid-cols-2 gap-2 text-xs font-semibold text-slate-700 md:grid-cols-4">
+                <p className="rounded-md bg-[#e8f3f4] px-3 py-2"><span className="mr-1 text-[#075866]">01</span>スマートフォン／タブレットで利用</p>
+                <p className="rounded-md bg-[#e8f3f4] px-3 py-2"><span className="mr-1 text-[#075866]">02</span>COREくんと音声で対話</p>
+                <p className="rounded-md bg-[#e8f3f4] px-3 py-2"><span className="mr-1 text-[#075866]">03</span>会話がチャットとして残る</p>
+                <p className="rounded-md bg-[#e8f3f4] px-3 py-2"><span className="mr-1 text-[#075866]">04</span>2つの広報モジュールから情報提供</p>
+              </div>
+              <button onClick={openDemo} className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-[#075866] px-5 text-sm font-semibold text-white shadow-md transition hover:bg-[#064b56] focus:outline-none focus:ring-4 focus:ring-teal-200">
+                体験デモを開く <ExternalLink className="h-4 w-4" />
+              </button>
+            </div>
+          </section>
+        )}
 
         {showSubtitles && scene === 2 && (
           <aside className="mx-auto mt-3 w-full max-w-6xl rounded-md border border-[#075866]/30 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm" aria-label="用語の関係">
@@ -220,6 +228,30 @@ export default function SatoConsultationPage() {
           </button>
         </nav>
       </div>
+      {demoOpen && (
+        <div className="fixed inset-0 z-50 flex flex-col bg-slate-950" role="dialog" aria-modal="true" aria-label="CORE Console v18c デモ">
+          <header className="flex min-h-14 items-center justify-between gap-3 bg-[#073f49] px-3 text-white shadow-lg md:px-5">
+            <div>
+              <p className="text-xs font-bold tracking-[0.1em] text-teal-100">CORE Console v18c｜体験デモ</p>
+              <p className="hidden text-xs text-white/75 sm:block">音声対話・チャット記録・2つの広報モジュールをご確認ください</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <a href="https://core-a0-demo.vercel.app/" target="_blank" rel="noreferrer" className="hidden min-h-10 items-center gap-2 rounded-full border border-white/40 px-4 text-xs font-semibold sm:inline-flex">
+                別タブで開く <ExternalLink className="h-4 w-4" />
+              </a>
+              <button onClick={closeDemo} className="inline-flex min-h-10 items-center gap-2 rounded-full bg-white px-4 text-sm font-bold text-[#075866] shadow">
+                <ArrowLeft className="h-4 w-4" /> DEMOを終了して説明スライドへ戻る
+              </button>
+            </div>
+          </header>
+          <iframe
+            src="https://core-a0-demo.vercel.app/"
+            title="CORE Console v18c"
+            className="min-h-0 flex-1 border-0 bg-white"
+            allow="microphone"
+          />
+        </div>
+      )}
     </main>
   );
 }
