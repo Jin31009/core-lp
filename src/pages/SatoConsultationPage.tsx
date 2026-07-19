@@ -49,6 +49,8 @@ export default function SatoConsultationPage() {
   const [audioReady, setAudioReady] = useState(true);
   const [finalStep, setFinalStep] = useState(1);
   const [demoOpen, setDemoOpen] = useState(false);
+  const [aiPreviewOpen, setAiPreviewOpen] = useState(false);
+  const [aiPhase, setAiPhase] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const goToScene = useCallback((next: number) => {
@@ -99,8 +101,37 @@ export default function SatoConsultationPage() {
     audio.play().catch(() => setAudioReady(false));
   };
 
-  const openDemo = () => {
+  useEffect(() => {
+    if (!aiPreviewOpen) return;
+    setAiPhase(0);
+    const timers = [2400, 5000, 7600, 10200].map((delay, index) =>
+      window.setTimeout(() => setAiPhase(index + 1), delay),
+    );
+    const speechTimer = window.setTimeout(() => {
+      if (!("speechSynthesis" in window)) return;
+      const utterance = new SpeechSynthesisUtterance(
+        "退院後の生活を一緒に整理しましょう。まず、移動と見守りの状況を確認させてください。必要に応じて担当職員へおつなぎします。",
+      );
+      utterance.lang = "ja-JP";
+      utterance.rate = 0.92;
+      utterance.pitch = 0.86;
+      window.speechSynthesis.speak(utterance);
+    }, 10400);
+    return () => {
+      timers.forEach(window.clearTimeout);
+      window.clearTimeout(speechTimer);
+      window.speechSynthesis?.cancel();
+    };
+  }, [aiPreviewOpen]);
+
+  const startAiPreview = () => {
     audioRef.current?.pause();
+    setAiPreviewOpen(true);
+  };
+
+  const openDemo = () => {
+    window.speechSynthesis?.cancel();
+    setAiPreviewOpen(false);
     setDemoOpen(true);
   };
 
@@ -152,22 +183,17 @@ export default function SatoConsultationPage() {
         </section>
 
         {scene === 3 && (
-          <section className="mx-auto mt-3 w-full max-w-6xl rounded-lg border border-[#075866]/20 bg-white px-4 py-3 shadow-sm" aria-label="DEMOで体感するポイント">
-            <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-              <div className="shrink-0">
-                <p className="text-xs font-bold tracking-[0.12em] text-[#075866]">DEMOで体感する4点</p>
-                <p className="mt-1 text-sm font-semibold text-slate-900">説明ではなく、実際の利用場面としてご覧ください。</p>
-              </div>
-              <div className="grid flex-1 grid-cols-2 gap-2 text-xs font-semibold text-slate-700 md:grid-cols-4">
-                <p className="rounded-md bg-[#e8f3f4] px-3 py-2"><span className="mr-1 text-[#075866]">01</span>スマートフォン／タブレットで利用</p>
-                <p className="rounded-md bg-[#e8f3f4] px-3 py-2"><span className="mr-1 text-[#075866]">02</span>COREくんと音声で対話</p>
-                <p className="rounded-md bg-[#e8f3f4] px-3 py-2"><span className="mr-1 text-[#075866]">03</span>会話がチャットとして残る</p>
-                <p className="rounded-md bg-[#e8f3f4] px-3 py-2"><span className="mr-1 text-[#075866]">04</span>2つの広報モジュールから情報提供</p>
-              </div>
-              <button onClick={openDemo} className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-[#075866] px-5 text-sm font-semibold text-white shadow-md transition hover:bg-[#064b56] focus:outline-none focus:ring-4 focus:ring-teal-200">
-                体験デモを開く <ExternalLink className="h-4 w-4" />
-              </button>
+          <section className="mx-auto mt-3 flex w-full max-w-6xl flex-col gap-3 rounded-lg border border-[#075866]/20 bg-white px-4 py-3 shadow-sm md:flex-row md:items-center md:justify-between" aria-label="DEMO導入">
+            <div>
+              <p className="text-xs font-bold tracking-[0.12em] text-[#075866]">患者・家族の利用場面</p>
+              <p className="mt-1 text-sm font-semibold text-slate-900">
+                スマートフォンからCOREくんへ相談し、言葉が情報と人の支援につながる流れを確認します。
+              </p>
+              <p className="mt-1 text-xs text-slate-500">固定シナリオによるAIコンシェルジュ作動イメージ｜GPT API未接続</p>
             </div>
+            <button onClick={startAiPreview} className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-full bg-[#075866] px-6 text-sm font-semibold text-white shadow-md transition hover:bg-[#064b56] focus:outline-none focus:ring-4 focus:ring-teal-200">
+              COREくんの動きを見る
+            </button>
           </section>
         )}
 
@@ -228,6 +254,68 @@ export default function SatoConsultationPage() {
           </button>
         </nav>
       </div>
+      {aiPreviewOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/90 p-3 md:p-6" role="dialog" aria-modal="true" aria-label="AIコンシェルジュ作動イメージ">
+          <section className="flex max-h-[94vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-[#eef4f4] shadow-2xl">
+            <header className="flex items-center justify-between gap-3 bg-[#073f49] px-4 py-3 text-white md:px-6">
+              <div>
+                <p className="text-xs font-bold tracking-[0.12em] text-teal-100">患者・家族がスマートフォンから利用</p>
+                <p className="mt-0.5 text-sm font-semibold">COREくんが、言葉を情報と人の支援へつなぐ</p>
+              </div>
+              <button onClick={() => setAiPreviewOpen(false)} className="rounded-full border border-white/40 px-3 py-2 text-xs font-semibold">閉じる</button>
+            </header>
+
+            <div className="grid min-h-0 flex-1 gap-4 overflow-y-auto p-4 md:grid-cols-[0.9fr_1.1fr] md:p-6">
+              <div className="mx-auto w-full max-w-sm rounded-[2rem] border-[8px] border-slate-900 bg-white p-4 shadow-xl">
+                <p className="text-center text-xs font-bold text-[#075866]">COREくんとの会話</p>
+                <div className="mt-5 rounded-2xl rounded-br-sm bg-slate-200 px-4 py-3 text-sm leading-6 text-slate-900">
+                  退院後、母を家で一人にして大丈夫なのか心配です。
+                </div>
+                <p className="mt-2 text-right text-[11px] font-semibold text-[#075866]">音声入力から文字に変換</p>
+                {aiPhase >= 4 && (
+                  <>
+                    <div className="mt-5 rounded-2xl rounded-bl-sm bg-[#d9eff0] px-4 py-3 text-sm leading-6 text-slate-900">
+                      退院後の生活を一緒に整理しましょう。まず、移動と見守りの状況を確認させてください。必要に応じて担当職員へおつなぎします。
+                    </div>
+                    <p className="mt-2 flex items-center justify-end gap-1 text-[11px] font-semibold text-[#075866]"><Volume2 className="h-3.5 w-3.5" /> 音声で応答・チャットとして記録</p>
+                  </>
+                )}
+              </div>
+
+              <div className="flex flex-col justify-center gap-3">
+                <p className="text-xs font-bold tracking-[0.12em] text-[#075866]">COREくんの働き</p>
+                <div className={`rounded-lg border bg-white px-4 py-3 transition-all duration-500 ${aiPhase >= 1 ? "border-[#075866] opacity-100 shadow-sm" : "border-slate-200 opacity-35"}`}>
+                  <p className="text-xs font-bold text-[#075866]">01｜言葉を整理</p>
+                  <p className="mt-1 text-sm font-semibold">退院後の生活と見守りに対する不安</p>
+                </div>
+                <div className={`rounded-lg border bg-white px-4 py-3 transition-all duration-500 ${aiPhase >= 2 ? "border-[#075866] opacity-100 shadow-sm" : "border-slate-200 opacity-35"}`}>
+                  <p className="text-xs font-bold text-[#075866]">02｜二つの広報モジュールを参照</p>
+                  <div className="mt-2 grid grid-cols-2 gap-2 text-xs font-semibold">
+                    <p className="rounded bg-[#e8f3f4] p-2">疾患広報<br /><span className="font-normal">退院後の注意点</span></p>
+                    <p className="rounded bg-[#e8f3f4] p-2">病院広報<br /><span className="font-normal">相談窓口・支援方針</span></p>
+                  </div>
+                </div>
+                <div className={`rounded-lg border bg-white px-4 py-3 transition-all duration-500 ${aiPhase >= 3 ? "border-[#075866] opacity-100 shadow-sm" : "border-slate-200 opacity-35"}`}>
+                  <p className="text-xs font-bold text-[#075866]">03｜Human Gateを判断</p>
+                  <p className="mt-1 text-sm font-semibold">個別状況は職員の確認へつなぐ</p>
+                </div>
+                <div className={`rounded-lg border bg-white px-4 py-3 transition-all duration-500 ${aiPhase >= 4 ? "border-[#075866] opacity-100 shadow-sm" : "border-slate-200 opacity-35"}`}>
+                  <p className="text-xs font-bold text-[#075866]">04｜応答して記録</p>
+                  <p className="mt-1 text-sm font-semibold">次の確認を示し、会話をチャットに残す</p>
+                </div>
+              </div>
+            </div>
+
+            <footer className="flex flex-col items-center justify-between gap-2 border-t border-slate-200 bg-white px-4 py-3 sm:flex-row md:px-6">
+              <p className="text-xs text-slate-500">固定シナリオによる作動イメージです。実際のGPT推論は行っていません。</p>
+              <button onClick={openDemo} disabled={aiPhase < 4} className="inline-flex min-h-11 items-center gap-2 rounded-full bg-[#075866] px-5 text-sm font-bold text-white disabled:cursor-wait disabled:opacity-35">
+                完成プロトタイプを開く <ExternalLink className="h-4 w-4" />
+              </button>
+            </footer>
+          </section>
+        </div>
+      )}
+
       {demoOpen && (
         <div className="fixed inset-0 z-50 flex flex-col bg-slate-950" role="dialog" aria-modal="true" aria-label="CORE Console v18c デモ">
           <header className="flex min-h-14 items-center justify-between gap-3 bg-[#073f49] px-3 text-white shadow-lg md:px-5">
