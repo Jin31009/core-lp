@@ -109,7 +109,7 @@ export default function SatoConsultationPage() {
   };
 
   const openDemo = () => {
-    demoWindowRef.current = window.open("/demo", "core-v18c-demo");
+    demoWindowRef.current = window.open("https://core-a0-demo.vercel.app/", "core-v18c-demo");
     demoWindowRef.current?.focus();
   };
 
