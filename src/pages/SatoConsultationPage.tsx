@@ -54,6 +54,7 @@ export default function SatoConsultationPage() {
   const goToScene = useCallback((next: number) => {
     setScene(clampScene(next));
     setFinalStep(1);
+    setShowSubtitles(false);
   }, []);
 
   useEffect(() => {
@@ -141,7 +142,7 @@ export default function SatoConsultationPage() {
             className="h-auto max-h-[calc(100vh-11rem)] w-full object-contain"
           />
 
-          {showSubtitles && scene === 3 && (
+          {scene === 3 && (
             <div className="absolute inset-x-0 bottom-5 flex justify-center px-4">
               <button onClick={openDemo} className="inline-flex min-h-12 items-center gap-2 rounded-full bg-[#075866] px-6 text-sm font-semibold text-white shadow-lg transition hover:bg-[#064b56] focus:outline-none focus:ring-4 focus:ring-teal-200">
                 CORE Console v18cを開く <ExternalLink className="h-4 w-4" />
@@ -149,7 +150,7 @@ export default function SatoConsultationPage() {
             </div>
           )}
 
-          {showSubtitles && scene === 7 && (
+          {scene === 7 && (
             <div className="absolute inset-x-0 bottom-5 flex justify-center gap-2 px-4">
               {finalStep < 3 ? (
                 <button onClick={() => setFinalStep((value) => Math.min(3, value + 1))} className="rounded-full bg-[#075866] px-6 py-3 text-sm font-semibold text-white shadow-lg">
@@ -175,7 +176,7 @@ export default function SatoConsultationPage() {
           </aside>
         )}
 
-        {scene === 3 && (
+        {showSubtitles && scene === 3 && (
           <aside className="mx-auto mt-3 w-full max-w-5xl rounded-md border border-amber-300 bg-amber-50 px-4 py-3 text-center text-sm font-semibold text-amber-950" aria-label="DEMO操作案内">
             DEMO内で「総論テストを開始」→ 終了後はDEMOタブを閉じる → Scene 04へ自動復帰
           </aside>
@@ -187,7 +188,7 @@ export default function SatoConsultationPage() {
           </aside>
         )}
 
-        {scene === 7 && (
+        {showSubtitles && scene === 7 && (
           <aside className="mx-auto mt-3 w-full max-w-5xl text-center text-xs font-semibold tracking-[0.08em] text-slate-600" aria-label="相談進行">
             進行：第一印象を聞く → 論点を表示する → 相談を始める
           </aside>
