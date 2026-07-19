@@ -142,7 +142,7 @@ export default function SatoConsultationPage() {
           />
 
           {scene === 2 && (
-            <div className="absolute bottom-5 left-1/2 -translate-x-1/2 rounded-full bg-[#075866] px-5 py-2 text-center text-xs font-semibold text-white shadow-lg md:text-sm">
+            <div className="absolute right-4 top-4 max-w-[calc(100%-2rem)] rounded-md border-2 border-[#075866] bg-white px-5 py-3 text-center text-sm font-bold text-[#075866] shadow-xl md:right-7 md:top-7 md:text-base">
               Communication Console ＝ CORE Console v18cとして実装
             </div>
           )}
