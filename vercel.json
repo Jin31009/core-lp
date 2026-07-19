@@ -51,6 +51,10 @@
     {
       "source": "/rass-ic-module-poc-slides-print",
       "destination": "/index.html"
+    },
+    {
+      "source": "/sato-consultation-2026",
+      "destination": "/index.html"
     }
   ]
 }
