@@ -24,6 +24,7 @@ import { initAnalytics } from "./lib/analytics";
 const PocOrthopedicSupportPage = lazy(() => import("./pages/PocOrthopedicSupportPage"));
 const RassIcModulePocPage = lazy(() => import("./pages/RassIcModulePocPage"));
 const RassIcModulePocSlidesPage = lazy(() => import("./pages/RassIcModulePocSlidesPage"));
+const SatoConsultationPage = lazy(() => import("./pages/SatoConsultationPage"));
 
 function getInitialPage() {
   if (typeof window === "undefined") {
@@ -43,6 +44,7 @@ function getInitialPage() {
     "/rass-ic-module-poc": "rass-ic-module-poc",
     "/rass-ic-module-poc-slides": "rass-ic-module-poc-slides",
     "/rass-ic-module-poc-slides-print": "rass-ic-module-poc-slides-print",
+    "/sato-consultation-2026": "sato-consultation-2026",
   };
 
   return pathToPage[window.location.pathname] ?? "top";
@@ -126,6 +128,11 @@ export default function App() {
       {page === "rass-ic-module-poc-slides-print" && (
         <Suspense fallback={<div className="p-6 text-slate-700">印刷用スライドを読み込み中...</div>}>
           <RassIcModulePocSlidesPage printMode />
+        </Suspense>
+      )}
+      {page === "sato-consultation-2026" && (
+        <Suspense fallback={<div className="p-6 text-slate-700">相談用スライドを読み込み中...</div>}>
+          <SatoConsultationPage />
         </Suspense>
       )}
       {page === "participation" && (
